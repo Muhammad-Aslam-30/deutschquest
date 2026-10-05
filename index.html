@@ -1469,9 +1469,11 @@ const C = { topic:null, focus:'wd', hist:[], busy:false, slow:false };
 
 // choose the newest general "flash" model this key can use (model names change over time, so ask the API)
 class AIError extends Error { constructor(kind, detail) { super(kind); this.detail = detail || ''; } }
-async function gfetch(url, opt) {
-  try { return await fetch(url, opt); }
-  catch (e) { throw new AIError('blocked'); }       // never reached Google: offline, firewall / work network, or a blocker
+async function gfetch(url, opt, ms = 15000) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), ms);
+  try { return await fetch(url, Object.assign({}, opt, { signal:ctl.signal })); }
+  catch (e) { throw new AIError(ctl.signal.aborted ? 'timeout' : 'blocked'); }   // timeout, or never reached Google (offline, firewall / work network, blocker)
+  finally { clearTimeout(timer); }
 }
 async function apiError(r) {
   let msg = ''; try { const d = await r.json(); msg = (d.error && d.error.message) || ''; } catch (e) {}
@@ -1494,7 +1496,8 @@ async function fetchModels(key) {
   const ver = n => parseFloat((n.match(/gemini-(\d+(\.\d+)?)/) || [0, 0])[1]);
   const tier = n => /flash-lite/.test(n) ? 1 : /flash/.test(n) ? 0 : /pro/.test(n) ? 2 : 3;   // flash first, then flash-lite, then pro
   usable.sort((x, y) => tier(x) - tier(y) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0) || x.length - y.length);
-  const list = usable.length ? usable : ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+  const fast = usable.filter(n => !/pro/.test(n));
+  const list = fast.length ? fast : usable.length ? usable : ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
   const tts = names.filter(n => /tts/.test(n)).sort((x, y) => (/flash/.test(x) ? 0 : 1) - (/flash/.test(y) ? 0 : 1) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0));
   modelCache = { key, list, tts }; return list;
 }
@@ -1517,31 +1520,40 @@ Rules:
 }
 // Lena's replies are short: skip Gemini's slow "thinking" step where the model allows it
 const THINK = [{ thinkingBudget:0 }, { thinkingLevel:'low' }, null], thinkIdx = {};
+const CHAT_WAIT = 12000, CHAT_BUDGET = 30000, REST_MS = 120000;   // per-request limit, overall limit, how long a busy model is skipped
+const resting = {};
 async function askLena(userText) {
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
-  const ranked = await rankModels(key), first = C.model || lsGet(AI_MODEL) || ranked[0];
-  const order = [first, ...ranked.filter(m => m !== first)].slice(0, 5);
+  const ranked = await rankModels(key), first = C.model || lsGet(AI_MODEL) || ranked[0], now = Date.now();
+  const all = [first, ...ranked.filter(m => m !== first)];
+  const order = [...all.filter(m => !(resting[m] > now)), ...all.filter(m => resting[m] > now)].slice(0, 4);   // models that just failed go last
+  const deadline = now + CHAT_BUDGET;
   C.hist.push({ role:'user', parts:[{ text:userText }] });
   let schema = true, r = null, used = null, lastErr = null;
   const ctxTurns = C.hist.length > 15 ? C.hist.slice(-15) : C.hist;             // recent turns are enough and keep replies fast
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
     body:JSON.stringify({ systemInstruction:{ parts:[{ text:cafeSystem() + (schema ? '' : '\nAnswer ONLY with a JSON object with the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.') }] }, contents:ctxTurns,
       generationConfig:Object.assign({ temperature:0.8, maxOutputTokens:1024, responseMimeType:'application/json' }, schema ? { responseSchema:REPLY_SCHEMA } : {},
-        THINK[thinkIdx[model] || 0] ? { thinkingConfig:THINK[thinkIdx[model] || 0] } : {}) }) });
+        THINK[thinkIdx[model] || 0] ? { thinkingConfig:THINK[thinkIdx[model] || 0] } : {}) }) }, CHAT_WAIT);
+  const attempt = async model => { try { return await call(model); } catch (e) { if (e.message === 'timeout') return null; throw e; } };
   try {
-    for (let round = 0; round < 2 && !used; round++) {
-      if (round) { cafeStatus('Gemini is busy, trying again…'); await sleep(2500); }
-      for (const model of order) {
-        r = await call(model);
+    outer: for (let round = 0; round < 2 && !used; round++) {
+      if (round) { if (Date.now() + 2500 > deadline) break; cafeStatus('Gemini is busy, trying again…'); await sleep(2500); }
+      for (const [i, model] of order.entries()) {
+        if (Date.now() > deadline) break outer;
+        if (i || round) cafeStatus(`Lena is thinking… (Gemini is busy, trying model ${i + 1} of ${order.length})`);
+        r = await attempt(model);
+        if (!r) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer within ${CHAT_WAIT / 1000} s`); continue; }
         if (r.ok) { used = model; break; }
         let err = await apiError(r);
         // adapt to what this model accepts: thinking switched off → lighter thinking → default; then plain JSON without schema
         while (r.status === 400 && ((/thinking/i.test(err.detail) && (thinkIdx[model] || 0) < THINK.length - 1) || (schema && /schema|response_?mime|json/i.test(err.detail)))) {
           if (/thinking/i.test(err.detail)) thinkIdx[model] = (thinkIdx[model] || 0) + 1; else schema = false;
-          r = await call(model); if (r.ok) break; err = await apiError(r);
+          r = await attempt(model); if (!r || r.ok) break; err = await apiError(r);
         }
+        if (!r) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); continue; }
         if (r.ok) { used = model; break; }
-        if (r.status === 404 || r.status === 429 || r.status >= 500) { lastErr = err; if (model !== order[order.length - 1]) cafeStatus('Lena is thinking… (switching to another Gemini model)'); continue; }
+        if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Date.now() + (r.status === 404 ? 3600000 : REST_MS); lastErr = err; continue; }
         throw err;                                                            // key problems or other refusals: no point trying other models
       }
     }
@@ -1678,7 +1690,7 @@ async function say(text) {
         talking(false); return;
       }
       cafeStatus('Tap the screen once so the browser lets Lena speak. Until then she uses the device voice.');
-    } else if (failed && failed.message !== 'busy' && failed.message !== 'blocked') {
+    } else if (failed && !['busy', 'blocked', 'timeout'].includes(failed.message)) {
       ttsDown = true; cafeStatus('The natural voice is not available right now (free limit or not offered for your key), so Lena uses the device voice.');
     }
   }
@@ -1764,15 +1776,20 @@ const AI_MSG = {
   nokey:'Add your Gemini key first (⚙).',
   key:'Gemini did not accept the key. Open ⚙ and paste it again from AI Studio.',
   limit:'Lena needs a short break: the free Gemini limit was reached on every model. Try again in a minute.',
-  busy:'All Gemini models are busy right now. Please try again in a minute.',
+  busy:'Gemini is very busy right now and didn’t answer in time. Wait a moment, then tap Try again.',
+  timeout:'Gemini didn’t answer in time. Wait a moment, then tap Try again.',
   blocked:'The request never reached Google. Check the internet connection. On a work laptop or with an ad/privacy blocker, Google AI may be blocked — try your tablet or another network.',
   api:'Gemini refused the request.',
   parse:'Lena got confused. Please try again.'
 };
-function cafeError(e) {
+function cafeError(e, retry) {
   const base = AI_MSG[e.message] || 'Something went wrong. Please try again.';
   cafeStatus(base + (e.detail ? ` (Google says: ${e.detail})` : ''), true);
-  if (e.message === 'nokey' || e.message === 'key') showKeySetup(true);
+  if (e.message === 'nokey' || e.message === 'key') { showKeySetup(true); return; }
+  if (retry) {
+    const b = document.createElement('button'); b.className = 'linkbtn'; b.textContent = '↻ Try again'; b.style.marginLeft = '8px';
+    b.addEventListener('click', () => { cafeStatus(''); retry(); }); $('#cStatus').appendChild(b);
+  }
 }
 async function cafeTurn(userText, mine) {
   if (C.busy) return; C.busy = true; $('#cSend').disabled = true;
@@ -1783,7 +1800,7 @@ async function cafeTurn(userText, mine) {
     if (mine) mine.insertAdjacentHTML('beforeend', feedbackHTML(a));
     $$('#cChat .b.sys').forEach(b => b.remove());
     lenaBubble(a); cafeLog(mine ? mine.dataset.de : null, a);
-  } catch (e) { wait.remove(); if (mine) mine.classList.add('failed'); cafeError(e); }
+  } catch (e) { wait.remove(); if (mine) mine.classList.add('failed'); cafeError(e, () => { if (mine) mine.classList.remove('failed'); cafeTurn(userText, mine); }); }
   C.busy = false; $('#cSend').disabled = false;
 }
 function cafeSend(text) {
