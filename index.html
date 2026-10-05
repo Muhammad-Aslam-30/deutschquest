@@ -1874,14 +1874,35 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 // Android's recogniser stops by itself after a short pause, so while the button is still held we simply restart it.
 let rec = null, recOn = false, holding = false, committed = '', sessionFinal = '', finishPending = false, finishTimer = null;
 function micUI(on) { $('#cMic').classList.toggle('rec', on); }
+// Chrome on Android repeats the whole phrase in every result ("ich" → "ich mag" → "ich mag Kaffee") and sometimes again
+// after a restart, so pieces are merged instead of added up, and Android listens one phrase at a time (its reliable mode).
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+const normSpeech = t => (t || '').replace(/\s+/g, ' ').trim();
+function mergeSpeech(base, add) {
+  base = normSpeech(base); add = normSpeech(add);
+  if (!add) return base; if (!base) return add;
+  const b = base.toLowerCase(), a = add.toLowerCase();
+  if (a.startsWith(b)) return add;                                  // the same phrase, just longer
+  if (` ${b} `.includes(` ${a} `)) return base;                     // already have it
+  return base + ' ' + add;
+}
+function collapseRepeats(t) {                                        // safety net: "ich mag Kaffee ich mag Kaffee" → "ich mag Kaffee"
+  const w = normSpeech(t).split(' ');
+  for (let n = Math.floor(w.length / 2); n >= 2; n--)
+    for (let i = 0; i + 2 * n <= w.length;) {
+      if (w.slice(i, i + n).join(' ').toLowerCase() === w.slice(i + n, i + 2 * n).join(' ').toLowerCase()) w.splice(i + n, n); else i++;
+    }
+  return w.join(' ');
+}
+let sessionInterim = '';
 function recStart() {
-  rec = new SR(); rec.lang = 'de-DE'; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
-  sessionFinal = '';
+  rec = new SR(); rec.lang = 'de-DE'; rec.interimResults = true; rec.continuous = !IS_ANDROID; rec.maxAlternatives = 1;
+  sessionFinal = ''; sessionInterim = '';
   rec.onresult = e => {
     let fin = '', inter = '';
-    for (const res of e.results) { if (res.isFinal) fin += res[0].transcript + ' '; else inter += res[0].transcript; }
-    sessionFinal = fin;
-    $('#cText').value = (committed + ' ' + fin + ' ' + inter).replace(/\s+/g, ' ').trim();
+    for (const res of e.results) { if (res.isFinal) fin = mergeSpeech(fin, res[0].transcript); else inter = res[0].transcript; }
+    sessionFinal = fin; sessionInterim = inter;
+    $('#cText').value = mergeSpeech(mergeSpeech(committed, fin), inter);
   };
   rec.onerror = e => {
     if (e.error === 'no-speech' || e.error === 'aborted') return;
@@ -1889,7 +1910,8 @@ function recStart() {
     cafeStatus(e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'Microphone blocked. Allow the microphone for this site in Chrome settings.' : 'Speech recognition problem: ' + e.error, true);
   };
   rec.onend = () => {
-    recOn = false; committed = (committed + ' ' + sessionFinal).replace(/\s+/g, ' ').trim(); sessionFinal = '';
+    recOn = false; committed = mergeSpeech(committed, sessionFinal || sessionInterim); sessionFinal = ''; sessionInterim = '';
+    $('#cText').value = committed;
     if (holding) { try { recStart(); } catch (e) {} return; }
     finishRec();
   };
@@ -1897,7 +1919,7 @@ function recStart() {
 }
 function finishRec() {
   if (!finishPending) return; finishPending = false; clearTimeout(finishTimer); micUI(false);
-  const t = $('#cText').value.trim();
+  const t = collapseRepeats($('#cText').value);
   if (t) cafeSend(t); else cafeStatus('I didn’t hear anything. Hold 🎤 while you speak, then let go.', true);
 }
 function micDown(e) {
