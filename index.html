@@ -805,7 +805,7 @@ const Store = {
     try { window.localStorage.setItem(KEY, s); } catch (e) {}
   }
 };
-const GAP_MIN = 4, GAP_MAX = 12, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
+const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
 const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2' });
 let S = DEF();
 try {
@@ -1465,9 +1465,20 @@ let cafeMode = null;              // 'run' | 'cafe' for the menu; reset when a t
 const C = { topic:null, focus:'wd', hist:[], busy:false, slow:false };
 
 // choose the newest general "flash" model this key can use (model names change over time, so ask the API)
+class AIError extends Error { constructor(kind, detail) { super(kind); this.detail = detail || ''; } }
+async function gfetch(url, opt) {
+  try { return await fetch(url, opt); }
+  catch (e) { throw new AIError('blocked'); }       // never reached Google: offline, firewall / work network, or a blocker
+}
+async function apiError(r) {
+  let msg = ''; try { const d = await r.json(); msg = (d.error && d.error.message) || ''; } catch (e) {}
+  const keyish = r.status === 401 || r.status === 403 || /api key|API_KEY|permission/i.test(msg);
+  return new AIError(r.status === 429 ? 'limit' : keyish ? 'key' : r.status >= 500 ? 'busy' : 'api', `${r.status}${msg ? ': ' + msg : ''}`);
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function pickModel(key) {
-  const r = await fetch(`${AI_BASE}/models?pageSize=200`, { headers:{ 'x-goog-api-key':key } });
-  if (!r.ok) throw new Error(r.status === 400 || r.status === 403 ? 'key' : 'net');
+  const r = await gfetch(`${AI_BASE}/models?pageSize=200`, { headers:{ 'x-goog-api-key':key } });
+  if (!r.ok) throw await apiError(r);
   const list = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent'));
   const name = m => m.name.replace('models/', '');
   const ok = list.map(name).filter(n => /flash/.test(n) && !/(lite|image|tts|live|audio|embed|thinking|exp|8b)/.test(n));
@@ -1495,17 +1506,23 @@ async function askLena(userText) {
   const key = lsGet(AI_KEY); if (!key) throw new Error('nokey');
   let model = lsGet(AI_MODEL); if (!model) { model = await pickModel(key); lsSet(AI_MODEL, model); }
   C.hist.push({ role:'user', parts:[{ text:userText }] });
-  const body = { systemInstruction:{ parts:[{ text:cafeSystem() }] }, contents:C.hist,
-    generationConfig:{ temperature:0.8, responseMimeType:'application/json', responseSchema:REPLY_SCHEMA } };
-  const r = await fetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key }, body:JSON.stringify(body) });
-  if (!r.ok) {
-    C.hist.pop();
-    if (r.status === 404) lsSet(AI_MODEL, '');          // model retired: pick a new one next time
-    throw new Error(r.status === 429 ? 'limit' : (r.status === 400 || r.status === 403) ? 'key' : 'net');
-  }
-  const d = await r.json(), parts = (((d.candidates || [])[0] || {}).content || {}).parts || [];
-  const txt = parts.filter(p => !p.thought).map(p => p.text || '').join('');
-  let a; try { a = JSON.parse(txt); } catch (e) { C.hist.pop(); throw new Error('parse'); }
+  let schema = true, r;
+  const call = () => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
+    body:JSON.stringify({ systemInstruction:{ parts:[{ text:cafeSystem() + (schema ? '' : '\nAnswer ONLY with a JSON object with the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.') }] }, contents:C.hist,
+      generationConfig:Object.assign({ temperature:0.8, responseMimeType:'application/json' }, schema ? { responseSchema:REPLY_SCHEMA } : {}) }) });
+  try {
+    for (let attempt = 0; attempt < 4; attempt++) {
+      r = await call();
+      if (r.ok) break;
+      if (r.status === 404 && attempt < 3) { lsSet(AI_MODEL, ''); model = await pickModel(key); lsSet(AI_MODEL, model); continue; }   // model retired or not available for this key
+      if (r.status >= 500 && attempt < 2) { await sleep(1500); continue; }                                                              // Google busy: try again
+      if (r.status === 400 && schema && attempt < 3) { const e = await apiError(r); if (/schema|response_?mime|json/i.test(e.detail)) { schema = false; continue; } throw e; }
+      throw await apiError(r);
+    }
+  } catch (e) { C.hist.pop(); throw e; }
+  const d = await r.json(), cand = (d.candidates || [])[0] || {}, parts = (cand.content || {}).parts || [];
+  const txt = parts.filter(p => !p.thought).map(p => p.text || '').join('').replace(/^```(json)?\s*|\s*```$/g, '');
+  let a; try { a = JSON.parse(txt); } catch (e) { C.hist.pop(); throw new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); }
   C.hist.push({ role:'model', parts:[{ text:a.reply_de }] });
   return a;
 }
@@ -1573,9 +1590,19 @@ function feedbackHTML(a) {
   if (a.feedback_ok) return a.feedback_explanation ? `<div class="fb ok">✓ ${esc(a.feedback_explanation)}</div>` : '';
   return `<div class="fb">✎ Better: <span class="fix">${esc(a.feedback_corrected)}</span> <button class="linkbtn" data-c="sayfix">🔊</button><div class="why">${esc(a.feedback_explanation)}</div></div>`;
 }
+const AI_MSG = {
+  nokey:'Add your Gemini key first (⚙).',
+  key:'Gemini did not accept the key. Open ⚙ and paste it again from AI Studio.',
+  limit:'Lena needs a short break: the free Gemini limit was reached. Try again in a minute.',
+  busy:'Gemini is busy right now. Please try again in a moment.',
+  blocked:'The request never reached Google. Check the internet connection. On a work laptop or with an ad/privacy blocker, Google AI may be blocked — try your tablet or another network.',
+  api:'Gemini refused the request.',
+  parse:'Lena got confused. Please try again.'
+};
 function cafeError(e) {
-  const m = { nokey:'Add your Gemini key first (⚙).', key:'Gemini did not accept the key. Check it under ⚙.', limit:'Lena needs a short break: the free Gemini limit was reached. Try again in a minute.', net:'Could not reach Gemini. Check your internet connection.', parse:'Lena got confused. Please try again.' }[e.message] || 'Something went wrong. Please try again.';
-  cafeStatus(m, true); if (e.message === 'nokey' || e.message === 'key') showKeySetup(true);
+  const base = AI_MSG[e.message] || 'Something went wrong. Please try again.';
+  cafeStatus(base + (e.detail ? ` (Google says: ${e.detail})` : ''), true);
+  if (e.message === 'nokey' || e.message === 'key') showKeySetup(true);
 }
 async function cafeTurn(userText, mine) {
   if (C.busy) return; C.busy = true; $('#cSend').disabled = true;
@@ -1584,6 +1611,7 @@ async function cafeTurn(userText, mine) {
     const a = await askLena(userText);
     wait.remove();
     if (mine) mine.insertAdjacentHTML('beforeend', feedbackHTML(a));
+    $$('#cChat .b.sys').forEach(b => b.remove());
     lenaBubble(a); cafeLog(mine ? mine.dataset.de : null, a);
   } catch (e) { wait.remove(); if (mine) mine.classList.add('failed'); cafeError(e); }
   C.busy = false; $('#cSend').disabled = false;
@@ -1606,7 +1634,7 @@ async function saveKey() {
     lsSet(AI_KEY, k); lsSet(AI_MODEL, model);
     $('#cKeyMsg').textContent = `Connected ✓ (using ${model}).`;
     setTimeout(() => { showKeySetup(false); $('#cChat .b.sys').forEach(b => b.remove()); if (!C.hist.length) cafeGreet(); }, 700);
-  } catch (e) { $('#cKeyMsg').textContent = e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : 'Could not reach Google. Check your internet connection.'; }
+  } catch (e) { $('#cKeyMsg').textContent = (e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : AI_MSG[e.message] || 'Could not connect.') + (e.detail ? ` (Google says: ${e.detail})` : ''); }
 }
 function cafeGreet() { cafeTurn('[Start of the conversation. Greet me warmly, introduce yourself in one short sentence and ask your first question about the topic.]', null); }
 function openCafe(topicId, focus, lvl) {
@@ -1747,6 +1775,7 @@ function togglePause() {
   if (G.paused) { G.paused = false; show(null); } else { G.paused = true; show('pause'); $('#pGo').focus(); }
 }
 window.addEventListener('keydown', e => {
+  if (e.target && e.target.closest && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
   if ($('#wrong').classList.contains('show') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); closeWrong(); return; }
   if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { move(-1); e.preventDefault(); }
   else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { move(1); e.preventDefault(); }
