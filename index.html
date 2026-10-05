@@ -71,6 +71,7 @@ p{line-height:1.5}
 /* words & sentences */
 .kw{background:var(--yellow);padding:0 3px}
 .cj{font-weight:800}
+.cj.akk{color:var(--red)} .cj.dat{color:var(--blue)}
 .cj.weil{color:var(--blue)} .cj.dass{color:var(--red)} .cj.das{color:#8A6D00} .cj.denn{color:var(--black);text-decoration:underline}
 .vb{border-bottom:4px solid var(--black)}
 .art{display:inline-block;font-weight:600;font-size:.82em;padding:0 6px;margin-right:4px;border:2px solid var(--black);line-height:1.35;vertical-align:1px}
@@ -174,10 +175,18 @@ p{line-height:1.5}
       </div>
       <p class="tag">Run, choose, and build German sentences where the verb goes to the end.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
+      <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button></div>
       <div class="levels">
-        <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">Is it weil or dass?</small></span></button>
-        <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Put the verb at the end</small></span></button>
-        <button class="btn black" data-level="3"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l3s">Faster, plus das/dass and weil/denn traps</small></span></button>
+        <div class="levels" id="lvWd">
+          <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">Is it weil or dass?</small></span></button>
+          <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Put the verb at the end</small></span></button>
+          <button class="btn black" data-level="3"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l3s">Faster, plus das/dass and weil/denn traps</small></span></button>
+        </div>
+        <div class="levels" id="lvPrep" style="display:none">
+          <button class="btn blue" data-level="4"><span class="shape"></span><span><b>Level 1: Akkusativ oder Dativ?</b><small id="l4s">mit, für, durch, aus, zu…</small></span></button>
+          <button class="btn red" data-level="5"><span class="shape circle"></span><span><b>Level 2: Wo oder wohin?</b><small id="l5s">Wechselpräpositionen</small></span></button>
+          <button class="btn black" data-level="6"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l6s">Faster, plus im/ins, am/an den, zum/zur</small></span></button>
+        </div>
         <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
       </div>
       <div class="row2">
@@ -197,10 +206,10 @@ p{line-height:1.5}
   <!-- INTRO -->
   <section id="intro" class="screen dim">
     <div class="panel">
-      <h2>Neue Wörter</h2>
-      <p class="lead">Three new words for this round. You'll meet them in the sentences you run through.</p>
+      <h2 id="iTitle">Neue Wörter</h2>
+      <p class="lead" id="iLead">Three new words for this round. You'll meet them in the sentences you run through.</p>
       <div class="cards" id="iCards"></div>
-      <p class="note">Tap ★ to bookmark a word. Starred words come back in your daily review.</p>
+      <p class="note" id="iNote">Tap ★ to bookmark a word. Starred words come back in your daily review.</p>
       <button class="btn red center" id="iGo">Los geht's!</button>
     </div>
   </section>
@@ -380,7 +389,69 @@ const EX = {
 };
 const EX_DASS_MAIN = '<b class="cj dass">dass</b> means <i>that</i>. It follows verbs like glauben, hoffen, sagen, wissen, or phrases like <i>es ist wichtig</i>, and introduces what someone thinks, says, or feels. The conjugated verb goes to the <b>end</b>.';
 
-const BYID = Object.fromEntries(W.map(w => [w.id, w]));
+/* Prepositions. q = sentence with ___, o = the two gate options, a = answer, pr = the preposition,
+   k = why: akk / dat (fixed case) or wo (location, Dativ) / wohin (direction, Akkusativ). */
+const P = [
+  // ---- fixed case ----
+  {id:'p_mit_bus', q:'Ich fahre mit ___ Bus.', o:['dem','den'], a:'dem', pr:'mit', k:'dat', t:"I'm going by bus."},
+  {id:'p_fuer_mutter', q:'Das Geschenk ist für ___ Mutter.', o:['die','der'], a:'die', pr:'für', k:'akk', t:'The present is for the mother.'},
+  {id:'p_durch_park', q:'Wir gehen durch ___ Park.', o:['den','dem'], a:'den', pr:'durch', k:'akk', t:'We walk through the park.'},
+  {id:'p_aus_schweiz', q:'Sie kommt aus ___ Schweiz.', o:['der','die'], a:'der', pr:'aus', k:'dat', t:'She comes from Switzerland.'},
+  {id:'p_mit_kindern', q:'Ich spreche mit ___ Kindern.', o:['den','die'], a:'den', pr:'mit', k:'dat', t:"I'm talking with the children."},
+  {id:'p_ohne_hund', q:'Er kommt ohne ___ Hund.', o:['den','dem'], a:'den', pr:'ohne', k:'akk', t:"He's coming without the dog."},
+  {id:'p_nach_film', q:'Nach ___ Film gehen wir essen.', o:['dem','den'], a:'dem', pr:'nach', k:'dat', t:"After the film we're going to eat."},
+  {id:'p_seit_woche', q:'Seit ___ Woche lerne ich Deutsch.', o:['einer','eine'], a:'einer', pr:'seit', k:'dat', t:"I've been learning German for a week."},
+  {id:'p_gegenueber_bahnhof', q:'Das Café ist gegenüber ___ Bahnhof.', o:['dem','den'], a:'dem', pr:'gegenüber', k:'dat', t:'The café is opposite the station.'},
+  {id:'p_gegen_plan', q:'Wir sind gegen ___ Plan.', o:['den','dem'], a:'den', pr:'gegen', k:'akk', t:"We're against the plan."},
+  {id:'p_von_bank', q:'Ich bekomme einen Brief von ___ Bank.', o:['der','die'], a:'der', pr:'von', k:'dat', t:"I'm getting a letter from the bank."},
+  {id:'p_um_tisch', q:'Wir sitzen um ___ Tisch.', o:['den','dem'], a:'den', pr:'um', k:'akk', t:"We're sitting around the table."},
+  {id:'p_zu_aerztin', q:'Ich gehe zu ___ Ärztin.', o:['der','die'], a:'der', pr:'zu', k:'dat', t:"I'm going to the (female) doctor."},
+  {id:'p_bei_eltern', q:'Er wohnt noch bei ___ Eltern.', o:['den','die'], a:'den', pr:'bei', k:'dat', t:'He still lives with the parents.'},
+  {id:'p_q_durch', q:'Ich laufe ___ den Wald.', o:['durch','aus'], a:'durch', pr:'durch', k:'akk', t:'I run through the forest.'},
+  {id:'p_q_mit', q:'Er fährt ___ dem Fahrrad zur Arbeit.', o:['mit','für'], a:'mit', pr:'mit', k:'dat', t:'He rides his bike to work.'},
+  {id:'p_q_fuer', q:'Das ist ein Geschenk ___ dich.', o:['für','mit'], a:'für', pr:'für', k:'akk', t:"That's a present for you."},
+  {id:'p_q_bei', q:'Sie arbeitet ___ einer Bank.', o:['bei','für'], a:'bei', pr:'bei', k:'dat', t:'She works at a bank.'},
+  {id:'p_zum_bahnhof', q:'Wir fahren ___ Bahnhof.', o:['zum','zur'], a:'zum', pr:'zu', k:'dat', t:"We're driving to the station.", mix:1},
+  {id:'p_zur_schule', q:'Die Kinder gehen ___ Schule.', o:['zur','zum'], a:'zur', pr:'zu', k:'dat', t:'The children go to school.', mix:1},
+  // ---- Wechselpräpositionen ----
+  {id:'w_auf_tisch_wo', q:'Das Buch liegt auf ___ Tisch.', o:['dem','den'], a:'dem', pr:'auf', k:'wo', t:'The book is lying on the table.'},
+  {id:'w_auf_tisch_wohin', q:'Ich lege das Buch auf ___ Tisch.', o:['den','dem'], a:'den', pr:'auf', k:'wohin', t:'I put the book on the table.'},
+  {id:'w_an_wand_wo', q:'Das Bild hängt an ___ Wand.', o:['der','die'], a:'der', pr:'an', k:'wo', t:'The picture is hanging on the wall.'},
+  {id:'w_an_wand_wohin', q:'Ich hänge das Bild an ___ Wand.', o:['die','der'], a:'die', pr:'an', k:'wohin', t:'I hang the picture on the wall.'},
+  {id:'w_ueber_sofa', q:'Die Lampe hängt über ___ Sofa.', o:['dem','das'], a:'dem', pr:'über', k:'wo', t:'The lamp hangs above the sofa.'},
+  {id:'w_unter_bett_wo', q:'Die Katze schläft unter ___ Bett.', o:['dem','das'], a:'dem', pr:'unter', k:'wo', t:'The cat sleeps under the bed.'},
+  {id:'w_unter_bett_wohin', q:'Die Katze läuft unter ___ Bett.', o:['das','dem'], a:'das', pr:'unter', k:'wohin', t:'The cat runs under the bed.'},
+  {id:'w_in_kuehlschrank', q:'Ich stelle die Flasche in ___ Kühlschrank.', o:['den','dem'], a:'den', pr:'in', k:'wohin', t:'I put the bottle in the fridge.'},
+  {id:'w_vor_haus_wo', q:'Das Auto steht vor ___ Haus.', o:['dem','das'], a:'dem', pr:'vor', k:'wo', t:"The car is parked in front of the house."},
+  {id:'w_vor_haus_wohin', q:'Er fährt das Auto vor ___ Haus.', o:['das','dem'], a:'das', pr:'vor', k:'wohin', t:'He drives the car in front of the house.'},
+  {id:'w_neben_tuer', q:'Der Hund liegt neben ___ Tür.', o:['der','die'], a:'der', pr:'neben', k:'wo', t:'The dog is lying next to the door.'},
+  {id:'w_neben_fenster_wohin', q:'Ich setze mich neben ___ Fenster.', o:['das','dem'], a:'das', pr:'neben', k:'wohin', t:'I sit down next to the window.'},
+  {id:'w_neben_fenster_wo', q:'Ich sitze neben ___ Fenster.', o:['dem','das'], a:'dem', pr:'neben', k:'wo', t:"I'm sitting next to the window."},
+  {id:'w_hinter_haus_wo', q:'Der Garten ist hinter ___ Haus.', o:['dem','das'], a:'dem', pr:'hinter', k:'wo', t:'The garden is behind the house.'},
+  {id:'w_hinter_haus_wohin', q:'Das Kind läuft hinter ___ Haus.', o:['das','dem'], a:'das', pr:'hinter', k:'wohin', t:'The child runs behind the house.'},
+  {id:'w_zwischen_wo', q:'Die Tasche liegt zwischen ___ Stühlen.', o:['den','die'], a:'den', pr:'zwischen', k:'wo', t:'The bag is lying between the chairs.'},
+  {id:'w_zwischen_wohin', q:'Ich stelle die Tasche zwischen ___ Stühle.', o:['die','den'], a:'die', pr:'zwischen', k:'wohin', t:'I put the bag between the chairs.'},
+  {id:'w_ins_kino', q:'Wir gehen heute ___ Kino.', o:['ins','im'], a:'ins', pr:'in', k:'wohin', t:"We're going to the cinema today.", mix:1},
+  {id:'w_im_kino', q:'Wir sind gerade ___ Kino.', o:['im','ins'], a:'im', pr:'in', k:'wo', t:'We are at the cinema right now.', mix:1},
+  {id:'w_im_kuehlschrank', q:'Die Milch steht ___ Kühlschrank.', o:['im','in den'], a:'im', pr:'in', k:'wo', t:'The milk is in the fridge.', mix:1},
+  {id:'w_an_den_strand', q:'Morgen fahren wir ___ Strand.', o:['an den','am'], a:'an den', pr:'an', k:'wohin', t:"Tomorrow we're going to the beach.", mix:1},
+  {id:'w_am_strand', q:'Wir liegen den ganzen Tag ___ Strand.', o:['am','an den'], a:'am', pr:'an', k:'wo', t:'We lie on the beach all day.', mix:1}
+];
+P.forEach(p => { p.pt = (p.k === 'akk' || p.k === 'dat') ? 'fix' : 'wech'; p.cs = (p.k === 'akk' || p.k === 'wohin') ? 'akk' : 'dat'; });
+const PFIX = P.filter(p => p.pt === 'fix' && !p.mix), PWECH = P.filter(p => p.pt === 'wech' && !p.mix), PMIX = P.filter(p => p.mix);
+const AKK = '<b class="cj akk">Akkusativ</b>', DAT = '<b class="cj dat">Dativ</b>';
+const ARTS_AKK = 'der → <i>den</i>, die → <i>die</i>, das → <i>das</i>, plural → <i>die</i>';
+const ARTS_DAT = 'der → <i>dem</i>, die → <i>der</i>, das → <i>dem</i>, plural → <i>den</i> (+n on the noun)';
+const WECHSEL = 'The Wechselpräpositionen are <b>an, auf, hinter, in, neben, über, unter, vor, zwischen</b>.';
+const EXP = {
+  akk: `<b>durch, für, gegen, ohne, um</b> always take the ${AKK}: ${ARTS_AKK}.`,
+  dat: `<b>aus, bei, mit, nach, seit, von, zu</b> (and <i>gegenüber</i>) always take the ${DAT}: ${ARTS_DAT}. Short forms: zu + dem = <i>zum</i>, zu + der = <i>zur</i>.`,
+  wo: `${WECHSEL} For a <b>location</b> (answering <i>Wo?</i>) they take the ${DAT}: ${ARTS_DAT}. Typical verbs: liegen, stehen, sitzen, hängen, sein. Short forms: in + dem = <i>im</i>, an + dem = <i>am</i>.`,
+  wohin: `${WECHSEL} For a <b>movement to a place</b> (answering <i>Wohin?</i>) they take the ${AKK}: ${ARTS_AKK}. Typical verbs: legen, stellen, setzen, hängen (something), gehen, fahren. Short forms: in + das = <i>ins</i>, an + das = <i>ans</i>.`
+};
+const caseName = p => p.cs === 'akk' ? 'Akkusativ' : 'Dativ';
+
+const BYID = Object.fromEntries([...W, ...P].map(w => [w.id, w]));
 const WEIL = W.filter(w => w.c === 'weil'), DASS = W.filter(w => w.c === 'dass');
 const ORDER = [];
 for (let i = 0; i < Math.max(WEIL.length, DASS.length); i++) { if (WEIL[i]) ORDER.push(WEIL[i]); if (DASS[i]) ORDER.push(DASS[i]); }
@@ -402,13 +473,13 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 12, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}}, best:{1:0,2:0,3:0,0:0}, unlocked:1, streak:{n:0,last:''}, rounds:0, gap:GAP_DEF });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF });
 let S = DEF();
 try {
   const L = await Store.load();
   if (L && L.v === 1) {
-    const d = DEF();
-    S = Object.assign(d, L);
+    const d = DEF(); // separate defaults so new nested fields (stats, best) survive the shallow merge below
+    S = Object.assign(DEF(), L);
     S.stats = Object.assign(d.stats, L.stats || {});
     S.best = Object.assign(d.best, L.best || {});
     S.streak = Object.assign(d.streak, L.streak || {});
@@ -416,6 +487,13 @@ try {
 } catch (e) {}
 let saveT = null;
 const save = () => { clearTimeout(saveT); saveT = setTimeout(() => Store.save(S), 250); };
+// ask the browser not to evict saved progress when the device is low on space.
+// Chrome decides silently; Firefox may ask, so this runs after a finished round rather than on load.
+let persistAsked = false;
+async function keepStorage() {
+  if (persistAsked) return; persistAsked = true;
+  try { if (navigator.storage && navigator.storage.persist && !(await navigator.storage.persisted())) await navigator.storage.persist(); } catch (e) {}
+}
 
 const dayStr = t => { const d = new Date(t); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 function currentStreak() {
@@ -446,12 +524,14 @@ function reviewWords() {
   return shuffle([...ids].map(id => BYID[id]).filter(Boolean));
 }
 function newWords(n) { return ORDER.filter(w => !S.intro[w.id] && !S.srs[w.id]).slice(0, n); }
-function pickWords(n, fresh) {
+const pickWords = (n, fresh) => pickFrom(W, n, fresh);
+const pickPrep = (pool, n) => pickFrom(pool, n, pool.filter(p => !S.srs[p.id]).slice(0, 3));
+function pickFrom(pool, n, fresh) {
   const now = Date.now();
-  const due = shuffle(W.filter(w => S.srs[w.id] && S.srs[w.id].due <= now));
-  const marked = shuffle(W.filter(w => S.bm[w.id]));
-  const seen = shuffle(W.filter(w => S.srs[w.id]));
-  const rest = shuffle(W.slice());
+  const due = shuffle(pool.filter(w => S.srs[w.id] && S.srs[w.id].due <= now));
+  const marked = shuffle(pool.filter(w => S.bm[w.id]));
+  const seen = shuffle(pool.filter(w => S.srs[w.id]));
+  const rest = shuffle(pool.slice());
   const out = [];
   const add = (arr, cap) => { let k = 0; for (const w of arr) { if (out.length >= n || k >= cap) return; if (!out.includes(w)) { out.push(w); k++; } } };
   add(fresh, 99); add(due, Math.ceil(n / 2)); add(marked, 2); add(seen, 2); add(rest, 99);
@@ -471,6 +551,8 @@ function sentHTML(w) {
   return `${mark(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${mid} <span class="vb">${mark(w.b[w.b.length - 1])}</span>${w.p || '.'}`;
 }
 function trapHTML(t) { return esc(t.q).replace('___', `<b class="cj ${t.a}">${t.a}</b>`); }
+function prepHTML(p) { return esc(p.q).replace('___', `<b class="cj ${p.cs}">${esc(p.a)}</b>`); }
+const prepItemHTML = p => `<div class="item"><div><div class="s">${prepHTML(p)}</div><div class="tr">${esc(p.t)}</div><div class="w">${esc(p.pr)} + ${caseName(p)}</div></div>${starBtn(p.id)}</div>`;
 const starBtn = id => `<button class="star ${S.bm[id] ? 'on' : ''}" data-star="${id}" aria-label="Bookmark word" aria-pressed="${!!S.bm[id]}">★</button>`;
 function dotsHTML(id) { const b = S.srs[id] ? S.srs[id].box : 0; let h = '<span class="dots" aria-label="Mastery ' + b + ' of 5">'; for (let i = 1; i <= 5; i++) h += `<i class="${i <= b ? 'f' : ''}"></i>`; return h + '</span>'; }
 
@@ -557,8 +639,8 @@ const GEO = {
   sign: new THREE.PlaneGeometry(2.0, 0.95), portal: new THREE.PlaneGeometry(1.6, 2.5),
   block: new THREE.BoxGeometry(1.95, 0.98, 0.5), barrier: new THREE.BoxGeometry(1.9, 1.1, 0.4)
 };
-function makeGate(label) {
-  const [bg, fg, hex] = GATE[label] || ['#FFFFFF', '#000000', WHITE];
+function makeGate(label, plain) {
+  const [bg, fg, hex] = (!plain && GATE[label]) || ['#FFFFFF', '#000000', WHITE];
   const g = new THREE.Group();
   const pm = lam(BLACK);
   const a = new THREE.Mesh(GEO.post, pm), b = new THREE.Mesh(GEO.post, pm);
@@ -604,7 +686,7 @@ window.addEventListener('resize', resize); resize();
 const SPAWN_DIST = 78, ROW_GAP = 26;
 // spawn distance scales with the time-between-gates setting, so faster levels (Level 3) keep their shorter gap
 const spawnZ = () => -SPAWN_DIST * S.gap / GAP_DEF, rowGap = () => ROW_GAP * S.gap / GAP_DEF;
-const SPEEDS = { 1:13, 2:11.5, 3:16, 0:12 };
+const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 0:12 };
 let G = { running:false, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0 };
 
 function schedule(sec, fn) { G.pending = { at:G.clock + sec, fn }; }
@@ -615,7 +697,7 @@ function clearRows() {
 function spawnRow(kind, items, z, step) {
   const grp = new THREE.Group(); grp.position.z = z;
   items.forEach(it => {
-    const m = kind === 'gate' ? (it.barrier ? makeBarrier() : makeGate(it.label)) : makeBlock(it.label);
+    const m = kind === 'gate' ? (it.barrier ? makeBarrier() : makeGate(it.label, it.plain)) : makeBlock(it.label);
     m.position.x = LANES[it.lane]; grp.add(m); it.mesh = m;
   });
   scene.add(grp);
@@ -625,22 +707,43 @@ function spawnRow(kind, items, z, step) {
 const gateQ = w => ({ type:'gate', w, opts:['weil', 'dass'], ans:w.c });
 const buildQ = w => ({ type:'build', w });
 const trapQ = t => ({ type:'trap', t, opts:t.o, ans:t.a });
+const prepQ = p => ({ type:'prep', p, opts:p.o, ans:p.a });
 
-let lastLevel = 1, pendingFresh = [];
+// levels 1-3 are weil/dass, 4-6 are prepositions (each topic unlocks on its own)
+const isLocked = l => l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
+const LOCK_MSG = { 2:'Get 6 of 8 right in Level 1 to unlock Level 2.', 3:'Get 4 of 6 right in Level 2 to unlock Level 3.',
+  5:'Get 6 of 8 right in Präpositionen Level 1 to unlock Level 2.', 6:'Get 6 of 8 right in Präpositionen Level 2 to unlock Level 3.' };
+const RULES = {
+  4: { key:'rule:fix', title:'Akkusativ oder Dativ?', lead:'Some prepositions always take the same case. Run through the gate with the right article.',
+       cards:[['Always Akkusativ', EXP.akk, 'Wir gehen <b>durch <b class="cj akk">den</b></b> Park.'], ['Always Dativ', EXP.dat, 'Ich fahre <b>mit <b class="cj dat">dem</b></b> Bus.']] },
+  5: { key:'rule:wech', title:'Wo oder wohin?', lead:'Wechselpräpositionen switch case. Ask yourself: is it a place, or a movement to a place?',
+       cards:[['Wo? → Dativ', EXP.wo, 'Das Buch liegt <b>auf <b class="cj dat">dem</b></b> Tisch.'], ['Wohin? → Akkusativ', EXP.wohin, 'Ich lege das Buch <b>auf <b class="cj akk">den</b></b> Tisch.']] }
+};
+
+let lastLevel = 1, pendingFresh = [], pendingRule = null;
 function startLevel(l) {
   $('#menuMsg').textContent = '';
-  if (l > S.unlocked) {
-    $('#menuMsg').textContent = l === 2 ? 'Get 6 of 8 right in Level 1 to unlock Level 2.' : 'Get 4 of 6 right in Level 2 to unlock Level 3.';
-    return;
-  }
+  if (isLocked(l)) { $('#menuMsg').textContent = LOCK_MSG[l]; return; }
   if (l === 0 && reviewWords().length === 0) {
     $('#menuMsg').textContent = 'Nothing to review yet. Play a level or star some words first.';
     return;
   }
   lastLevel = l;
-  const fresh = l === 0 ? [] : newWords(3);
+  const rule = RULES[l];
+  pendingRule = rule && !S.intro[rule.key] ? rule.key : null;
+  if (pendingRule) {
+    $('#iTitle').textContent = rule.title; $('#iLead').textContent = rule.lead;
+    $('#iNote').textContent = 'You can read this again any time: it shows up when you get one wrong.';
+    $('#iCards').innerHTML = rule.cards.map(([h, body, ex]) => `
+      <div class="wcard"><div><div class="de">${h}</div></div><div class="ex">${body}<div class="tr" style="margin-top:6px">${ex}</div></div></div>`).join('');
+    pendingFresh = []; show('intro'); $('#iGo').focus(); return;
+  }
+  const fresh = (l === 0 || l >= 4) ? [] : newWords(3);
   pendingFresh = fresh;
   if (fresh.length) {
+    $('#iTitle').textContent = 'Neue Wörter';
+    $('#iLead').textContent = "Three new words for this round. You'll meet them in the sentences you run through.";
+    $('#iNote').textContent = 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
     $('#iCards').innerHTML = fresh.map(w => `
       <div class="wcard">
         <div><div class="de">${wordHTML(w)}</div><div class="en">${esc(w.en)}</div></div>
@@ -652,12 +755,17 @@ function startLevel(l) {
 }
 
 function beginRound(l, fresh) {
-  fresh.forEach(w => { S.intro[w.id] = Date.now(); }); save();
+  fresh.forEach(w => { S.intro[w.id] = Date.now(); });
+  if (pendingRule) { S.intro[pendingRule] = Date.now(); pendingRule = null; }
+  save();
   let q = [];
   if (l === 1) q = pickWords(8, fresh).map(gateQ);
   else if (l === 2) q = pickWords(6, fresh).map(buildQ);
   else if (l === 3) { const ws = pickWords(6, fresh); q = shuffle([...ws.slice(0, 3).map(gateQ), ...ws.slice(3).map(buildQ), ...shuffle(TRAPS.slice()).slice(0, 4).map(trapQ)]); }
-  else q = reviewWords().slice(0, 8).map((w, i) => i % 2 ? buildQ(w) : gateQ(w));
+  else if (l === 4) q = pickPrep(PFIX, 8).map(prepQ);
+  else if (l === 5) q = pickPrep(PWECH, 8).map(prepQ);
+  else if (l === 6) q = shuffle([...pickPrep(PFIX, 3), ...pickPrep(PWECH, 3), ...pickPrep(PMIX, 4)]).map(prepQ);
+  else q = reviewWords().slice(0, 8).map((w, i) => w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
 
   clearRows();
   G = { running:true, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0,
@@ -685,10 +793,11 @@ function startQuestion(q) {
       spawnRow('block', labels.map((lab, i) => ({ lane:lanes[i], label:lab, correct:i === 0 })), spawnZ() - k * rowGap(), k);
     });
   } else {
-    const lanes = shuffle([0, 1, 2]);
+    // article gates stay neutral white so the das/dass colour coding doesn't hint at an answer
+    const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep';
     spawnRow('gate', [
-      { lane:lanes[0], label:q.opts[0], correct:q.opts[0] === q.ans },
-      { lane:lanes[1], label:q.opts[1], correct:q.opts[1] === q.ans },
+      { lane:lanes[0], label:q.opts[0], correct:q.opts[0] === q.ans, plain },
+      { lane:lanes[1], label:q.opts[1], correct:q.opts[1] === q.ans, plain },
       { lane:lanes[2], label:null, correct:false, barrier:true }
     ], spawnZ(), 0);
   }
@@ -703,6 +812,10 @@ function renderPrompt() {
   } else if (q.type === 'trap') {
     html = esc(q.t.q).replace('___', '<span class="gap">?</span>');
     hint = 'Careful, this one is a classic trap';
+  } else if (q.type === 'prep') {
+    const p = q.p;
+    html = esc(p.q).replace('___', '<span class="gap">?</span>');
+    hint = p.o.includes(p.pr) ? 'Which preposition fits this case?' : p.pt === 'wech' ? 'Wo? → Dativ · Wohin? → Akkusativ' : `Which case does ${p.pr} take?`;
   } else {
     const w = q.w;
     const slots = w.b.map((b, i) => i < q.built.length ? `<span class="slot fill ${q.builtOk[i] ? '' : 'bad'}">${esc(q.built[i])}</span>` : '<span class="slot">&nbsp;</span>').join(' ');
@@ -745,6 +858,7 @@ function loseLife() {
 function finish(q, ok) {
   G.answered++;
   if (q.type === 'trap') stat('trap', ok);
+  else if (q.type === 'prep') { stat('p' + q.p.pt, ok); grade(q.p.id, ok); }
   else { stat(q.w.c, ok); grade(q.w.id, ok); }
   if (ok) {
     G.streak++; const pts = 10 + Math.min(G.streak - 1, 5) * 2;
@@ -757,7 +871,7 @@ function finish(q, ok) {
 
 let toastT = null;
 function toast(pts, q) {
-  const s = q.type === 'trap' ? trapHTML(q.t) : sentHTML(q.w);
+  const s = q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : sentHTML(q.w);
   const el = $('#toast'); el.innerHTML = `<b class="ok">Richtig! +${pts}</b><div class="s">${s}</div>`;
   el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2200);
 }
@@ -769,6 +883,12 @@ function showWrong(q, chose, expect) {
     const t = q.t;
     body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. The answer is <b class="cj ${t.a}">${t.a}</b>.` : `You missed both gates. The answer is <b class="cj ${t.a}">${t.a}</b>.`}</p>
       <p class="sent">${trapHTML(t)}</p><p class="tr">${esc(t.t)}</p><div class="ex">${EX[t.ex]}</div>`;
+  } else if (q.type === 'prep') {
+    const p = q.p, ans = `<b class="cj ${p.cs}">${esc(p.a)}</b>`;
+    const why = p.pt === 'wech' ? `${p.k === 'wo' ? 'Wo?' : 'Wohin?'} → ${caseName(p)}` : `${esc(p.pr)} + ${caseName(p)}`;
+    body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
+      <p class="sent">${prepHTML(p)}</p><p class="tr">${esc(p.t)}</p><div class="ex">${EXP[p.k]}</div>
+      <div class="wrow"><span class="grow"><b>${why}</b></span>${starBtn(p.id)}</div>`;
   } else {
     const w = q.w;
     const line = q.type === 'build'
@@ -792,8 +912,10 @@ function endRound() {
   const l = G.level; let unlock = '';
   if (l === 1 && G.correct >= 6 && S.unlocked < 2) { S.unlocked = 2; unlock = 'Level 2 is unlocked. Time to build whole clauses.'; }
   if (l === 2 && G.correct >= 4 && S.unlocked < 3) { S.unlocked = 3; unlock = 'Level 3 is unlocked. Watch out for das and denn.'; }
+  if (l === 4 && G.correct >= 6 && S.unlockedP < 2) { S.unlockedP = 2; unlock = 'Präpositionen Level 2 is unlocked: Wo oder wohin?'; }
+  if (l === 5 && G.correct >= 6 && S.unlockedP < 3) { S.unlockedP = 3; unlock = 'Präpositionen Level 3 is unlocked. Watch out for im/ins and zum/zur.'; }
   const newBest = G.score > (S.best[l] || 0); if (newBest) S.best[l] = G.score;
-  save();
+  save(); keepStorage();
 
   $('#eTitle').textContent = G.lives <= 0 ? 'Out of lives' : (G.mistakes.length === 0 ? 'Perfekt!' : 'Runde vorbei!');
   $('#eStats').innerHTML = `
@@ -804,6 +926,7 @@ function endRound() {
   $('#eListTitle').style.display = G.mistakes.length ? 'block' : 'none';
   $('#eList').innerHTML = G.mistakes.map(q => q.type === 'trap'
     ? `<div class="item"><div><div class="s">${trapHTML(q.t)}</div><div class="tr">${esc(q.t.t)}</div></div></div>`
+    : q.type === 'prep' ? prepItemHTML(q.p)
     : `<div class="item"><div><div class="s">${sentHTML(q.w)}</div><div class="tr">${esc(q.w.t)}</div><div class="w">${wordHTML(q.w)}: ${esc(q.w.en)}</div></div>${starBtn(q.w.id)}</div>`
   ).join('');
   show('end'); $('#eAgain').focus();
@@ -818,14 +941,20 @@ function renderMenu() {
   const n = currentStreak();
   $('#mStreak').textContent = n ? `${n}-day streak. Keep it going today.` : 'Play a round today to start a streak.';
   $('#dueBadge').textContent = reviewWords().length;
-  [2, 3].forEach(l => {
-    const b = $(`[data-level="${l}"]`), locked = l > S.unlocked;
+  [2, 3, 5, 6].forEach(l => {
+    const b = $(`[data-level="${l}"]`), locked = isLocked(l);
     b.classList.toggle('locked', locked); b.setAttribute('aria-disabled', locked);
   });
   $('#l2s').textContent = S.unlocked >= 2 ? 'Put the verb at the end' : 'Locked: get 6 of 8 in Level 1';
-  renderGap();
   $('#l3s').textContent = S.unlocked >= 3 ? 'Faster, plus das/dass and weil/denn traps' : 'Locked: get 4 of 6 in Level 2';
+  $('#l5s').textContent = S.unlockedP >= 2 ? 'Wechselpräpositionen' : 'Locked: get 6 of 8 in Level 1';
+  $('#l6s').textContent = S.unlockedP >= 3 ? 'Faster, plus im/ins, am/an den, zum/zur' : 'Locked: get 6 of 8 in Level 2';
+  $$('#topicTabs button').forEach(b => b.classList.toggle('on', b.dataset.topic === S.topic));
+  $('#lvWd').style.display = S.topic === 'prep' ? 'none' : '';
+  $('#lvPrep').style.display = S.topic === 'prep' ? '' : 'none';
+  renderGap();
 }
+function setTopic(t) { S.topic = t; save(); $('#menuMsg').textContent = ''; renderMenu(); }
 
 function renderGap() {
   $('#gapVal').textContent = `${S.gap} s`;
@@ -835,9 +964,10 @@ function setGap(d) { S.gap = Math.max(GAP_MIN, Math.min(GAP_MAX, S.gap + d)); sa
 
 let wTab = 'star';
 function renderWords() {
-  $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
-  const list = wTab === 'star' ? W.filter(w => S.bm[w.id]) : W.filter(w => S.srs[w.id] || S.intro[w.id]);
-  $('#wList').innerHTML = list.length ? list.map(w => `
+  $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
+  const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
+  const list = [...W.filter(has), ...P.filter(has)];
+  $('#wList').innerHTML = list.length ? list.map(w => w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
       <div class="tr">${esc(w.en)}</div>
@@ -853,13 +983,14 @@ function renderProg() {
   $('#pStats').innerHTML = `
     <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>
     <div class="stat"><b>${S.rounds}</b><span>Rounds played</span></div>
-    <div class="stat"><b>${S.unlocked}/3</b><span>Levels unlocked</span></div>
+    <div class="stat"><b>${S.unlocked + S.unlockedP}/6</b><span>Levels unlocked</span></div>
     <div class="stat"><b>${seen}/${W.length}</b><span>Words met</span></div>
     <div class="stat"><b>${mastered}</b><span>Words mastered</span></div>
     <div class="stat"><b>${Object.keys(S.bm).length}</b><span>Starred</span></div>`;
   const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s.t ? pct(s) + '% of ' + s.t : 'not played yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
   $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
-    + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: Level 1 ${S.best[1]}, Level 2 ${S.best[2]}, Level 3 ${S.best[3]}, review ${S.best[0]}</div>`;
+    + bar('Prepositions with a fixed case', st.pfix, 'var(--blue)') + bar('Wechselpräpositionen (wo/wohin)', st.pwech, 'var(--red)')
+    + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, review ${S.best[0]}</div>`;
   let tip;
   if (st.weil.t + st.dass.t < 6) tip = 'Play a few rounds and this space will tell you what to focus on.';
   else if (pct(st.weil) + 10 < pct(st.dass)) tip = 'weil is your weaker side. Remember: weil answers <i>why?</i> If the first half is a reason-free statement like <i>Ich bleibe zu Hause</i>, the second half is the reason.';
@@ -897,7 +1028,8 @@ $('#eAgain').addEventListener('click', () => startLevel(lastLevel));
 $('#eMenu').addEventListener('click', () => show('menu'));
 $('#bWords').addEventListener('click', () => { renderWords(); show('words'); });
 $('#wBack').addEventListener('click', () => show('menu'));
-$$('.tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
+$$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
+$$('#topicTabs button').forEach(b => b.addEventListener('click', () => setTopic(b.dataset.topic)));
 $('#gapDn').addEventListener('click', () => setGap(-1));
 $('#gapUp').addEventListener('click', () => setGap(1));
 $('#bProg').addEventListener('click', () => { renderProg(); show('prog'); });
