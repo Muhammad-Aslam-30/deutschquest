@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>weil oder dass? – a 3D German word-order runner</title>
+<title>Deutsch Quest – a 3D German grammar runner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@ html,body{height:100%;overflow:hidden;background:var(--sky);font-family:'Jost',"
 button{font:inherit;color:inherit}
 button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 
-.screen{position:absolute;inset:0;display:none;pointer-events:auto;overflow-y:auto;padding:20px}
+.screen{position:absolute;inset:0;display:none;pointer-events:auto;overflow-y:auto;padding:20px;z-index:2}
 .screen.show{display:flex}
 .screen.dim{background:rgba(207,216,223,.55)}
 .panel{background:var(--white);border:3px solid var(--black);box-shadow:8px 8px 0 var(--black);padding:28px;max-width:620px;width:100%;margin:auto;user-select:none}
@@ -46,7 +46,7 @@ p{line-height:1.5}
 
 /* menu */
 .menu .brand{display:flex;align-items:flex-end;gap:18px;margin-bottom:6px}
-.menu h1{font-weight:800;line-height:.82;letter-spacing:-.03em;font-size:clamp(58px,13vw,92px)}
+.menu h1{font-weight:800;line-height:.86;letter-spacing:-.03em;font-size:clamp(46px,12vw,86px)}
 .menu h1 .w{color:var(--blue);display:block}
 .menu h1 .o{font-size:.32em;font-weight:400;letter-spacing:0;display:block;margin:6px 0 2px 4px;color:var(--grey)}
 .menu h1 .d{color:var(--red);display:block}
@@ -93,6 +93,11 @@ p{line-height:1.5}
 .item{border:2px solid var(--black);padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
 .item .s{font-size:16px;line-height:1.5}
 .item .w{font-size:14px;margin-top:6px;color:var(--grey)}
+.pic{display:block;width:100%;max-width:360px;margin:12px auto;border:3px solid var(--black);background:var(--white)}
+.item .pic{max-width:260px;margin:10px 0 0}
+#toast .trow{display:flex;gap:12px;align-items:center}
+#toast .trow>div{flex:1}
+#toast .pic{flex:0 0 150px;width:150px;margin:0}
 .dots{display:inline-flex;gap:3px;vertical-align:middle;margin-left:6px}
 .dots i{width:9px;height:9px;border:1.5px solid var(--black);display:block}
 .dots i.f{background:var(--black)}
@@ -116,6 +121,7 @@ p{line-height:1.5}
 
 /* modal */
 .modal .panel{max-width:560px}
+.modal .pic{max-width:300px}
 .modal h2.bad{color:var(--red)}
 .modal .chose{margin:6px 0 14px;font-size:17px}
 .modal .sent{font-size:22px;line-height:1.45;font-weight:600}
@@ -170,10 +176,10 @@ p{line-height:1.5}
   <section id="menu" class="screen">
     <div class="panel menu">
       <div class="brand">
-        <h1><span class="w">weil</span><span class="o">oder</span><span class="d">dass?</span></h1>
+        <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag">Run, choose, and build German sentences where the verb goes to the end.</p>
+      <p class="tag">Run through German streets and build sentences: weil/dass word order and prepositions.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
       <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button></div>
       <div class="levels">
@@ -552,7 +558,110 @@ function sentHTML(w) {
 }
 function trapHTML(t) { return esc(t.q).replace('___', `<b class="cj ${t.a}">${t.a}</b>`); }
 function prepHTML(p) { return esc(p.q).replace('___', `<b class="cj ${p.cs}">${esc(p.a)}</b>`); }
-const prepItemHTML = p => `<div class="item"><div><div class="s">${prepHTML(p)}</div><div class="tr">${esc(p.t)}</div><div class="w">${esc(p.pr)} + ${caseName(p)}</div></div>${starBtn(p.id)}</div>`;
+const prepItemHTML = p => `<div class="item"><div><div class="s">${prepHTML(p)}</div><div class="tr">${esc(p.t)}</div><div class="w">${esc(p.pr)} + ${caseName(p)}</div>${picSVG(p)}</div>${starBtn(p.id)}</div>`;
+
+/* ================= pictures =================
+   Every preposition sentence gets a small flat illustration (SVG + emoji, no image files).
+   Wechselpräpositionen: [place, thing, relation, optional start point]. Wo? shows the thing resting there,
+   Wohin? shows it moving there along a red arrow. Fixed-case prepositions: [concept, a, b]. */
+const PIC = {
+  p_mit_bus:['mit', '🧑', '🚌'], p_fuer_mutter:['fuer', '🎁', '👩'], p_durch_park:['durch', '🚶', '🌳'], p_aus_schweiz:['aus', '🧑', 'Schweiz'],
+  p_mit_kindern:['mit', '🧑', '👧👦'], p_ohne_hund:['ohne', '🧑', '🐕'], p_nach_film:['nach', '🎬', '🍝'], p_seit_woche:['seit', '📚'],
+  p_gegenueber_bahnhof:['gegenueber', '☕', '🚉'], p_gegen_plan:['gegen', '🙅', '📋'], p_von_bank:['von', '✉️', '🏦'], p_um_tisch:['um', '🧑'],
+  p_zu_aerztin:['zu', '🧑', '🏥'], p_bei_eltern:['bei', '🧑', '🏠'], p_q_durch:['durch', '🏃', '🌲'], p_q_mit:['mit', '🧑', '🚲'],
+  p_q_fuer:['fuer', '🎁', '🧒'], p_q_bei:['bei', '🧑', '🏦'], p_zum_bahnhof:['zu', '🚗', '🚉'], p_zur_schule:['zu', '🧒', '🏫'],
+  w_auf_tisch_wo:['table', '📕', 'auf'], w_auf_tisch_wohin:['table', '📕', 'auf'], w_an_wand_wo:['wall', '🖼️', 'an'], w_an_wand_wohin:['wall', '🖼️', 'an'],
+  w_ueber_sofa:['sofa', '💡', 'über'], w_unter_bett_wo:['bed', '🐈', 'unter'], w_unter_bett_wohin:['bed', '🐈', 'unter'], w_in_kuehlschrank:['fridge', '🍾', 'in'],
+  w_vor_haus_wo:['house', '🚗', 'vor'], w_vor_haus_wohin:['house', '🚗', 'vor'], w_neben_tuer:['door', '🐕', 'neben'],
+  w_neben_fenster_wohin:['window', '🧑', 'neben'], w_neben_fenster_wo:['window', '🧑', 'neben'], w_hinter_haus_wo:['house', '🌳', 'hinter'],
+  w_hinter_haus_wohin:['house', '🏃', 'hinter'], w_zwischen_wo:['chairs', '👜', 'zwischen'], w_zwischen_wohin:['chairs', '👜', 'zwischen'],
+  w_ins_kino:['cinema', '🧑', 'in'], w_im_kino:['cinema', '🧑', 'in'], w_im_kuehlschrank:['fridge', '🥛', 'in'],
+  w_an_den_strand:['beach', '🚗', 'an', [34, 172]], w_am_strand:['beach', '😎', 'an']
+};
+const C_AKK = '#E1251B', C_DAT = '#1F4FA3', STK = 'stroke="#000" stroke-width="3"';
+const em = (ch, x, y, s, extra = '') => `<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI Emoji,Apple Color Emoji,Noto Color Emoji,sans-serif" ${extra}>${ch}</text>`;
+const txt = (t, x, y, s, fill = '#000', w = 700) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="${w}" fill="${fill}" text-anchor="middle" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif">${t}</text>`;
+// dashed arrow from (sx,sy) towards (tx,ty), stopping `gap` short of the target
+function arrowSVG(sx, sy, tx, ty, col, gap = 0) {
+  const lift = Math.abs(sy - ty) < 20 ? 0 : 36, cx = (sx + tx) / 2, cy = Math.min(sy, ty) - lift;
+  let dx = tx - cx, dy = ty - cy, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+  const ex = tx - ux * gap, ey = ty - uy * gap, bx = ex - ux * 14, by = ey - uy * 14;
+  return `<path d="M${sx} ${sy} Q${cx} ${cy} ${bx} ${by}" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="9 6" stroke-linecap="round"/>`
+    + `<polygon points="${ex},${ey} ${bx - uy * 8},${by + ux * 8} ${bx + uy * 8},${by - ux * 8}" fill="${col}"/>`;
+}
+const badge = (t, col) => `<rect x="8" y="8" width="${Math.round(t.length * 7.4 + 18)}" height="26" fill="${col}" stroke="#000" stroke-width="2"/>${txt(t, Math.round(t.length * 3.7 + 17), 21, 14, '#fff')}`;
+const FLOOR = '<rect x="0" y="172" width="320" height="18" fill="#E6E9EA"/><line x1="0" y1="172" x2="320" y2="172" stroke="#000" stroke-width="3"/>';
+const WALL = `<rect x="30" y="14" width="260" height="158" fill="#F3EDE2" ${STK}/>`;
+const chair = (x, flip) => { const bx = flip ? x + 40 : x; return `<rect x="${bx}" y="80" width="8" height="92" fill="#000"/><rect x="${x}" y="122" width="48" height="9" fill="#E1251B" ${STK}/><rect x="${x + (flip ? 0 : 40)}" y="131" width="6" height="41" fill="#000"/>`; };
+const REFS = {
+  table:{ in:1, spots:{ auf:[160, 84, 36], unter:[160, 150, 30] },
+    draw:`<rect x="100" y="104" width="120" height="10" fill="#F7C600" ${STK}/><rect x="110" y="114" width="8" height="58" fill="#000"/><rect x="202" y="114" width="8" height="58" fill="#000"/>` },
+  wall:{ in:1, spots:{ an:[160, 92, 54] },
+    draw:WALL + [52, 92, 132].map(y => `<line x1="32" y1="${y}" x2="288" y2="${y}" stroke="#E2D7C3" stroke-width="2"/>`).join('') + '<circle cx="160" cy="58" r="3" fill="#000"/>' },
+  sofa:{ in:1, spots:{ 'über':[160, 62, 34] },
+    draw:'<line x1="0" y1="4" x2="320" y2="4" stroke="#000" stroke-width="6"/><line x1="160" y1="4" x2="160" y2="46" stroke="#000" stroke-width="2"/>'
+      + `<rect x="92" y="102" width="136" height="34" rx="6" fill="#E1251B" ${STK}/><rect x="92" y="128" width="136" height="30" fill="#E1251B" ${STK}/>`
+      + `<rect x="78" y="112" width="20" height="46" rx="5" fill="#B81C14" ${STK}/><rect x="222" y="112" width="20" height="46" rx="5" fill="#B81C14" ${STK}/>`
+      + '<rect x="98" y="158" width="8" height="14" fill="#000"/><rect x="214" y="158" width="8" height="14" fill="#000"/>' },
+  bed:{ in:1, spots:{ unter:[160, 152, 32] },
+    draw:`<rect x="72" y="76" width="12" height="96" fill="#1F4FA3" ${STK}/><rect x="236" y="98" width="12" height="74" fill="#1F4FA3" ${STK}/>`
+      + `<rect x="84" y="96" width="152" height="16" fill="#fff" ${STK}/><rect x="84" y="112" width="152" height="18" fill="#1F4FA3" ${STK}/><rect x="90" y="84" width="34" height="14" rx="5" fill="#fff" ${STK}/>` },
+  fridge:{ in:1, spots:{ in:[160, 100, 34] },
+    draw:`<rect x="118" y="26" width="84" height="146" rx="8" fill="#fff" ${STK}/><rect x="126" y="36" width="68" height="128" fill="#DDEFFF" stroke="#000" stroke-width="2"/>`
+      + '<line x1="126" y1="78" x2="194" y2="78" stroke="#000" stroke-width="2"/><line x1="126" y1="124" x2="194" y2="124" stroke="#000" stroke-width="2"/>'
+      + `<polygon points="202,28 238,42 238,158 202,172" fill="#F3F3F3" ${STK}/>` },
+  house:{ spots:{ vor:[160, 156, 50], hinter:[224, 98, 58] },
+    draw:`<rect x="110" y="82" width="100" height="90" fill="#fff" ${STK}/><polygon points="100,84 160,38 220,84" fill="#E1251B" ${STK}/>`
+      + `<rect x="148" y="130" width="24" height="42" fill="#1F4FA3" ${STK}/><rect x="122" y="98" width="20" height="18" fill="#F7C600" ${STK}/><rect x="178" y="98" width="20" height="18" fill="#F7C600" ${STK}/>` },
+  door:{ in:1, spots:{ neben:[228, 150, 42] },
+    draw:WALL + `<rect x="128" y="58" width="54" height="114" fill="#1F4FA3" ${STK}/><circle cx="172" cy="118" r="4" fill="#F7C600"/>` },
+  window:{ in:1, spots:{ neben:[238, 128, 52] },
+    draw:WALL + `<rect x="112" y="40" width="80" height="72" fill="#BFE3FF" ${STK}/><line x1="152" y1="40" x2="152" y2="112" ${STK}/><line x1="112" y1="76" x2="192" y2="76" ${STK}/><rect x="104" y="112" width="96" height="8" fill="#fff" ${STK}/>` },
+  chairs:{ in:1, spots:{ zwischen:[160, 150, 34] }, draw:chair(58, false) + chair(214, true) },
+  cinema:{ spots:{ in:[160, 140, 42] },
+    draw:`<rect x="86" y="44" width="148" height="128" fill="#fff" ${STK}/><rect x="104" y="52" width="112" height="28" fill="#000"/>${txt('KINO', 160, 66, 19, '#F7C600', 800)}`
+      + '<rect x="100" y="90" width="120" height="76" fill="#3A3F44" stroke="#000" stroke-width="2"/><rect x="118" y="96" width="84" height="20" fill="#BFE3FF"/>' },
+  beach:{ spots:{ an:[140, 160, 36] },
+    draw:'<rect x="0" y="0" width="320" height="190" fill="#EAF4FB"/><rect x="0" y="106" width="320" height="36" fill="#1F4FA3"/>'
+      + '<path d="M0 142 Q160 124 320 142 L320 190 L0 190Z" fill="#F7C600" stroke="#000" stroke-width="3"/>'
+      + `<circle cx="276" cy="40" r="20" fill="#F7C600" ${STK}/>` + em('🌴', 262, 112, 56) }
+};
+const START = { auf:[292, 34], an:[300, 170], 'über':[300, 24], unter:[26, 152], in:[28, 150], vor:[300, 160], hinter:[300, 166], neben:[296, 50], zwischen:[160, 30] };
+
+function spatialSVG(p, [ref, obj, rel, from]) {
+  const R = REFS[ref], [tx, ty, sz] = R.spots[rel], move = p.k === 'wohin';
+  const thing = em(obj, tx, ty, sz);
+  let s = (R.in ? FLOOR : '') + (rel === 'hinter' ? thing + R.draw : R.draw + thing);
+  if (move) { const [sx, sy] = from || START[rel]; s += em(obj, sx, sy, Math.round(sz * 0.8), 'opacity="0.35"') + arrowSVG(sx, sy, tx, ty, C_AKK, sz * 0.55); }
+  return s + (move ? badge(`Wohin? → ${p.pr} + Akkusativ`, C_AKK) : badge(`Wo? → ${p.pr} + Dativ`, C_DAT));
+}
+function fixedSVG(p, [kind, a, b]) {
+  const col = p.cs === 'akk' ? C_AKK : C_DAT; let s = '';
+  switch (kind) {
+    case 'mit': s = `<ellipse cx="160" cy="114" rx="122" ry="54" fill="#EEF2F5" stroke="${col}" stroke-width="3" stroke-dasharray="8 6"/>` + em(a, 92, 114, 58) + txt('+', 146, 112, 40) + em(b, 222, 114, [...b].length > 1 ? 40 : 58); break;
+    case 'fuer': s = em(a, 76, 120, 52) + arrowSVG(108, 120, 196, 120, col) + em(b, 240, 114, 64) + em('❤️', 276, 66, 24); break;
+    case 'durch': s = [70, 115, 160, 205, 250].map(x => em(b, x, 66, 42) + em(b, x, 164, 42)).join('') + em(a, 40, 116, 38) + arrowSVG(66, 116, 304, 116, col); break;
+    case 'aus': s = `<rect x="150" y="46" width="146" height="124" fill="#EEF2F5" ${STK}/>` + txt(b, 223, 64, 17) + em(a, 223, 118, 46, 'opacity="0.35"') + arrowSVG(196, 118, 92, 118, col) + em(a, 60, 118, 52); break;
+    case 'ohne': s = em(a, 100, 112, 64) + em(b, 222, 120, 56) + `<line x1="190" y1="88" x2="254" y2="152" stroke="${C_AKK}" stroke-width="8" stroke-linecap="round"/><line x1="254" y1="88" x2="190" y2="152" stroke="${C_AKK}" stroke-width="8" stroke-linecap="round"/>`; break;
+    case 'nach': s = em(a, 92, 98, 56) + em(b, 228, 98, 56) + arrowSVG(128, 98, 192, 98, col)
+      + '<line x1="30" y1="160" x2="290" y2="160" stroke="#000" stroke-width="3"/>' + txt('1', 92, 160, 15, '#fff').replace('<text', `<circle cx="92" cy="160" r="12" fill="${col}"/><text`) + txt('2', 228, 160, 15, '#fff').replace('<text', `<circle cx="228" cy="160" r="12" fill="${col}"/><text`); break;
+    case 'seit': s = em(a, 160, 80, 56) + '<line x1="24" y1="142" x2="296" y2="142" stroke="#000" stroke-width="3"/>'
+      + `<rect x="60" y="134" width="200" height="16" fill="#F7C600" ${STK}/>` + txt('vor 1 Woche', 60, 170, 14) + txt('heute', 260, 170, 14); break;
+    case 'gegenueber': s = '<rect x="136" y="40" width="48" height="150" fill="#2A2D30"/><line x1="160" y1="44" x2="160" y2="190" stroke="#fff" stroke-width="3" stroke-dasharray="10 8"/>'
+      + em(a, 76, 112, 62) + em(b, 244, 112, 62) + arrowSVG(112, 160, 128, 160, col) + arrowSVG(208, 160, 192, 160, col); break;
+    case 'gegen': s = em(a, 78, 112, 58) + arrowSVG(112, 112, 196, 112, col) + '<rect x="198" y="64" width="10" height="96" fill="#000"/>' + em(b, 252, 112, 54); break;
+    case 'von': s = em(b, 72, 106, 70) + arrowSVG(114, 106, 200, 106, col) + em(a, 238, 106, 48); break;
+    case 'um': s = `<circle cx="160" cy="108" r="68" fill="none" stroke="${col}" stroke-width="3" stroke-dasharray="8 6"/><polygon points="228,100 220,118 236,118" fill="${col}"/>`
+      + `<circle cx="160" cy="108" r="34" fill="#F7C600" ${STK}/>` + [[160, 52], [214, 108], [160, 164], [106, 108]].map(([x, y]) => em(a, x, y, 30)).join(''); break;
+    case 'zu': s = em(a, 58, 120, 50) + arrowSVG(90, 120, 182, 120, col) + em(b, 236, 104, 76); break;
+    case 'bei': s = em(b, 148, 100, 92) + em(a, 230, 140, 46); break;
+  }
+  return s + badge(`${p.pr} + ${caseName(p)}`, col);
+}
+function picSVG(p) {
+  const spec = PIC[p.id]; if (!spec) return '';
+  return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(p.t)}">${p.pt === 'wech' ? spatialSVG(p, spec) : fixedSVG(p, spec)}</svg>`;
+}
 const starBtn = id => `<button class="star ${S.bm[id] ? 'on' : ''}" data-star="${id}" aria-label="Bookmark word" aria-pressed="${!!S.bm[id]}">★</button>`;
 function dotsHTML(id) { const b = S.srs[id] ? S.srs[id].box : 0; let h = '<span class="dots" aria-label="Mastery ' + b + ' of 5">'; for (let i = 1; i <= 5; i++) h += `<i class="${i <= b ? 'f' : ''}"></i>`; return h + '</span>'; }
 
@@ -593,18 +702,181 @@ const stripes = [];
 const stripeGeo = new THREE.BoxGeometry(0.12, 0.02, 2.2), stripeMat = lam(WHITE);
 for (let i = 0; i < 16; i++) for (const x of [-1.1, 1.1]) { const s = new THREE.Mesh(stripeGeo, stripeMat); s.position.set(x, 0.11, 10 - i * 8); scene.add(s); stripes.push(s); }
 
-const DECO_COL = [RED, BLUE, YELLOW, WHITE, BLACK];
-const deco = [];
-function decoMesh() {
-  const r = Math.random(), mat = lam(pick(DECO_COL)); let m;
-  if (r < 0.45) { const h = 2 + Math.random() * 7; m = new THREE.Mesh(new THREE.BoxGeometry(2 + Math.random() * 2, h, 2 + Math.random() * 2), mat); m.position.y = h / 2; }
-  else if (r < 0.7) { const h = 1.5 + Math.random() * 5; m = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, h, 24), mat); m.position.y = h / 2; }
-  else if (r < 0.85) { m = new THREE.Mesh(new THREE.SphereGeometry(1.2, 22, 16), mat); m.position.y = 1.2; }
-  else { m = new THREE.Mesh(new THREE.ConeGeometry(1.4, 3.6, 4), mat); m.position.y = 1.8; m.rotation.y = Math.PI / 4; }
-  return m;
+/* ---- German street: cobbled sidewalks, rows of houses, lamps, trees, signs, skyline ---- */
+const rnd = (a, b) => a + Math.random() * (b - a), rndi = (a, b) => Math.floor(rnd(a, b + 1));
+const CURB_X = 3.9, FRONT_X = 7.4;   // sidewalk runs from the curb to the house fronts
+function canvasTex(w, h, draw) {
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h; draw(cv.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(cv); t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy()); return t;
 }
-const placeDeco = (m, z) => { m.position.x = (Math.random() < 0.5 ? -1 : 1) * (6.5 + Math.random() * 10); m.position.z = z; };
-for (let i = 0; i < 44; i++) { const m = decoMesh(); placeDeco(m, 15 - Math.random() * 135); scene.add(m); deco.push(m); }
+const WALK_TILE = 4;
+const walkTex = canvasTex(128, 128, (g, w, h) => {
+  g.fillStyle = '#A9AEB2'; g.fillRect(0, 0, w, h);
+  for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
+    g.fillStyle = pick(['#C3C7CA', '#CDD0D3', '#BABEC2', '#D4D7D9']);
+    g.fillRect(x * 32 + (y % 2) * 16 - 16 + 2, y * 32 + 2, 28, 28); g.fillRect(x * 32 + (y % 2) * 16 + 112 + 2 - 128, y * 32 + 2, 28, 28);
+  }
+});
+walkTex.wrapS = walkTex.wrapT = THREE.RepeatWrapping; walkTex.repeat.set((FRONT_X - CURB_X) / WALK_TILE, 320 / WALK_TILE);
+[-1, 1].forEach(sd => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(FRONT_X - CURB_X + 0.4, 320), new THREE.MeshLambertMaterial({ map:walkTex }));
+  m.rotation.x = -Math.PI / 2; m.position.set(sd * (CURB_X + FRONT_X) / 2, 0.08, -100); scene.add(m);
+});
+
+// facades are drawn on a canvas: 64 px per window bay and per floor
+const SHOPS = ['Bäckerei', 'Apotheke', 'Café', 'Döner', 'Kiosk', 'Blumen', 'Bücher', 'Metzgerei', 'Eiscafé', 'Späti', 'Optiker', 'Friseur'];
+function win(g, x, y, w, h, frame = '#FFFFFF', glass = '#35505F') {
+  g.fillStyle = frame; g.fillRect(x - 3, y - 3, w + 6, h + 6); g.fillStyle = glass; g.fillRect(x, y, w, h);
+  g.fillStyle = frame; g.fillRect(x + w / 2 - 1.5, y, 3, h); g.fillRect(x, y + h * 0.38, w, 3);
+}
+function facadeTex(b) {
+  return canvasTex(b.bays * 64, b.floors * 64, (g, W, H) => {
+    g.fillStyle = b.wall; g.fillRect(0, 0, W, H);
+    if (b.kind === 'brick') { g.fillStyle = 'rgba(0,0,0,.14)'; for (let y = 0; y < H; y += 8) { g.fillRect(0, y, W, 1.5); for (let x = (y / 8) % 2 * 8; x < W; x += 16) g.fillRect(x, y, 1.5, 8); } }
+    for (let f = 0; f < b.floors; f++) {
+      const y0 = H - (f + 1) * 64, ground = f === 0;
+      if (b.kind === 'bauhaus') {
+        if (ground) { g.fillStyle = '#1D2328'; g.fillRect(b.door * 64 + 20, y0 + 18, 24, 46); }
+        else { g.fillStyle = '#1D2328'; g.fillRect(6, y0 + 16, W - 12, 28); g.fillStyle = '#FFFFFF'; for (let x = 6; x < W - 6; x += 16) g.fillRect(x, y0 + 16, 2, 28); }
+        continue;
+      }
+      if (b.kind === 'altbau') { g.fillStyle = 'rgba(255,255,255,.4)'; g.fillRect(0, y0, W, 5); }
+      if (ground && b.shop) {
+        g.fillStyle = '#2A2D30'; g.fillRect(0, y0 + 4, W, 16);
+        g.fillStyle = '#F7C600'; g.font = '700 13px Jost, Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(b.shop, W / 2, y0 + 12.5);
+      }
+      for (let i = 0; i < b.bays; i++) {
+        const x = i * 64;
+        if (b.kind === 'fachwerk') {
+          g.fillStyle = '#4A2E1E'; g.fillRect(x, y0, 6, 64); g.fillRect(0, y0, W, 6); g.fillRect(0, y0 + 58, W, 6);
+          if (i % 2 === 0) { g.strokeStyle = '#4A2E1E'; g.lineWidth = 5; g.beginPath(); g.moveTo(x + 6, y0 + 58); g.lineTo(x + 20, y0 + 8); g.moveTo(x + 62, y0 + 58); g.lineTo(x + 48, y0 + 8); g.stroke(); }
+        }
+        if (ground && i === b.door) { g.fillStyle = b.kind === 'fachwerk' ? '#6B3A22' : '#2A2D30'; g.fillRect(x + 18, y0 + 22, 28, 42); continue; }
+        if (ground && b.shop) { win(g, x + 8, y0 + 26, 48, 34, '#FFFFFF', '#4B6B80'); continue; }
+        if (b.kind === 'altbau') { win(g, x + 20, y0 + 14, 24, 40); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(x + 16, y0 + 8, 32, 4); }
+        else if (b.kind === 'brick') { win(g, x + 18, y0 + 16, 28, 34); g.fillStyle = '#E8E2D0'; g.fillRect(x + 15, y0 + 10, 34, 4); }
+        else { win(g, x + 20, y0 + 16, 24, 28); g.fillStyle = '#C8372D'; g.fillRect(x + 18, y0 + 47, 28, 5); }
+      }
+      if (b.kind === 'fachwerk') { g.fillStyle = '#4A2E1E'; g.fillRect(W - 6, y0, 6, 64); }
+    }
+  });
+}
+const KINDS = [['fachwerk', 30], ['altbau', 34], ['brick', 20], ['bauhaus', 16]];
+const pickKind = () => { let r = Math.random() * 100; for (const [k, wgt] of KINDS) { if ((r -= wgt) < 0) return k; } return 'altbau'; };
+function prism(base, height, length, alongZ) {
+  // triangular roof prism: base x height triangle, extruded `length`; ridge along z if alongZ, else along x (gable facing the street)
+  const s = new THREE.Shape(); s.moveTo(-base / 2, 0); s.lineTo(base / 2, 0); s.lineTo(0, height); s.lineTo(-base / 2, 0);
+  const geo = new THREE.ExtrudeGeometry(s, { depth:length, bevelEnabled:false });
+  geo.translate(0, 0, -length / 2); if (!alongZ) geo.rotateY(Math.PI / 2);
+  return geo;
+}
+function makeHouse(side, kind) {
+  const g = new THREE.Group();
+  if (kind === 'church') {
+    const stone = lam(0xD8D0BE), w = 4.6, d = 4.6, h = 17;
+    const tex = canvasTex(128, 512, (c, W, H) => {
+      c.fillStyle = '#D8D0BE'; c.fillRect(0, 0, W, H); c.fillStyle = '#2E3A44';
+      for (const y of [120, 260, 400]) { c.fillRect(44, y, 40, 70); c.beginPath(); c.arc(64, y, 20, Math.PI, 0); c.fill(); }
+      c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(64, 50, 26, 0, 7); c.fill(); c.strokeStyle = '#000'; c.lineWidth = 4; c.stroke();
+      c.beginPath(); c.moveTo(64, 50); c.lineTo(64, 32); c.moveTo(64, 50); c.lineTo(78, 56); c.stroke();
+    });
+    const mats = [stone, stone, stone, stone, stone, stone]; mats[side > 0 ? 1 : 0] = new THREE.MeshLambertMaterial({ map:tex });
+    const tower = new THREE.Mesh(new THREE.BoxGeometry(d, h, w), mats); tower.position.y = h / 2;
+    const spire = new THREE.Mesh(new THREE.ConeGeometry(3.4, 10, 4), lam(0x5E9C8C)); spire.position.y = h + 5; spire.rotation.y = Math.PI / 4;
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 8), lam(YELLOW)); ball.position.y = h + 10.3;
+    const nave = new THREE.Mesh(new THREE.BoxGeometry(9, 8, 7), stone); nave.position.set(side * 6.8, 4, 0);
+    const naveRoof = new THREE.Mesh(prism(7.6, 4, 9.4, false), lam(0x7A3B2E)); naveRoof.position.set(side * 6.8, 8, 0);
+    g.add(tower, spire, ball, nave, naveRoof);
+    g.position.x = side * (FRONT_X + d / 2); return { g, w:7.4 };
+  }
+  const floors = kind === 'altbau' ? rndi(4, 5) : kind === 'fachwerk' ? rndi(2, 3) : rndi(2, 4);
+  const bays = kind === 'altbau' ? rndi(4, 6) : rndi(3, 4);
+  const wall = { fachwerk:'#F4EEE2', brick:'#A4442E', bauhaus:'#F5F4EE' }[kind] || pick(['#F2D58A', '#E9B7A3', '#BFD4E6', '#E8E2D0', '#CFE3C8', '#F3E3C3']);
+  const shop = (kind === 'altbau' || (kind === 'brick' && Math.random() < 0.4)) && Math.random() < 0.75 ? pick(SHOPS) : null;
+  const b = { kind, floors, bays, wall, shop, door:rndi(0, bays - 1) };
+  const w = bays * 2.0, d = rnd(5, 6.5), h = floors * 2.6;
+  const plain = lam(new THREE.Color(wall).getHex()), front = new THREE.MeshLambertMaterial({ map:facadeTex(b) });
+  const mats = [plain, plain, plain, plain, plain, plain]; mats[side > 0 ? 1 : 0] = front;
+  const body = new THREE.Mesh(new THREE.BoxGeometry(d, h, w), mats); body.position.y = h / 2; g.add(body);
+  if (kind === 'fachwerk') {                     // steep gable facing the street, as in old town centres
+    const roof = new THREE.Mesh(prism(w + 0.5, Math.min(5, w * 0.6), d + 0.5, false), [lam(0xF4EEE2), lam(0xA8372A)]); roof.position.y = h; g.add(roof);
+  } else if (kind === 'brick') {                 // ridge along the street, dark tiles
+    const roof = new THREE.Mesh(prism(d + 0.5, 2.6, w + 0.3, true), [lam(0xA4442E), lam(0x3A3F44)]); roof.position.y = h; g.add(roof);
+  } else if (kind === 'altbau') {                // cornice + slate mansard + chimney
+    const cor = new THREE.Mesh(new THREE.BoxGeometry(d + 0.3, 0.35, w + 0.1), lam(0xF5F1E6)); cor.position.y = h + 0.17;
+    const man = new THREE.Mesh(new THREE.BoxGeometry(d * 0.8, 1.5, w - 0.1), lam(0x5B6670)); man.position.y = h + 1.1;
+    const chim = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.2, 0.6), lam(0x8E3826)); chim.position.set(side * 0.8, h + 2.2, rnd(-w / 3, w / 3));
+    g.add(cor, man, chim);
+  } else {                                       // Bauhaus: flat roof slab and one coloured stair tower
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(d + 0.2, 0.25, w + 0.2), lam(BLACK)); slab.position.y = h + 0.12;
+    const tw = new THREE.Mesh(new THREE.BoxGeometry(1.0, h + 1.2, 1.4), lam(pick([RED, BLUE, YELLOW]))); tw.position.set(-side * (d / 2 - 0.4), (h + 1.2) / 2, w / 2 - 1);
+    g.add(slab, tw);
+  }
+  g.position.x = side * (FRONT_X + d / 2); return { g, w };
+}
+const HOUSE_GAP = 0.3, ROW_FROM = 24, ROW_TO = -170;
+const rowsCity = [-1, 1].map(side => {
+  const r = { side, list:[], tail:ROW_FROM }, churchAt = rndi(5, 12);
+  for (let i = 0; r.tail > ROW_TO; i++) {
+    const hs = makeHouse(side, i === churchAt ? 'church' : pickKind());
+    hs.g.position.z = r.tail - hs.w / 2; r.tail -= hs.w + HOUSE_GAP; scene.add(hs.g); r.list.push(hs);
+  }
+  return r;
+});
+
+// sidewalk props, evenly spaced and recycled like the lane stripes
+const PROP_GAP = 8, PROP_N = 25, PROP_SPAN = PROP_GAP * PROP_N;
+const CITIES = ['BERLIN', 'MÜNCHEN', 'HAMBURG', 'KÖLN', 'FRANKFURT', 'LEIPZIG', 'DRESDEN', 'BREMEN', 'STUTTGART', 'HEIDELBERG', 'NÜRNBERG', 'BONN'];
+const PG = { pole:new THREE.CylinderGeometry(0.07, 0.09, 4.2, 8), lampHead:new THREE.BoxGeometry(0.42, 0.6, 0.42), lampCap:new THREE.ConeGeometry(0.4, 0.35, 4),
+  trunk:new THREE.CylinderGeometry(0.14, 0.2, 2.0, 8), crown:new THREE.SphereGeometry(1.25, 14, 10), signPole:new THREE.CylinderGeometry(0.05, 0.05, 2.6, 6) };
+const PM = { black:lam(BLACK), lampGlow:new THREE.MeshBasicMaterial({ color:0xFFE38A }), trunk:lam(0x6B4A2E), crown:[lam(0x5E8C4A), lam(0x4F7D3E), lam(0x6E9A52)] };
+function makeProp(side) {
+  const g = new THREE.Group(), r = Math.random();
+  if (r < 0.42) {
+    const t = new THREE.Mesh(PG.trunk, PM.trunk); t.position.y = 1.0;
+    const c = new THREE.Mesh(PG.crown, pick(PM.crown)); c.position.y = 2.9; c.scale.setScalar(rnd(0.85, 1.15));
+    g.add(t, c); g.position.x = side * 5.3;
+  } else if (r < 0.8) {                          // old-style Berlin street lamp
+    const p = new THREE.Mesh(PG.pole, PM.black); p.position.y = 2.1;
+    const hd = new THREE.Mesh(PG.lampHead, PM.lampGlow); hd.position.y = 4.4;
+    const cap = new THREE.Mesh(PG.lampCap, PM.black); cap.position.y = 4.85; cap.rotation.y = Math.PI / 4;
+    g.add(p, hd, cap); g.position.x = side * 4.4;
+  } else {                                       // yellow town sign, U-Bahn sign or bus stop
+    const kind = r < 0.88 ? 'ort' : r < 0.94 ? 'u' : 'h';
+    const tex = kind === 'ort' ? labelTex(pick(CITIES), '#F7C600', '#000000', '#000000') : kind === 'u' ? labelTex('U', '#1F4FA3', '#FFFFFF', '#FFFFFF') : labelTex('H', '#F7C600', '#0A7A3B', '#0A7A3B');
+    const pw = kind === 'ort' ? 2.0 : 1.0, sign = new THREE.Mesh(new THREE.PlaneGeometry(pw, pw / 2), new THREE.MeshBasicMaterial({ map:tex, side:THREE.DoubleSide }));
+    sign.position.y = 2.6; g.add(sign);
+    for (const dx of kind === 'ort' ? [-0.8, 0.8] : [0]) { const p = new THREE.Mesh(PG.signPole, PM.black); p.position.set(dx, 1.3, -0.02); g.add(p); }
+    g.position.x = side * 4.9;
+  }
+  return g;
+}
+const props = [];   // filled by initProps() once labelTex exists (signs use it)
+function initProps() { for (const side of [-1, 1]) for (let i = 0; i < PROP_N; i++) { const p = makeProp(side); p.position.z = 16 - i * PROP_GAP - (side > 0 ? PROP_GAP / 2 : 0); scene.add(p); props.push(p); } }
+
+// distant skyline (unaffected by fog): Fernsehturm, twin cathedral spires, rooftops
+(function skyline() {
+  const far = new THREE.MeshBasicMaterial({ color:0xB4C0C8, fog:false }), farther = new THREE.MeshBasicMaterial({ color:0xC0CAD1, fog:false });
+  const add = (geo, mat, x, y, z = -192) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); scene.add(m); return m; };
+  for (let i = 0; i < 30; i++) { const w = rnd(6, 16), h = rnd(5, 20); add(new THREE.BoxGeometry(w, h, 4), farther, rnd(-140, 140), h / 2, -196); }
+  add(new THREE.CylinderGeometry(1.0, 1.7, 46, 12), far, -30, 23);
+  add(new THREE.SphereGeometry(5.2, 20, 14), far, -30, 40);
+  add(new THREE.CylinderGeometry(0.25, 0.4, 20, 6), far, -30, 54);
+  for (const x of [38, 46]) { add(new THREE.BoxGeometry(4.2, 28, 4), far, x, 14); add(new THREE.ConeGeometry(2.6, 13, 4), far, x, 34.5).rotation.y = Math.PI / 4; }
+  add(new THREE.BoxGeometry(14, 16, 6), far, 42, 8);
+})();
+
+function stepCity(dz) {
+  walkTex.offset.y += dz / WALK_TILE;
+  for (const r of rowsCity) {
+    r.tail += dz;
+    for (const h of r.list) {
+      h.g.position.z += dz;
+      if (h.g.position.z - h.w / 2 > 18) { h.g.position.z = r.tail - h.w / 2; r.tail -= h.w + HOUSE_GAP; }
+    }
+  }
+  for (const p of props) { p.position.z += dz; if (p.position.z > 18) p.position.z -= PROP_SPAN; }
+}
 
 // player
 const player = new THREE.Group();
@@ -633,6 +905,7 @@ function labelTex(text, bg, fg, border) {
   t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   texCache.set(key, t); return t;
 }
+initProps();
 const GATE = { weil:['#1F4FA3', '#FFFFFF', BLUE], dass:['#E1251B', '#FFFFFF', RED], das:['#F7C600', '#000000', YELLOW], denn:['#000000', '#FFFFFF', BLACK] };
 const GEO = {
   post: new THREE.BoxGeometry(0.22, 3.0, 0.22), beam: new THREE.BoxGeometry(2.15, 1.05, 0.3),
@@ -715,9 +988,9 @@ const LOCK_MSG = { 2:'Get 6 of 8 right in Level 1 to unlock Level 2.', 3:'Get 4 
   5:'Get 6 of 8 right in Präpositionen Level 1 to unlock Level 2.', 6:'Get 6 of 8 right in Präpositionen Level 2 to unlock Level 3.' };
 const RULES = {
   4: { key:'rule:fix', title:'Akkusativ oder Dativ?', lead:'Some prepositions always take the same case. Run through the gate with the right article.',
-       cards:[['Always Akkusativ', EXP.akk, 'Wir gehen <b>durch <b class="cj akk">den</b></b> Park.'], ['Always Dativ', EXP.dat, 'Ich fahre <b>mit <b class="cj dat">dem</b></b> Bus.']] },
+       cards:[['Always Akkusativ', EXP.akk, 'Wir gehen <b>durch <b class="cj akk">den</b></b> Park.', 'p_durch_park'], ['Always Dativ', EXP.dat, 'Ich fahre <b>mit <b class="cj dat">dem</b></b> Bus.', 'p_mit_bus']] },
   5: { key:'rule:wech', title:'Wo oder wohin?', lead:'Wechselpräpositionen switch case. Ask yourself: is it a place, or a movement to a place?',
-       cards:[['Wo? → Dativ', EXP.wo, 'Das Buch liegt <b>auf <b class="cj dat">dem</b></b> Tisch.'], ['Wohin? → Akkusativ', EXP.wohin, 'Ich lege das Buch <b>auf <b class="cj akk">den</b></b> Tisch.']] }
+       cards:[['Wo? → Dativ', EXP.wo, 'Das Buch liegt <b>auf <b class="cj dat">dem</b></b> Tisch.', 'w_auf_tisch_wo'], ['Wohin? → Akkusativ', EXP.wohin, 'Ich lege das Buch <b>auf <b class="cj akk">den</b></b> Tisch.', 'w_auf_tisch_wohin']] }
 };
 
 let lastLevel = 1, pendingFresh = [], pendingRule = null;
@@ -734,8 +1007,8 @@ function startLevel(l) {
   if (pendingRule) {
     $('#iTitle').textContent = rule.title; $('#iLead').textContent = rule.lead;
     $('#iNote').textContent = 'You can read this again any time: it shows up when you get one wrong.';
-    $('#iCards').innerHTML = rule.cards.map(([h, body, ex]) => `
-      <div class="wcard"><div><div class="de">${h}</div></div><div class="ex">${body}<div class="tr" style="margin-top:6px">${ex}</div></div></div>`).join('');
+    $('#iCards').innerHTML = rule.cards.map(([h, body, ex, pic]) => `
+      <div class="wcard"><div><div class="de">${h}</div></div><div class="ex">${body}<div class="tr" style="margin-top:6px">${ex}</div>${picSVG(BYID[pic])}</div></div>`).join('');
     pendingFresh = []; show('intro'); $('#iGo').focus(); return;
   }
   const fresh = (l === 0 || l >= 4) ? [] : newWords(3);
@@ -872,8 +1145,9 @@ function finish(q, ok) {
 let toastT = null;
 function toast(pts, q) {
   const s = q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : sentHTML(q.w);
-  const el = $('#toast'); el.innerHTML = `<b class="ok">Richtig! +${pts}</b><div class="s">${s}</div>`;
-  el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2200);
+  const el = $('#toast'); const pic = q.type === 'prep' ? picSVG(q.p) : '';
+  el.innerHTML = `<div class="trow"><div><b class="ok">Richtig! +${pts}</b><div class="s">${s}</div></div>${pic}</div>`;
+  el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), pic ? 3000 : 2200);
 }
 
 function showWrong(q, chose, expect) {
@@ -887,7 +1161,7 @@ function showWrong(q, chose, expect) {
     const p = q.p, ans = `<b class="cj ${p.cs}">${esc(p.a)}</b>`;
     const why = p.pt === 'wech' ? `${p.k === 'wo' ? 'Wo?' : 'Wohin?'} → ${caseName(p)}` : `${esc(p.pr)} + ${caseName(p)}`;
     body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
-      <p class="sent">${prepHTML(p)}</p><p class="tr">${esc(p.t)}</p><div class="ex">${EXP[p.k]}</div>
+      <p class="sent">${prepHTML(p)}</p><p class="tr">${esc(p.t)}</p>${picSVG(p)}<div class="ex">${EXP[p.k]}</div>
       <div class="wrow"><span class="grow"><b>${why}</b></span>${starBtn(p.id)}</div>`;
   } else {
     const w = q.w;
@@ -1050,7 +1324,7 @@ function frame(now) {
   const spd = active ? G.speed : (G.running ? 0 : 5);
 
   for (const s of stripes) { s.position.z += spd * dt; if (s.position.z > 12) s.position.z -= 128; }
-  for (const m of deco) { m.position.z += spd * dt; if (m.position.z > 18) placeDeco(m, m.position.z - 135); }
+  stepCity(spd * dt);
 
   const tx2 = LANES[G.running ? G.lane : 1];
   player.position.x += (tx2 - player.position.x) * Math.min(1, dt * 14);
