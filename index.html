@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --red:#E1251B; --blue:#1F4FA3; --yellow:#F7C600; --black:#000; --white:#FFFFFF;
-  --sky:#CFD8DF; --grey:#5B6670; --good:#178A4A;
+  --red:#D9675B; --blue:#4F7CAC; --yellow:#EDC765; --black:#2F3640; --white:#FFFFFF;
+  --sky:#E4ECEB; --grey:#5B6670; --good:#3E8E63;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:var(--sky);font-family:'Jost',"Futura","Century Gothic",system-ui,sans-serif;color:var(--black);-webkit-tap-highlight-color:transparent}
@@ -21,7 +21,7 @@ button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 
 .screen{position:absolute;inset:0;display:none;pointer-events:auto;overflow-y:auto;padding:20px;z-index:2}
 .screen.show{display:flex}
-.screen.dim{background:rgba(207,216,223,.55)}
+.screen.dim{background:rgba(228,236,235,.62)}
 .panel{background:var(--white);border:3px solid var(--black);box-shadow:8px 8px 0 var(--black);padding:28px;max-width:620px;width:100%;margin:auto;user-select:none}
 h2{font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-.01em;margin-bottom:6px}
 h3{font-size:19px;font-weight:600;margin:22px 0 10px}
@@ -93,8 +93,26 @@ p{line-height:1.5}
 .item{border:2px solid var(--black);padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
 .item .s{font-size:16px;line-height:1.5}
 .item .w{font-size:14px;margin-top:6px;color:var(--grey)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:6px}
+.vcard{border:2px solid var(--black);padding:10px 12px;background:var(--white);position:relative}
+.vcard .big{font-size:24px;font-weight:800;line-height:1.1}
+.vcard .big.sm{font-size:17px}
+.vcard .en{color:var(--grey);font-size:15px;margin-top:2px}
+.ta{font-family:'Noto Sans Tamil','Nirmala UI','Latha',Jost,sans-serif;font-size:15px;color:var(--grey)}
+.vcard .ta{margin-top:2px}
+.mn{background:#FBF3DC;border-left:4px solid var(--yellow);padding:6px 9px;margin-top:8px;font-size:15px;line-height:1.45}
+.wcard .mn{margin:0 0 8px}
+.mn.ta-mn{font-family:'Noto Sans Tamil','Nirmala UI','Latha',Jost,sans-serif;background:#EAF2EC;border-left-color:var(--good);margin-top:6px}
+.vgrid.tips{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-bottom:4px}
+.case{position:absolute;top:8px;right:8px;font-size:12px;font-weight:700;color:var(--white);padding:2px 6px}
+.case.akk{background:var(--red)} .case.dat{background:var(--blue)} .case.wech{background:var(--grey)}
+.newtag{background:var(--yellow);color:var(--black);font-size:12px;font-weight:800;padding:2px 6px;vertical-align:4px}
+.nlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 14px;font-size:17px}
+.nlist .tr{font-size:15px}
 .pic{display:block;width:100%;max-width:360px;margin:12px auto;border:3px solid var(--black);background:var(--white)}
 .item .pic{max-width:260px;margin:10px 0 0}
+#intro #iGo{position:sticky;bottom:0}
+#iCards h3{margin:6px 0 -4px}
 #toast .trow{display:flex;gap:12px;align-items:center}
 #toast .trow>div{flex:1}
 #toast .pic{flex:0 0 150px;width:150px;margin:0}
@@ -179,7 +197,7 @@ p{line-height:1.5}
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag">Run through German streets and build sentences: weil/dass word order and prepositions.</p>
+      <p class="tag">Run, choose, and build German sentences: weil/dass word order and prepositions.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
       <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button></div>
       <div class="levels">
@@ -457,6 +475,149 @@ const EXP = {
 };
 const caseName = p => p.cs === 'akk' ? 'Akkusativ' : 'Dativ';
 
+/* ================= vocabulary briefing =================
+   Shown before every round: meaning, Tamil meaning and a memory trick for each word in that round. */
+const VOC = { // weil/dass words: [memory trick, Tamil]
+  regen:['Regen sounds like "rain again".', 'மழை'], muede:['Too tired to move? You get moody when you are müde.', 'களைப்பு'],
+  hunger:['Same word as English: Hunger = hunger.', 'பசி'], zeit:['Zeit sounds like "tight": time is always tight.', 'நேரம்'],
+  krank:['When you are krank you feel cranky.', 'உடல்நலமில்லை'], bus:['Same as English: der Bus.', 'பேருந்து'],
+  teuer:['Teuer sounds like "toy-er": toys are always teuer.', 'விலை அதிகம்'], arbeiten:['ar-BITE-en: work bites into your day.', 'வேலை செய்'],
+  pruefung:['Prüfung ≈ proof: in an exam you prove what you know.', 'தேர்வு'], kalt:['Kalt ≈ cold (k for c).', 'குளிர்'],
+  geburtstag:['Geburt (birth) + Tag (day) = birthday.', 'பிறந்தநாள்'], wohnung:['wohnen = to live: the Wohnung is where you live.', 'அடுக்குமாடி வீடு'],
+  arzt:['Arzt sounds like "arts": the doctor practises the healing arts.', 'மருத்துவர்'], wetter:['Wetter ≈ weather; think of wet weather.', 'வானிலை'],
+  fahrrad:['fahren (ride) + Rad (wheel) = ride-wheel → bicycle.', 'மிதிவண்டி'], zug:['Zug ≈ "tug": the engine tugs the carriages.', 'ரயில்'],
+  arbeit:['Like arbeiten: work bites into your day.', 'வேலை'], schluessel:['Schloss = lock, Schlüssel = the thing for the lock.', 'சாவி'],
+  freundin:['Freund = friend, -in makes it female.', 'தோழி'], musik:['Same as English: Musik = music.', 'இசை'],
+  stadt:['Stadt ≈ "city-state": a town.', 'நகரம்'], hund:['Hund ≈ hound.', 'நாய்'],
+  glauben:['glauben hides "lieb" (love): you believe in what you love.', 'நம்பு'], laden:['A cart laden with goods → the shop.', 'கடை'],
+  hoffen:['hoffen ≈ hope (h-o-p/f).', 'நம்பிக்கை கொள்'], sagen:['A saga is a story you tell → sagen = to say.', 'சொல்'],
+  denken:['denken ≈ think (d for th, like drei = three).', 'நினை'], wissen:['wissen → wise, wisdom: to know.', 'தெரியும்'],
+  froh:['Froh ≈ frolic: glad people frolic.', 'மகிழ்ச்சி'], schade:['Stuck in the shade: what a pity!', 'வருத்தம்'],
+  essen:['Essen ≈ eat (ess = eat).', 'உணவு'], termin:['Termin ≈ term: a fixed point in time.', 'சந்திப்பு நேரம்'],
+  chef:['In a kitchen, the chef is the boss.', 'முதலாளி'], sicher:['sicher ≈ secure → sure.', 'உறுதி'],
+  merken:['You mark what you notice → merken.', 'கவனி'], nachricht:['A message that reached you overnight (Nacht).', 'செய்தி'],
+  hoeren:['hören ≈ hear (h-ö-r).', 'கேள்'], lehrerin:['lehren ≈ lore: the teacher passes on lore; -in = female.', 'ஆசிரியை'],
+  wichtig:['wichtig ≈ weighty → important.', 'முக்கியம்'], gemuese:['Vegetables mashed into mush → Gemüse.', 'காய்கறி'],
+  versprechen:['ver + sprechen (speak): you give your spoken word = promise.', 'வாக்குறுதி கொடு'], urlaub:['Ur-LAUB ≈ leave: holiday leave.', 'விடுமுறை']
+};
+const PV = { // prepositions: [English, Tamil, memory trick, case]
+  durch:['through', 'வழியாக', 'durch ≈ through: German d often matches English th.', 'akk'], 'für':['for', 'க்காக', 'für ≈ for.', 'akk'],
+  gegen:['against', 'எதிராக', 'gegen sounds like a-GAIN-st.', 'akk'], ohne:['without', 'இல்லாமல்', 'ohne ≈ "on your own": without the others.', 'akk'],
+  um:['around', 'சுற்றி', 'An umbrella goes around you.', 'akk'],
+  aus:['out of, from', 'இருந்து (வெளியே)', 'aus ≈ out.', 'dat'], bei:['at, at someone’s place', 'இடத்தில்', 'bei ≈ by: by my parents = at their place.', 'dat'],
+  mit:['with', 'உடன்', 'A mitt(en) is always with your hand.', 'dat'], nach:['after; to (cities)', 'பிறகு', 'nach → next: what comes next = after.', 'dat'],
+  seit:['since, for (time)', 'முதல்', 'seit ≈ since: both point back in time.', 'dat'], von:['from, of', 'இருந்து', 'von in names (Ludwig von …) tells you where someone is from.', 'dat'],
+  zu:['to', 'க்கு', 'zu ≈ to (z for t, like zehn = ten).', 'dat'], 'gegenüber':['opposite', 'எதிரே', 'gegen (against) + über (over): over there, facing you.', 'dat'],
+  an:['at, on (a side)', 'அருகில் / மேல் (பக்கம்)', 'an = touching the side, like a picture an der Wand.', 'wech'], auf:['on (top of)', 'மேல்', 'auf ≈ up: on top of a surface.', 'wech'],
+  hinter:['behind', 'பின்னால்', 'hinter ≈ hind: the hind legs are behind.', 'wech'], in:['in, into', 'உள்ளே', 'Same as English.', 'wech'],
+  neben:['next to', 'அருகில்', 'neben ≈ neighbour: the one next to you.', 'wech'], 'über':['over, above', 'மேலே', 'über ≈ over.', 'wech'],
+  unter:['under', 'கீழே', 'unter ≈ under.', 'wech'], vor:['in front of', 'முன்னால்', 'vor ≈ fore: your forehead is in front.', 'wech'],
+  zwischen:['between', 'இடையில்', 'zwischen hides zwei (two): between two things.', 'wech']
+};
+const CONTR = { zum:'zu + dem', zur:'zu + der', im:'in + dem', ins:'in + das', am:'an + dem' };
+const NOUN = { // nouns in the preposition sentences: [German, English, Tamil]
+  p_mit_bus:['der Bus', 'the bus', 'பேருந்து'], p_fuer_mutter:['die Mutter', 'the mother', 'அம்மா'], p_durch_park:['der Park', 'the park', 'பூங்கா'],
+  p_aus_schweiz:['die Schweiz', 'Switzerland', 'சுவிட்சர்லாந்து'], p_mit_kindern:['die Kinder', 'the children', 'குழந்தைகள்'], p_ohne_hund:['der Hund', 'the dog', 'நாய்'],
+  p_nach_film:['der Film', 'the film', 'திரைப்படம்'], p_seit_woche:['die Woche', 'the week', 'வாரம்'], p_gegenueber_bahnhof:['der Bahnhof', 'the station', 'ரயில் நிலையம்'],
+  p_gegen_plan:['der Plan', 'the plan', 'திட்டம்'], p_von_bank:['die Bank', 'the bank', 'வங்கி'], p_um_tisch:['der Tisch', 'the table', 'மேசை'],
+  p_zu_aerztin:['die Ärztin', 'the (female) doctor', 'பெண் மருத்துவர்'], p_bei_eltern:['die Eltern', 'the parents', 'பெற்றோர்'], p_q_durch:['der Wald', 'the forest', 'காடு'],
+  p_q_mit:['das Fahrrad', 'the bicycle', 'மிதிவண்டி'], p_q_bei:['die Bank', 'the bank', 'வங்கி'], p_zum_bahnhof:['der Bahnhof', 'the station', 'ரயில் நிலையம்'],
+  p_zur_schule:['die Schule', 'the school', 'பள்ளி'], w_auf_tisch_wo:['der Tisch', 'the table', 'மேசை'], w_auf_tisch_wohin:['der Tisch', 'the table', 'மேசை'],
+  w_an_wand_wo:['die Wand', 'the wall', 'சுவர்'], w_an_wand_wohin:['die Wand', 'the wall', 'சுவர்'], w_ueber_sofa:['das Sofa', 'the sofa', 'சோபா'],
+  w_unter_bett_wo:['das Bett', 'the bed', 'படுக்கை'], w_unter_bett_wohin:['das Bett', 'the bed', 'படுக்கை'], w_in_kuehlschrank:['der Kühlschrank', 'the fridge', 'குளிர்சாதனப் பெட்டி'],
+  w_im_kuehlschrank:['der Kühlschrank', 'the fridge', 'குளிர்சாதனப் பெட்டி'], w_vor_haus_wo:['das Haus', 'the house', 'வீடு'], w_vor_haus_wohin:['das Haus', 'the house', 'வீடு'],
+  w_hinter_haus_wo:['das Haus', 'the house', 'வீடு'], w_hinter_haus_wohin:['das Haus', 'the house', 'வீடு'], w_neben_tuer:['die Tür', 'the door', 'கதவு'],
+  w_neben_fenster_wo:['das Fenster', 'the window', 'ஜன்னல்'], w_neben_fenster_wohin:['das Fenster', 'the window', 'ஜன்னல்'], w_zwischen_wo:['die Stühle', 'the chairs', 'நாற்காலிகள்'],
+  w_zwischen_wohin:['die Stühle', 'the chairs', 'நாற்காலிகள்'], w_ins_kino:['das Kino', 'the cinema', 'திரையரங்கம்'], w_im_kino:['das Kino', 'the cinema', 'திரையரங்கம்'],
+  w_an_den_strand:['der Strand', 'the beach', 'கடற்கரை'], w_am_strand:['der Strand', 'the beach', 'கடற்கரை']
+};
+const CONJ = { // trap words: [English, Tamil, memory trick]
+  weil:['because (verb goes to the end)', 'ஏனென்றால்', 'weil sends the verb for a long walk to the end of the sentence.'],
+  denn:['because (verb stays in 2nd place)', 'ஏனெனில்', 'denn keeps normal order: "denn ich bin müde".'],
+  dass:['that (joins two clauses)', 'என்று', 'dass with two s connects two Sätze (sentences).'],
+  das:['the / which (for a das-noun)', 'அந்த / எது', 'If you can swap it for welches, write das with one s.']
+};
+const TIPS = {
+  akk:['Akkusativ club: DOGFU', '<b>D</b>urch, <b>O</b>hne, <b>G</b>egen, <b>F</b>ür, <b>U</b>m → always Akkusativ. Say it like a kung-fu move: "DOG-FU!"'],
+  dat:['Dativ song', 'Sing to the Blue Danube waltz: “<b>aus, bei, mit, nach, seit, von, zu</b> — da-da, da-da!” → always Dativ.'],
+  wech:['Wo or wohin?', '<b>Wo?</b> (எங்கே இருக்கிறது? — it is resting) → Dativ. <b>Wohin?</b> (எங்கே போகிறது? — it is moving there) → Akkusativ. Think: <b>A</b>kkusativ = <b>A</b>ction.']
+};
+
+// Tamil memory tricks: a Tamil sound-alike where one exists, otherwise the trick explained in Tamil
+const TA_W = {
+  regen:'ரெ-கன்: "ரெண்டு நாளா கனமழை!" → Regen = மழை', muede:'மூடே: களைப்பா இருந்தா "மூட்" (mood) சரியில்லை', hunger:'ஹங்கர்: ஆங்கிலம் போலவே — hunger = பசி',
+  zeit:'ட்சைட்: "சைட்"ல நின்னு நேரத்தை வீணாக்காதே!', krank:'க்ராங்க்: உடம்பு சரியில்லாதபோது "cranky" (எரிச்சல்) ஆவோம்', bus:'பஸ்: அதே சொல்!',
+  teuer:'டொய்யர்: "டாய்" (toy) பொம்மைகள் எப்போதும் விலை அதிகம்!', arbeiten:'அர்-பை-டன்: வேலைக்கு "பை" எடுத்துக்கிட்டு போ!',
+  pruefung:'ப்ரூஃபுங்: தேர்வில் தெரிந்ததை "ப்ரூஃப்" (நிரூபணம்) செய்யணும்', kalt:'கால்ட்: குளிரில் "கால்" நடுங்குது!',
+  geburtstag:'Geburt = பிறப்பு, Tag = நாள் → பிறந்தநாள்', wohnung:'வோனுங்: wohnen = வசி → Wohnung = வசிக்கும் வீடு',
+  arzt:'ஆர்ட்ஸ்ட்: மருத்துவர் நோயை "ஆற்று"கிறார்!', wetter:'வெட்டர்: வெயிலா மழையா? வானிலை "வெட்டி வெட்டி" மாறும்!',
+  fahrrad:'fahren = ஓட்டு, Rad = சக்கரம் → ஓட்டும் சக்கரம் = மிதிவண்டி', zug:'ட்சூக்: ரயில் "சுக்கு சுக்கு" என்று ஓடுது!',
+  arbeit:'அர்பைட்: வேலைக்கு "பை" எடுத்துக்கிட்டு போ!', schluessel:'Schloss = பூட்டு; பூட்டுக்கானது Schlüssel = சாவி',
+  freundin:'Freund = நண்பன், -in = பெண் → தோழி', musik:'மூசிக்: அதே சொல் — இசை', stadt:'ஷ்டாட்: நகரத்தில்தான் எல்லாம் "ஸ்டார்ட்" ஆகும்!',
+  hund:'ஹூண்ட்: நாய் "ஊ…ண்" என்று ஊளையிடும்!', glauben:'glauben ↔ believe: இரண்டிலும் l, b/v ஒலி → நம்பு',
+  laden:'லாடன்: கடையில் பொருட்கள் "லோடு" (load) ஆக நிறைந்திருக்கும்', hoffen:'ஹோஃபன்: hoffen ≈ hope → நம்பிக்கை கொள்',
+  sagen:'சாகன்: "சாகசக் கதை" (saga) சொல்வது → sagen = சொல்', denken:'டென்கன்: think (திங்க்) → நினை; d ↔ th',
+  wissen:'விஸ்ஸன்: "விஷயம்" தெரிந்தவன் → wissen = தெரியும்', froh:'ஃப்ரோ: மகிழ்ச்சியில் "ஃப்ரீ"யா பறக்கலாம்!',
+  schade:'ஷாடே: நிழலில் (shade) மாட்டிக்கொண்டாய் — ஐயோ, வருத்தம்!', essen:'எஸ்ஸன்: essen ≈ eat → சாப்பிடு; das Essen = உணவு',
+  termin:'டெர்மின்: "டேர்ம்" (term) = குறித்த நேரம் → சந்திப்பு', chef:'ஷெஃப்: சமையலறையில் ஷெஃப்தான் முதலாளி!',
+  sicher:'ஸிஷர்: sicher ≈ secure → பாதுகாப்பு, உறுதி', merken:'மெர்கன்: கவனித்ததை "மார்க்" (mark) செய்!',
+  nachricht:'நாக்ரிஷ்ட்: இரவில் (Nacht) வந்த செய்தி!', hoeren:'ஹ்யோரன்: hören ≈ hear → கேள்',
+  lehrerin:'லேரரின்: "லேர்ன்" (learn) பண்ண வைப்பவர் — -in = பெண் → ஆசிரியை', wichtig:'விஷ்டிஷ்: "வெயிட்டான" (weighty) விஷயம் = முக்கியம்',
+  gemuese:'கெம்யூசே: காய்கறிகளை "மசி"த்தால் Gemüse!', versprechen:'sprechen = பேசு; வாக்கு கொடுத்துப் பேசுவது = வாக்குறுதி',
+  urlaub:'ஊர்லவ்ப்: விடுமுறையில் "ஊர்"க்கு போகலாம்!'
+};
+const TA_P = {
+  durch:'டுர்ஷ்: "துருவி" உள்ளே போவது → வழியாக', 'für':'ஃபியூர்: "for" போலவே → für dich = உனக்காக', gegen:'கேகன்: gegen ≈ against → எதிராக',
+  ohne:'ஓனெ: "ஓ, நீ இல்லாமல்!" → ohne = இல்லாமல்', um:'உம்: "உம்"னு சுத்திச் சுத்தி வருது → சுற்றி', aus:'அவுஸ்: "அவுட்" (out) → வெளியே, இருந்து',
+  bei:'பை: bei ≈ by → ஒருவர் இடத்தில், பக்கத்தில்', mit:'மிட்: "மிட்டாய்" உடன் காபி → mit = உடன்', nach:'நாக்: nach → next: அடுத்து = பிறகு',
+  seit:'ஸைட்: seit ≈ since → அன்று முதல்', von:'ஃபோன்: "ஃபோன்" யாரிடமிருந்து? → von = இருந்து', zu:'ட்சூ: "ஜூ" (zoo)-க்கு போவோம்! → zu = க்கு',
+  'gegenüber':'gegen (எதிர்) + über (மேல்) → எதிரே', an:'அன்: சுவரின் ஓரத்தில் ஒட்டியபடி → an', auf:'அவ்ஃப்: "அப்" (up) → மேசையின் மேல்',
+  hinter:'ஹின்டர்: "ஹிண்ட்" (hind) = பின் → பின்னால்', in:'இன்: ஆங்கிலம் போலவே → உள்ளே', neben:'நேபன்: "நேபர்" (neighbour) = அருகில் இருப்பவர்',
+  'über':'ஊபர்: "ஊபர்" டாக்ஸி பாலத்தின் மேலே போகுது! → மேலே', unter:'உன்டர்: "அண்டர்" (under) → கீழே', vor:'ஃபோர்: "ஃபோர்ஹெட்" (நெற்றி) முன்னால் இருக்கு → முன்னால்',
+  zwischen:'ட்ஸ்விஷன்: zwei = இரண்டு → இரண்டுக்கு இடையில்'
+};
+const TA_C = {
+  weil:'வைல்: "வெயில்"ல நடந்து வினைச்சொல் கடைசிக்குப் போகுது!', denn:'டென்: denn-க்குப் பிறகு வழக்கமான வரிசை — வினைச்சொல் 2-வது இடத்தில்',
+  dass:'டாஸ்: இரண்டு s = இரண்டு வாக்கியங்களை இணைக்கும் "என்று"', das:'டாஸ் (ஒரு s): "welches" என்று மாற்ற முடிந்தால் das'
+};
+const TA_TIPS = {
+  akk:'DOGFU: நாய் (DOG) குங்ஃபூ (FU) அடிக்குது! durch, ohne, gegen, für, um → எப்போதும் Akkusativ',
+  dat:'aus-bei-mit-nach-seit-von-zu: ஒரு பாட்டாகப் பாடிப் பழகு → எப்போதும் Dativ',
+  wech:'இருக்கும் இடம் (Wo?) → Dativ; போகும் இடம் (Wohin?) → Akkusativ. A = Action = அசைவு'
+};
+const taMn = t => t ? `<div class="mn ta-mn">🪷 ${esc(t)}</div>` : '';
+const vcard = (big, sub, ta, mn, extra = '', tmn = '') => `<div class="vcard">${extra}<div class="big">${big}</div><div class="en">${sub}</div><div class="ta">தமிழ்: ${esc(ta)}</div>${mn ? `<div class="mn">💡 ${mn}</div>` : ''}${taMn(tmn)}</div>`;
+function briefingHTML(q, fresh) {
+  const preps = q.filter(x => x.type === 'prep').map(x => x.p), words = q.filter(x => x.w).map(x => x.w), traps = q.filter(x => x.type === 'trap');
+  let h = '';
+  if (preps.length) {
+    const kinds = [...new Set(preps.map(p => p.pt === 'wech' ? 'wech' : p.cs))].sort();
+    h += `<div class="vgrid tips">${kinds.map(k => `<div class="vcard tip-${k}"><div class="big sm">${TIPS[k][0]}</div><div class="mn">💡 ${TIPS[k][1]}</div>${taMn(TA_TIPS[k])}</div>`).join('')}</div>`;
+    const prs = [...new Set(preps.map(p => p.pr))];
+    h += `<h3>Prepositions</h3><div class="vgrid">${prs.map(pr => { const [en, ta, mn, k] = PV[pr];
+      const tag = k === 'wech' ? '<span class="case wech">Dativ / Akk.</span>' : `<span class="case ${k}">${k === 'akk' ? 'Akkusativ' : 'Dativ'}</span>`;
+      return vcard(esc(pr), esc(en), ta, esc(mn), tag, TA_P[pr]); }).join('')}</div>`;
+    const cs = [...new Set(preps.map(p => p.a).filter(a => CONTR[a]))];
+    if (cs.length) h += `<h3>Short forms</h3><div class="vgrid">${cs.map(c => `<div class="vcard"><div class="big">${c}</div><div class="en">= ${CONTR[c]}</div></div>`).join('')}</div>`;
+    const ns = [...new Map(preps.filter(p => NOUN[p.id]).map(p => [NOUN[p.id][0], NOUN[p.id]])).values()];
+    if (ns.length) h += `<h3>Words in the sentences</h3><div class="nlist">${ns.map(([de, en, ta]) => `<div>${wordHTML({ de })} <span class="tr">${esc(en)} · ${esc(ta)}</span></div>`).join('')}</div>`;
+  }
+  if (traps.length) {
+    const cj = [...new Set(traps.flatMap(t => t.opts))];
+    h += `<h3>Trap words</h3><div class="vgrid">${cj.map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`;
+  }
+  if (words.length) {
+    const uniq = [...new Set(words)];
+    h += `<h3>${preps.length ? 'weil / dass words' : 'Words in this round'}</h3><div class="cards">${uniq.map(w => { const [mn, ta] = VOC[w.id] || ['', ''];
+      return `<div class="wcard">
+        <div><div class="de">${fresh.includes(w) ? '<span class="newtag">NEW</span> ' : ''}${wordHTML(w)}</div><div class="en">${esc(w.en)} · <span class="ta">${esc(ta)}</span></div></div>
+        ${starBtn(w.id)}
+        <div class="ex">${mn ? `<div class="mn">💡 ${esc(mn)}</div>` : ''}${taMn(TA_W[w.id])}${sentHTML(w)}<div class="tr">${esc(w.t)}</div></div>
+      </div>`; }).join('')}</div>`;
+  }
+  return h;
+}
+
 const BYID = Object.fromEntries([...W, ...P].map(w => [w.id, w]));
 const WEIL = W.filter(w => w.c === 'weil'), DASS = W.filter(w => w.c === 'dass');
 const ORDER = [];
@@ -578,9 +739,9 @@ const PIC = {
   w_ins_kino:['cinema', '🧑', 'in'], w_im_kino:['cinema', '🧑', 'in'], w_im_kuehlschrank:['fridge', '🥛', 'in'],
   w_an_den_strand:['beach', '🚗', 'an', [34, 172]], w_am_strand:['beach', '😎', 'an']
 };
-const C_AKK = '#E1251B', C_DAT = '#1F4FA3', STK = 'stroke="#000" stroke-width="3"';
+const C_AKK = '#D9675B', C_DAT = '#4F7CAC', STK = 'stroke="#2F3640" stroke-width="3"';
 const em = (ch, x, y, s, extra = '') => `<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle" dominant-baseline="central" font-family="Segoe UI Emoji,Apple Color Emoji,Noto Color Emoji,sans-serif" ${extra}>${ch}</text>`;
-const txt = (t, x, y, s, fill = '#000', w = 700) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="${w}" fill="${fill}" text-anchor="middle" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif">${t}</text>`;
+const txt = (t, x, y, s, fill = '#2F3640', w = 700) => `<text x="${x}" y="${y}" font-size="${s}" font-weight="${w}" fill="${fill}" text-anchor="middle" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif">${t}</text>`;
 // dashed arrow from (sx,sy) towards (tx,ty), stopping `gap` short of the target
 function arrowSVG(sx, sy, tx, ty, col, gap = 0) {
   const lift = Math.abs(sy - ty) < 20 ? 0 : 36, cx = (sx + tx) / 2, cy = Math.min(sy, ty) - lift;
@@ -589,72 +750,97 @@ function arrowSVG(sx, sy, tx, ty, col, gap = 0) {
   return `<path d="M${sx} ${sy} Q${cx} ${cy} ${bx} ${by}" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="9 6" stroke-linecap="round"/>`
     + `<polygon points="${ex},${ey} ${bx - uy * 8},${by + ux * 8} ${bx + uy * 8},${by - ux * 8}" fill="${col}"/>`;
 }
-const badge = (t, col) => `<rect x="8" y="8" width="${Math.round(t.length * 7.4 + 18)}" height="26" fill="${col}" stroke="#000" stroke-width="2"/>${txt(t, Math.round(t.length * 3.7 + 17), 21, 14, '#fff')}`;
-const FLOOR = '<rect x="0" y="172" width="320" height="18" fill="#E6E9EA"/><line x1="0" y1="172" x2="320" y2="172" stroke="#000" stroke-width="3"/>';
+const badge = (t, col) => `<rect x="8" y="8" width="${Math.round(t.length * 7.4 + 18)}" height="26" fill="${col}" stroke="#2F3640" stroke-width="2"/>${txt(t, Math.round(t.length * 3.7 + 17), 21, 14, '#fff')}`;
+const FLOOR = '<rect x="0" y="172" width="320" height="18" fill="#E6E9EA"/><line x1="0" y1="172" x2="320" y2="172" stroke="#2F3640" stroke-width="3"/>';
 const WALL = `<rect x="30" y="14" width="260" height="158" fill="#F3EDE2" ${STK}/>`;
-const chair = (x, flip) => { const bx = flip ? x + 40 : x; return `<rect x="${bx}" y="80" width="8" height="92" fill="#000"/><rect x="${x}" y="122" width="48" height="9" fill="#E1251B" ${STK}/><rect x="${x + (flip ? 0 : 40)}" y="131" width="6" height="41" fill="#000"/>`; };
+const chair = (x, flip) => { const bx = flip ? x + 40 : x; return `<rect x="${bx}" y="80" width="8" height="92" fill="#2F3640"/><rect x="${x}" y="122" width="48" height="9" fill="#D9675B" ${STK}/><rect x="${x + (flip ? 0 : 40)}" y="131" width="6" height="41" fill="#2F3640"/>`; };
 const REFS = {
   table:{ in:1, spots:{ auf:[160, 84, 36], unter:[160, 150, 30] },
-    draw:`<rect x="100" y="104" width="120" height="10" fill="#F7C600" ${STK}/><rect x="110" y="114" width="8" height="58" fill="#000"/><rect x="202" y="114" width="8" height="58" fill="#000"/>` },
+    draw:`<rect x="100" y="104" width="120" height="10" fill="#EDC765" ${STK}/><rect x="110" y="114" width="8" height="58" fill="#2F3640"/><rect x="202" y="114" width="8" height="58" fill="#2F3640"/>` },
   wall:{ in:1, spots:{ an:[160, 92, 54] },
-    draw:WALL + [52, 92, 132].map(y => `<line x1="32" y1="${y}" x2="288" y2="${y}" stroke="#E2D7C3" stroke-width="2"/>`).join('') + '<circle cx="160" cy="58" r="3" fill="#000"/>' },
+    draw:WALL + [52, 92, 132].map(y => `<line x1="32" y1="${y}" x2="288" y2="${y}" stroke="#E2D7C3" stroke-width="2"/>`).join('') + '<circle cx="160" cy="58" r="3" fill="#2F3640"/>' },
   sofa:{ in:1, spots:{ 'über':[160, 62, 34] },
-    draw:'<line x1="0" y1="4" x2="320" y2="4" stroke="#000" stroke-width="6"/><line x1="160" y1="4" x2="160" y2="46" stroke="#000" stroke-width="2"/>'
-      + `<rect x="92" y="102" width="136" height="34" rx="6" fill="#E1251B" ${STK}/><rect x="92" y="128" width="136" height="30" fill="#E1251B" ${STK}/>`
-      + `<rect x="78" y="112" width="20" height="46" rx="5" fill="#B81C14" ${STK}/><rect x="222" y="112" width="20" height="46" rx="5" fill="#B81C14" ${STK}/>`
-      + '<rect x="98" y="158" width="8" height="14" fill="#000"/><rect x="214" y="158" width="8" height="14" fill="#000"/>' },
+    draw:'<line x1="0" y1="4" x2="320" y2="4" stroke="#2F3640" stroke-width="6"/><line x1="160" y1="4" x2="160" y2="46" stroke="#2F3640" stroke-width="2"/>'
+      + `<rect x="92" y="102" width="136" height="34" rx="6" fill="#D9675B" ${STK}/><rect x="92" y="128" width="136" height="30" fill="#D9675B" ${STK}/>`
+      + `<rect x="78" y="112" width="20" height="46" rx="5" fill="#B9544A" ${STK}/><rect x="222" y="112" width="20" height="46" rx="5" fill="#B9544A" ${STK}/>`
+      + '<rect x="98" y="158" width="8" height="14" fill="#2F3640"/><rect x="214" y="158" width="8" height="14" fill="#2F3640"/>' },
   bed:{ in:1, spots:{ unter:[160, 152, 32] },
-    draw:`<rect x="72" y="76" width="12" height="96" fill="#1F4FA3" ${STK}/><rect x="236" y="98" width="12" height="74" fill="#1F4FA3" ${STK}/>`
-      + `<rect x="84" y="96" width="152" height="16" fill="#fff" ${STK}/><rect x="84" y="112" width="152" height="18" fill="#1F4FA3" ${STK}/><rect x="90" y="84" width="34" height="14" rx="5" fill="#fff" ${STK}/>` },
+    draw:`<rect x="72" y="76" width="12" height="96" fill="#4F7CAC" ${STK}/><rect x="236" y="98" width="12" height="74" fill="#4F7CAC" ${STK}/>`
+      + `<rect x="84" y="96" width="152" height="16" fill="#fff" ${STK}/><rect x="84" y="112" width="152" height="18" fill="#4F7CAC" ${STK}/><rect x="90" y="84" width="34" height="14" rx="5" fill="#fff" ${STK}/>` },
   fridge:{ in:1, spots:{ in:[160, 100, 34] },
-    draw:`<rect x="118" y="26" width="84" height="146" rx="8" fill="#fff" ${STK}/><rect x="126" y="36" width="68" height="128" fill="#DDEFFF" stroke="#000" stroke-width="2"/>`
-      + '<line x1="126" y1="78" x2="194" y2="78" stroke="#000" stroke-width="2"/><line x1="126" y1="124" x2="194" y2="124" stroke="#000" stroke-width="2"/>'
+    draw:`<rect x="118" y="26" width="84" height="146" rx="8" fill="#fff" ${STK}/><rect x="126" y="36" width="68" height="128" fill="#DDEFFF" stroke="#2F3640" stroke-width="2"/>`
+      + '<line x1="126" y1="78" x2="194" y2="78" stroke="#2F3640" stroke-width="2"/><line x1="126" y1="124" x2="194" y2="124" stroke="#2F3640" stroke-width="2"/>'
       + `<polygon points="202,28 238,42 238,158 202,172" fill="#F3F3F3" ${STK}/>` },
   house:{ spots:{ vor:[160, 156, 50], hinter:[224, 98, 58] },
-    draw:`<rect x="110" y="82" width="100" height="90" fill="#fff" ${STK}/><polygon points="100,84 160,38 220,84" fill="#E1251B" ${STK}/>`
-      + `<rect x="148" y="130" width="24" height="42" fill="#1F4FA3" ${STK}/><rect x="122" y="98" width="20" height="18" fill="#F7C600" ${STK}/><rect x="178" y="98" width="20" height="18" fill="#F7C600" ${STK}/>` },
+    draw:`<rect x="110" y="82" width="100" height="90" fill="#fff" ${STK}/><polygon points="100,84 160,38 220,84" fill="#D9675B" ${STK}/>`
+      + `<rect x="148" y="130" width="24" height="42" fill="#4F7CAC" ${STK}/><rect x="122" y="98" width="20" height="18" fill="#EDC765" ${STK}/><rect x="178" y="98" width="20" height="18" fill="#EDC765" ${STK}/>` },
   door:{ in:1, spots:{ neben:[228, 150, 42] },
-    draw:WALL + `<rect x="128" y="58" width="54" height="114" fill="#1F4FA3" ${STK}/><circle cx="172" cy="118" r="4" fill="#F7C600"/>` },
+    draw:WALL + `<rect x="128" y="58" width="54" height="114" fill="#4F7CAC" ${STK}/><circle cx="172" cy="118" r="4" fill="#EDC765"/>` },
   window:{ in:1, spots:{ neben:[238, 128, 52] },
     draw:WALL + `<rect x="112" y="40" width="80" height="72" fill="#BFE3FF" ${STK}/><line x1="152" y1="40" x2="152" y2="112" ${STK}/><line x1="112" y1="76" x2="192" y2="76" ${STK}/><rect x="104" y="112" width="96" height="8" fill="#fff" ${STK}/>` },
   chairs:{ in:1, spots:{ zwischen:[160, 150, 34] }, draw:chair(58, false) + chair(214, true) },
   cinema:{ spots:{ in:[160, 140, 42] },
-    draw:`<rect x="86" y="44" width="148" height="128" fill="#fff" ${STK}/><rect x="104" y="52" width="112" height="28" fill="#000"/>${txt('KINO', 160, 66, 19, '#F7C600', 800)}`
-      + '<rect x="100" y="90" width="120" height="76" fill="#3A3F44" stroke="#000" stroke-width="2"/><rect x="118" y="96" width="84" height="20" fill="#BFE3FF"/>' },
+    draw:`<rect x="86" y="44" width="148" height="128" fill="#fff" ${STK}/><rect x="104" y="52" width="112" height="28" fill="#2F3640"/>${txt('KINO', 160, 66, 19, '#EDC765', 800)}`
+      + '<rect x="100" y="90" width="120" height="76" fill="#3A3F44" stroke="#2F3640" stroke-width="2"/><rect x="118" y="96" width="84" height="20" fill="#BFE3FF"/>' },
   beach:{ spots:{ an:[140, 160, 36] },
-    draw:'<rect x="0" y="0" width="320" height="190" fill="#EAF4FB"/><rect x="0" y="106" width="320" height="36" fill="#1F4FA3"/>'
-      + '<path d="M0 142 Q160 124 320 142 L320 190 L0 190Z" fill="#F7C600" stroke="#000" stroke-width="3"/>'
-      + `<circle cx="276" cy="40" r="20" fill="#F7C600" ${STK}/>` + em('🌴', 262, 112, 56) }
+    draw:'<rect x="0" y="0" width="320" height="190" fill="#EAF4FB"/><rect x="0" y="106" width="320" height="36" fill="#4F7CAC"/>'
+      + '<path d="M0 142 Q160 124 320 142 L320 190 L0 190Z" fill="#EDC765" stroke="#2F3640" stroke-width="3"/>'
+      + `<circle cx="276" cy="40" r="20" fill="#EDC765" ${STK}/>` + em('🌴', 262, 112, 56) }
 };
 const START = { auf:[292, 34], an:[300, 170], 'über':[300, 24], unter:[26, 152], in:[28, 150], vor:[300, 160], hinter:[300, 166], neben:[296, 50], zwischen:[160, 30] };
 
+/* Animation (looping, GIF-style) via SVG SMIL. With "reduce motion" switched on in the OS,
+   every helper falls back to the still end state. */
+const STILL = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const LOOP = 3.2;
+const loopAttr = (d = LOOP) => `dur="${d}s" repeatCount="indefinite"`;
+function qpath(sx, sy, tx, ty) { const lift = Math.abs(sy - ty) < 20 ? 0 : 36; return `M${sx} ${sy} Q${(sx + tx) / 2} ${Math.min(sy, ty) - lift} ${tx} ${ty}`; }
+// emoji travelling along a path: fades in, moves, rests at the end, fades out, repeats
+function glide(ch, size, path, [ex, ey], d = LOOP) {
+  if (STILL) return em(ch, ex, ey, size);
+  return `<g opacity="0">${em(ch, 0, 0, size)}<animateMotion path="${path}" ${loopAttr(d)} keyPoints="0;0;1;1" keyTimes="0;0.12;0.68;1" calcMode="linear"/>`
+    + `<animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.12;0.68;0.93;1" ${loopAttr(d)}/></g>`;
+}
+const appear = (inner, at = 0.45) => STILL ? inner
+  : `<g opacity="0">${inner}<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;${at};${at + 0.08};0.93;1" ${loopAttr()}/></g>`;
+const shift = (inner, values, d = 2.4) => STILL ? inner : `<g>${inner}<animateTransform attributeName="transform" type="translate" values="${values}" ${loopAttr(d)}/></g>`;
+const bob = (inner, dy = -6) => shift(inner, `0 0;0 ${dy};0 0`, 1.6);
+const ring = (x, y, r, col) => STILL ? '' : `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${col}" stroke-width="3"><animate attributeName="r" values="${r * 0.6};${r * 1.15}" ${loopAttr(1.6)}/><animate attributeName="opacity" values="0.9;0" ${loopAttr(1.6)}/></circle>`;
+
 function spatialSVG(p, [ref, obj, rel, from]) {
   const R = REFS[ref], [tx, ty, sz] = R.spots[rel], move = p.k === 'wohin';
-  const thing = em(obj, tx, ty, sz);
-  let s = (R.in ? FLOOR : '') + (rel === 'hinter' ? thing + R.draw : R.draw + thing);
-  if (move) { const [sx, sy] = from || START[rel]; s += em(obj, sx, sy, Math.round(sz * 0.8), 'opacity="0.35"') + arrowSVG(sx, sy, tx, ty, C_AKK, sz * 0.55); }
+  let s = R.in ? FLOOR : '';
+  if (move) {                 // Wohin? the thing travels to its place along the red arrow
+    const [sx, sy] = from || START[rel], mover = glide(obj, sz, qpath(sx, sy, tx, ty), [tx, ty]);
+    s += (rel === 'hinter' ? mover + R.draw : R.draw + mover) + em(obj, sx, sy, Math.round(sz * 0.8), 'opacity="0.3"') + arrowSVG(sx, sy, tx, ty, C_AKK, sz * 0.55);
+  } else {                    // Wo? the thing just rests there; a blue ring marks the spot
+    const thing = ring(tx, ty, sz * 0.75, C_DAT) + em(obj, tx, ty, sz);
+    s += rel === 'hinter' ? thing + R.draw : R.draw + thing;
+  }
   return s + (move ? badge(`Wohin? → ${p.pr} + Akkusativ`, C_AKK) : badge(`Wo? → ${p.pr} + Dativ`, C_DAT));
 }
 function fixedSVG(p, [kind, a, b]) {
   const col = p.cs === 'akk' ? C_AKK : C_DAT; let s = '';
   switch (kind) {
-    case 'mit': s = `<ellipse cx="160" cy="114" rx="122" ry="54" fill="#EEF2F5" stroke="${col}" stroke-width="3" stroke-dasharray="8 6"/>` + em(a, 92, 114, 58) + txt('+', 146, 112, 40) + em(b, 222, 114, [...b].length > 1 ? 40 : 58); break;
-    case 'fuer': s = em(a, 76, 120, 52) + arrowSVG(108, 120, 196, 120, col) + em(b, 240, 114, 64) + em('❤️', 276, 66, 24); break;
-    case 'durch': s = [70, 115, 160, 205, 250].map(x => em(b, x, 66, 42) + em(b, x, 164, 42)).join('') + em(a, 40, 116, 38) + arrowSVG(66, 116, 304, 116, col); break;
-    case 'aus': s = `<rect x="150" y="46" width="146" height="124" fill="#EEF2F5" ${STK}/>` + txt(b, 223, 64, 17) + em(a, 223, 118, 46, 'opacity="0.35"') + arrowSVG(196, 118, 92, 118, col) + em(a, 60, 118, 52); break;
-    case 'ohne': s = em(a, 100, 112, 64) + em(b, 222, 120, 56) + `<line x1="190" y1="88" x2="254" y2="152" stroke="${C_AKK}" stroke-width="8" stroke-linecap="round"/><line x1="254" y1="88" x2="190" y2="152" stroke="${C_AKK}" stroke-width="8" stroke-linecap="round"/>`; break;
-    case 'nach': s = em(a, 92, 98, 56) + em(b, 228, 98, 56) + arrowSVG(128, 98, 192, 98, col)
-      + '<line x1="30" y1="160" x2="290" y2="160" stroke="#000" stroke-width="3"/>' + txt('1', 92, 160, 15, '#fff').replace('<text', `<circle cx="92" cy="160" r="12" fill="${col}"/><text`) + txt('2', 228, 160, 15, '#fff').replace('<text', `<circle cx="228" cy="160" r="12" fill="${col}"/><text`); break;
-    case 'seit': s = em(a, 160, 80, 56) + '<line x1="24" y1="142" x2="296" y2="142" stroke="#000" stroke-width="3"/>'
-      + `<rect x="60" y="134" width="200" height="16" fill="#F7C600" ${STK}/>` + txt('vor 1 Woche', 60, 170, 14) + txt('heute', 260, 170, 14); break;
-    case 'gegenueber': s = '<rect x="136" y="40" width="48" height="150" fill="#2A2D30"/><line x1="160" y1="44" x2="160" y2="190" stroke="#fff" stroke-width="3" stroke-dasharray="10 8"/>'
-      + em(a, 76, 112, 62) + em(b, 244, 112, 62) + arrowSVG(112, 160, 128, 160, col) + arrowSVG(208, 160, 192, 160, col); break;
-    case 'gegen': s = em(a, 78, 112, 58) + arrowSVG(112, 112, 196, 112, col) + '<rect x="198" y="64" width="10" height="96" fill="#000"/>' + em(b, 252, 112, 54); break;
-    case 'von': s = em(b, 72, 106, 70) + arrowSVG(114, 106, 200, 106, col) + em(a, 238, 106, 48); break;
-    case 'um': s = `<circle cx="160" cy="108" r="68" fill="none" stroke="${col}" stroke-width="3" stroke-dasharray="8 6"/><polygon points="228,100 220,118 236,118" fill="${col}"/>`
-      + `<circle cx="160" cy="108" r="34" fill="#F7C600" ${STK}/>` + [[160, 52], [214, 108], [160, 164], [106, 108]].map(([x, y]) => em(a, x, y, 30)).join(''); break;
-    case 'zu': s = em(a, 58, 120, 50) + arrowSVG(90, 120, 182, 120, col) + em(b, 236, 104, 76); break;
-    case 'bei': s = em(b, 148, 100, 92) + em(a, 230, 140, 46); break;
+    case 'mit': s = `<ellipse cx="160" cy="114" rx="122" ry="54" fill="#EEF2F5" stroke="${col}" stroke-width="3" stroke-dasharray="8 6"/>`
+      + shift(em(a, 92, 114, 58) + txt('+', 146, 112, 40) + em(b, 222, 114, [...b].length > 1 ? 40 : 58), '-14 0;14 0;-14 0'); break;
+    case 'fuer': s = arrowSVG(108, 120, 196, 120, col) + em(b, 240, 114, 64) + glide(a, 52, 'M76 120 L204 122', [204, 122]) + appear(em('❤️', 276, 66, 24), 0.62); break;
+    case 'durch': s = [70, 115, 160, 205, 250].map(x => em(b, x, 66, 42) + em(b, x, 164, 42)).join('') + arrowSVG(66, 116, 304, 116, col) + glide(a, 38, 'M30 116 L292 116', [292, 116], 3.6); break;
+    case 'aus': s = `<rect x="150" y="46" width="146" height="124" fill="#EEF2F5" ${STK}/>` + txt(b, 223, 64, 17) + em(a, 223, 118, 46, 'opacity="0.3"') + arrowSVG(196, 118, 92, 118, col) + glide(a, 52, 'M223 118 L60 118', [60, 118]); break;
+    case 'ohne': s = em(a, 100, 112, 64) + em(b, 222, 120, 56) + appear(`<line x1="190" y1="88" x2="254" y2="152" stroke="${C_AKK}" stroke-width="8" stroke-linecap="round"/><line x1="254" y1="88" x2="190" y2="152" stroke="${C_AKK}" stroke-width="8" stroke-linecap="round"/>`, 0.3); break;
+    case 'nach': s = em(a, 92, 98, 56) + appear(arrowSVG(128, 98, 192, 98, col), 0.25) + appear(em(b, 228, 98, 56), 0.45)
+      + '<line x1="30" y1="160" x2="290" y2="160" stroke="#2F3640" stroke-width="3"/>' + txt('1', 92, 160, 15, '#fff').replace('<text', `<circle cx="92" cy="160" r="12" fill="${col}"/><text`) + appear(txt('2', 228, 160, 15, '#fff').replace('<text', `<circle cx="228" cy="160" r="12" fill="${col}"/><text`), 0.45); break;
+    case 'seit': s = em(a, 160, 80, 56) + '<line x1="24" y1="142" x2="296" y2="142" stroke="#2F3640" stroke-width="3"/>'
+      + `<rect x="60" y="134" width="200" height="16" fill="#EDC765" ${STK}>${STILL ? '' : `<animate attributeName="width" values="0;200;200" keyTimes="0;0.7;1" ${loopAttr()}/>`}</rect>` + txt('vor 1 Woche', 60, 170, 14) + txt('heute', 260, 170, 14); break;
+    case 'gegenueber': s = '<rect x="136" y="40" width="48" height="150" fill="#8F9BA5"/><line x1="160" y1="44" x2="160" y2="190" stroke="#fff" stroke-width="3" stroke-dasharray="10 8"/>'
+      + bob(em(a, 76, 112, 62)) + bob(em(b, 244, 112, 62)) + appear(arrowSVG(112, 160, 128, 160, col) + arrowSVG(208, 160, 192, 160, col), 0.2); break;
+    case 'gegen': s = arrowSVG(112, 112, 196, 112, col) + '<rect x="198" y="64" width="10" height="96" fill="#2F3640"/>' + em(b, 252, 112, 54) + shift(em(a, 78, 112, 58), '0 0;84 0;64 0;0 0', LOOP); break;
+    case 'von': s = em(b, 72, 106, 70) + arrowSVG(114, 106, 200, 106, col) + glide(a, 48, 'M100 106 L238 106', [238, 106]); break;
+    case 'um': s = `<circle cx="160" cy="108" r="68" fill="none" stroke="${col}" stroke-width="3" stroke-dasharray="8 6"/>`
+      + (STILL ? `<polygon points="228,100 220,118 236,118" fill="${col}"/>` : `<circle r="8" fill="${col}"><animateMotion path="M160 40 A68 68 0 1 1 159.9 40" ${loopAttr()}/></circle>`)
+      + `<circle cx="160" cy="108" r="34" fill="#EDC765" ${STK}/>` + [[160, 52], [214, 108], [160, 164], [106, 108]].map(([x, y]) => em(a, x, y, 30)).join(''); break;
+    case 'zu': s = arrowSVG(90, 120, 182, 120, col) + em(b, 236, 104, 76) + glide(a, 50, 'M58 120 L196 120', [196, 120]); break;
+    case 'bei': s = em(b, 148, 100, 92) + bob(em(a, 230, 140, 46)); break;
   }
   return s + badge(`${p.pr} + ${caseName(p)}`, col);
 }
@@ -678,7 +864,7 @@ function toggleStar(id) {
 document.addEventListener('click', e => { const b = e.target.closest('[data-star]'); if (b) { e.stopPropagation(); toggleStar(b.dataset.star); } });
 
 /* ================= 3D scene ================= */
-const RED = 0xE1251B, BLUE = 0x1F4FA3, YELLOW = 0xF7C600, BLACK = 0x000000, WHITE = 0xFFFFFF, SKY = 0xCFD8DF;
+const RED = 0xD9675B, BLUE = 0x4F7CAC, YELLOW = 0xEDC765, BLACK = 0x2F3640, WHITE = 0xFFFFFF, SKY = 0xE4ECEB, GROUND = 0x9FB5A6, LANE_LINE = 0xC4D3C8;
 const canvas = $('#c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -691,192 +877,13 @@ scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa3a8, 0.95));
 const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(6, 12, 8); scene.add(sun);
 
 const lam = c => new THREE.MeshLambertMaterial({ color:c });
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 320), lam(0xE6E9EA));
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 320), lam(GROUND));
 ground.rotation.x = -Math.PI / 2; ground.position.z = -100; scene.add(ground);
-const track = new THREE.Mesh(new THREE.BoxGeometry(7.2, 0.1, 320), lam(0x2A2D30));
-track.position.set(0, 0.05, -100); scene.add(track);
-[-3.75, 3.75].forEach(x => { const curb = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.25, 320), lam(RED)); curb.position.set(x, 0.12, -100); scene.add(curb); });
 
 const LANES = [-2.2, 0, 2.2];
 const stripes = [];
-const stripeGeo = new THREE.BoxGeometry(0.12, 0.02, 2.2), stripeMat = lam(WHITE);
-for (let i = 0; i < 16; i++) for (const x of [-1.1, 1.1]) { const s = new THREE.Mesh(stripeGeo, stripeMat); s.position.set(x, 0.11, 10 - i * 8); scene.add(s); stripes.push(s); }
-
-/* ---- German street: cobbled sidewalks, rows of houses, lamps, trees, signs, skyline ---- */
-const rnd = (a, b) => a + Math.random() * (b - a), rndi = (a, b) => Math.floor(rnd(a, b + 1));
-const CURB_X = 3.9, FRONT_X = 7.4;   // sidewalk runs from the curb to the house fronts
-function canvasTex(w, h, draw) {
-  const cv = document.createElement('canvas'); cv.width = w; cv.height = h; draw(cv.getContext('2d'), w, h);
-  const t = new THREE.CanvasTexture(cv); t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy()); return t;
-}
-const WALK_TILE = 4;
-const walkTex = canvasTex(128, 128, (g, w, h) => {
-  g.fillStyle = '#A9AEB2'; g.fillRect(0, 0, w, h);
-  for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
-    g.fillStyle = pick(['#C3C7CA', '#CDD0D3', '#BABEC2', '#D4D7D9']);
-    g.fillRect(x * 32 + (y % 2) * 16 - 16 + 2, y * 32 + 2, 28, 28); g.fillRect(x * 32 + (y % 2) * 16 + 112 + 2 - 128, y * 32 + 2, 28, 28);
-  }
-});
-walkTex.wrapS = walkTex.wrapT = THREE.RepeatWrapping; walkTex.repeat.set((FRONT_X - CURB_X) / WALK_TILE, 320 / WALK_TILE);
-[-1, 1].forEach(sd => {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(FRONT_X - CURB_X + 0.4, 320), new THREE.MeshLambertMaterial({ map:walkTex }));
-  m.rotation.x = -Math.PI / 2; m.position.set(sd * (CURB_X + FRONT_X) / 2, 0.08, -100); scene.add(m);
-});
-
-// facades are drawn on a canvas: 64 px per window bay and per floor
-const SHOPS = ['Bäckerei', 'Apotheke', 'Café', 'Döner', 'Kiosk', 'Blumen', 'Bücher', 'Metzgerei', 'Eiscafé', 'Späti', 'Optiker', 'Friseur'];
-function win(g, x, y, w, h, frame = '#FFFFFF', glass = '#35505F') {
-  g.fillStyle = frame; g.fillRect(x - 3, y - 3, w + 6, h + 6); g.fillStyle = glass; g.fillRect(x, y, w, h);
-  g.fillStyle = frame; g.fillRect(x + w / 2 - 1.5, y, 3, h); g.fillRect(x, y + h * 0.38, w, 3);
-}
-function facadeTex(b) {
-  return canvasTex(b.bays * 64, b.floors * 64, (g, W, H) => {
-    g.fillStyle = b.wall; g.fillRect(0, 0, W, H);
-    if (b.kind === 'brick') { g.fillStyle = 'rgba(0,0,0,.14)'; for (let y = 0; y < H; y += 8) { g.fillRect(0, y, W, 1.5); for (let x = (y / 8) % 2 * 8; x < W; x += 16) g.fillRect(x, y, 1.5, 8); } }
-    for (let f = 0; f < b.floors; f++) {
-      const y0 = H - (f + 1) * 64, ground = f === 0;
-      if (b.kind === 'bauhaus') {
-        if (ground) { g.fillStyle = '#1D2328'; g.fillRect(b.door * 64 + 20, y0 + 18, 24, 46); }
-        else { g.fillStyle = '#1D2328'; g.fillRect(6, y0 + 16, W - 12, 28); g.fillStyle = '#FFFFFF'; for (let x = 6; x < W - 6; x += 16) g.fillRect(x, y0 + 16, 2, 28); }
-        continue;
-      }
-      if (b.kind === 'altbau') { g.fillStyle = 'rgba(255,255,255,.4)'; g.fillRect(0, y0, W, 5); }
-      if (ground && b.shop) {
-        g.fillStyle = '#2A2D30'; g.fillRect(0, y0 + 4, W, 16);
-        g.fillStyle = '#F7C600'; g.font = '700 13px Jost, Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(b.shop, W / 2, y0 + 12.5);
-      }
-      for (let i = 0; i < b.bays; i++) {
-        const x = i * 64;
-        if (b.kind === 'fachwerk') {
-          g.fillStyle = '#4A2E1E'; g.fillRect(x, y0, 6, 64); g.fillRect(0, y0, W, 6); g.fillRect(0, y0 + 58, W, 6);
-          if (i % 2 === 0) { g.strokeStyle = '#4A2E1E'; g.lineWidth = 5; g.beginPath(); g.moveTo(x + 6, y0 + 58); g.lineTo(x + 20, y0 + 8); g.moveTo(x + 62, y0 + 58); g.lineTo(x + 48, y0 + 8); g.stroke(); }
-        }
-        if (ground && i === b.door) { g.fillStyle = b.kind === 'fachwerk' ? '#6B3A22' : '#2A2D30'; g.fillRect(x + 18, y0 + 22, 28, 42); continue; }
-        if (ground && b.shop) { win(g, x + 8, y0 + 26, 48, 34, '#FFFFFF', '#4B6B80'); continue; }
-        if (b.kind === 'altbau') { win(g, x + 20, y0 + 14, 24, 40); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(x + 16, y0 + 8, 32, 4); }
-        else if (b.kind === 'brick') { win(g, x + 18, y0 + 16, 28, 34); g.fillStyle = '#E8E2D0'; g.fillRect(x + 15, y0 + 10, 34, 4); }
-        else { win(g, x + 20, y0 + 16, 24, 28); g.fillStyle = '#C8372D'; g.fillRect(x + 18, y0 + 47, 28, 5); }
-      }
-      if (b.kind === 'fachwerk') { g.fillStyle = '#4A2E1E'; g.fillRect(W - 6, y0, 6, 64); }
-    }
-  });
-}
-const KINDS = [['fachwerk', 30], ['altbau', 34], ['brick', 20], ['bauhaus', 16]];
-const pickKind = () => { let r = Math.random() * 100; for (const [k, wgt] of KINDS) { if ((r -= wgt) < 0) return k; } return 'altbau'; };
-function prism(base, height, length, alongZ) {
-  // triangular roof prism: base x height triangle, extruded `length`; ridge along z if alongZ, else along x (gable facing the street)
-  const s = new THREE.Shape(); s.moveTo(-base / 2, 0); s.lineTo(base / 2, 0); s.lineTo(0, height); s.lineTo(-base / 2, 0);
-  const geo = new THREE.ExtrudeGeometry(s, { depth:length, bevelEnabled:false });
-  geo.translate(0, 0, -length / 2); if (!alongZ) geo.rotateY(Math.PI / 2);
-  return geo;
-}
-function makeHouse(side, kind) {
-  const g = new THREE.Group();
-  if (kind === 'church') {
-    const stone = lam(0xD8D0BE), w = 4.6, d = 4.6, h = 17;
-    const tex = canvasTex(128, 512, (c, W, H) => {
-      c.fillStyle = '#D8D0BE'; c.fillRect(0, 0, W, H); c.fillStyle = '#2E3A44';
-      for (const y of [120, 260, 400]) { c.fillRect(44, y, 40, 70); c.beginPath(); c.arc(64, y, 20, Math.PI, 0); c.fill(); }
-      c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(64, 50, 26, 0, 7); c.fill(); c.strokeStyle = '#000'; c.lineWidth = 4; c.stroke();
-      c.beginPath(); c.moveTo(64, 50); c.lineTo(64, 32); c.moveTo(64, 50); c.lineTo(78, 56); c.stroke();
-    });
-    const mats = [stone, stone, stone, stone, stone, stone]; mats[side > 0 ? 1 : 0] = new THREE.MeshLambertMaterial({ map:tex });
-    const tower = new THREE.Mesh(new THREE.BoxGeometry(d, h, w), mats); tower.position.y = h / 2;
-    const spire = new THREE.Mesh(new THREE.ConeGeometry(3.4, 10, 4), lam(0x5E9C8C)); spire.position.y = h + 5; spire.rotation.y = Math.PI / 4;
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 8), lam(YELLOW)); ball.position.y = h + 10.3;
-    const nave = new THREE.Mesh(new THREE.BoxGeometry(9, 8, 7), stone); nave.position.set(side * 6.8, 4, 0);
-    const naveRoof = new THREE.Mesh(prism(7.6, 4, 9.4, false), lam(0x7A3B2E)); naveRoof.position.set(side * 6.8, 8, 0);
-    g.add(tower, spire, ball, nave, naveRoof);
-    g.position.x = side * (FRONT_X + d / 2); return { g, w:7.4 };
-  }
-  const floors = kind === 'altbau' ? rndi(4, 5) : kind === 'fachwerk' ? rndi(2, 3) : rndi(2, 4);
-  const bays = kind === 'altbau' ? rndi(4, 6) : rndi(3, 4);
-  const wall = { fachwerk:'#F4EEE2', brick:'#A4442E', bauhaus:'#F5F4EE' }[kind] || pick(['#F2D58A', '#E9B7A3', '#BFD4E6', '#E8E2D0', '#CFE3C8', '#F3E3C3']);
-  const shop = (kind === 'altbau' || (kind === 'brick' && Math.random() < 0.4)) && Math.random() < 0.75 ? pick(SHOPS) : null;
-  const b = { kind, floors, bays, wall, shop, door:rndi(0, bays - 1) };
-  const w = bays * 2.0, d = rnd(5, 6.5), h = floors * 2.6;
-  const plain = lam(new THREE.Color(wall).getHex()), front = new THREE.MeshLambertMaterial({ map:facadeTex(b) });
-  const mats = [plain, plain, plain, plain, plain, plain]; mats[side > 0 ? 1 : 0] = front;
-  const body = new THREE.Mesh(new THREE.BoxGeometry(d, h, w), mats); body.position.y = h / 2; g.add(body);
-  if (kind === 'fachwerk') {                     // steep gable facing the street, as in old town centres
-    const roof = new THREE.Mesh(prism(w + 0.5, Math.min(5, w * 0.6), d + 0.5, false), [lam(0xF4EEE2), lam(0xA8372A)]); roof.position.y = h; g.add(roof);
-  } else if (kind === 'brick') {                 // ridge along the street, dark tiles
-    const roof = new THREE.Mesh(prism(d + 0.5, 2.6, w + 0.3, true), [lam(0xA4442E), lam(0x3A3F44)]); roof.position.y = h; g.add(roof);
-  } else if (kind === 'altbau') {                // cornice + slate mansard + chimney
-    const cor = new THREE.Mesh(new THREE.BoxGeometry(d + 0.3, 0.35, w + 0.1), lam(0xF5F1E6)); cor.position.y = h + 0.17;
-    const man = new THREE.Mesh(new THREE.BoxGeometry(d * 0.8, 1.5, w - 0.1), lam(0x5B6670)); man.position.y = h + 1.1;
-    const chim = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.2, 0.6), lam(0x8E3826)); chim.position.set(side * 0.8, h + 2.2, rnd(-w / 3, w / 3));
-    g.add(cor, man, chim);
-  } else {                                       // Bauhaus: flat roof slab and one coloured stair tower
-    const slab = new THREE.Mesh(new THREE.BoxGeometry(d + 0.2, 0.25, w + 0.2), lam(BLACK)); slab.position.y = h + 0.12;
-    const tw = new THREE.Mesh(new THREE.BoxGeometry(1.0, h + 1.2, 1.4), lam(pick([RED, BLUE, YELLOW]))); tw.position.set(-side * (d / 2 - 0.4), (h + 1.2) / 2, w / 2 - 1);
-    g.add(slab, tw);
-  }
-  g.position.x = side * (FRONT_X + d / 2); return { g, w };
-}
-const HOUSE_GAP = 0.3, ROW_FROM = 24, ROW_TO = -170;
-const rowsCity = [-1, 1].map(side => {
-  const r = { side, list:[], tail:ROW_FROM }, churchAt = rndi(5, 12);
-  for (let i = 0; r.tail > ROW_TO; i++) {
-    const hs = makeHouse(side, i === churchAt ? 'church' : pickKind());
-    hs.g.position.z = r.tail - hs.w / 2; r.tail -= hs.w + HOUSE_GAP; scene.add(hs.g); r.list.push(hs);
-  }
-  return r;
-});
-
-// sidewalk props, evenly spaced and recycled like the lane stripes
-const PROP_GAP = 8, PROP_N = 25, PROP_SPAN = PROP_GAP * PROP_N;
-const CITIES = ['BERLIN', 'MÜNCHEN', 'HAMBURG', 'KÖLN', 'FRANKFURT', 'LEIPZIG', 'DRESDEN', 'BREMEN', 'STUTTGART', 'HEIDELBERG', 'NÜRNBERG', 'BONN'];
-const PG = { pole:new THREE.CylinderGeometry(0.07, 0.09, 4.2, 8), lampHead:new THREE.BoxGeometry(0.42, 0.6, 0.42), lampCap:new THREE.ConeGeometry(0.4, 0.35, 4),
-  trunk:new THREE.CylinderGeometry(0.14, 0.2, 2.0, 8), crown:new THREE.SphereGeometry(1.25, 14, 10), signPole:new THREE.CylinderGeometry(0.05, 0.05, 2.6, 6) };
-const PM = { black:lam(BLACK), lampGlow:new THREE.MeshBasicMaterial({ color:0xFFE38A }), trunk:lam(0x6B4A2E), crown:[lam(0x5E8C4A), lam(0x4F7D3E), lam(0x6E9A52)] };
-function makeProp(side) {
-  const g = new THREE.Group(), r = Math.random();
-  if (r < 0.42) {
-    const t = new THREE.Mesh(PG.trunk, PM.trunk); t.position.y = 1.0;
-    const c = new THREE.Mesh(PG.crown, pick(PM.crown)); c.position.y = 2.9; c.scale.setScalar(rnd(0.85, 1.15));
-    g.add(t, c); g.position.x = side * 5.3;
-  } else if (r < 0.8) {                          // old-style Berlin street lamp
-    const p = new THREE.Mesh(PG.pole, PM.black); p.position.y = 2.1;
-    const hd = new THREE.Mesh(PG.lampHead, PM.lampGlow); hd.position.y = 4.4;
-    const cap = new THREE.Mesh(PG.lampCap, PM.black); cap.position.y = 4.85; cap.rotation.y = Math.PI / 4;
-    g.add(p, hd, cap); g.position.x = side * 4.4;
-  } else {                                       // yellow town sign, U-Bahn sign or bus stop
-    const kind = r < 0.88 ? 'ort' : r < 0.94 ? 'u' : 'h';
-    const tex = kind === 'ort' ? labelTex(pick(CITIES), '#F7C600', '#000000', '#000000') : kind === 'u' ? labelTex('U', '#1F4FA3', '#FFFFFF', '#FFFFFF') : labelTex('H', '#F7C600', '#0A7A3B', '#0A7A3B');
-    const pw = kind === 'ort' ? 2.0 : 1.0, sign = new THREE.Mesh(new THREE.PlaneGeometry(pw, pw / 2), new THREE.MeshBasicMaterial({ map:tex, side:THREE.DoubleSide }));
-    sign.position.y = 2.6; g.add(sign);
-    for (const dx of kind === 'ort' ? [-0.8, 0.8] : [0]) { const p = new THREE.Mesh(PG.signPole, PM.black); p.position.set(dx, 1.3, -0.02); g.add(p); }
-    g.position.x = side * 4.9;
-  }
-  return g;
-}
-const props = [];   // filled by initProps() once labelTex exists (signs use it)
-function initProps() { for (const side of [-1, 1]) for (let i = 0; i < PROP_N; i++) { const p = makeProp(side); p.position.z = 16 - i * PROP_GAP - (side > 0 ? PROP_GAP / 2 : 0); scene.add(p); props.push(p); } }
-
-// distant skyline (unaffected by fog): Fernsehturm, twin cathedral spires, rooftops
-(function skyline() {
-  const far = new THREE.MeshBasicMaterial({ color:0xB4C0C8, fog:false }), farther = new THREE.MeshBasicMaterial({ color:0xC0CAD1, fog:false });
-  const add = (geo, mat, x, y, z = -192) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); scene.add(m); return m; };
-  for (let i = 0; i < 30; i++) { const w = rnd(6, 16), h = rnd(5, 20); add(new THREE.BoxGeometry(w, h, 4), farther, rnd(-140, 140), h / 2, -196); }
-  add(new THREE.CylinderGeometry(1.0, 1.7, 46, 12), far, -30, 23);
-  add(new THREE.SphereGeometry(5.2, 20, 14), far, -30, 40);
-  add(new THREE.CylinderGeometry(0.25, 0.4, 20, 6), far, -30, 54);
-  for (const x of [38, 46]) { add(new THREE.BoxGeometry(4.2, 28, 4), far, x, 14); add(new THREE.ConeGeometry(2.6, 13, 4), far, x, 34.5).rotation.y = Math.PI / 4; }
-  add(new THREE.BoxGeometry(14, 16, 6), far, 42, 8);
-})();
-
-function stepCity(dz) {
-  walkTex.offset.y += dz / WALK_TILE;
-  for (const r of rowsCity) {
-    r.tail += dz;
-    for (const h of r.list) {
-      h.g.position.z += dz;
-      if (h.g.position.z - h.w / 2 > 18) { h.g.position.z = r.tail - h.w / 2; r.tail -= h.w + HOUSE_GAP; }
-    }
-  }
-  for (const p of props) { p.position.z += dz; if (p.position.z > 18) p.position.z -= PROP_SPAN; }
-}
+const stripeGeo = new THREE.BoxGeometry(0.12, 0.02, 2.2), stripeMat = lam(LANE_LINE);
+for (let i = 0; i < 16; i++) for (const x of [-1.1, 1.1]) { const s = new THREE.Mesh(stripeGeo, stripeMat); s.position.set(x, 0.02, 10 - i * 8); scene.add(s); stripes.push(s); }
 
 // player
 const player = new THREE.Group();
@@ -905,15 +912,14 @@ function labelTex(text, bg, fg, border) {
   t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   texCache.set(key, t); return t;
 }
-initProps();
-const GATE = { weil:['#1F4FA3', '#FFFFFF', BLUE], dass:['#E1251B', '#FFFFFF', RED], das:['#F7C600', '#000000', YELLOW], denn:['#000000', '#FFFFFF', BLACK] };
+const GATE = { weil:['#4F7CAC', '#FFFFFF', BLUE], dass:['#D9675B', '#FFFFFF', RED], das:['#EDC765', '#2F3640', YELLOW], denn:['#2F3640', '#FFFFFF', BLACK] };
 const GEO = {
   post: new THREE.BoxGeometry(0.22, 3.0, 0.22), beam: new THREE.BoxGeometry(2.15, 1.05, 0.3),
   sign: new THREE.PlaneGeometry(2.0, 0.95), portal: new THREE.PlaneGeometry(1.6, 2.5),
   block: new THREE.BoxGeometry(1.95, 0.98, 0.5), barrier: new THREE.BoxGeometry(1.9, 1.1, 0.4)
 };
 function makeGate(label, plain) {
-  const [bg, fg, hex] = (!plain && GATE[label]) || ['#FFFFFF', '#000000', WHITE];
+  const [bg, fg, hex] = (!plain && GATE[label]) || ['#FFFFFF', '#2F3640', WHITE];
   const g = new THREE.Group();
   const pm = lam(BLACK);
   const a = new THREE.Mesh(GEO.post, pm), b = new THREE.Mesh(GEO.post, pm);
@@ -925,12 +931,12 @@ function makeGate(label, plain) {
   g.add(a, b, beam, sign, portal); return g;
 }
 function makeBarrier() {
-  const side = lam(BLACK), front = new THREE.MeshBasicMaterial({ map: labelTex('✕', '#000000', '#F7C600') });
+  const side = lam(BLACK), front = new THREE.MeshBasicMaterial({ map: labelTex('✕', '#2F3640', '#EDC765') });
   const m = new THREE.Mesh(GEO.barrier, [side, side, side, side, front, side]); m.position.y = 0.55;
   const g = new THREE.Group(); g.add(m); return g;
 }
 function makeBlock(label) {
-  const side = lam(YELLOW), front = new THREE.MeshBasicMaterial({ map: labelTex(label, '#FFFFFF', '#000000', '#000000') });
+  const side = lam(YELLOW), front = new THREE.MeshBasicMaterial({ map: labelTex(label, '#FFFFFF', '#2F3640', '#2F3640') });
   const m = new THREE.Mesh(GEO.block, [side, side, side, side, front, side]);
   const g = new THREE.Group(); m.position.y = 1.0; g.add(m); g.userData.block = m; return g;
 }
@@ -993,7 +999,18 @@ const RULES = {
        cards:[['Wo? → Dativ', EXP.wo, 'Das Buch liegt <b>auf <b class="cj dat">dem</b></b> Tisch.', 'w_auf_tisch_wo'], ['Wohin? → Akkusativ', EXP.wohin, 'Ich lege das Buch <b>auf <b class="cj akk">den</b></b> Tisch.', 'w_auf_tisch_wohin']] }
 };
 
-let lastLevel = 1, pendingFresh = [], pendingRule = null;
+function buildQueue(l, fresh) {
+  if (l === 1) return pickWords(8, fresh).map(gateQ);
+  if (l === 2) return pickWords(6, fresh).map(buildQ);
+  if (l === 3) { const ws = pickWords(6, fresh); return shuffle([...ws.slice(0, 3).map(gateQ), ...ws.slice(3).map(buildQ), ...shuffle(TRAPS.slice()).slice(0, 4).map(trapQ)]); }
+  if (l === 4) return pickPrep(PFIX, 8).map(prepQ);
+  if (l === 5) return pickPrep(PWECH, 8).map(prepQ);
+  if (l === 6) return shuffle([...pickPrep(PFIX, 3), ...pickPrep(PWECH, 3), ...pickPrep(PMIX, 4)]).map(prepQ);
+  return reviewWords().slice(0, 8).map((w, i) => w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
+}
+
+// every round opens with a briefing of its vocabulary (plus the full rule cards the first time a preposition level is played)
+let lastLevel = 1, pendingFresh = [], pendingRule = null, pendingQueue = [];
 function startLevel(l) {
   $('#menuMsg').textContent = '';
   if (isLocked(l)) { $('#menuMsg').textContent = LOCK_MSG[l]; return; }
@@ -1004,41 +1021,22 @@ function startLevel(l) {
   lastLevel = l;
   const rule = RULES[l];
   pendingRule = rule && !S.intro[rule.key] ? rule.key : null;
-  if (pendingRule) {
-    $('#iTitle').textContent = rule.title; $('#iLead').textContent = rule.lead;
-    $('#iNote').textContent = 'You can read this again any time: it shows up when you get one wrong.';
-    $('#iCards').innerHTML = rule.cards.map(([h, body, ex, pic]) => `
-      <div class="wcard"><div><div class="de">${h}</div></div><div class="ex">${body}<div class="tr" style="margin-top:6px">${ex}</div>${picSVG(BYID[pic])}</div></div>`).join('');
-    pendingFresh = []; show('intro'); $('#iGo').focus(); return;
-  }
-  const fresh = (l === 0 || l >= 4) ? [] : newWords(3);
-  pendingFresh = fresh;
-  if (fresh.length) {
-    $('#iTitle').textContent = 'Neue Wörter';
-    $('#iLead').textContent = "Three new words for this round. You'll meet them in the sentences you run through.";
-    $('#iNote').textContent = 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
-    $('#iCards').innerHTML = fresh.map(w => `
-      <div class="wcard">
-        <div><div class="de">${wordHTML(w)}</div><div class="en">${esc(w.en)}</div></div>
-        ${starBtn(w.id)}
-        <div class="ex">${sentHTML(w)}<div class="tr">${esc(w.t)}</div></div>
-      </div>`).join('');
-    show('intro'); $('#iGo').focus();
-  } else beginRound(l, []);
+  pendingFresh = (l === 0 || l >= 4) ? [] : newWords(3);
+  pendingQueue = buildQueue(l, pendingFresh);
+  const ruleHTML = pendingRule ? rule.cards.map(([h, body, ex, pic]) => `
+      <div class="wcard"><div><div class="de">${h}</div></div><div class="ex">${body}<div class="tr" style="margin-top:6px">${ex}</div>${picSVG(BYID[pic])}</div></div>`).join('') : '';
+  $('#iTitle').textContent = pendingRule ? rule.title : 'Vor der Runde';
+  $('#iLead').textContent = pendingRule ? rule.lead : `Here's the vocabulary for this round, with a memory trick for each.${pendingFresh.length ? ` ${pendingFresh.length} new word${pendingFresh.length > 1 ? 's' : ''} today.` : ''}`;
+  $('#iNote').textContent = 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
+  $('#iCards').innerHTML = ruleHTML + briefingHTML(pendingQueue, pendingFresh);
+  show('intro'); $('#intro').scrollTop = 0; $('#iGo').focus();
 }
 
 function beginRound(l, fresh) {
   fresh.forEach(w => { S.intro[w.id] = Date.now(); });
   if (pendingRule) { S.intro[pendingRule] = Date.now(); pendingRule = null; }
   save();
-  let q = [];
-  if (l === 1) q = pickWords(8, fresh).map(gateQ);
-  else if (l === 2) q = pickWords(6, fresh).map(buildQ);
-  else if (l === 3) { const ws = pickWords(6, fresh); q = shuffle([...ws.slice(0, 3).map(gateQ), ...ws.slice(3).map(buildQ), ...shuffle(TRAPS.slice()).slice(0, 4).map(trapQ)]); }
-  else if (l === 4) q = pickPrep(PFIX, 8).map(prepQ);
-  else if (l === 5) q = pickPrep(PWECH, 8).map(prepQ);
-  else if (l === 6) q = shuffle([...pickPrep(PFIX, 3), ...pickPrep(PWECH, 3), ...pickPrep(PMIX, 4)]).map(prepQ);
-  else q = reviewWords().slice(0, 8).map((w, i) => w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
+  const q = pendingQueue.length ? pendingQueue : buildQueue(l, fresh); pendingQueue = [];
 
   clearRows();
   G = { running:true, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0,
@@ -1111,12 +1109,12 @@ function resolveRow(row) {
   const q = G.q, hit = row.items.find(it => it.lane === G.lane);
   hit.mesh.visible = false;
   if (row.kind === 'gate') {
-    if (hit.correct) { burst(hit.mesh, 0x178A4A); finish(q, true); }
+    if (hit.correct) { burst(hit.mesh, 0x3E8E63); finish(q, true); }
     else { burst(hit.mesh, RED); loseLife(); showWrong(q, hit.barrier ? null : hit.label); finish(q, false); }
     return;
   }
   const k = row.step, expect = q.w.b[k];
-  if (hit.correct) { burst(hit.mesh, 0x178A4A); q.built.push(hit.label); q.builtOk.push(true); }
+  if (hit.correct) { burst(hit.mesh, 0x3E8E63); q.built.push(hit.label); q.builtOk.push(true); }
   else { burst(hit.mesh, RED); q.mistake = true; q.built.push(expect); q.builtOk.push(false); loseLife(); showWrong(q, hit.label, expect); }
   renderPrompt();
   if (G.lives <= 0) { clearRows(); finish(q, false); }
@@ -1324,7 +1322,6 @@ function frame(now) {
   const spd = active ? G.speed : (G.running ? 0 : 5);
 
   for (const s of stripes) { s.position.z += spd * dt; if (s.position.z > 12) s.position.z -= 128; }
-  stepCity(spd * dt);
 
   const tx2 = LANES[G.running ? G.lane : 1];
   player.position.x += (tx2 - player.position.x) * Math.min(1, dt * 14);
