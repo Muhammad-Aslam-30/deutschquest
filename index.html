@@ -1566,6 +1566,12 @@ function audioCtx() {
   actx = actx || new A(); if (actx.state === 'suspended') actx.resume().catch(() => {});
   return actx;
 }
+// browsers only allow sound that follows a tap; every tap/key in the café re-unlocks audio (a silent blip does it on Android)
+let audioUnlocked = false;
+function unlockAudio() {
+  const ctx = audioCtx(); if (!ctx || audioUnlocked && ctx.state === 'running') return;
+  try { const src = ctx.createBufferSource(); src.buffer = ctx.createBuffer(1, 1, 22050); src.connect(ctx.destination); src.start(0); audioUnlocked = true; } catch (e) {}
+}
 function talking(on) { const f = $('#lena .lena-svg'); if (f) f.classList.toggle('talk', on); }
 function stopVoice() {
   speakSeq++;
@@ -1574,27 +1580,46 @@ function stopVoice() {
   talking(false);
 }
 function voiceBtn() { const b = $('#cVoice'); if (b) b.setAttribute('aria-pressed', (S.cafeVoice || 'natural') === 'natural'); }
-async function ttsBuffer(text) {
-  const ck = (C.slow ? 's:' : 'n:') + text;
-  if (audioCache.has(ck)) return audioCache.get(ck);
+// only Lena's sentence is sent: style instructions get read aloud by the speech model
+const ttsPending = new Map();
+function ttsBuffer(text) {
+  if (audioCache.has(text)) return Promise.resolve(audioCache.get(text));
+  if (!ttsPending.has(text)) ttsPending.set(text, fetchSpeech(text).finally(() => ttsPending.delete(text)));
+  return ttsPending.get(text);
+}
+async function fetchSpeech(text) {
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
   await rankModels(key);
   const models = (modelCache && modelCache.tts) || []; if (!models.length) throw new AIError('notts');
-  const style = C.slow ? 'Say slowly and very clearly, in a warm and friendly voice' : 'Say naturally, in a warm, cheerful and friendly voice, like a young barista chatting with a regular guest';
   let lastErr = null;
   for (const model of models.slice(0, 3)) {
     const r = await gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
-      body:JSON.stringify({ contents:[{ parts:[{ text:`${style}: ${text}` }] }],
-        generationConfig:{ responseModalities:['AUDIO'], speechConfig:{ voiceConfig:{ prebuiltVoiceConfig:{ voiceName:LENA_VOICE } } } } }) });
-    if (!r.ok) { lastErr = await apiError(r); if (r.status === 404 || r.status === 429 || r.status >= 500) continue; throw lastErr; }
-    const d = await r.json(), part = ((((d.candidates || [])[0] || {}).content || {}).parts || []).find(p => p.inlineData && p.inlineData.data);
-    if (!part) { lastErr = new AIError('notts'); continue; }
-    const ctx = audioCtx(), rate = +(((part.inlineData.mimeType || '').match(/rate=(\d+)/) || [0, 24000])[1]);
-    const bin = atob(part.inlineData.data), n = bin.length >> 1, buf = ctx.createBuffer(1, n, rate), ch = buf.getChannelData(0);
-    for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; ch[i] = v / 32768; }
-    audioCache.set(ck, buf); return buf;
+      body:JSON.stringify({ contents:[{ parts:[{ text }] }],
+        generationConfig:{ responseModalities:['AUDIO'], speechConfig:{ languageCode:'de-DE', voiceConfig:{ prebuiltVoiceConfig:{ voiceName:LENA_VOICE } } } } }) });
+    if (!r.ok) {
+      lastErr = await apiError(r);
+      if (r.status === 400 && /language_?code/i.test(lastErr.detail)) { lastErr = null; return fetchSpeechNoLang(key, model, text); }
+      if (r.status === 404 || r.status === 429 || r.status >= 500) continue; throw lastErr;
+    }
+    const buf = await speechToBuffer(r); if (buf) { audioCache.set(text, buf); return buf; }
+    lastErr = new AIError('notts');
   }
   throw lastErr || new AIError('notts');
+}
+async function fetchSpeechNoLang(key, model, text) {     // older speech models don't take a language code
+  const r = await gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
+    body:JSON.stringify({ contents:[{ parts:[{ text }] }], generationConfig:{ responseModalities:['AUDIO'], speechConfig:{ voiceConfig:{ prebuiltVoiceConfig:{ voiceName:LENA_VOICE } } } } }) });
+  if (!r.ok) throw await apiError(r);
+  const buf = await speechToBuffer(r); if (!buf) throw new AIError('notts');
+  audioCache.set(text, buf); return buf;
+}
+async function speechToBuffer(r) {
+  const d = await r.json(), part = ((((d.candidates || [])[0] || {}).content || {}).parts || []).find(p => p.inlineData && p.inlineData.data);
+  if (!part) return null;
+  const ctx = audioCtx(), rate = +(((part.inlineData.mimeType || '').match(/rate=(\d+)/) || [0, 24000])[1]);
+  const bin = atob(part.inlineData.data), n = bin.length >> 1, buf = ctx.createBuffer(1, n, rate), ch = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; ch[i] = v / 32768; }
+  return buf;
 }
 function loadVoice() {
   const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [], de = vs.filter(v => /^de/i.test(v.lang));
@@ -1609,19 +1634,29 @@ function sayDevice(text) {
   u.onend = u.onerror = () => talking(false);
   speechSynthesis.speak(u);
 }
+const VOICE_WAIT = 7000;   // if the natural voice takes longer than this, Lena uses the device voice for this message
+function playBuffer(buf) {
+  const ctx = audioCtx(), src = ctx.createBufferSource();
+  src.buffer = buf; src.playbackRate.value = C.slow ? 0.85 : 1; src.connect(ctx.destination);
+  src.onended = () => { if (curSrc === src) { curSrc = null; talking(false); } };
+  curSrc = src; talking(true); src.start();
+}
 async function say(text) {
   stopVoice(); const my = speakSeq;
   if ((S.cafeVoice || 'natural') === 'natural' && !ttsDown && lsGet(AI_KEY) && audioCtx()) {
-    try {
-      const buf = await ttsBuffer(text);
-      if (my !== speakSeq) return;                          // the learner already started something else
-      const ctx = audioCtx(), src = ctx.createBufferSource();
-      src.buffer = buf; src.connect(ctx.destination);
-      src.onended = () => { if (curSrc === src) { curSrc = null; talking(false); } };
-      curSrc = src; talking(true); src.start(); return;
-    } catch (e) {
+    let buf = null, failed = null;
+    if (!audioCache.has(text)) cafeStatus('🗣 Lena is about to speak…');
+    try { buf = await Promise.race([ttsBuffer(text), sleep(VOICE_WAIT).then(() => null)]); } catch (e) { failed = e; }
+    if (my !== speakSeq) return;                                  // the learner already started something else
+    if ($('#cStatus').textContent.startsWith('🗣')) cafeStatus('');
+    if (buf) {
+      const ctx = audioCtx();
+      if (ctx.state !== 'running') { try { await Promise.race([ctx.resume(), sleep(400)]); } catch (e) {} }
       if (my !== speakSeq) return;
-      if (e.message !== 'busy' && e.message !== 'blocked') { ttsDown = true; cafeStatus('The natural voice is not available right now (free limit or not offered for your key), so Lena uses the device voice.'); }
+      if (ctx.state === 'running') { playBuffer(buf); return; }
+      cafeStatus('Tap the screen once so the browser lets Lena speak. Until then she uses the device voice.');
+    } else if (failed && failed.message !== 'busy' && failed.message !== 'blocked') {
+      ttsDown = true; cafeStatus('The natural voice is not available right now (free limit or not offered for your key), so Lena uses the device voice.');
     }
   }
   if (my === speakSeq) sayDevice(text);
@@ -1927,6 +1962,7 @@ $('#gapUp').addEventListener('click', () => setGap(1));
 $$('#menu .btn.mode').forEach(b => b.addEventListener('click', () => { cafeMode = b.dataset.mode; $('#menuMsg').textContent = ''; renderMenu(); }));
 $('#cafeLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderCafeBox(); } });
 $('#cafeTopics').addEventListener('click', e => { const b = e.target.closest('[data-cafe]'); if (b) openCafe(b.dataset.cafe); });
+$('#cafe').addEventListener('pointerdown', unlockAudio, true); $('#cafe').addEventListener('keydown', unlockAudio, true);
 $('#cBack').addEventListener('click', closeCafe);
 $('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setAttribute('aria-pressed', C.slow); });
 $('#cKeyBtn').addEventListener('click', () => showKeySetup($('#cSetup').style.display === 'none'));
