@@ -72,6 +72,23 @@ p{line-height:1.5}
 .kw{background:var(--yellow);padding:0 3px}
 .cj{font-weight:800}
 .cj.akk{color:var(--red)} .cj.dat{color:var(--blue)}
+.cj.adj-weak{color:var(--blue)} .cj.adj-mixed{color:#A07A12} .cj.adj-strong{color:var(--red)}
+.guide{margin-top:18px}
+.guide>h3{margin:0 0 2px}
+.guide details{border:2px solid var(--black);background:var(--white);margin-top:8px}
+.guide summary{padding:10px 12px;font-weight:700;cursor:pointer;font-size:16.5px}
+.guide .gb{padding:0 12px 12px;line-height:1.55;font-size:16px}
+.guide .gb p{margin:8px 0}
+.gsvg{display:block;width:100%;max-width:440px;margin:10px auto;border:2px solid var(--black);background:#fff}
+.guide .pic{max-width:340px}
+.gex{margin:8px 0 6px 20px;line-height:1.65}
+.gex .tr{font-size:14px}
+.gpair{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.gpair .pic{margin:6px 0}
+.gpair .s{font-size:15px}
+.gtab{border-collapse:collapse;width:100%;margin:8px 0;font-size:15px}
+.gtab td,.gtab th{border:2px solid var(--black);padding:6px 8px;text-align:left;vertical-align:top}
+.gtab th{background:#EEF2F5}
 .cj.weil{color:var(--blue)} .cj.dass{color:var(--red)} .cj.das{color:#8A6D00} .cj.denn{color:var(--black);text-decoration:underline}
 .vb{border-bottom:4px solid var(--black)}
 .art{display:inline-block;font-weight:600;font-size:.82em;padding:0 6px;margin-right:4px;border:2px solid var(--black);line-height:1.35;vertical-align:1px}
@@ -289,9 +306,9 @@ p{line-height:1.5}
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag">Run, build and speak German: weil/dass word order and prepositions, plus voice chats in the Sprach-Café.</p>
+      <p class="tag">Run, build and speak German: weil/dass word order, prepositions and adjective endings, plus voice chats in the Sprach-Café.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
-      <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button></div>
+      <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button><button data-topic="adj">Adjektive</button></div>
       <p class="modeq" id="modeQ">Was möchtest du machen? <span>What would you like to do?</span></p>
       <div class="row2 modes">
         <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner game</b><small>Run through the right gates</small></span></button>
@@ -308,7 +325,19 @@ p{line-height:1.5}
           <button class="btn red" data-level="5"><span class="shape circle"></span><span><b>Level 2: Wo oder wohin?</b><small id="l5s">Wechselpräpositionen</small></span></button>
           <button class="btn black" data-level="6"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l6s">Faster, plus im/ins, am/an den, zum/zur</small></span></button>
         </div>
+        <div class="levels" id="lvAdj" style="display:none">
+          <button class="btn blue" data-level="7"><span class="shape"></span><span><b>Level 1: Nach der / die / das</b><small id="l7s">der alte Mann · den alten Mann</small></span></button>
+          <button class="btn red" data-level="8"><span class="shape circle"></span><span><b>Level 2: Nach ein / kein / mein</b><small id="l8s">ein alter Mann · ein neues Auto</small></span></button>
+          <button class="btn black" data-level="9"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l9s">Faster, plus no article: kalter Kaffee</small></span></button>
+        </div>
         <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
+        <div class="gapset">
+          <span class="l">Time between gates</span>
+          <button id="gapDn" aria-label="Less time between gates">−</button>
+          <b id="gapVal" aria-live="polite"></b>
+          <button id="gapUp" aria-label="More time between gates">+</button>
+        </div>
+        <div class="guide" id="guide"></div>
       </div>
       <div id="cafeBox" style="display:none">
         <p class="cafe-lead">Pick your level and a topic. Lena will chat with you and slip in <b id="cafeFocusName">weil / dass</b> as often as she can.</p>
@@ -320,12 +349,6 @@ p{line-height:1.5}
         <button class="btn center" id="bProg">My progress</button>
       </div>
       <button class="btn center" id="bHist" style="margin-top:14px">📖 Past rounds</button>
-      <div class="gapset">
-        <span class="l">Time between gates</span>
-        <button id="gapDn" aria-label="Less time between gates">−</button>
-        <b id="gapVal" aria-live="polite"></b>
-        <button id="gapUp" aria-label="More time between gates">+</button>
-      </div>
       <div class="msg" id="menuMsg" role="status"></div>
     </div>
   </section>
@@ -758,7 +781,15 @@ const wasMissed = id => !!(S.srs[id] && S.srs[id].box === 0 && S.srs[id].seen > 
 const vcard = (big, sub, ta, mn, extra = '', tmn = '') => `<div class="vcard">${extra}<div class="big">${big}</div><div class="en">${sub}</div><div class="ta">தமிழ்: ${esc(ta)}</div>${mn ? `<div class="mn">💡 ${mn}</div>` : ''}${taMn(tmn)}</div>`;
 function briefingHTML(q, fresh) {
   const preps = q.filter(x => x.type === 'prep').map(x => x.p), words = q.filter(x => x.w).map(x => x.w), traps = q.filter(x => x.type === 'trap');
+  const adjs = q.filter(x => x.type === 'adj').map(x => x.p);
   let h = '';
+  if (adjs.length) {
+    const kinds = ['weak', 'mixed', 'strong'].filter(k => adjs.some(x => x.k === k));
+    h += `<div class="vgrid tips">${kinds.map(k => `<div class="vcard"><div class="big sm">${ADJ_TIPS[k][0]}</div><div class="mn">💡 ${ADJ_TIPS[k][1]}</div>${taMn(ADJ_TIPS[k][2])}</div>`).join('')}</div>`;
+    h += `<h3>Adjectives</h3><div class="vgrid">${[...new Set(adjs.map(x => x.adj))].map(k => { const [b, en, ta, mn, tmn] = ADJV[k]; return vcard(esc(b), esc(en), ta, esc(mn), '', tmn); }).join('')}</div>`;
+    const ns = [...new Set(adjs.map(x => x.n))].map(k => ANOUN[k]).filter(Boolean);
+    h += `<h3>Nouns (watch the gender!)</h3><div class="nlist">${ns.map(([de, en, ta]) => `<div>${wordHTML({ de })} <span class="tr">${esc(en)} · ${esc(ta)}</span></div>`).join('')}</div>`;
+  }
   if (preps.length) {
     const kinds = [...new Set(preps.map(p => p.pt === 'wech' ? 'wech' : p.cs))].sort();
     h += `<div class="vgrid tips">${kinds.map(k => `<div class="vcard tip-${k}"><div class="big sm">${TIPS[k][0]}</div><div class="mn">💡 ${TIPS[k][1]}</div>${taMn(TA_TIPS[k])}</div>`).join('')}</div>`;
@@ -787,7 +818,115 @@ function briefingHTML(q, fresh) {
   return h;
 }
 
-const BYID = Object.fromEntries([...W, ...P].map(w => [w.id, w]));
+/* ================= Adjektivdeklination =================
+   q = sentence with ___, o = gate options, a = answer, k = weak (after der/die/das) / mixed (after ein/kein/mein) /
+   strong (no article), g = gender m/f/n/pl, c = case nom/akk/dat, adj = adjective (ADJV key), n = noun (ANOUN key). */
+const A = [
+  // ---- weak: after der / die / das ----
+  {id:'a_w1', q:'Der ___ Mann wohnt hier.', o:['alte','alten'], a:'alte', k:'weak', g:'m', c:'nom', adj:'alt', n:'mann', t:'The old man lives here.'},
+  {id:'a_w2', q:'Ich sehe den ___ Mann.', o:['alten','alte'], a:'alten', k:'weak', g:'m', c:'akk', adj:'alt', n:'mann', t:'I see the old man.'},
+  {id:'a_w3', q:'Die ___ Lampe ist teuer.', o:['neue','neuen'], a:'neue', k:'weak', g:'f', c:'nom', adj:'neu', n:'lampe', t:'The new lamp is expensive.'},
+  {id:'a_w4', q:'Ich kaufe die ___ Jacke.', o:['rote','roten'], a:'rote', k:'weak', g:'f', c:'akk', adj:'rot', n:'jacke', t:"I'm buying the red jacket."},
+  {id:'a_w5', q:'Das ___ Kind spielt im Garten.', o:['kleine','kleinen'], a:'kleine', k:'weak', g:'n', c:'nom', adj:'klein', n:'kind', t:'The small child is playing in the garden.'},
+  {id:'a_w6', q:'Wir mögen das ___ Haus.', o:['schöne','schönen'], a:'schöne', k:'weak', g:'n', c:'akk', adj:'schoen', n:'haus', t:'We like the beautiful house.'},
+  {id:'a_w7', q:'Ich spreche mit dem ___ Lehrer.', o:['netten','nette'], a:'netten', k:'weak', g:'m', c:'dat', adj:'nett', n:'lehrer', t:"I'm talking to the nice teacher."},
+  {id:'a_w8', q:'Sie hilft der ___ Frau.', o:['alten','alte'], a:'alten', k:'weak', g:'f', c:'dat', adj:'alt', n:'frau', t:'She helps the old woman.'},
+  {id:'a_w9', q:'Er spielt mit dem ___ Hund.', o:['jungen','junge'], a:'jungen', k:'weak', g:'m', c:'dat', adj:'jung', n:'hund', t:'He plays with the young dog.'},
+  {id:'a_w10', q:'Die ___ Leute sind nett.', o:['jungen','junge'], a:'jungen', k:'weak', g:'pl', c:'nom', adj:'jung', n:'leute', t:'The young people are nice.'},
+  {id:'a_w11', q:'Ich trinke den ___ Kaffee nicht.', o:['kalten','kalte'], a:'kalten', k:'weak', g:'m', c:'akk', adj:'kalt', n:'kaffee', t:"I'm not drinking the cold coffee."},
+  {id:'a_w12', q:'Das ___ Brot ist lecker.', o:['frische','frischen'], a:'frische', k:'weak', g:'n', c:'nom', adj:'frisch', n:'brot', t:'The fresh bread is tasty.'},
+  {id:'a_w13', q:'Wir wohnen in der ___ Stadt.', o:['großen','große'], a:'großen', k:'weak', g:'f', c:'dat', adj:'gross', n:'stadt', t:'We live in the big city.'},
+  {id:'a_w14', q:'Ich lese das ___ Buch.', o:['neue','neuen'], a:'neue', k:'weak', g:'n', c:'akk', adj:'neu', n:'buch', t:"I'm reading the new book."},
+  {id:'a_w15', q:'Der ___ Wein ist teuer.', o:['rote','roten'], a:'rote', k:'weak', g:'m', c:'nom', adj:'rot', n:'wein', t:'The red wine is expensive.'},
+  {id:'a_w16', q:'Ich danke den ___ Freunden.', o:['guten','gute'], a:'guten', k:'weak', g:'pl', c:'dat', adj:'gut', n:'freunde', t:'I thank the good friends.'},
+  // ---- mixed: after ein / kein / mein ----
+  {id:'a_m1', q:'Das ist ein ___ Mann.', o:['alter','alte'], a:'alter', k:'mixed', g:'m', c:'nom', adj:'alt', n:'mann', t:"That's an old man."},
+  {id:'a_m2', q:'Ich habe einen ___ Hund.', o:['kleinen','kleiner'], a:'kleinen', k:'mixed', g:'m', c:'akk', adj:'klein', n:'hund', t:'I have a small dog.'},
+  {id:'a_m3', q:'Sie hat eine ___ Katze.', o:['schwarze','schwarzen'], a:'schwarze', k:'mixed', g:'f', c:'akk', adj:'schwarz', n:'katze', t:'She has a black cat.'},
+  {id:'a_m4', q:'Das ist ein ___ Auto.', o:['neues','neue'], a:'neues', k:'mixed', g:'n', c:'nom', adj:'neu', n:'auto', t:"That's a new car."},
+  {id:'a_m5', q:'Wir kaufen ein ___ Haus.', o:['großes','großen'], a:'großes', k:'mixed', g:'n', c:'akk', adj:'gross', n:'haus', t:"We're buying a big house."},
+  {id:'a_m6', q:'Mein ___ Freund wohnt in Köln.', o:['guter','gute'], a:'guter', k:'mixed', g:'m', c:'nom', adj:'gut', n:'freund', t:'My good friend lives in Cologne.'},
+  {id:'a_m7', q:'Ich wohne bei meiner ___ Tante.', o:['netten','nette'], a:'netten', k:'mixed', g:'f', c:'dat', adj:'nett', n:'tante', t:"I'm staying with my nice aunt."},
+  {id:'a_m8', q:'Er fährt mit seinem ___ Fahrrad.', o:['alten','altes'], a:'alten', k:'mixed', g:'n', c:'dat', adj:'alt', n:'fahrrad', t:'He rides his old bike.'},
+  {id:'a_m9', q:'Das ist keine ___ Idee.', o:['gute','guten'], a:'gute', k:'mixed', g:'f', c:'nom', adj:'gut', n:'idee', t:"That's not a good idea."},
+  {id:'a_m10', q:'Ich habe keinen ___ Kaffee mehr.', o:['warmen','warmer'], a:'warmen', k:'mixed', g:'m', c:'akk', adj:'warm', n:'kaffee', t:'I have no warm coffee left.'},
+  {id:'a_m11', q:'Meine ___ Freunde kommen heute.', o:['neuen','neue'], a:'neuen', k:'mixed', g:'pl', c:'nom', adj:'neu', n:'freunde', t:'My new friends are coming today.'},
+  {id:'a_m12', q:'Sie trägt ein ___ Kleid.', o:['rotes','rote'], a:'rotes', k:'mixed', g:'n', c:'akk', adj:'rot', n:'kleid', t:"She's wearing a red dress."},
+  {id:'a_m13', q:'Wir sprechen mit einem ___ Arzt.', o:['jungen','junger'], a:'jungen', k:'mixed', g:'m', c:'dat', adj:'jung', n:'arzt', t:"We're talking to a young doctor."},
+  {id:'a_m14', q:'Eine ___ Frau wartet draußen.', o:['freundliche','freundlichen'], a:'freundliche', k:'mixed', g:'f', c:'nom', adj:'freundlich', n:'frau', t:'A friendly woman is waiting outside.'},
+  // ---- strong: no article ----
+  {id:'a_s1', q:'Ich trinke gern ___ Kaffee.', o:['kalten','kalter'], a:'kalten', k:'strong', g:'m', c:'akk', adj:'kalt', n:'kaffee', t:'I like drinking cold coffee.'},
+  {id:'a_s2', q:'___ Kaffee schmeckt mir nicht.', o:['Kalter','Kalten'], a:'Kalter', k:'strong', g:'m', c:'nom', adj:'kalt', n:'kaffee', t:"I don't like cold coffee."},
+  {id:'a_s3', q:'Ich mag ___ Milch.', o:['frische','frischen'], a:'frische', k:'strong', g:'f', c:'akk', adj:'frisch', n:'milch', t:'I like fresh milk.'},
+  {id:'a_s4', q:'___ Wasser ist gesund.', o:['Frisches','Frische'], a:'Frisches', k:'strong', g:'n', c:'nom', adj:'frisch', n:'wasser', t:'Fresh water is healthy.'},
+  {id:'a_s5', q:'Wir essen gern ___ Brot.', o:['frisches','frischen'], a:'frisches', k:'strong', g:'n', c:'akk', adj:'frisch', n:'brot', t:'We like eating fresh bread.'},
+  {id:'a_s6', q:'Er trinkt Tee mit ___ Milch.', o:['warmer','warme'], a:'warmer', k:'strong', g:'f', c:'dat', adj:'warm', n:'milch', t:'He drinks tea with warm milk.'},
+  {id:'a_s7', q:'Ich koche mit ___ Wasser.', o:['heißem','heißes'], a:'heißem', k:'strong', g:'n', c:'dat', adj:'heiss', n:'wasser', t:'I cook with hot water.'},
+  {id:'a_s8', q:'Sie kommt mit ___ Wein.', o:['rotem','roter'], a:'rotem', k:'strong', g:'m', c:'dat', adj:'rot', n:'wein', t:"She's coming with red wine."},
+  {id:'a_s9', q:'___ Leute sind hier willkommen.', o:['Nette','Netten'], a:'Nette', k:'strong', g:'pl', c:'nom', adj:'nett', n:'leute', t:'Nice people are welcome here.'},
+  {id:'a_s10', q:'Wir haben ___ Freunde in Berlin.', o:['gute','guten'], a:'gute', k:'strong', g:'pl', c:'akk', adj:'gut', n:'freunde', t:'We have good friends in Berlin.'},
+  {id:'a_s11', q:'Ich spreche gern mit ___ Leuten.', o:['netten','nette'], a:'netten', k:'strong', g:'pl', c:'dat', adj:'nett', n:'leute', t:'I like talking to nice people.'},
+  {id:'a_s12', q:'Heute ist ___ Wetter!', o:['schönes','schöne'], a:'schönes', k:'strong', g:'n', c:'nom', adj:'schoen', n:'wetter', t:"It's lovely weather today!"}
+];
+A.forEach(x => { x.ak = x.k; });
+const AWEAK = A.filter(x => x.k === 'weak'), AMIXED = A.filter(x => x.k === 'mixed'), ASTRONG = A.filter(x => x.k === 'strong');
+const ADJV = { // adjective: [base form, English, Tamil, memory trick, Tamil memory trick]
+  alt:['alt', 'old', 'பழைய', 'alt ≈ old: an Altstadt is the old town.', 'ஆல்ட்: "ஆல"மரம் போல பழையது!'],
+  neu:['neu', 'new', 'புதிய', 'neu ≈ new.', 'நொய்: "நியூ" (new) போலவே — புதியது'],
+  rot:['rot', 'red', 'சிவப்பு', 'rot ≈ rose-red: think of a red rose.', 'ரோட்: சிவப்பு "ரோஜா"!'],
+  klein:['klein', 'small', 'சிறிய', 'Kleingeld = small change (coins).', 'க்ளைன்: "க்ளீன்" சின்ன அறை — சிறியது'],
+  schoen:['schön', 'beautiful, nice', 'அழகான', 'schön ≈ shine: beautiful things shine.', 'ஷ்யோன்: "ஷைன்" (shine) — அழகு மின்னும்'],
+  nett:['nett', 'nice, kind', 'அன்பான', 'nett ≈ neat: a neat, nice person.', 'நெட்: "நீட்"டான நல்ல மனிதர்'],
+  jung:['jung', 'young', 'இளம்', 'jung ≈ young.', 'யுங்: "யங்" (young) — இளமை'],
+  kalt:['kalt', 'cold', 'குளிர்ந்த', 'kalt ≈ cold (k for c).', 'கால்ட்: குளிரில் "கால்" நடுங்குது!'],
+  frisch:['frisch', 'fresh', 'புத்தம்புதிய', 'frisch ≈ fresh.', 'ஃப்ரிஷ்: "ஃப்ரெஷ்" — புத்தம் புதிய'],
+  gross:['groß', 'big', 'பெரிய', 'groß ≈ grow: things that grow get big.', 'க்ரோஸ்: "க்ரோ" (grow) ஆகி பெரியதாகும்'],
+  gut:['gut', 'good', 'நல்ல', 'gut ≈ good.', 'கூட்: "குட்" (good) — நல்லது'],
+  schwarz:['schwarz', 'black', 'கருப்பு', 'schwarz ≈ swarthy: dark, black.', 'ஷ்வார்ட்ஸ்: இருட்டு "சுவர்" போல கருப்பு'],
+  warm:['warm', 'warm', 'வெதுவெதுப்பான', 'Same as English.', 'வார்ம்: ஆங்கிலம் போலவே — வெதுவெதுப்பு'],
+  freundlich:['freundlich', 'friendly', 'நட்பான', 'Freund (friend) + -lich = friendly.', 'Freund = நண்பன் → freundlich = நட்பான'],
+  heiss:['heiß', 'hot', 'சூடான', 'heiß ≈ hot (h…ß/t).', 'ஹைஸ்: "ஹை" வெப்பம் — சூடு']
+};
+const ANOUN = { // noun: [German with article, English, Tamil]
+  mann:['der Mann', 'the man', 'ஆண்'], frau:['die Frau', 'the woman', 'பெண்'], lampe:['die Lampe', 'the lamp', 'விளக்கு'],
+  jacke:['die Jacke', 'the jacket', 'ஜாக்கெட்'], kind:['das Kind', 'the child', 'குழந்தை'], haus:['das Haus', 'the house', 'வீடு'],
+  lehrer:['der Lehrer', 'the teacher', 'ஆசிரியர்'], hund:['der Hund', 'the dog', 'நாய்'], leute:['die Leute (pl.)', 'people', 'மக்கள்'],
+  kaffee:['der Kaffee', 'coffee', 'காபி'], brot:['das Brot', 'bread', 'ரொட்டி'], stadt:['die Stadt', 'the city', 'நகரம்'],
+  buch:['das Buch', 'the book', 'புத்தகம்'], wein:['der Wein', 'wine', 'ஒயின்'], freunde:['die Freunde (pl.)', 'friends', 'நண்பர்கள்'],
+  katze:['die Katze', 'the cat', 'பூனை'], auto:['das Auto', 'the car', 'கார்'], freund:['der Freund', 'the friend', 'நண்பன்'],
+  tante:['die Tante', 'the aunt', 'அத்தை'], fahrrad:['das Fahrrad', 'the bicycle', 'மிதிவண்டி'], idee:['die Idee', 'the idea', 'யோசனை'],
+  kleid:['das Kleid', 'the dress', 'உடை'], arzt:['der Arzt', 'the doctor', 'மருத்துவர்'], milch:['die Milch', 'milk', 'பால்'],
+  wasser:['das Wasser', 'water', 'தண்ணீர்'], wetter:['das Wetter', 'the weather', 'வானிலை']
+};
+const GEN = { m:['masculine', 'der'], f:['feminine', 'die'], n:['neuter', 'das'], pl:['plural', 'die'] };
+const CASES = { nom:'Nominativ', akk:'Akkusativ', dat:'Dativ' };
+const DEFART = { nom:{ m:'der', f:'die', n:'das', pl:'die' }, akk:{ m:'den', f:'die', n:'das', pl:'die' }, dat:{ m:'dem', f:'der', n:'dem', pl:'den' } };
+const AKIND = { weak:'after der/die/das', mixed:'after ein/kein/mein', strong:'no article' };
+const ADJ_COL = { weak:'#4F7CAC', mixed:'#A07A12', strong:'#D9675B' };
+const ADJ_RULE = {
+  weak:'After <b>der / die / das</b> (also dieser, jeder, welcher) the article already shows gender and case, so the adjective only adds <b>-e</b> or <b>-en</b>. <b>-e</b> appears in just five places: Nominativ der/die/das and Akkusativ die/das. Everywhere else (all Dativ, Akkusativ masculine, all plural): <b>-en</b>.',
+  mixed:'After <b>ein / kein / mein, dein, sein…</b>: where the article has <b>no ending</b> (ein Mann, ein Haus, mein Freund) the adjective must show the gender itself: <b>-er</b> for masculine, <b>-es</b> for neuter. Everywhere else it works like after der: <b>-e</b> or <b>-en</b>.',
+  strong:'<b>No article</b>: nothing shows gender and case yet, so the adjective takes over the ending of the der-word: der → <b>-er</b>, die → <b>-e</b>, das → <b>-es</b>, den → <b>-en</b>, dem → <b>-em</b>, Dativ der → <b>-er</b>, Dativ plural den → <b>-en</b>.'
+};
+const ADJ_TIPS = {
+  weak:['After der/die/das: just -e or -en', 'Picture the table: <b>-e</b> only in the 5 top-left spots (Nominativ der/die/das, Akkusativ die/das). Everything else: <b>-en</b>.', 'der/die/das இருந்தால் → -e அல்லது -en மட்டும். 5 இடங்களில் -e, மீதி எல்லாம் -en.'],
+  mixed:['After ein/kein/mein: lazy "ein"', '<b>ein</b> is lazy: when it has no ending (ein Mann, ein Haus), the adjective does the work: <b>-er</b> (der-word) / <b>-es</b> (das-word). Otherwise -e / -en like after der.', 'ein-க்கு முடிவு இல்லையென்றால், adjective வேலை செய்யும்: -er / -es. இல்லையெனில் -e / -en.'],
+  strong:['No article: adjective = article', 'No article? The adjective wears the article\'s ending: der → <b>-er</b>, das → <b>-es</b>, die → <b>-e</b>, dem → <b>-em</b>, den → <b>-en</b>.', 'article இல்லையா? adjective அந்த article-இன் முடிவை அணியும்: der → -er, das → -es, dem → -em.']
+};
+const adjEnding = x => x.a.toLowerCase().slice(ADJV[x.adj][0].length);
+const artOf = x => { const w = x.q.split('___')[0].trim().split(/\s+/); return w[w.length - 1] || ''; };
+const nounOf = x => x.q.split('___')[1].trim().split(/[\s.,!?]/)[0];
+const artHasEnding = x => !/^(ein|kein|mein|dein|sein|ihr|unser|euer)$/i.test(artOf(x));
+const adjJumps = x => x.k === 'strong' || (x.k === 'mixed' && !artHasEnding(x));   // the adjective has to carry the der-ending
+function adjHTML(x) { return esc(x.q).replace('___', `<b class="cj adj-${x.k}">${esc(x.a)}</b>`); }
+function adjWhy(x) {
+  const end = adjEnding(x), d = DEFART[x.c][x.g];
+  return `<b>${CASES[x.c]}, ${GEN[x.g][0]}</b> (${AKIND[x.k]}) → <b class="cj adj-${x.k}">-${end}</b>`
+    + (x.k === 'strong' ? `, because the article would be <i>${d}</i>` : adjJumps(x) ? `, because <i>${esc(artOf(x))}</i> has no ending (like <i>${d}</i>)` : `, because <i>${esc(artOf(x))}</i> already shows the case`);
+}
+const adjItemHTML = x => `<div class="item"><div><div class="s">${adjHTML(x)}</div><div class="tr">${esc(x.t)}</div><div class="w">${adjWhy(x)}</div>${picSVG(x)}</div>${starBtn(x.id)}</div>`;
+
+const BYID = Object.fromEntries([...W, ...P, ...A].map(w => [w.id, w]));
 const WEIL = W.filter(w => w.c === 'weil'), DASS = W.filter(w => w.c === 'dass');
 const ORDER = [];
 for (let i = 0; i < Math.max(WEIL.length, DASS.length); i++) { if (WEIL[i]) ORDER.push(WEIL[i]); if (DASS[i]) ORDER.push(DASS[i]); }
@@ -809,7 +948,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural' });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural' });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -1015,6 +1154,7 @@ function fixedSVG(p, [kind, a, b]) {
   return s + badge(`${p.pr} + ${caseName(p)}`, col);
 }
 function picSVG(p) {
+  if (p.ak) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(p.t)}">${adjSVG(p)}</svg>`;
   const spec = PIC[p.id]; if (!spec) return '';
   return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(p.t)}">${p.pt === 'wech' ? spatialSVG(p, spec) : fixedSVG(p, spec)}</svg>`;
 }
@@ -1135,7 +1275,7 @@ window.addEventListener('resize', resize); resize();
 const SPAWN_DIST = 78, ROW_GAP = 26;
 // spawn distance scales with the time-between-gates setting, so faster levels (Level 3) keep their shorter gap
 const spawnZ = () => -SPAWN_DIST * S.gap / GAP_DEF, rowGap = () => ROW_GAP * S.gap / GAP_DEF;
-const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 0:12 };
+const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 7:12, 8:12, 9:15, 0:12 };
 let G = { running:false, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0 };
 
 function schedule(sec, fn) { G.pending = { at:G.clock + sec, fn }; }
@@ -1157,16 +1297,24 @@ const gateQ = w => ({ type:'gate', w, opts:['weil', 'dass'], ans:w.c });
 const buildQ = w => ({ type:'build', w });
 const trapQ = t => ({ type:'trap', t, opts:t.o, ans:t.a });
 const prepQ = p => ({ type:'prep', p, opts:p.o, ans:p.a });
+const adjQ = x => ({ type:'adj', p:x, opts:x.o, ans:x.a });
 
-// levels 1-3 are weil/dass, 4-6 are prepositions (each topic unlocks on its own)
-const isLocked = l => l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
+// levels 1-3 are weil/dass, 4-6 prepositions, 7-9 adjective endings (each topic unlocks on its own)
+const isLocked = l => l >= 7 ? l - 6 > (S.unlockedA || 1) : l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
 const LOCK_MSG = { 2:'Get 6 of 8 right in Level 1 to unlock Level 2.', 3:'Get 4 of 6 right in Level 2 to unlock Level 3.',
-  5:'Get 6 of 8 right in Präpositionen Level 1 to unlock Level 2.', 6:'Get 6 of 8 right in Präpositionen Level 2 to unlock Level 3.' };
+  5:'Get 6 of 8 right in Präpositionen Level 1 to unlock Level 2.', 6:'Get 6 of 8 right in Präpositionen Level 2 to unlock Level 3.',
+  8:'Get 6 of 8 right in Adjektive Level 1 to unlock Level 2.', 9:'Get 6 of 8 right in Adjektive Level 2 to unlock Level 3.' };
 const RULES = {
   4: { key:'rule:fix', title:'Akkusativ oder Dativ?', lead:'Some prepositions always take the same case. Run through the gate with the right article.',
        cards:[['Always Akkusativ', EXP.akk, 'Wir gehen <b>durch <b class="cj akk">den</b></b> Park.', 'p_durch_park'], ['Always Dativ', EXP.dat, 'Ich fahre <b>mit <b class="cj dat">dem</b></b> Bus.', 'p_mit_bus']] },
   5: { key:'rule:wech', title:'Wo oder wohin?', lead:'Wechselpräpositionen switch case. Ask yourself: is it a place, or a movement to a place?',
-       cards:[['Wo? → Dativ', EXP.wo, 'Das Buch liegt <b>auf <b class="cj dat">dem</b></b> Tisch.', 'w_auf_tisch_wo'], ['Wohin? → Akkusativ', EXP.wohin, 'Ich lege das Buch <b>auf <b class="cj akk">den</b></b> Tisch.', 'w_auf_tisch_wohin']] }
+       cards:[['Wo? → Dativ', EXP.wo, 'Das Buch liegt <b>auf <b class="cj dat">dem</b></b> Tisch.', 'w_auf_tisch_wo'], ['Wohin? → Akkusativ', EXP.wohin, 'Ich lege das Buch <b>auf <b class="cj akk">den</b></b> Tisch.', 'w_auf_tisch_wohin']] },
+  7: { key:'rule:aweak', title:'Nach der / die / das', lead:'The article already shows gender and case, so the adjective only gets -e or -en.',
+       cards:[['-e in five places', ADJ_RULE.weak, 'Der alt<b class="cj adj-weak">e</b> Mann · die neu<b class="cj adj-weak">e</b> Lampe', 'a_w1'], ['Everywhere else -en', 'Akkusativ masculine, all of Dativ and all plurals: <b>-en</b>.', 'den alt<b class="cj adj-weak">en</b> Mann · mit dem nett<b class="cj adj-weak">en</b> Lehrer', 'a_w2']] },
+  8: { key:'rule:amixed', title:'Nach ein / kein / mein', lead:'Where ein has no ending, the adjective has to show the gender.',
+       cards:[['ein without ending → -er / -es', ADJ_RULE.mixed, 'ein alt<b class="cj adj-mixed">er</b> Mann · ein neu<b class="cj adj-mixed">es</b> Auto', 'a_m1'], ['einen, einem, eine … → -en / -e', 'When ein already has an ending, the adjective is like after der.', 'einen klein<b class="cj adj-mixed">en</b> Hund', 'a_m2']] },
+  9: { key:'rule:astrong', title:'Ohne Artikel', lead:'No article? The adjective takes over the ending of der / das / dem.',
+       cards:[['Adjective = article', ADJ_RULE.strong, 'kalt<b class="cj adj-strong">er</b> Kaffee (der) · mit heiß<b class="cj adj-strong">em</b> Wasser (dem)', 'a_s2'], ['Dativ: -em / -er / -en', 'mit heißem Wasser, mit warmer Milch, mit netten Leuten.', 'mit heiß<b class="cj adj-strong">em</b> Wasser', 'a_s7']] }
 };
 
 function buildQueue(l, fresh) {
@@ -1176,7 +1324,10 @@ function buildQueue(l, fresh) {
   if (l === 4) return pickPrep(PFIX, 8).map(prepQ);
   if (l === 5) return pickPrep(PWECH, 8).map(prepQ);
   if (l === 6) return shuffle([...pickPrep(PFIX, 3), ...pickPrep(PWECH, 3), ...pickPrep(PMIX, 4)]).map(prepQ);
-  return reviewWords().slice(0, 8).map((w, i) => w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
+  if (l === 7) return pickPrep(AWEAK, 8).map(adjQ);
+  if (l === 8) return pickPrep(AMIXED, 8).map(adjQ);
+  if (l === 9) return shuffle([...pickPrep(AWEAK, 3), ...pickPrep(AMIXED, 3), ...pickPrep(ASTRONG, 4)]).map(adjQ);
+  return reviewWords().slice(0, 8).map((w, i) => w.ak ? adjQ(w) : w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
 }
 
 // every round opens with a briefing of its vocabulary (plus the full rule cards the first time a preposition level is played)
@@ -1235,7 +1386,7 @@ function startQuestion(q) {
     });
   } else {
     // article gates stay neutral white so the das/dass colour coding doesn't hint at an answer
-    const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep';
+    const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep' || q.type === 'adj';
     spawnRow('gate', [
       { lane:lanes[0], label:q.opts[0], correct:q.opts[0] === q.ans, plain },
       { lane:lanes[1], label:q.opts[1], correct:q.opts[1] === q.ans, plain },
@@ -1257,6 +1408,10 @@ function renderPrompt() {
     const p = q.p;
     html = esc(p.q).replace('___', '<span class="gap">?</span>');
     hint = p.o.includes(p.pr) ? 'Which preposition fits this case?' : p.pt === 'wech' ? 'Wo? → Dativ · Wohin? → Akkusativ' : `Which case does ${p.pr} take?`;
+  } else if (q.type === 'adj') {
+    const x = q.p;
+    html = esc(x.q).replace('___', '<span class="gap">?</span>');
+    hint = { weak:'After der/die/das: -e or -en?', mixed:'After ein/kein/mein: does the adjective need -er / -es?', strong:'No article: the adjective shows the case' }[x.k];
   } else {
     const w = q.w;
     const slots = w.b.map((b, i) => i < q.built.length ? `<span class="slot fill ${q.builtOk[i] ? '' : 'bad'}">${esc(q.built[i])}</span>` : '<span class="slot">&nbsp;</span>').join(' ');
@@ -1297,7 +1452,7 @@ function loseLife() {
   const f = $('#flash'); f.style.opacity = .35; setTimeout(() => f.style.opacity = 0, 160);
 }
 
-const histKey = q => q.type === 'trap' ? TRAPS.indexOf(q.t) : q.type === 'prep' ? q.p.id : q.w.id;
+const histKey = q => q.type === 'trap' ? TRAPS.indexOf(q.t) : (q.type === 'prep' || q.type === 'adj') ? q.p.id : q.w.id;
 function finish(q, ok) {
   const first = !q.retry;
   G.log.push({ y:q.type[0], i:histKey(q), o:ok ? 1 : 0, c:q.chose, w:q.type === 'build' && q.wrong.length ? q.wrong : undefined, r:q.retry ? 1 : undefined });
@@ -1305,9 +1460,10 @@ function finish(q, ok) {
     G.answered++;
     if (q.type === 'trap') stat('trap', ok);
     else if (q.type === 'prep') stat('p' + q.p.pt, ok);
+    else if (q.type === 'adj') stat('a' + q.p.k, ok);
     else stat(q.w.c, ok);
   }
-  if (q.type !== 'trap') grade(q.type === 'prep' ? q.p.id : q.w.id, ok);
+  if (q.type !== 'trap') grade(histKey(q), ok);
   if (ok) {
     G.streak++; const pts = 10 + Math.min(G.streak - 1, 5) * 2;
     G.score += pts; if (first) G.correct++;
@@ -1322,8 +1478,8 @@ function finish(q, ok) {
 
 let toastT = null;
 function toast(pts, q) {
-  const s = q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : sentHTML(q.w);
-  const el = $('#toast'); const pic = q.type === 'prep' ? picSVG(q.p) : '';
+  const s = q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : q.type === 'adj' ? adjHTML(q.p) : sentHTML(q.w);
+  const el = $('#toast'); const pic = (q.type === 'prep' || q.type === 'adj') ? picSVG(q.p) : '';
   el.innerHTML = `<div class="trow"><div><b class="ok">Richtig! +${pts}</b><div class="s">${s}</div></div>${pic}</div>`;
   el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), pic ? 3000 : 2200);
 }
@@ -1341,6 +1497,11 @@ function showWrong(q, chose, expect) {
     body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
       <p class="sent">${prepHTML(p)}</p><p class="tr">${esc(p.t)}</p>${picSVG(p)}<div class="ex">${EXP[p.k]}</div>
       <div class="wrow"><span class="grow"><b>${why}</b></span>${starBtn(p.id)}</div>`;
+  } else if (q.type === 'adj') {
+    const x = q.p, ans = `<b class="cj adj-${x.k}">${esc(x.a)}</b>`;
+    body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
+      <p class="sent">${adjHTML(x)}</p><p class="tr">${esc(x.t)}</p>${picSVG(x)}<div class="ex">${ADJ_RULE[x.k]}</div>
+      <div class="wrow"><span class="grow">${adjWhy(x)}</span>${starBtn(x.id)}</div>`;
   } else {
     const w = q.w;
     const line = q.type === 'build'
@@ -1372,6 +1533,8 @@ function endRound() {
   if (l === 2 && G.correct >= 4 && S.unlocked < 3) { S.unlocked = 3; unlock = 'Level 3 is unlocked. Watch out for das and denn.'; }
   if (l === 4 && G.correct >= 6 && S.unlockedP < 2) { S.unlockedP = 2; unlock = 'Präpositionen Level 2 is unlocked: Wo oder wohin?'; }
   if (l === 5 && G.correct >= 6 && S.unlockedP < 3) { S.unlockedP = 3; unlock = 'Präpositionen Level 3 is unlocked. Watch out for im/ins and zum/zur.'; }
+  if (l === 7 && G.correct >= 6 && (S.unlockedA || 1) < 2) { S.unlockedA = 2; unlock = 'Adjektive Level 2 is unlocked: endings after ein / kein / mein.'; }
+  if (l === 8 && G.correct >= 6 && (S.unlockedA || 1) < 3) { S.unlockedA = 3; unlock = 'Adjektive Level 3 is unlocked: now with no article (kalter Kaffee).'; }
   const newBest = G.score > (S.best[l] || 0); if (newBest) S.best[l] = G.score;
   save(); keepStorage();
 
@@ -1385,6 +1548,7 @@ function endRound() {
   $('#eList').innerHTML = G.mistakes.map(q => q.type === 'trap'
     ? `<div class="item"><div><div class="s">${trapHTML(q.t)}</div><div class="tr">${esc(q.t.t)}</div></div></div>`
     : q.type === 'prep' ? prepItemHTML(q.p)
+    : q.type === 'adj' ? adjItemHTML(q.p)
     : `<div class="item"><div><div class="s">${sentHTML(q.w)}</div><div class="tr">${esc(q.w.t)}</div><div class="w">${wordHTML(q.w)}: ${esc(q.w.en)}</div></div>${starBtn(q.w.id)}</div>`
   ).join('');
   show('end'); $('#eAgain').focus();
@@ -1399,7 +1563,7 @@ function renderMenu() {
   const n = currentStreak();
   $('#mStreak').textContent = n ? `${n}-day streak. Keep it going today.` : 'Play a round today to start a streak.';
   $('#dueBadge').textContent = reviewWords().length;
-  [2, 3, 5, 6].forEach(l => {
+  [2, 3, 5, 6, 8, 9].forEach(l => {
     const b = $(`[data-level="${l}"]`), locked = isLocked(l);
     b.classList.toggle('locked', locked); b.setAttribute('aria-disabled', locked);
   });
@@ -1407,9 +1571,14 @@ function renderMenu() {
   $('#l3s').textContent = S.unlocked >= 3 ? 'Faster, plus das/dass and weil/denn traps' : 'Locked: get 4 of 6 in Level 2';
   $('#l5s').textContent = S.unlockedP >= 2 ? 'Wechselpräpositionen' : 'Locked: get 6 of 8 in Level 1';
   $('#l6s').textContent = S.unlockedP >= 3 ? 'Faster, plus im/ins, am/an den, zum/zur' : 'Locked: get 6 of 8 in Level 2';
+  $('#l8s').textContent = (S.unlockedA || 1) >= 2 ? 'ein alter Mann · ein neues Auto' : 'Locked: get 6 of 8 in Level 1';
+  $('#l9s').textContent = (S.unlockedA || 1) >= 3 ? 'Faster, plus no article: kalter Kaffee' : 'Locked: get 6 of 8 in Level 2';
   $$('#topicTabs button').forEach(b => b.classList.toggle('on', b.dataset.topic === S.topic));
-  $('#lvWd').style.display = S.topic === 'prep' ? 'none' : '';
-  $('#lvPrep').style.display = S.topic === 'prep' ? '' : 'none';
+  const tp = topicKey();
+  $('#lvWd').style.display = tp === 'wd' ? '' : 'none';
+  $('#lvPrep').style.display = tp === 'prep' ? '' : 'none';
+  $('#lvAdj').style.display = tp === 'adj' ? '' : 'none';
+  if (cafeMode === 'run' && $('#guide').dataset.topic !== tp) { $('#guide').innerHTML = guideHTML(tp); $('#guide').dataset.topic = tp; }
   $$('#menu .btn.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === cafeMode));
   $('#modeQ').style.display = cafeMode ? 'none' : '';
   $('#runBox').style.display = cafeMode === 'run' ? '' : 'none';
@@ -1417,6 +1586,7 @@ function renderMenu() {
   if (cafeMode === 'cafe') renderCafeBox();
   renderGap();
 }
+const topicKey = () => (S.topic === 'prep' || S.topic === 'adj') ? S.topic : 'wd';
 function setTopic(t) { S.topic = t; cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
 
 function renderGap() {
@@ -1437,6 +1607,7 @@ const CAFE_TOPICS = [
   ['stadt', '🏙️', 'In der Stadt', 'In the city'], ['frei', '💬', 'Freies Gespräch', 'Anything you like']
 ];
 const CAFE_FOCUS = {
+  adj:{ name:'Adjektivendungen', prompt:'Grammar focus: adjective endings (Adjektivdeklination) after der/die/das (weak: -e/-en), after ein/kein/mein (mixed: -er/-es where ein has no ending) and without article (strong: der → -er, das → -es, dem → -em), in Nominativ, Akkusativ and Dativ. Use adjectives in front of nouns yourself in all three patterns, and ask questions that make the learner describe people and things: "Wie ist dein …?", "Was für ein … hast du?", "Beschreib mal deinen / deine / dein …", "Welche … magst du?".' },
   wd:{ name:'weil / dass', prompt:'Grammar focus: subordinate clauses with "weil" (giving a reason) and "dass" (that-clauses), where the conjugated verb goes to the END (… weil ich müde bin; … dass das Wetter schön ist). Ask many "Warum …?" questions and opinion questions ("Was denkst du …?", "Glaubst du, dass …?", "Findest du, dass …?") so the learner has to answer with weil or dass.' },
   prep:{ name:'Präpositionen', prompt:'Grammar focus: prepositions and their case: always Akkusativ (durch, für, gegen, ohne, um), always Dativ (aus, bei, mit, nach, seit, von, zu, gegenüber) and Wechselpräpositionen (an, auf, hinter, in, neben, über, unter, vor, zwischen: location / Wo? → Dativ, movement / Wohin? → Akkusativ). Ask questions like "Wo …?", "Wohin …?", "Mit wem …?", "Für wen …?", "Seit wann …?" so the learner has to answer with a preposition.' }
 };
@@ -1829,7 +2000,7 @@ function openCafe(topicId, focus, lvl) {
   if (lvl) S.cafeLevel = lvl;
   audioCtx(); ttsDown = false; voiceBtn();          // unlock audio while we still have the tap
   if (!modelCache && lsGet(AI_KEY)) rankModels(lsGet(AI_KEY)).catch(() => {});
-  Object.assign(C, { topic:topicId, focus:focus || (S.topic === 'prep' ? 'prep' : 'wd'), hist:[], busy:false, msgs:[], entry:null, model:null });
+  Object.assign(C, { topic:topicId, focus:focus || topicKey(), hist:[], busy:false, msgs:[], entry:null, model:null });
   $('#cTopic').textContent = `${t[1]} ${t[2]}`;
   $('#cFocus').textContent = `${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
   if (!$('#lena svg')) $('#lena').innerHTML = LENA_SVG;
@@ -1842,13 +2013,167 @@ function openCafe(topicId, focus, lvl) {
 }
 function closeCafe() { holding = false; if (recOn && rec) { try { rec.abort(); } catch (e) {} } micUI(false); stopVoice(); show('menu'); }
 function renderCafeBox() {
-  $('#cafeFocusName').textContent = CAFE_FOCUS[S.topic === 'prep' ? 'prep' : 'wd'].name;
+  $('#cafeFocusName').textContent = CAFE_FOCUS[topicKey()].name;
   $$('#cafeLvl button').forEach(b => b.classList.toggle('on', b.dataset.lvl === (S.cafeLevel || 'A2')));
   if (!$('#cafeTopics').children.length) $('#cafeTopics').innerHTML = CAFE_TOPICS.map(([id, e, de, en]) => `<button data-cafe="${id}"><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small></button>`).join('');
 }
 
+/* ================= animated grammar pictures for adjectives + revision guides ================= */
+// a label flying along a path, then resting (GIF-style loop; still under "reduce motion")
+function flyText(label, size, col, path, [ex, ey]) {
+  if (STILL) return txt(label, ex, ey, size, col, 800);
+  return `<g opacity="0">${txt(label, 0, 0, size, col, 800)}<animateMotion path="${path}" ${loopAttr()} keyPoints="0;0;1;1" keyTimes="0;0.2;0.6;1" calcMode="linear"/>`
+    + `<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.18;0.22;0.93;1" ${loopAttr()}/></g>`;
+}
+const pulseRect = (x, y, w, h, col) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${col}" opacity="0.2">${STILL ? '' : '<animate attributeName="opacity" values="0.07;0.38;0.07" dur="1.6s" repeatCount="indefinite"/>'}</rect>`;
+// "der alte Mann": the article carries the case (weak), or the der-ending jumps onto the adjective (mixed without ending / strong)
+function adjSVG(x) {
+  const end = adjEnding(x), stem = x.a.slice(0, x.a.length - end.length), art = x.k === 'strong' ? '' : artOf(x), noun = nounOf(x), d = DEFART[x.c][x.g];
+  const col = ADJ_COL[x.k], jump = adjJumps(x), gap = 16;
+  let CW = 14.2, S = 26;
+  const widths = () => [art ? art.length * CW + 10 : 46, x.a.length * CW + 10, noun.length * CW + 10];
+  let [wA, wJ, wN] = widths(), total = wA + wJ + wN + gap * 2;
+  if (total > 300) { const f = 300 / total; CW *= f; S *= f; [wA, wJ, wN] = widths(); total = wA + wJ + wN + gap * 2; }
+  const y = 116, x0 = (320 - total) / 2, aX = x0 + wA / 2, adjL = x0 + wA + gap + 5, nX = x0 + wA + gap + wJ + gap + wN / 2;
+  const endX = adjL + (stem.length + end.length / 2) * CW;
+  let s = '';
+  if (art) {
+    if (!jump) s += pulseRect(aX - wA / 2 - 2, y - 20, wA + 4, 40, col);
+    s += txt(esc(art), aX, y, S, '#2F3640', 700);
+  } else s += `<rect x="${aX - 21}" y="${y - 18}" width="42" height="36" fill="none" stroke="#8F9BA5" stroke-width="2" stroke-dasharray="5 4"/>` + txt('–', aX, y, 22, '#8F9BA5', 600) + txt('no article', aX, y + 30, 11, '#8F9BA5', 600);
+  s += `<text x="${adjL}" y="${y}" font-size="${S}" font-weight="700" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif" fill="#2F3640">${esc(stem)}<tspan fill="${col}" font-weight="800">${esc(end)}${STILL ? '' : `<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.55;0.62;1" ${loopAttr()}/>`}</tspan></text>`;
+  s += txt(esc(noun), nX, y, S, '#2F3640', 600);
+  if (jump) {
+    s += txt('like', aX, 40, 11, '#8F9BA5', 600) + txt(d, aX, 58, 20, '#8F9BA5', 700);
+    s += flyText('-' + end, 18, col, `M${aX} 58 Q${(aX + endX) / 2} 26 ${endX} ${y - 30}`, [endX, y - 30]);
+  }
+  const cap = x.k === 'strong' ? `no article → like "${d}": -${end}` : jump ? `"${art}" has no ending → adjective takes -${end}` : `"${art}" already shows the case → only -${end}`;
+  s += txt(esc(cap), 160, 172, 13, '#2F3640', 600);
+  return s + badge(`${AKIND[x.k]} · ${CASES[x.c]} ${GEN[x.g][0]}`, col);
+}
+
+// an animated table; hi = cells that pulse. cells: [[ [grey part, bold part], … ], …]
+function tableSVG(colHead, rowHead, cells, hi, col, note) {
+  const W = 360, x0 = 80, cw = (W - x0 - 6) / colHead.length, rh = 34, y0 = 30;
+  let s = colHead.map((h, j) => txt(h, x0 + cw * j + cw / 2, 16, 12.5, '#5B6670', 700)).join('');
+  rowHead.forEach((h, i) => {
+    const y = y0 + i * rh;
+    s += txt(h, 40, y + rh / 2, 12.5, '#5B6670', 700);
+    cells[i].forEach((c, j) => {
+      const x = x0 + cw * j;
+      s += `<rect x="${x + 2}" y="${y + 2}" width="${cw - 4}" height="${rh - 4}" fill="#fff" stroke="#2F3640" stroke-width="1.5"/>`;
+      if (hi.some(([a, b]) => a === i && b === j)) s += pulseRect(x + 3, y + 3, cw - 6, rh - 6, col);
+      s += `<text x="${x + cw / 2}" y="${y + rh / 2}" font-size="${(c[0] + (c[1] || '')).length > 8 ? 12.5 : 15}" text-anchor="middle" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif"><tspan fill="#5B6670">${esc(c[0])}</tspan>${c[1] ? `<tspan fill="#2F3640" font-weight="800"> ${esc(c[1])}</tspan>` : ''}</text>`;
+    });
+  });
+  const H = y0 + rowHead.length * rh + (note ? 28 : 8);
+  if (note) s += txt(esc(note), W / 2, H - 13, 12.5, '#2F3640', 600);
+  return `<svg class="gsvg" viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`;
+}
+// word chips in a clause; the verb slides to its new place (weil/dass → verb at the end)
+function orderAnim(main, before, after, verbs, conj, caption) {
+  const CW = 9.4, pad = 16, gap = 7, y = 66, H = 32, w = t => t.length * CW + pad;
+  const pos = arr => { let p = 0; return arr.map(t => { const r = p; p += w(t) + gap; return r; }); };
+  const total = before.reduce((a, t) => a + w(t) + gap, -gap), x0 = (360 - total) / 2, pb = pos(before), pa = pos(after);
+  const conjFill = { weil:C_DAT, dass:C_AKK }[conj] || '#2F3640';
+  let s = `<text x="16" y="24" font-size="15" fill="#5B6670" font-family="Jost,Futura,Arial,sans-serif">${esc(main)}</text>`;
+  before.forEach((t, i) => {
+    const xb = x0 + pb[i], xa = x0 + pa[after.indexOf(t)], isV = verbs.includes(t), isC = t === conj;
+    const fill = isV ? '#EDC765' : isC ? conjFill : '#fff', tc = isC ? '#fff' : '#2F3640';
+    const chip = `<rect x="0" y="${y - H / 2}" width="${w(t)}" height="${H}" rx="6" fill="${fill}" stroke="#2F3640" stroke-width="2"/>` + txt(esc(t), w(t) / 2, y, 16, tc, 700);
+    s += STILL || xb === xa ? `<g transform="translate(${xa} 0)">${chip}</g>`
+      : `<g transform="translate(${xb} 0)">${chip}<animateTransform attributeName="transform" type="translate" values="${isV ? `${xb} 0;${xb} 0;${(xb + xa) / 2} -34;${xa} 0;${xa} 0` : `${xb} 0;${xb} 0;${xb} 0;${xa} 0;${xa} 0`}" keyTimes="0;0.3;0.48;0.65;1" ${loopAttr(3.6)}/></g>`;
+  });
+  s += txt(esc(caption), 180, 112, 13.5, '#2F3640', 600);
+  return `<svg class="gsvg" viewBox="0 0 360 128" role="img">${s}</svg>`;
+}
+// which adjective type? the three questions light up one after the other
+function adjDecisionSVG() {
+  const rows = [['der / die / das …', 'WEAK: just -e / -en', C_DAT], ['ein / kein / mein …', 'MIXED: -er/-es or -e/-en', '#A07A12'], ['no article', 'STRONG: like der/das/dem', C_AKK]];
+  let s = txt('In front of the adjective there is …', 180, 16, 13, '#5B6670', 700);
+  rows.forEach(([q, a, col], i) => {
+    const y = 34 + i * 46;
+    s += `<rect x="8" y="${y}" width="140" height="36" rx="6" fill="#fff" stroke="#2F3640" stroke-width="2"/>` + txt(esc(q), 78, y + 18, 12.5, '#2F3640', 700);
+    s += `<path d="M152 ${y + 18} L166 ${y + 18}" stroke="#2F3640" stroke-width="2.5"/><polygon points="166,${y + 12} 176,${y + 18} 166,${y + 24}" fill="#2F3640"/>`;
+    s += `<rect x="180" y="${y}" width="174" height="36" rx="6" fill="${col}" stroke="#2F3640" stroke-width="2"/>` + txt(esc(a), 267, y + 18, 11.5, '#fff', 700);
+    if (!STILL) s += `<rect x="4" y="${y - 4}" width="352" height="44" rx="8" fill="none" stroke="${col}" stroke-width="3" opacity="0"><animate attributeName="opacity" values="${[0, 1, 2].map(k => k === i ? 1 : 0).join(';')}" keyTimes="0;0.333;0.666" calcMode="discrete" dur="4.5s" repeatCount="indefinite"/></rect>`;
+  });
+  return `<svg class="gsvg" viewBox="0 0 360 172" role="img">${s}</svg>`;
+}
+
+const gEx = ids => `<ul class="gex">${ids.map(id => { const x = BYID[id]; if (!x) return ''; return `<li>${x.ak ? adjHTML(x) : x.pt ? prepHTML(x) : sentHTML(x)} <span class="tr">${esc(x.t)}</span></li>`; }).join('')}</ul>`;
+const COLS4 = ['masc.', 'fem.', 'neut.', 'plural'], ROWS3 = ['Nominativ', 'Akkusativ', 'Dativ'];
+const GUIDE = {
+  wd:{ name:'weil / dass', sections:() => [
+    ['1 · weil = because → verb to the end', `<p><b class="cj weil">weil</b> gives a <b>reason</b> (it answers <i>Warum?</i>). It starts a side clause, and in a side clause the conjugated verb goes to the <b>very end</b>.</p>
+      ${orderAnim('Ich bleibe zu Hause,', ['weil', 'ich', 'bin', 'müde'], ['weil', 'ich', 'müde', 'bin'], ['bin'], 'weil', 'weil pushes the verb "bin" to the end')}${gEx(['muede', 'regen', 'hunger'])}`],
+    ['2 · dass = that → verb to the end', `<p><b class="cj dass">dass</b> introduces what someone <b>thinks, says, knows or feels</b>. It follows verbs like <i>glauben, hoffen, wissen, sagen, denken</i> and phrases like <i>es ist wichtig, ich bin froh</i>. Same rule: verb at the end.</p>
+      ${orderAnim('Ich glaube,', ['dass', 'er', 'hat', 'recht'], ['dass', 'er', 'recht', 'hat'], ['hat'], 'dass', 'dass pushes "hat" to the end')}${gEx(['glauben', 'hoffen', 'wichtig'])}`],
+    ['3 · Two verbs? The conjugated one is last', `<p>With a helper verb (<i>möchte, will, kann, muss, habe, bin</i>) the other verb comes first and the <b>conjugated verb is the very last word</b>.</p>
+      ${orderAnim('Ich lerne Deutsch,', ['weil', 'ich', 'möchte', 'in Berlin', 'arbeiten'], ['weil', 'ich', 'in Berlin', 'arbeiten', 'möchte'], ['möchte'], 'weil', '"möchte" jumps behind "arbeiten"')}${gEx(['arbeiten', 'schluessel', 'fahrrad'])}`],
+    ['4 · Always a comma', `<p>German always puts a <b>comma before weil and dass</b>: <i>Ich weiß<b>,</b> dass du recht hast.</i> Use the comma as your signal: "now the verb goes to the end".</p>`],
+    ['5 · weil or denn?', `<p>Both mean <i>because</i>. <b class="cj weil">weil</b> sends the verb to the end; <b class="cj denn">denn</b> keeps the normal order (verb in 2nd place).</p>
+      ${orderAnim('weil:', ['weil', 'ich', 'bin', 'müde'], ['weil', 'ich', 'müde', 'bin'], ['bin'], 'weil', 'weil → the verb moves to the end')}${orderAnim('denn:', ['denn', 'ich', 'bin', 'müde'], ['denn', 'ich', 'bin', 'müde'], ['bin'], 'denn', 'denn → nothing moves, the verb stays 2nd')}`],
+    ['6 · das or dass?', `<p><b class="cj das">das</b> (one s) points to a <b>thing</b> (das Buch, das ich lese) or means "the / this". <b class="cj dass">dass</b> (two s) joins two sentences. <b>Test:</b> if you can replace it with <i>welches</i>, write <b>das</b>.</p>
+      <ul class="gex">${TRAPS.slice(0, 4).map(t => `<li>${trapHTML(t)} <span class="tr">${esc(t.t)}</span></li>`).join('')}</ul>`],
+    ['💡 Memory tricks', `<div class="vgrid">${Object.keys(CONJ).map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`]
+  ] },
+  prep:{ name:'Präpositionen', sections:() => [
+    ['1 · Articles change with the case', `<p>A preposition decides the <b>case</b> of the noun after it, and you see the case on the <b>article</b>:</p>
+      ${tableSVG(COLS4, ROWS3, [[['der'], ['die'], ['das'], ['die']], [['den'], ['die'], ['das'], ['die']], [['dem'], ['der'], ['dem'], ['den', '+n']]], [[1, 0], [2, 0], [2, 1], [2, 2], [2, 3]], C_DAT, 'Akkusativ: only der → den. Dativ: everything changes.')}
+      <p>Same with ein: ein → <b>einen</b> (Akkusativ), ein/eine → <b>einem/einer</b> (Dativ).</p>`],
+    ['2 · Always Akkusativ: DOGFU', `<p>${TIPS.akk[1]}</p>${picSVG(BYID.p_durch_park)}${gEx(['p_fuer_mutter', 'p_gegen_plan', 'p_ohne_hund', 'p_um_tisch'])}${taMn(TA_TIPS.akk)}`],
+    ['3 · Always Dativ', `<p>${TIPS.dat[1]}</p>${picSVG(BYID.p_mit_bus)}${gEx(['p_aus_schweiz', 'p_von_bank', 'p_zu_aerztin', 'p_seit_woche', 'p_bei_eltern'])}${taMn(TA_TIPS.dat)}`],
+    ['4 · Wechselpräpositionen: Wo? or Wohin?', `<p>${WECHSEL} Ask: is it <b>resting</b> there (Wo? → Dativ) or <b>moving</b> there (Wohin? → Akkusativ)?</p>
+      <div class="gpair">${['w_auf_tisch_wo', 'w_auf_tisch_wohin', 'w_unter_bett_wo', 'w_unter_bett_wohin', 'w_an_wand_wo', 'w_an_wand_wohin'].map(id => `<div>${picSVG(BYID[id])}<div class="s">${prepHTML(BYID[id])}</div></div>`).join('')}</div>${taMn(TA_TIPS.wech)}`],
+    ['5 · Verb pairs: resting or moving?', `<table class="gtab"><tr><th>Wo? → Dativ (resting)</th><th>Wohin? → Akkusativ (moving)</th></tr>
+      <tr><td><b>liegen</b>: Das Buch liegt auf <b>dem</b> Tisch.</td><td><b>legen</b>: Ich lege das Buch auf <b>den</b> Tisch.</td></tr>
+      <tr><td><b>stehen</b>: Die Flasche steht im Kühlschrank.</td><td><b>stellen</b>: Ich stelle sie in <b>den</b> Kühlschrank.</td></tr>
+      <tr><td><b>sitzen</b>: Ich sitze neben <b>dem</b> Fenster.</td><td><b>setzen</b>: Ich setze mich neben <b>das</b> Fenster.</td></tr>
+      <tr><td><b>hängen</b>: Das Bild hängt an <b>der</b> Wand.</td><td><b>hängen</b>: Ich hänge das Bild an <b>die</b> Wand.</td></tr>
+      <tr><td><b>sein, bleiben, wohnen</b>: Wir sind im Kino.</td><td><b>gehen, fahren, laufen</b>: Wir gehen ins Kino.</td></tr></table>`],
+    ['6 · Short forms', `<table class="gtab"><tr><th>long</th><th>short</th><th>example</th></tr>
+      <tr><td>in dem</td><td><b>im</b></td><td>Ich bin im Kino.</td></tr><tr><td>in das</td><td><b>ins</b></td><td>Ich gehe ins Kino.</td></tr>
+      <tr><td>an dem</td><td><b>am</b></td><td>Wir liegen am Strand.</td></tr><tr><td>an das</td><td><b>ans</b></td><td>Wir fahren ans Meer.</td></tr>
+      <tr><td>zu dem</td><td><b>zum</b></td><td>Ich gehe zum Arzt.</td></tr><tr><td>zu der</td><td><b>zur</b></td><td>Ich gehe zur Schule.</td></tr>
+      <tr><td>von dem</td><td><b>vom</b></td><td>Ich komme vom Bahnhof.</td></tr><tr><td>bei dem</td><td><b>beim</b></td><td>Ich bin beim Bäcker.</td></tr></table>`],
+    ['💡 Memory tricks for every preposition', `<div class="vgrid">${Object.keys(PV).map(pr => { const [en, ta, mn, k] = PV[pr];
+      const tag = k === 'wech' ? '<span class="case wech">Dativ / Akk.</span>' : `<span class="case ${k}">${k === 'akk' ? 'Akkusativ' : 'Dativ'}</span>`;
+      return vcard(esc(pr), esc(en), ta, esc(mn), tag, TA_P[pr]); }).join('')}</div>`]
+  ] },
+  adj:{ name:'Adjektivdeklination', sections:() => [
+    ['1 · The big idea', `<p>In front of a noun, <b>gender and case must be shown once</b>. If the <b>article</b> already shows them, the adjective just adds a small <b>-e / -en</b>. If there is <b>no article</b>, or <i>ein</i> without an ending, the <b>adjective</b> has to show them with a "strong" ending, borrowed from der / das / dem.</p>
+      ${picSVG(BYID.a_w1)}${picSVG(BYID.a_m1)}${picSVG(BYID.a_s2)}<p>Adjectives <b>after</b> the noun never change: <i>Der Mann ist alt.</i></p>`],
+    ['2 · Which type? Ask three questions', `<p>Look at what stands in front of the adjective:</p>${adjDecisionSVG()}`],
+    ['3 · After der / die / das: -e or -en', `<p>${ADJ_RULE.weak}</p>
+      ${tableSVG(COLS4, ROWS3, [[['der', '-e'], ['die', '-e'], ['das', '-e'], ['die', '-en']], [['den', '-en'], ['die', '-e'], ['das', '-e'], ['die', '-en']], [['dem', '-en'], ['der', '-en'], ['dem', '-en'], ['den', '-en']]], [[0, 0], [0, 1], [0, 2], [1, 1], [1, 2]], ADJ_COL.weak, '-e only in the 5 marked spots, everywhere else -en')}
+      ${gEx(['a_w2', 'a_w7', 'a_w10', 'a_w13'])}${taMn(ADJ_TIPS.weak[2])}`],
+    ['4 · After ein / kein / mein: mixed', `<p>${ADJ_RULE.mixed}</p>
+      ${tableSVG(COLS4, ROWS3, [[['ein', '-er'], ['eine', '-e'], ['ein', '-es'], ['keine', '-en']], [['einen', '-en'], ['eine', '-e'], ['ein', '-es'], ['keine', '-en']], [['einem', '-en'], ['einer', '-en'], ['einem', '-en'], ['keinen', '-en']]], [[0, 0], [0, 2], [1, 2]], ADJ_COL.mixed, 'ein without ending → the adjective shows it: -er / -es')}
+      ${picSVG(BYID.a_m4)}${gEx(['a_m2', 'a_m6', 'a_m7', 'a_m11'])}${taMn(ADJ_TIPS.mixed[2])}`],
+    ['5 · No article: strong', `<p>${ADJ_RULE.strong}</p>
+      ${tableSVG(COLS4, ROWS3, [[['(der)', '-er'], ['(die)', '-e'], ['(das)', '-es'], ['(die)', '-e']], [['(den)', '-en'], ['(die)', '-e'], ['(das)', '-es'], ['(die)', '-e']], [['(dem)', '-em'], ['(der)', '-er'], ['(dem)', '-em'], ['(den)', '-en']]], [[0, 0], [0, 2], [2, 0], [2, 1], [2, 2]], ADJ_COL.strong, 'ending = last letters of the der-word in (brackets)')}
+      ${picSVG(BYID.a_s7)}${gEx(['a_s1', 'a_s6', 'a_s10', 'a_s11'])}${taMn(ADJ_TIPS.strong[2])}`],
+    ['6 · Watch out', `<ul class="gex"><li><b>Dativ</b> after any article → always <b>-en</b>: mit dem alt<b>en</b> Mann, mit einer nett<b>en</b> Frau.</li>
+      <li><b>Plural</b> after die / keine / meine → always <b>-en</b>: die neu<b>en</b> Freunde, meine neu<b>en</b> Freunde.</li>
+      <li><b>Plural without article</b> → <b>-e</b> (Nom./Akk.): gut<b>e</b> Freunde, nett<b>e</b> Leute — but Dativ: mit nett<b>en</b> Leute<b>n</b>.</li>
+      <li>Adjective <b>after</b> the noun (with sein / werden / bleiben) → <b>no ending</b>: Das Auto ist neu.</li></ul>`],
+    ['💡 Memory tricks', `<div class="vgrid tips">${['weak', 'mixed', 'strong'].map(k => `<div class="vcard"><div class="big sm">${ADJ_TIPS[k][0]}</div><div class="mn">💡 ${ADJ_TIPS[k][1]}</div>${taMn(ADJ_TIPS[k][2])}</div>`).join('')}</div>
+      <h3>Adjectives in the game</h3><div class="vgrid">${Object.values(ADJV).map(([b, en, ta, mn, tmn]) => vcard(esc(b), esc(en), ta, esc(mn), '', tmn)).join('')}</div>`]
+  ] }
+};
+const guideCache = {};
+function guideHTML(topic) {
+  if (!guideCache[topic]) {
+    const g = GUIDE[topic];
+    guideCache[topic] = `<h3>📖 Revision: ${g.name}</h3><p class="note">Read before you play. Tap a section to open it; the pictures move to show the rule.</p>`
+      + g.sections().map(([t, h], i) => `<details${i ? '' : ' open'}><summary>${t}</summary><div class="gb">${h}</div></details>`).join('');
+  }
+  return guideCache[topic];
+}
+
 /* ---- past rounds ---- */
-const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 0:'Review / practice' };
+const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 0:'Review / practice' };
 const when = t => new Date(t).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
 const gapQ = h => h.replace('___', '<span class="gap">?</span>');
 function histItem(e, k) {
@@ -1856,6 +2181,11 @@ function histItem(e, k) {
   if (e.y === 't') {
     const t = TRAPS[e.i]; if (!t) return '';
     qline = gapQ(esc(t.q)); sent = trapHTML(t); tr = t.t; ex = EX[t.ex]; ans = t.a; mn = CONJ[t.a][2]; tmn = TA_C[t.a];
+  } else if (e.y === 'a') {
+    const x = BYID[e.i]; if (!x) return '';
+    qline = gapQ(esc(x.q)); sent = adjHTML(x); tr = x.t; ex = ADJ_RULE[x.k]; ans = x.a; pic = picSVG(x);
+    const v = ADJV[x.adj] || []; mn = v[3] || ''; tmn = v[4];
+    extra = `<div class="w">${adjWhy(x)}</div>`;
   } else if (e.y === 'p') {
     const p = BYID[e.i]; if (!p) return '';
     qline = gapQ(esc(p.q)); sent = prepHTML(p); tr = p.t; ex = EXP[p.k]; ans = p.a; pic = picSVG(p);
@@ -1914,7 +2244,7 @@ function practiseHist() {
   const q = histOpen.it.filter(e => !e.r).map(e => {
     if (e.y === 't') return TRAPS[e.i] ? trapQ(TRAPS[e.i]) : null;
     const x = BYID[e.i]; if (!x) return null;
-    return e.y === 'p' ? prepQ(x) : e.y === 'b' ? buildQ(x) : gateQ(x);
+    return e.y === 'a' ? adjQ(x) : e.y === 'p' ? prepQ(x) : e.y === 'b' ? buildQ(x) : gateQ(x);
   }).filter(Boolean);
   if (q.length) startLevel(0, q);
 }
@@ -1923,8 +2253,8 @@ let wTab = 'star';
 function renderWords() {
   $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
   const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
-  const list = [...W.filter(has), ...P.filter(has)];
-  $('#wList').innerHTML = list.length ? list.map(w => w.pt ? prepItemHTML(w) : `
+  const list = [...W.filter(has), ...P.filter(has), ...A.filter(has)];
+  $('#wList').innerHTML = list.length ? list.map(w => w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
       <div class="tr">${esc(w.en)}</div>
@@ -1940,13 +2270,14 @@ function renderProg() {
   $('#pStats').innerHTML = `
     <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>
     <div class="stat"><b>${S.rounds}</b><span>Rounds played</span></div>
-    <div class="stat"><b>${S.unlocked + S.unlockedP}/6</b><span>Levels unlocked</span></div>
+    <div class="stat"><b>${S.unlocked + S.unlockedP + (S.unlockedA || 1)}/9</b><span>Levels unlocked</span></div>
     <div class="stat"><b>${seen}/${W.length}</b><span>Words met</span></div>
     <div class="stat"><b>${mastered}</b><span>Words mastered</span></div>
     <div class="stat"><b>${Object.keys(S.bm).length}</b><span>Starred</span></div>`;
   const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s.t ? pct(s) + '% of ' + s.t : 'not played yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
   $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
     + bar('Prepositions with a fixed case', st.pfix, 'var(--blue)') + bar('Wechselpräpositionen (wo/wohin)', st.pwech, 'var(--red)')
+    + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)')
     + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, review ${S.best[0]}</div>`;
   let tip;
   if (st.weil.t + st.dass.t < 6) tip = 'Play a few rounds and this space will tell you what to focus on.';
@@ -2056,7 +2387,7 @@ function mergeSaves(a, b) {
   for (const [k, v] of Object.entries(b.stats || {})) { const o = m.stats[k] || { c:0, t:0 }; m.stats[k] = v.t > o.t ? v : o; }
   m.best = Object.assign({}, DEF().best, a.best);
   for (const [k, v] of Object.entries(b.best || {})) m.best[k] = Math.max(m.best[k] || 0, v || 0);
-  m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1);
+  m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1); m.unlockedA = Math.max(a.unlockedA || 1, b.unlockedA || 1);
   m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
   if (b.streak && (b.streak.last || '') > (a.streak && a.streak.last || '') ) m.streak = b.streak;
   const seenT = new Set(), hist = [];
