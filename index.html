@@ -175,7 +175,9 @@ p{line-height:1.5}
 .cafe-input{display:flex;gap:8px;align-items:center}
 .cafe-input input{flex:1;min-width:0;border:3px solid var(--black);padding:12px;font:inherit;font-size:17px;background:var(--white)}
 .cafe-input button{height:52px;min-width:52px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:22px;cursor:pointer}
-#cMic{background:var(--red);color:var(--white);min-width:68px}
+#cMic{background:var(--red);color:var(--white);min-width:74px;line-height:1;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#cMic small{display:block;font-size:11px;font-weight:700;margin-top:2px;text-transform:uppercase}
+#cMic.rec{background:#B9544A}
 #cMic.rec{animation:recpulse 1s infinite}
 @keyframes recpulse{50%{box-shadow:0 0 0 8px rgba(217,103,91,.35)}}
 .cstatus{min-height:20px;font-size:14px;color:var(--grey);margin-top:6px}
@@ -392,6 +394,7 @@ p{line-height:1.5}
       <div class="cafe-top">
         <button id="cBack" aria-label="Back to menu">←</button>
         <div class="ct"><b id="cTopic"></b><small id="cFocus"></small></div>
+        <button id="cVoice" aria-pressed="true" title="Natural voice (Gemini). Tap for the device voice.">🗣</button>
         <button id="cSlow" aria-pressed="false" title="Speak slowly">🐢</button>
         <button id="cKeyBtn" title="Gemini key">⚙</button>
       </div>
@@ -413,8 +416,8 @@ p{line-height:1.5}
       <div id="cChat" class="chat" aria-live="polite"></div>
       <div class="cafe-input">
         <button id="cHelp" title="Hilfe: show me example answers">💡</button>
-        <button id="cMic" aria-label="Speak">🎤</button>
-        <input id="cText" type="text" autocomplete="off" placeholder="Sprich oder schreib auf Deutsch…">
+        <button id="cMic" aria-label="Hold to talk">🎤<small>hold</small></button>
+        <input id="cText" type="text" autocomplete="off" placeholder="Hold 🎤 and speak, or type here…">
         <button id="cSend" aria-label="Send">➤</button>
       </div>
       <div id="cStatus" class="cstatus" role="status"></div>
@@ -806,7 +809,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2' });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural' });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -1477,8 +1480,13 @@ async function apiError(r) {
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let modelCache = null;
-async function rankModels(key) {
-  if (modelCache && modelCache.key === key) return modelCache.list;
+let modelPending = null;   // shares one model-list request between callers that start at the same time
+function rankModels(key) {
+  if (modelCache && modelCache.key === key) return Promise.resolve(modelCache.list);
+  if (!modelPending || modelPending.key !== key) modelPending = { key, p:fetchModels(key).finally(() => { modelPending = null; }) };
+  return modelPending.p;
+}
+async function fetchModels(key) {
   const r = await gfetch(`${AI_BASE}/models?pageSize=200`, { headers:{ 'x-goog-api-key':key } });
   if (!r.ok) throw await apiError(r);
   const names = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent')).map(m => m.name.replace('models/', ''));
@@ -1487,7 +1495,8 @@ async function rankModels(key) {
   const tier = n => /flash-lite/.test(n) ? 1 : /flash/.test(n) ? 0 : /pro/.test(n) ? 2 : 3;   // flash first, then flash-lite, then pro
   usable.sort((x, y) => tier(x) - tier(y) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0) || x.length - y.length);
   const list = usable.length ? usable : ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
-  modelCache = { key, list }; return list;
+  const tts = names.filter(n => /tts/.test(n)).sort((x, y) => (/flash/.test(x) ? 0 : 1) - (/flash/.test(y) ? 0 : 1) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0));
+  modelCache = { key, list, tts }; return list;
 }
 const pickModel = async key => (await rankModels(key))[0];
 const REPLY_SCHEMA = { type:'OBJECT', properties:{
@@ -1506,23 +1515,32 @@ Rules:
 - feedback_*: judge ONLY the learner's last message. Ignore missing capital letters and punctuation (it comes from speech recognition). If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
 - If the learner writes English or seems lost, help with a simple German sentence they could say.`;
 }
+// Lena's replies are short: skip Gemini's slow "thinking" step where the model allows it
+const THINK = [{ thinkingBudget:0 }, { thinkingLevel:'low' }, null], thinkIdx = {};
 async function askLena(userText) {
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
   const ranked = await rankModels(key), first = C.model || lsGet(AI_MODEL) || ranked[0];
   const order = [first, ...ranked.filter(m => m !== first)].slice(0, 5);
   C.hist.push({ role:'user', parts:[{ text:userText }] });
   let schema = true, r = null, used = null, lastErr = null;
+  const ctxTurns = C.hist.length > 15 ? C.hist.slice(-15) : C.hist;             // recent turns are enough and keep replies fast
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
-    body:JSON.stringify({ systemInstruction:{ parts:[{ text:cafeSystem() + (schema ? '' : '\nAnswer ONLY with a JSON object with the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.') }] }, contents:C.hist,
-      generationConfig:Object.assign({ temperature:0.8, responseMimeType:'application/json' }, schema ? { responseSchema:REPLY_SCHEMA } : {}) }) });
+    body:JSON.stringify({ systemInstruction:{ parts:[{ text:cafeSystem() + (schema ? '' : '\nAnswer ONLY with a JSON object with the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.') }] }, contents:ctxTurns,
+      generationConfig:Object.assign({ temperature:0.8, maxOutputTokens:1024, responseMimeType:'application/json' }, schema ? { responseSchema:REPLY_SCHEMA } : {},
+        THINK[thinkIdx[model] || 0] ? { thinkingConfig:THINK[thinkIdx[model] || 0] } : {}) }) });
   try {
     for (let round = 0; round < 2 && !used; round++) {
       if (round) { cafeStatus('Gemini is busy, trying again…'); await sleep(2500); }
       for (const model of order) {
         r = await call(model);
         if (r.ok) { used = model; break; }
-        const err = await apiError(r);
-        if (r.status === 400 && schema && /schema|response_?mime|json/i.test(err.detail)) { schema = false; r = await call(model); if (r.ok) { used = model; break; } lastErr = await apiError(r); continue; }
+        let err = await apiError(r);
+        // adapt to what this model accepts: thinking switched off → lighter thinking → default; then plain JSON without schema
+        while (r.status === 400 && ((/thinking/i.test(err.detail) && (thinkIdx[model] || 0) < THINK.length - 1) || (schema && /schema|response_?mime|json/i.test(err.detail)))) {
+          if (/thinking/i.test(err.detail)) thinkIdx[model] = (thinkIdx[model] || 0) + 1; else schema = false;
+          r = await call(model); if (r.ok) break; err = await apiError(r);
+        }
+        if (r.ok) { used = model; break; }
         if (r.status === 404 || r.status === 429 || r.status >= 500) { lastErr = err; if (model !== order[order.length - 1]) cafeStatus('Lena is thinking… (switching to another Gemini model)'); continue; }
         throw err;                                                            // key problems or other refusals: no point trying other models
       }
@@ -1538,40 +1556,124 @@ async function askLena(userText) {
 }
 
 // ---- voice out ----
-let deVoice = null;
+// Natural voice: Gemini's speech models (same key) return 24 kHz PCM that we play with Web Audio.
+// If that is unavailable (free limit, not offered for the key, offline) Lena uses the device's built-in German voice.
+const LENA_VOICE = 'Aoede';
+const audioCache = new Map();
+let actx = null, curSrc = null, speakSeq = 0, ttsDown = false, deVoice = null;
+function audioCtx() {
+  const A = window.AudioContext || window.webkitAudioContext; if (!A) return null;
+  actx = actx || new A(); if (actx.state === 'suspended') actx.resume().catch(() => {});
+  return actx;
+}
+function talking(on) { const f = $('#lena .lena-svg'); if (f) f.classList.toggle('talk', on); }
+function stopVoice() {
+  speakSeq++;
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  if (curSrc) { try { curSrc.stop(); } catch (e) {} curSrc = null; }
+  talking(false);
+}
+function voiceBtn() { const b = $('#cVoice'); if (b) b.setAttribute('aria-pressed', (S.cafeVoice || 'natural') === 'natural'); }
+async function ttsBuffer(text) {
+  const ck = (C.slow ? 's:' : 'n:') + text;
+  if (audioCache.has(ck)) return audioCache.get(ck);
+  const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
+  await rankModels(key);
+  const models = (modelCache && modelCache.tts) || []; if (!models.length) throw new AIError('notts');
+  const style = C.slow ? 'Say slowly and very clearly, in a warm and friendly voice' : 'Say naturally, in a warm, cheerful and friendly voice, like a young barista chatting with a regular guest';
+  let lastErr = null;
+  for (const model of models.slice(0, 3)) {
+    const r = await gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
+      body:JSON.stringify({ contents:[{ parts:[{ text:`${style}: ${text}` }] }],
+        generationConfig:{ responseModalities:['AUDIO'], speechConfig:{ voiceConfig:{ prebuiltVoiceConfig:{ voiceName:LENA_VOICE } } } } }) });
+    if (!r.ok) { lastErr = await apiError(r); if (r.status === 404 || r.status === 429 || r.status >= 500) continue; throw lastErr; }
+    const d = await r.json(), part = ((((d.candidates || [])[0] || {}).content || {}).parts || []).find(p => p.inlineData && p.inlineData.data);
+    if (!part) { lastErr = new AIError('notts'); continue; }
+    const ctx = audioCtx(), rate = +(((part.inlineData.mimeType || '').match(/rate=(\d+)/) || [0, 24000])[1]);
+    const bin = atob(part.inlineData.data), n = bin.length >> 1, buf = ctx.createBuffer(1, n, rate), ch = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; ch[i] = v / 32768; }
+    audioCache.set(ck, buf); return buf;
+  }
+  throw lastErr || new AIError('notts');
+}
 function loadVoice() {
   const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [], de = vs.filter(v => /^de/i.test(v.lang));
   deVoice = de.find(v => /google/i.test(v.name)) || de.find(v => /(katja|hedda|anna|marlene|vicki|petra|helena|female)/i.test(v.name)) || de[0] || null;
 }
 if (window.speechSynthesis) { loadVoice(); speechSynthesis.onvoiceschanged = loadVoice; }
-function say(text) {
+function sayDevice(text) {
   if (!window.speechSynthesis) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; if (deVoice) u.voice = deVoice; u.rate = C.slow ? 0.72 : 0.95; u.pitch = 1.1;
-  const face = $('#lena .lena-svg');
-  u.onstart = () => face && face.classList.add('talk');
-  u.onend = u.onerror = () => face && face.classList.remove('talk');
+  u.onstart = () => talking(true);
+  u.onend = u.onerror = () => talking(false);
   speechSynthesis.speak(u);
+}
+async function say(text) {
+  stopVoice(); const my = speakSeq;
+  if ((S.cafeVoice || 'natural') === 'natural' && !ttsDown && lsGet(AI_KEY) && audioCtx()) {
+    try {
+      const buf = await ttsBuffer(text);
+      if (my !== speakSeq) return;                          // the learner already started something else
+      const ctx = audioCtx(), src = ctx.createBufferSource();
+      src.buffer = buf; src.connect(ctx.destination);
+      src.onended = () => { if (curSrc === src) { curSrc = null; talking(false); } };
+      curSrc = src; talking(true); src.start(); return;
+    } catch (e) {
+      if (my !== speakSeq) return;
+      if (e.message !== 'busy' && e.message !== 'blocked') { ttsDown = true; cafeStatus('The natural voice is not available right now (free limit or not offered for your key), so Lena uses the device voice.'); }
+    }
+  }
+  if (my === speakSeq) sayDevice(text);
 }
 
 // ---- voice in ----
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = null, recOn = false;
-function toggleMic() {
-  if (!SR) { cafeStatus('Speech recognition is not available in this browser. Use Chrome, or type your answer.', true); return; }
-  if (recOn) { rec.stop(); return; }
-  if (window.speechSynthesis) speechSynthesis.cancel();
-  rec = new SR(); rec.lang = 'de-DE'; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
-  let finalText = '';
-  rec.onstart = () => { recOn = true; $('#cMic').classList.add('rec'); cafeStatus('Ich höre zu… speak German now.'); };
+// hold-to-talk: listen while the 🎤 button is held, send when it is released.
+// Android's recogniser stops by itself after a short pause, so while the button is still held we simply restart it.
+let rec = null, recOn = false, holding = false, committed = '', sessionFinal = '', finishPending = false, finishTimer = null;
+function micUI(on) { $('#cMic').classList.toggle('rec', on); }
+function recStart() {
+  rec = new SR(); rec.lang = 'de-DE'; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
+  sessionFinal = '';
   rec.onresult = e => {
-    let interim = ''; finalText = '';
-    for (const res of e.results) (res.isFinal ? (finalText += res[0].transcript) : (interim += res[0].transcript));
-    $('#cText').value = (finalText + ' ' + interim).trim();
+    let fin = '', inter = '';
+    for (const res of e.results) { if (res.isFinal) fin += res[0].transcript + ' '; else inter += res[0].transcript; }
+    sessionFinal = fin;
+    $('#cText').value = (committed + ' ' + fin + ' ' + inter).replace(/\s+/g, ' ').trim();
   };
-  rec.onerror = e => cafeStatus(e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'Microphone blocked. Allow the microphone for this site in Chrome settings.' : e.error === 'no-speech' ? 'I didn’t hear anything. Tap 🎤 and try again.' : 'Speech recognition problem: ' + e.error, true);
-  rec.onend = () => { recOn = false; $('#cMic').classList.remove('rec'); const t = $('#cText').value.trim(); if (t) cafeSend(t); else if (!$('#cStatus').classList.contains('err')) cafeStatus(''); };
-  try { rec.start(); } catch (e) { cafeStatus('Could not start the microphone.', true); }
+  rec.onerror = e => {
+    if (e.error === 'no-speech' || e.error === 'aborted') return;
+    holding = false; micUI(false); finishPending = false;
+    cafeStatus(e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'Microphone blocked. Allow the microphone for this site in Chrome settings.' : 'Speech recognition problem: ' + e.error, true);
+  };
+  rec.onend = () => {
+    recOn = false; committed = (committed + ' ' + sessionFinal).replace(/\s+/g, ' ').trim(); sessionFinal = '';
+    if (holding) { try { recStart(); } catch (e) {} return; }
+    finishRec();
+  };
+  recOn = true; rec.start();
+}
+function finishRec() {
+  if (!finishPending) return; finishPending = false; clearTimeout(finishTimer); micUI(false);
+  const t = $('#cText').value.trim();
+  if (t) cafeSend(t); else cafeStatus('I didn’t hear anything. Hold 🎤 while you speak, then let go.', true);
+}
+function micDown(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (!SR) { cafeStatus('Speech recognition is not available in this browser. Use Chrome, or type your answer.', true); return; }
+  if (holding) return;
+  if (C.busy) { cafeStatus('Lena is still answering…'); return; }
+  audioCtx(); stopVoice();
+  holding = true; finishPending = true; committed = ''; $('#cText').value = ''; micUI(true);
+  cafeStatus('Ich höre zu… keep holding while you speak, let go to send.');
+  try { recStart(); } catch (err) { holding = false; finishPending = false; micUI(false); cafeStatus('Could not start the microphone.', true); }
+}
+function micUp() {
+  if (!holding) return;
+  holding = false; cafeStatus('');
+  try { if (rec && recOn) rec.stop(); else finishRec(); } catch (e) { finishRec(); }
+  finishTimer = setTimeout(() => { if (recOn && rec) { try { rec.abort(); } catch (e) {} } finishRec(); }, 2500);   // safety net if the recogniser never reports back
 }
 
 // ---- chat UI ----
@@ -1650,6 +1752,8 @@ function cafeGreet() { cafeTurn('[Start of the conversation. Greet me warmly, in
 function openCafe(topicId, focus, lvl) {
   const t = CAFE_TOPICS.find(x => x[0] === topicId); if (!t) return;
   if (lvl) S.cafeLevel = lvl;
+  audioCtx(); ttsDown = false; voiceBtn();          // unlock audio while we still have the tap
+  if (!modelCache && lsGet(AI_KEY)) rankModels(lsGet(AI_KEY)).catch(() => {});
   Object.assign(C, { topic:topicId, focus:focus || (S.topic === 'prep' ? 'prep' : 'wd'), hist:[], busy:false, msgs:[], entry:null, model:null });
   $('#cTopic').textContent = `${t[1]} ${t[2]}`;
   $('#cFocus').textContent = `${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
@@ -1661,7 +1765,7 @@ function openCafe(topicId, focus, lvl) {
   if (!lsGet(AI_KEY)) { showKeySetup(true); addBubble('sys', 'Hallo! To talk with Lena, connect a free Gemini key once (steps above).'); }
   else { showKeySetup(false); cafeGreet(); }
 }
-function closeCafe() { if (recOn && rec) rec.stop(); if (window.speechSynthesis) speechSynthesis.cancel(); show('menu'); }
+function closeCafe() { holding = false; if (recOn && rec) { try { rec.abort(); } catch (e) {} } micUI(false); stopVoice(); show('menu'); }
 function renderCafeBox() {
   $('#cafeFocusName').textContent = CAFE_FOCUS[S.topic === 'prep' ? 'prep' : 'wd'].name;
   $$('#cafeLvl button').forEach(b => b.classList.toggle('on', b.dataset.lvl === (S.cafeLevel || 'A2')));
@@ -1829,12 +1933,18 @@ $('#cKeyBtn').addEventListener('click', () => showKeySetup($('#cSetup').style.di
 $('#cKeySave').addEventListener('click', saveKey);
 $('#cKey').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
 $('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); modelCache = null; C.model = null; $('#cKeyMsg').textContent = 'Key removed from this device.'; });
-$('#cMic').addEventListener('click', toggleMic);
-$('#cSend').addEventListener('click', () => cafeSend($('#cText').value));
-$('#cText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); cafeSend($('#cText').value); } });
-$('#cHelp').addEventListener('click', () => cafeTurn('[I am stuck. Give me two short example answers I could say to your last question (in German, using the grammar focus), then ask the question again.]', null));
+const mic = $('#cMic');
+mic.addEventListener('pointerdown', e => { if (e.button > 0) return; try { mic.setPointerCapture(e.pointerId); } catch (x) {} micDown(e); });
+mic.addEventListener('pointerup', micUp); mic.addEventListener('pointercancel', micUp); mic.addEventListener('lostpointercapture', micUp);
+mic.addEventListener('contextmenu', e => e.preventDefault());
+mic.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); micDown(e); } });
+mic.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); micUp(); } });
+$('#cVoice').addEventListener('click', () => { S.cafeVoice = (S.cafeVoice || 'natural') === 'natural' ? 'device' : 'natural'; ttsDown = false; save(); voiceBtn(); cafeStatus(S.cafeVoice === 'natural' ? 'Natural voice on.' : 'Device voice on (faster, more robotic).'); });
+$('#cSend').addEventListener('click', () => { audioCtx(); cafeSend($('#cText').value); });
+$('#cText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); audioCtx(); cafeSend($('#cText').value); } });
+$('#cHelp').addEventListener('click', () => { audioCtx(); cafeTurn('[I am stuck. Give me two short example answers I could say to your last question (in German, using the grammar focus), then ask the question again.]', null); });
 function chatTools(e) {
-  const b = e.target.closest('[data-c]'); if (!b) return;
+  const b = e.target.closest('[data-c]'); if (!b) return; audioCtx();
   const bub = b.closest('.b');
   if (b.dataset.c === 'tr') { const box = bub.querySelector('.trbox'); box.hidden = !box.hidden; b.textContent = box.hidden ? '🌐 Translate' : '🌐 Hide'; }
   else if (b.dataset.c === 'say') say(bub.dataset.de);
