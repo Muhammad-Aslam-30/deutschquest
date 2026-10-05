@@ -13,8 +13,8 @@
   --sky:#E4ECEB; --grey:#5B6670; --good:#3E8E63;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--sky);font-family:'Jost',"Futura","Century Gothic",system-ui,sans-serif;color:var(--black);-webkit-tap-highlight-color:transparent}
-#c{position:fixed;inset:0;width:100%;height:100%;display:block}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:var(--sky);font-family:'Jost',"Futura","Century Gothic",system-ui,sans-serif;color:var(--black);-webkit-tap-highlight-color:transparent}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
 #ui{position:fixed;inset:0;pointer-events:none}
 button{font:inherit;color:inherit}
 button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
@@ -106,9 +106,23 @@ p{line-height:1.5}
 .vgrid.tips{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-bottom:4px}
 .case{position:absolute;top:8px;right:8px;font-size:12px;font-weight:700;color:var(--white);padding:2px 6px}
 .case.akk{background:var(--red)} .case.dat{background:var(--blue)} .case.wech{background:var(--grey)}
+.newtag.again{background:var(--red);color:var(--white)}
 .newtag{background:var(--yellow);color:var(--black);font-size:12px;font-weight:800;padding:2px 6px;vertical-align:4px}
 .nlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 14px;font-size:17px}
 .nlist .tr{font-size:15px}
+.hrow{display:block;width:100%;text-align:left;border:2px solid var(--black);background:var(--white);padding:12px 14px;cursor:pointer;font-size:17px}
+.hrow span{display:block;color:var(--grey);font-size:14.5px;margin-top:3px}
+.hrow .score{float:right;font-weight:800;color:var(--black)}
+.hlist{display:grid;gap:10px}
+.hlist details{border:2px solid var(--black);background:var(--white)}
+.hlist details.bad{border-left:8px solid var(--red)} .hlist details.ok{border-left:8px solid var(--good)}
+.hlist summary{cursor:pointer;padding:10px 12px;font-size:16.5px;line-height:1.45}
+.hlist summary .hm{font-weight:800;margin-right:6px} .hlist .ok .hm{color:var(--good)} .hlist .bad .hm{color:var(--red)}
+.hlist .hb{padding:0 12px 12px;line-height:1.5}
+.hlist .hb .sent{font-size:19px;font-weight:600;margin:4px 0 2px}
+.hlist .hb .you{margin:6px 0}
+.hlist .hb .ex{border-left:6px solid var(--blue);background:#EEF2F5;padding:10px 12px;margin:10px 0}
+.hlist .hb .pic{max-width:300px}
 .pic{display:block;width:100%;max-width:360px;margin:12px auto;border:3px solid var(--black);background:var(--white)}
 .item .pic{max-width:260px;margin:10px 0 0}
 #intro #iGo{position:sticky;bottom:0}
@@ -217,6 +231,7 @@ p{line-height:1.5}
         <button class="btn center" id="bWords">★ My words</button>
         <button class="btn center" id="bProg">My progress</button>
       </div>
+      <button class="btn center" id="bHist" style="margin-top:14px">📖 Past rounds</button>
       <div class="gapset">
         <span class="l">Time between gates</span>
         <button id="gapDn" aria-label="Less time between gates">−</button>
@@ -282,6 +297,27 @@ p{line-height:1.5}
       <div class="tabs"><button data-tab="star" class="on">Starred</button><button data-tab="all">All seen</button></div>
       <div class="list" id="wList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="wBack">Back to menu</button></div>
+    </div>
+  </section>
+
+  <!-- PAST ROUNDS -->
+  <section id="hist" class="screen dim">
+    <div class="panel">
+      <h2>Past rounds</h2>
+      <p class="lead">Tap a round to see every question, your answer and the explanation.</p>
+      <div class="list" id="hList"></div>
+      <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="hBack">Back to menu</button></div>
+    </div>
+  </section>
+  <section id="histD" class="screen dim">
+    <div class="panel">
+      <h2 id="hdTitle"></h2>
+      <p class="lead" id="hdSub"></p>
+      <div class="hlist" id="hdList"></div>
+      <div class="row2">
+        <button class="btn blue center" id="hdPlay">Practise this round again</button>
+        <button class="btn center" id="hdBack">Back to rounds</button>
+      </div>
     </div>
   </section>
 
@@ -586,6 +622,7 @@ const TA_TIPS = {
   wech:'இருக்கும் இடம் (Wo?) → Dativ; போகும் இடம் (Wohin?) → Akkusativ. A = Action = அசைவு'
 };
 const taMn = t => t ? `<div class="mn ta-mn">🪷 ${esc(t)}</div>` : '';
+const wasMissed = id => !!(S.srs[id] && S.srs[id].box === 0 && S.srs[id].seen > 0);
 const vcard = (big, sub, ta, mn, extra = '', tmn = '') => `<div class="vcard">${extra}<div class="big">${big}</div><div class="en">${sub}</div><div class="ta">தமிழ்: ${esc(ta)}</div>${mn ? `<div class="mn">💡 ${mn}</div>` : ''}${taMn(tmn)}</div>`;
 function briefingHTML(q, fresh) {
   const preps = q.filter(x => x.type === 'prep').map(x => x.p), words = q.filter(x => x.w).map(x => x.w), traps = q.filter(x => x.type === 'trap');
@@ -610,7 +647,7 @@ function briefingHTML(q, fresh) {
     const uniq = [...new Set(words)];
     h += `<h3>${preps.length ? 'weil / dass words' : 'Words in this round'}</h3><div class="cards">${uniq.map(w => { const [mn, ta] = VOC[w.id] || ['', ''];
       return `<div class="wcard">
-        <div><div class="de">${fresh.includes(w) ? '<span class="newtag">NEW</span> ' : ''}${wordHTML(w)}</div><div class="en">${esc(w.en)} · <span class="ta">${esc(ta)}</span></div></div>
+        <div><div class="de">${fresh.includes(w) ? '<span class="newtag">NEW</span> ' : wasMissed(w.id) ? '<span class="newtag again">↻ AGAIN</span> ' : ''}${wordHTML(w)}</div><div class="en">${esc(w.en)} · <span class="ta">${esc(ta)}</span></div></div>
         ${starBtn(w.id)}
         <div class="ex">${mn ? `<div class="mn">💡 ${esc(mn)}</div>` : ''}${taMn(TA_W[w.id])}${sentHTML(w)}<div class="tr">${esc(w.t)}</div></div>
       </div>`; }).join('')}</div>`;
@@ -640,7 +677,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 12, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[] });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -695,13 +732,14 @@ const pickWords = (n, fresh) => pickFrom(W, n, fresh);
 const pickPrep = (pool, n) => pickFrom(pool, n, pool.filter(p => !S.srs[p.id]).slice(0, 3));
 function pickFrom(pool, n, fresh) {
   const now = Date.now();
+  const missed = shuffle(pool.filter(w => S.srs[w.id] && S.srs[w.id].box === 0 && S.srs[w.id].seen > 0));
   const due = shuffle(pool.filter(w => S.srs[w.id] && S.srs[w.id].due <= now));
   const marked = shuffle(pool.filter(w => S.bm[w.id]));
   const seen = shuffle(pool.filter(w => S.srs[w.id]));
   const rest = shuffle(pool.slice());
   const out = [];
   const add = (arr, cap) => { let k = 0; for (const w of arr) { if (out.length >= n || k >= cap) return; if (!out.includes(w)) { out.push(w); k++; } } };
-  add(fresh, 99); add(due, Math.ceil(n / 2)); add(marked, 2); add(seen, 2); add(rest, 99);
+  add(fresh, 99); add(missed, Math.ceil(n * 0.75)); add(due, Math.ceil(n / 2)); add(marked, 2); add(seen, 2); add(rest, 99);
   return shuffle(out);
 }
 
@@ -1011,10 +1049,10 @@ function buildQueue(l, fresh) {
 
 // every round opens with a briefing of its vocabulary (plus the full rule cards the first time a preposition level is played)
 let lastLevel = 1, pendingFresh = [], pendingRule = null, pendingQueue = [];
-function startLevel(l) {
+function startLevel(l, customQ) {
   $('#menuMsg').textContent = '';
   if (isLocked(l)) { $('#menuMsg').textContent = LOCK_MSG[l]; return; }
-  if (l === 0 && reviewWords().length === 0) {
+  if (l === 0 && !customQ && reviewWords().length === 0) {
     $('#menuMsg').textContent = 'Nothing to review yet. Play a level or star some words first.';
     return;
   }
@@ -1022,7 +1060,7 @@ function startLevel(l) {
   const rule = RULES[l];
   pendingRule = rule && !S.intro[rule.key] ? rule.key : null;
   pendingFresh = (l === 0 || l >= 4) ? [] : newWords(3);
-  pendingQueue = buildQueue(l, pendingFresh);
+  pendingQueue = customQ || buildQueue(l, pendingFresh);
   const ruleHTML = pendingRule ? rule.cards.map(([h, body, ex, pic]) => `
       <div class="wcard"><div><div class="de">${h}</div></div><div class="ex">${body}<div class="tr" style="margin-top:6px">${ex}</div>${picSVG(BYID[pic])}</div></div>`).join('') : '';
   $('#iTitle').textContent = pendingRule ? rule.title : 'Vor der Runde';
@@ -1040,7 +1078,7 @@ function beginRound(l, fresh) {
 
   clearRows();
   G = { running:true, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0,
-        level:l, queue:q, qi:0, q:null, lives:3, score:0, streak:0, correct:0, answered:0, mistakes:[], speed:SPEEDS[l] };
+        level:l, queue:q, qi:0, q:null, log:[], lives:3, score:0, streak:0, correct:0, answered:0, mistakes:[], speed:SPEEDS[l] };
   show(null); $('#hud').classList.add('show');
   $('#qText').innerHTML = 'Get ready…'; $('#qHint').textContent = ''; $('#qCount').textContent = '';
   updateHUD();
@@ -1053,7 +1091,7 @@ function nextQuestion() {
 }
 
 function startQuestion(q) {
-  q.mistake = false;
+  q.mistake = false; q.chose = null; q.wrong = [];
   if (q.type === 'build') {
     q.built = []; q.builtOk = [];
     const blocks = q.w.b;
@@ -1093,7 +1131,7 @@ function renderPrompt() {
     html = `${esc(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${slots}${w.p || '.'}`;
     hint = 'Collect the words in the right order';
   }
-  $('#qText').innerHTML = html; $('#qHint').textContent = hint;
+  $('#qText').innerHTML = html; $('#qHint').textContent = (q.retry ? '↻ Again — you missed this one. ' : '') + hint;
   $('#qCount').textContent = `${G.qi + 1} of ${G.queue.length}`;
 }
 
@@ -1109,13 +1147,14 @@ function resolveRow(row) {
   const q = G.q, hit = row.items.find(it => it.lane === G.lane);
   hit.mesh.visible = false;
   if (row.kind === 'gate') {
+    q.chose = hit.barrier ? null : hit.label;
     if (hit.correct) { burst(hit.mesh, 0x3E8E63); finish(q, true); }
     else { burst(hit.mesh, RED); loseLife(); showWrong(q, hit.barrier ? null : hit.label); finish(q, false); }
     return;
   }
   const k = row.step, expect = q.w.b[k];
   if (hit.correct) { burst(hit.mesh, 0x3E8E63); q.built.push(hit.label); q.builtOk.push(true); }
-  else { burst(hit.mesh, RED); q.mistake = true; q.built.push(expect); q.builtOk.push(false); loseLife(); showWrong(q, hit.label, expect); }
+  else { burst(hit.mesh, RED); q.mistake = true; q.wrong.push([hit.label, expect]); q.built.push(expect); q.builtOk.push(false); loseLife(); showWrong(q, hit.label, expect); }
   renderPrompt();
   if (G.lives <= 0) { clearRows(); finish(q, false); }
   else if (k === q.w.b.length - 1) finish(q, !q.mistake);
@@ -1126,16 +1165,25 @@ function loseLife() {
   const f = $('#flash'); f.style.opacity = .35; setTimeout(() => f.style.opacity = 0, 160);
 }
 
+const histKey = q => q.type === 'trap' ? TRAPS.indexOf(q.t) : q.type === 'prep' ? q.p.id : q.w.id;
 function finish(q, ok) {
-  G.answered++;
-  if (q.type === 'trap') stat('trap', ok);
-  else if (q.type === 'prep') { stat('p' + q.p.pt, ok); grade(q.p.id, ok); }
-  else { stat(q.w.c, ok); grade(q.w.id, ok); }
+  const first = !q.retry;
+  G.log.push({ y:q.type[0], i:histKey(q), o:ok ? 1 : 0, c:q.chose, w:q.type === 'build' && q.wrong.length ? q.wrong : undefined, r:q.retry ? 1 : undefined });
+  if (first) {
+    G.answered++;
+    if (q.type === 'trap') stat('trap', ok);
+    else if (q.type === 'prep') stat('p' + q.p.pt, ok);
+    else stat(q.w.c, ok);
+  }
+  if (q.type !== 'trap') grade(q.type === 'prep' ? q.p.id : q.w.id, ok);
   if (ok) {
     G.streak++; const pts = 10 + Math.min(G.streak - 1, 5) * 2;
-    G.score += pts; G.correct++;
+    G.score += pts; if (first) G.correct++;
     toast(pts, q);
-  } else { G.streak = 0; G.mistakes.push(q); }
+  } else {
+    G.streak = 0;
+    if (first) { G.mistakes.push(q); G.queue.push(Object.assign({}, q, { retry:true })); }
+  }
   updateHUD(); G.qi++; save();
   schedule(ok ? 0.8 : 0.3, nextQuestion);
 }
@@ -1177,10 +1225,16 @@ function showWrong(q, chose, expect) {
 }
 function closeWrong() { show(null); G.paused = false; }
 
+const HIST_MAX = 60;
+function recordRound(quit) {
+  S.history = S.history || [];
+  S.history.unshift({ t:Date.now(), l:G.level, n:quit ? 0 : S.rounds, sc:G.score, c:G.correct, a:G.answered, q:quit ? 1 : undefined, it:G.log });
+  if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
+}
 function endRound() {
   G.running = false; G.pending = null; clearRows();
   $('#hud').classList.remove('show'); $('#toast').classList.remove('show');
-  S.rounds++; bumpStreak();
+  S.rounds++; bumpStreak(); recordRound(false);
   const l = G.level; let unlock = '';
   if (l === 1 && G.correct >= 6 && S.unlocked < 2) { S.unlocked = 2; unlock = 'Level 2 is unlocked. Time to build whole clauses.'; }
   if (l === 2 && G.correct >= 4 && S.unlocked < 3) { S.unlocked = 3; unlock = 'Level 3 is unlocked. Watch out for das and denn.'; }
@@ -1234,6 +1288,58 @@ function renderGap() {
 }
 function setGap(d) { S.gap = Math.max(GAP_MIN, Math.min(GAP_MAX, S.gap + d)); save(); renderGap(); }
 
+/* ---- past rounds ---- */
+const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 0:'Review / practice' };
+const when = t => new Date(t).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+const gapQ = h => h.replace('___', '<span class="gap">?</span>');
+function histItem(e, k) {
+  let qline, sent, tr, ex, ans, mn = '', tmn = '', pic = '', extra = '';
+  if (e.y === 't') {
+    const t = TRAPS[e.i]; if (!t) return '';
+    qline = gapQ(esc(t.q)); sent = trapHTML(t); tr = t.t; ex = EX[t.ex]; ans = t.a; mn = CONJ[t.a][2]; tmn = TA_C[t.a];
+  } else if (e.y === 'p') {
+    const p = BYID[e.i]; if (!p) return '';
+    qline = gapQ(esc(p.q)); sent = prepHTML(p); tr = p.t; ex = EXP[p.k]; ans = p.a; pic = picSVG(p);
+    mn = PV[p.pr][2]; tmn = TA_P[p.pr];
+    extra = `<div class="w"><b>${p.pt === 'wech' ? (p.k === 'wo' ? 'Wo?' : 'Wohin?') + ' → ' + caseName(p) : esc(p.pr) + ' + ' + caseName(p)}</b></div>`;
+  } else {
+    const w = BYID[e.i]; if (!w) return '';
+    qline = e.y === 'b' ? `${esc(w.m)}, <b class="cj ${w.c}">${w.c}</b> <span class="gap">…</span> (build the clause)` : `${esc(w.m)}, <span class="gap">?</span> ${esc(w.b.join(' '))}${w.p || '.'}`;
+    sent = sentHTML(w); tr = w.t; ans = w.c; ex = e.y === 'b' ? EX.order : (w.c === 'weil' ? EX.weil : EX_DASS_MAIN);
+    const v = VOC[w.id] || ['', '']; mn = v[0]; tmn = TA_W[w.id];
+    extra = `<div class="w">${wordHTML(w)} — ${esc(w.en)} · <span class="ta">${esc(v[1])}</span></div>`;
+  }
+  const you = e.y === 'b'
+    ? (e.o ? 'You built the clause correctly ✓' : 'Your mistakes: ' + (e.w || []).map(([got, exp]) => `<b>${esc(got)}</b> instead of <b>${esc(exp)}</b>`).join(', '))
+    : e.o ? `You chose <b>${esc(e.c)}</b> ✓` : (e.c ? `You chose <b>${esc(e.c)}</b> ✗ — the answer is <b>${esc(ans)}</b>` : `You missed both gates — the answer is <b>${esc(ans)}</b>`);
+  const id = e.y === 't' ? null : e.i;
+  return `<details class="${e.o ? 'ok' : 'bad'}" ${e.o ? '' : 'open'}><summary><span class="hm">${e.o ? '✓' : '✗'}</span>${k + 1}. ${qline}${e.r ? ' <span class="newtag again">↻ 2nd try</span>' : ''}</summary>
+    <div class="hb"><p class="sent">${sent}</p><div class="tr">${esc(tr)}</div><div class="you">${you}</div>${extra}${pic}<div class="ex">${ex}</div>
+    ${mn ? `<div class="mn">💡 ${esc(mn)}</div>` : ''}${taMn(tmn)}${id ? `<div style="text-align:right;margin-top:8px">${starBtn(id)}</div>` : ''}</div></details>`;
+}
+function renderHist() {
+  const H = S.history || [];
+  $('#hList').innerHTML = H.length ? H.map((h, i) => `<button class="hrow" data-h="${i}"><b class="score">${h.c}/${h.a}</b><b>${h.q ? 'Unfinished round' : 'Round ' + h.n}</b> · ${LEVEL_NAME[h.l] || ''}<span>${h.sc} points · ${when(h.t)}</span></button>`).join('')
+    : '<div class="empty">No rounds yet. Play a round and it will show up here.</div>';
+}
+let histOpen = null;
+function openHist(i) {
+  const h = (S.history || [])[i]; if (!h) return; histOpen = h;
+  $('#hdTitle').textContent = h.q ? 'Unfinished round' : 'Round ' + h.n;
+  $('#hdSub').textContent = `${LEVEL_NAME[h.l] || ''} · ${h.c}/${h.a} correct · ${h.sc} points · ${when(h.t)}`;
+  $('#hdList').innerHTML = h.it.map(histItem).join('');
+  show('histD'); $('#histD').scrollTop = 0;
+}
+// replay exactly the questions of a past round (as a practice round, so it never unlocks levels)
+function practiseHist() {
+  const q = histOpen.it.filter(e => !e.r).map(e => {
+    if (e.y === 't') return TRAPS[e.i] ? trapQ(TRAPS[e.i]) : null;
+    const x = BYID[e.i]; if (!x) return null;
+    return e.y === 'p' ? prepQ(x) : e.y === 'b' ? buildQ(x) : gateQ(x);
+  }).filter(Boolean);
+  if (q.length) startLevel(0, q);
+}
+
 let wTab = 'star';
 function renderWords() {
   $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
@@ -1286,16 +1392,25 @@ window.addEventListener('keydown', e => {
 });
 $('#bL').addEventListener('pointerdown', e => { e.preventDefault(); move(-1); });
 $('#bR').addEventListener('pointerdown', e => { e.preventDefault(); move(1); });
+// swipe: switch lane as soon as the finger has moved far enough (no need to lift it);
+// keep swiping in the same motion to cross two lanes
+const SWIPE_PX = 28;
 let tx = null;
 canvas.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive:true });
-canvas.addEventListener('touchend', e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 30) move(dx > 0 ? 1 : -1); tx = null; }, { passive:true });
+canvas.addEventListener('touchmove', e => {
+  if (tx === null) return;
+  const x = e.touches[0].clientX, dx = x - tx;
+  if (Math.abs(dx) >= SWIPE_PX) { move(dx > 0 ? 1 : -1); tx = x; }
+}, { passive:true });
+canvas.addEventListener('touchend', () => { tx = null; }, { passive:true });
+canvas.addEventListener('touchcancel', () => { tx = null; }, { passive:true });
 
 $$('[data-level]').forEach(b => b.addEventListener('click', () => startLevel(+b.dataset.level)));
 $('#iGo').addEventListener('click', () => beginRound(lastLevel, pendingFresh));
 $('#wGo').addEventListener('click', closeWrong);
 $('#bPause').addEventListener('click', togglePause);
 $('#pGo').addEventListener('click', togglePause);
-$('#pQuit').addEventListener('click', () => { G.running = false; G.pending = null; clearRows(); $('#hud').classList.remove('show'); show('menu'); });
+$('#pQuit').addEventListener('click', () => { if (G.log && G.log.length) { recordRound(true); save(); } G.running = false; G.pending = null; clearRows(); $('#hud').classList.remove('show'); show('menu'); });
 $('#eAgain').addEventListener('click', () => startLevel(lastLevel));
 $('#eMenu').addEventListener('click', () => show('menu'));
 $('#bWords').addEventListener('click', () => { renderWords(); show('words'); });
@@ -1304,6 +1419,11 @@ $$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab 
 $$('#topicTabs button').forEach(b => b.addEventListener('click', () => setTopic(b.dataset.topic)));
 $('#gapDn').addEventListener('click', () => setGap(-1));
 $('#gapUp').addEventListener('click', () => setGap(1));
+$('#bHist').addEventListener('click', () => { renderHist(); show('hist'); $('#hist').scrollTop = 0; });
+$('#hBack').addEventListener('click', () => show('menu'));
+$('#hList').addEventListener('click', e => { const b = e.target.closest('[data-h]'); if (b) openHist(+b.dataset.h); });
+$('#hdBack').addEventListener('click', () => { renderHist(); show('hist'); });
+$('#hdPlay').addEventListener('click', practiseHist);
 $('#bProg').addEventListener('click', () => { renderProg(); show('prog'); });
 $('#pBack').addEventListener('click', () => show('menu'));
 let resetArmed = false;
