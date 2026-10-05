@@ -1634,26 +1634,49 @@ function sayDevice(text) {
   u.onend = u.onerror = () => talking(false);
   speechSynthesis.speak(u);
 }
-const VOICE_WAIT = 7000;   // if the natural voice takes longer than this, Lena uses the device voice for this message
-function playBuffer(buf) {
-  const ctx = audioCtx(), src = ctx.createBufferSource();
-  src.buffer = buf; src.playbackRate.value = C.slow ? 0.85 : 1; src.connect(ctx.destination);
-  src.onended = () => { if (curSrc === src) { curSrc = null; talking(false); } };
-  curSrc = src; talking(true); src.start();
+const VOICE_WAIT = 7000;   // if the natural voice takes longer than this, Lena uses the device voice instead
+// Start speaking sooner: the first sentence and the rest are recorded in parallel; the short first one is ready
+// quickly and the rest is usually ready before it finishes. At most two voice requests per reply.
+function speechChunks(text) {
+  const parts = text.match(/[^.!?…]+[.!?…]+["“”»«]*|[^.!?…]+$/g) || [text];
+  const sent = parts.map(x => x.trim()).filter(Boolean);
+  if (sent.length < 2) return [text.trim()];
+  let n = 1; while (n < sent.length - 1 && sent.slice(0, n).join(' ').length < 25) n++;   // a very short "Hallo!" is merged with the next sentence
+  return [sent.slice(0, n).join(' '), sent.slice(n).join(' ')];
 }
+function playBuffer(buf) {
+  return new Promise(done => {
+    const ctx = audioCtx(), src = ctx.createBufferSource();
+    src.buffer = buf; src.playbackRate.value = C.slow ? 0.85 : 1; src.connect(ctx.destination);
+    src.onended = () => { if (curSrc === src) curSrc = null; done(); };
+    curSrc = src; talking(true); src.start();
+  });
+}
+const withTimeout = p => Promise.race([p, sleep(VOICE_WAIT).then(() => null)]);
 async function say(text) {
   stopVoice(); const my = speakSeq;
   if ((S.cafeVoice || 'natural') === 'natural' && !ttsDown && lsGet(AI_KEY) && audioCtx()) {
-    let buf = null, failed = null;
-    if (!audioCache.has(text)) cafeStatus('🗣 Lena is about to speak…');
-    try { buf = await Promise.race([ttsBuffer(text), sleep(VOICE_WAIT).then(() => null)]); } catch (e) { failed = e; }
+    const parts = speechChunks(text), jobs = parts.map(p => { const j = ttsBuffer(p); j.catch(() => {}); return j; });
+    let first = null, failed = null;
+    if (!audioCache.has(parts[0])) cafeStatus('🗣 Lena is about to speak…');
+    try { first = await withTimeout(jobs[0]); } catch (e) { failed = e; }
     if (my !== speakSeq) return;                                  // the learner already started something else
     if ($('#cStatus').textContent.startsWith('🗣')) cafeStatus('');
-    if (buf) {
+    if (first) {
       const ctx = audioCtx();
       if (ctx.state !== 'running') { try { await Promise.race([ctx.resume(), sleep(400)]); } catch (e) {} }
       if (my !== speakSeq) return;
-      if (ctx.state === 'running') { playBuffer(buf); return; }
+      if (ctx.state === 'running') {
+        for (let i = 0; i < parts.length; i++) {
+          let buf = first;
+          if (i > 0) { buf = null; try { buf = await withTimeout(jobs[i]); } catch (e) {} }
+          if (my !== speakSeq) return;
+          if (!buf) { talking(false); sayDevice(parts.slice(i).join(' ')); return; }   // rest not ready: finish with the device voice
+          await playBuffer(buf);
+          if (my !== speakSeq) return;
+        }
+        talking(false); return;
+      }
       cafeStatus('Tap the screen once so the browser lets Lena speak. Until then she uses the device voice.');
     } else if (failed && failed.message !== 'busy' && failed.message !== 'blocked') {
       ttsDown = true; cafeStatus('The natural voice is not available right now (free limit or not offered for your key), so Lena uses the device voice.');
