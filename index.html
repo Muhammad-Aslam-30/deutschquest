@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>weil oder dass? – a 3D German word-order runner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E1251B; --blue:#1F4FA3; --yellow:#F7C600; --black:#000; --white:#FFFFFF;
+  --sky:#CFD8DF; --grey:#5B6670; --good:#178A4A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--sky);font-family:'Jost',"Futura","Century Gothic",system-ui,sans-serif;color:var(--black);-webkit-tap-highlight-color:transparent}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block}
+#ui{position:fixed;inset:0;pointer-events:none}
+button{font:inherit;color:inherit}
+button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+.screen{position:absolute;inset:0;display:none;pointer-events:auto;overflow-y:auto;padding:20px}
+.screen.show{display:flex}
+.screen.dim{background:rgba(207,216,223,.55)}
+.panel{background:var(--white);border:3px solid var(--black);box-shadow:8px 8px 0 var(--black);padding:28px;max-width:620px;width:100%;margin:auto;user-select:none}
+h2{font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-.01em;margin-bottom:6px}
+h3{font-size:19px;font-weight:600;margin:22px 0 10px}
+p{line-height:1.5}
+.lead{color:var(--grey);font-size:17px;margin-bottom:18px}
+
+.btn{font-weight:600;font-size:17px;border:3px solid var(--black);background:var(--white);padding:12px 16px;box-shadow:4px 4px 0 var(--black);cursor:pointer;transition:transform .07s,box-shadow .07s;display:flex;align-items:center;gap:14px;text-align:left;width:100%}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--black)}
+.btn.blue{background:var(--blue);color:var(--white)}
+.btn.red{background:var(--red);color:var(--white)}
+.btn.yellow{background:var(--yellow)}
+.btn.black{background:var(--black);color:var(--white)}
+.btn.center{justify-content:center;text-align:center}
+.btn small{display:block;font-weight:400;font-size:14px;opacity:.85}
+.btn .shape{flex:0 0 34px;height:34px;background:var(--white);border:3px solid var(--black)}
+.btn .shape.circle{border-radius:50%}
+.btn .shape.tri{background:none;border:none;width:0;height:0;flex:0 0 0;border-left:19px solid transparent;border-right:19px solid transparent;border-bottom:34px solid var(--white)}
+.btn.locked{background:#E8ECEF;color:var(--grey);cursor:not-allowed}
+.btn.locked .shape{background:#E8ECEF}
+.btn .badge{margin-left:auto;background:var(--white);color:var(--black);border:2px solid var(--black);font-weight:800;min-width:34px;text-align:center;padding:2px 8px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+
+/* menu */
+.menu .brand{display:flex;align-items:flex-end;gap:18px;margin-bottom:6px}
+.menu h1{font-weight:800;line-height:.82;letter-spacing:-.03em;font-size:clamp(58px,13vw,92px)}
+.menu h1 .w{color:var(--blue);display:block}
+.menu h1 .o{font-size:.32em;font-weight:400;letter-spacing:0;display:block;margin:6px 0 2px 4px;color:var(--grey)}
+.menu h1 .d{color:var(--red);display:block}
+.geo{display:grid;grid-template-columns:repeat(2,38px);gap:8px;margin-bottom:8px}
+.geo i{display:block;width:38px;height:38px}
+.geo .a{background:var(--yellow);border-radius:50%}
+.geo .b{background:var(--black)}
+.geo .c{background:var(--blue)}
+.geo .d2{width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-bottom:38px solid var(--red)}
+.menu .tag{font-size:17px;color:var(--grey);margin:14px 0 18px}
+.menu .streakline{display:flex;gap:10px;align-items:center;font-weight:600;margin-bottom:16px}
+.menu .streakline .sq{width:14px;height:14px;background:var(--yellow);border:2px solid var(--black)}
+.menu .levels{display:grid;gap:12px}
+.menu .gapset{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600}
+.menu .gapset span.l{flex:1}
+.menu .gapset button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:22px;font-weight:800;cursor:pointer}
+.menu .gapset button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--black)}
+.menu .gapset button:disabled{color:var(--grey);cursor:not-allowed}
+.menu .gapset b{min-width:56px;text-align:center}
+.menu .msg{min-height:22px;margin-top:12px;color:var(--red);font-weight:600}
+
+/* words & sentences */
+.kw{background:var(--yellow);padding:0 3px}
+.cj{font-weight:800}
+.cj.weil{color:var(--blue)} .cj.dass{color:var(--red)} .cj.das{color:#8A6D00} .cj.denn{color:var(--black);text-decoration:underline}
+.vb{border-bottom:4px solid var(--black)}
+.art{display:inline-block;font-weight:600;font-size:.82em;padding:0 6px;margin-right:4px;border:2px solid var(--black);line-height:1.35;vertical-align:1px}
+.art.der{background:var(--blue);color:var(--white)}
+.art.die{background:var(--red);color:var(--white)}
+.art.das{background:var(--yellow)}
+.star{background:none;border:2px solid var(--black);width:36px;height:36px;font-size:19px;cursor:pointer;line-height:1;flex:0 0 36px;color:var(--grey)}
+.star.on{background:var(--yellow);color:var(--black)}
+.tr{color:var(--grey);font-size:15px;margin-top:2px}
+
+.cards{display:grid;gap:12px;margin:18px 0}
+.wcard{border:3px solid var(--black);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:start}
+.wcard .de{font-size:24px;font-weight:600}
+.wcard .en{color:var(--grey);font-size:16px}
+.wcard .ex{grid-column:1/-1;margin-top:8px;font-size:16px;line-height:1.5}
+.note{color:var(--grey);font-size:15px;margin-bottom:16px}
+
+.list{display:grid;gap:10px}
+.item{border:2px solid var(--black);padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+.item .s{font-size:16px;line-height:1.5}
+.item .w{font-size:14px;margin-top:6px;color:var(--grey)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle;margin-left:6px}
+.dots i{width:9px;height:9px;border:1.5px solid var(--black);display:block}
+.dots i.f{background:var(--black)}
+.empty{border:2px dashed var(--grey);padding:18px;color:var(--grey);line-height:1.5}
+
+.tabs{display:flex;gap:0;margin:14px 0}
+.tabs button{flex:1;border:3px solid var(--black);background:var(--white);padding:9px;font-weight:600;cursor:pointer}
+.tabs button+button{border-left:0}
+.tabs button.on{background:var(--black);color:var(--white)}
+
+/* progress */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.stat{border:3px solid var(--black);padding:12px}
+.stat b{display:block;font-size:30px;font-weight:800;line-height:1}
+.stat span{font-size:14px;color:var(--grey)}
+.bar{margin:12px 0}
+.bar .lbl{display:flex;justify-content:space-between;font-weight:600;margin-bottom:4px}
+.bar .trk{height:16px;border:2px solid var(--black);background:var(--white)}
+.bar .fil{height:100%}
+.tip{background:#EEF2F5;border-left:6px solid var(--black);padding:12px 14px;margin-top:14px;line-height:1.5}
+
+/* modal */
+.modal .panel{max-width:560px}
+.modal h2.bad{color:var(--red)}
+.modal .chose{margin:6px 0 14px;font-size:17px}
+.modal .sent{font-size:22px;line-height:1.45;font-weight:600}
+.modal .ex{border-left:6px solid var(--blue);background:#EEF2F5;padding:12px 14px;margin:16px 0;line-height:1.5}
+.modal .wrow{display:flex;align-items:center;gap:12px;border-top:2px solid var(--black);padding-top:14px;margin-bottom:18px}
+.modal .wrow .grow{flex:1;font-size:18px}
+.legend{font-size:14px;color:var(--grey);margin-top:6px}
+
+/* HUD */
+#hud{position:absolute;inset:0;display:none;pointer-events:none}
+#hud.show{display:block}
+.topbar{position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;gap:12px;pointer-events:auto}
+#lives{display:flex;gap:6px}
+#lives i{width:22px;height:22px;background:var(--red);border:2px solid var(--black);border-radius:50%;display:block}
+#lives i.lost{background:transparent;border-style:dashed}
+#scoreBox{margin-left:auto;background:var(--white);border:3px solid var(--black);padding:4px 12px;font-weight:800;font-size:20px;min-width:80px;text-align:right}
+#streakBox{background:var(--yellow);border:3px solid var(--black);padding:4px 10px;font-weight:600;display:none}
+#bPause{width:42px;height:42px;border:3px solid var(--black);background:var(--white);font-weight:800;cursor:pointer}
+.prompt{position:absolute;top:66px;left:50%;transform:translateX(-50%);width:min(94vw,780px);background:var(--white);border:3px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:12px 18px 14px}
+.prompt .meta{display:flex;justify-content:space-between;color:var(--grey);font-size:14px;margin-bottom:4px}
+#qText{font-size:clamp(19px,3.2vw,27px);font-weight:600;line-height:1.35}
+.gap{display:inline-block;min-width:64px;border-bottom:4px solid var(--black);text-align:center;color:var(--grey)}
+.slot{display:inline-block;min-width:54px;border-bottom:4px dashed var(--grey);margin:0 1px;padding:0 4px}
+.slot.fill{border-bottom:4px solid var(--good)}
+.slot.bad{border-bottom:4px solid var(--red)}
+#toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:var(--white);border:3px solid var(--good);box-shadow:5px 5px 0 var(--black);padding:10px 16px;width:min(92vw,560px);display:none}
+#toast.show{display:block}
+#toast b.ok{color:var(--good);font-size:19px}
+#toast .s{font-size:16px;margin-top:2px;line-height:1.4}
+.ctrl{position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:none}
+.ctrl button{pointer-events:auto;width:76px;height:76px;border:3px solid var(--black);background:var(--white);box-shadow:4px 4px 0 var(--black);font-size:28px;cursor:pointer;touch-action:manipulation}
+.ctrl button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--black)}
+#flash{position:absolute;inset:0;background:var(--red);opacity:0;pointer-events:none;transition:opacity .35s}
+#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;background:var(--sky);z-index:5}
+
+@media (max-width:560px){
+  .panel{padding:20px;box-shadow:6px 6px 0 var(--black)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .ctrl button{width:66px;height:66px}
+  #toast{bottom:100px}
+  .modal .sent{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){ .btn,.ctrl button{transition:none} }
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<div id="loading">Loading…</div>
+<div id="ui">
+
+  <!-- MENU -->
+  <section id="menu" class="screen">
+    <div class="panel menu">
+      <div class="brand">
+        <h1><span class="w">weil</span><span class="o">oder</span><span class="d">dass?</span></h1>
+        <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
+      </div>
+      <p class="tag">Run, choose, and build German sentences where the verb goes to the end.</p>
+      <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
+      <div class="levels">
+        <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">Is it weil or dass?</small></span></button>
+        <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Put the verb at the end</small></span></button>
+        <button class="btn black" data-level="3"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l3s">Faster, plus das/dass and weil/denn traps</small></span></button>
+        <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
+      </div>
+      <div class="row2">
+        <button class="btn center" id="bWords">★ My words</button>
+        <button class="btn center" id="bProg">My progress</button>
+      </div>
+      <div class="gapset">
+        <span class="l">Time between gates</span>
+        <button id="gapDn" aria-label="Less time between gates">−</button>
+        <b id="gapVal" aria-live="polite"></b>
+        <button id="gapUp" aria-label="More time between gates">+</button>
+      </div>
+      <div class="msg" id="menuMsg" role="status"></div>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section id="intro" class="screen dim">
+    <div class="panel">
+      <h2>Neue Wörter</h2>
+      <p class="lead">Three new words for this round. You'll meet them in the sentences you run through.</p>
+      <div class="cards" id="iCards"></div>
+      <p class="note">Tap ★ to bookmark a word. Starred words come back in your daily review.</p>
+      <button class="btn red center" id="iGo">Los geht's!</button>
+    </div>
+  </section>
+
+  <!-- WRONG MODAL -->
+  <section id="wrong" class="screen dim modal" role="dialog" aria-modal="true" aria-labelledby="wrongTitle">
+    <div class="panel">
+      <h2 class="bad" id="wrongTitle">Nicht ganz!</h2>
+      <div id="wrongBody"></div>
+      <button class="btn blue center" id="wGo">Weiter</button>
+    </div>
+  </section>
+
+  <!-- PAUSE -->
+  <section id="pause" class="screen dim">
+    <div class="panel" style="max-width:420px">
+      <h2>Pause</h2>
+      <p class="lead">Take a breath.</p>
+      <div style="display:grid;gap:12px">
+        <button class="btn blue center" id="pGo">Resume</button>
+        <button class="btn center" id="pQuit">Quit to menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="screen dim">
+    <div class="panel">
+      <h2 id="eTitle">Runde vorbei!</h2>
+      <div class="stats" id="eStats"></div>
+      <div id="eUnlock"></div>
+      <h3 id="eListTitle">Your mistakes</h3>
+      <div class="list" id="eList"></div>
+      <div class="row2">
+        <button class="btn blue center" id="eAgain">Play again</button>
+        <button class="btn center" id="eMenu">Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORDS -->
+  <section id="words" class="screen dim">
+    <div class="panel">
+      <h2>My words</h2>
+      <p class="lead">The squares show how well you know each word. Five filled means mastered.</p>
+      <div class="tabs"><button data-tab="star" class="on">Starred</button><button data-tab="all">All seen</button></div>
+      <div class="list" id="wList"></div>
+      <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="wBack">Back to menu</button></div>
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="prog" class="screen dim">
+    <div class="panel">
+      <h2>My progress</h2>
+      <div class="stats" id="pStats"></div>
+      <div id="pBars"></div>
+      <div class="tip" id="pTip"></div>
+      <div class="row2">
+        <button class="btn center" id="pBack">Back to menu</button>
+        <button class="btn center" id="pReset">Reset progress</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="flash"></div>
+    <div class="topbar">
+      <div id="lives" aria-label="Lives"></div>
+      <div id="streakBox"></div>
+      <div id="scoreBox">0</div>
+      <button id="bPause" aria-label="Pause">II</button>
+    </div>
+    <div class="prompt">
+      <div class="meta"><span id="qHint"></span><span id="qCount"></span></div>
+      <div id="qText"></div>
+    </div>
+    <div id="toast" role="status"></div>
+    <div class="ctrl">
+      <button id="bL" aria-label="Move left">◀</button>
+      <button id="bR" aria-label="Move right">▶</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(async function () {
+'use strict';
+
+/* ================= helpers ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const DAY = 86400000;
+
+if (typeof THREE === 'undefined') {
+  $('#loading').textContent = 'Could not load the 3D engine. Check your internet connection and reload.';
+  return;
+}
+
+/* ================= content =================
+   Each word has one example sentence. m = main clause, c = conjunction,
+   b = blocks of the subordinate clause in correct order (verb last), t = translation. */
+const W = [
+  // ---- weil ----
+  {id:'regen', de:'der Regen', en:'the rain', m:'Wir bleiben zu Hause', c:'weil', b:['der Regen','stark','ist'], t:"We're staying home because the rain is heavy."},
+  {id:'muede', de:'müde', en:'tired', m:'Ich gehe früh ins Bett', c:'weil', b:['ich','müde','bin'], t:"I'm going to bed early because I'm tired."},
+  {id:'hunger', de:'der Hunger', en:'hunger', m:'Er isst schnell', c:'weil', b:['er','großen Hunger','hat'], t:"He's eating fast because he's very hungry."},
+  {id:'zeit', de:'die Zeit', en:'time', m:'Ich kann heute nicht kommen', c:'weil', b:['ich','keine Zeit','habe'], t:"I can't come today because I don't have time."},
+  {id:'krank', de:'krank', en:'sick, ill', m:'Sie bleibt im Bett', c:'weil', b:['sie','krank','ist'], t:"She's staying in bed because she's sick."},
+  {id:'bus', de:'der Bus', en:'the bus', m:'Ich komme zu spät', c:'weil', b:['der Bus','Verspätung','hat'], t:"I'm late because the bus is delayed."},
+  {id:'teuer', de:'teuer', en:'expensive', m:'Wir kaufen das Auto nicht', c:'weil', b:['es','zu teuer','ist'], t:"We're not buying the car because it's too expensive."},
+  {id:'arbeiten', de:'arbeiten', en:'to work', m:'Ich lerne Deutsch', c:'weil', b:['ich','in Berlin','arbeiten','möchte'], t:"I'm learning German because I'd like to work in Berlin."},
+  {id:'pruefung', de:'die Prüfung', en:'the exam', m:'Er ist nervös', c:'weil', b:['er','morgen eine Prüfung','hat'], t:"He's nervous because he has an exam tomorrow."},
+  {id:'kalt', de:'kalt', en:'cold', m:'Ich trage eine Jacke', c:'weil', b:['es','draußen kalt','ist'], t:"I'm wearing a jacket because it's cold outside."},
+  {id:'geburtstag', de:'der Geburtstag', en:'the birthday', m:'Wir backen einen Kuchen', c:'weil', b:['Oma','Geburtstag','hat'], t:"We're baking a cake because it's Grandma's birthday."},
+  {id:'wohnung', de:'die Wohnung', en:'the apartment', m:'Sie zieht um', c:'weil', b:['ihre Wohnung','zu klein','ist'], t:"She's moving because her apartment is too small."},
+  {id:'arzt', de:'der Arzt', en:'the doctor', m:'Ich gehe zum Arzt', c:'weil', b:['ich','Kopfschmerzen','habe'], t:"I'm going to the doctor because I have a headache."},
+  {id:'wetter', de:'das Wetter', en:'the weather', m:'Wir gehen in den Park', c:'weil', b:['das Wetter','schön','ist'], t:"We're going to the park because the weather is nice."},
+  {id:'fahrrad', de:'das Fahrrad', en:'the bicycle', m:'Er spart Geld', c:'weil', b:['er','ein neues Fahrrad','kaufen','will'], t:"He's saving money because he wants to buy a new bike."},
+  {id:'zug', de:'der Zug', en:'the train', m:'Ich nehme den Zug', c:'weil', b:['er','schneller','ist'], t:"I'm taking the train because it's faster."},
+  {id:'arbeit', de:'die Arbeit', en:'work', m:'Sie ist gestresst', c:'weil', b:['sie','viel Arbeit','hat'], t:"She's stressed because she has a lot of work."},
+  {id:'schluessel', de:'der Schlüssel', en:'the key', m:'Ich warte draußen', c:'weil', b:['ich','meinen Schlüssel','vergessen','habe'], t:"I'm waiting outside because I forgot my key."},
+  {id:'freundin', de:'die Freundin', en:'the (girl)friend', m:'Er ist glücklich', c:'weil', b:['seine Freundin','zu Besuch','kommt'], t:"He's happy because his girlfriend is coming to visit."},
+  {id:'musik', de:'die Musik', en:'the music', m:'Ich kann nicht schlafen', c:'weil', b:['die Musik','zu laut','ist'], t:"I can't sleep because the music is too loud."},
+  {id:'stadt', de:'die Stadt', en:'the city, town', m:'Wir wohnen gern hier', c:'weil', b:['die Stadt','so ruhig','ist'], t:"We like living here because the town is so quiet."},
+  {id:'hund', de:'der Hund', en:'the dog', m:'Ich gehe jeden Morgen raus', c:'weil', b:['der Hund','spazieren gehen','muss'], t:"I go out every morning because the dog needs a walk."},
+  // ---- dass ----
+  {id:'glauben', de:'glauben', hl:'glaube', en:'to believe', m:'Ich glaube', c:'dass', b:['er','recht','hat'], t:"I believe (that) he's right."},
+  {id:'laden', de:'der Laden', en:'the shop', m:'Wir wissen', c:'dass', b:['der Laden','heute geschlossen','ist'], t:"We know that the shop is closed today."},
+  {id:'hoffen', de:'hoffen', hl:'hoffe', en:'to hope', m:'Ich hoffe', c:'dass', b:['du','morgen','kommst'], t:"I hope (that) you're coming tomorrow."},
+  {id:'sagen', de:'sagen', hl:'sagt', en:'to say', m:'Sie sagt', c:'dass', b:['sie','keine Zeit','hat'], t:"She says (that) she has no time."},
+  {id:'denken', de:'denken', hl:'denkt', en:'to think', m:'Er denkt', c:'dass', b:['der Film','langweilig','ist'], t:"He thinks (that) the film is boring."},
+  {id:'wissen', de:'wissen', hl:'Weißt', en:'to know', m:'Weißt du', c:'dass', b:['Anna','in Wien','wohnt'], p:'?', t:"Do you know that Anna lives in Vienna?"},
+  {id:'froh', de:'froh', en:'glad', m:'Ich bin froh', c:'dass', b:['du','hier','bist'], t:"I'm glad (that) you're here."},
+  {id:'schade', de:'schade', en:'a pity, too bad', m:'Es ist schade', c:'dass', b:['wir','nicht mitkommen','können'], t:"It's a pity that we can't come along."},
+  {id:'essen', de:'das Essen', en:'the food', m:'Der Koch hofft', c:'dass', b:['das Essen','gut','schmeckt'], t:"The cook hopes (that) the food tastes good."},
+  {id:'termin', de:'der Termin', en:'the appointment', m:'Ich habe vergessen', c:'dass', b:['wir','heute einen Termin','haben'], t:"I forgot that we have an appointment today."},
+  {id:'chef', de:'der Chef', en:'the boss', m:'Der Chef sagt', c:'dass', b:['wir','morgen frei','haben'], t:"The boss says (that) we have tomorrow off."},
+  {id:'sicher', de:'sicher', en:'sure', m:'Bist du sicher', c:'dass', b:['die Tür','zu','ist'], p:'?', t:"Are you sure (that) the door is closed?"},
+  {id:'merken', de:'merken', hl:'merke', en:'to notice', m:'Ich merke', c:'dass', b:['mein Deutsch','besser','wird'], t:"I notice (that) my German is getting better."},
+  {id:'nachricht', de:'die Nachricht', en:'the message', m:'In der Nachricht steht', c:'dass', b:['der Zug','später','kommt'], t:"The message says (that) the train is coming later."},
+  {id:'hoeren', de:'hören', hl:'gehört', en:'to hear', m:'Ich habe gehört', c:'dass', b:['das Restaurant','sehr gut','ist'], t:"I've heard (that) the restaurant is very good."},
+  {id:'lehrerin', de:'die Lehrerin', en:'the (female) teacher', m:'Die Lehrerin erklärt', c:'dass', b:['das Verb','am Ende','steht'], t:"The teacher explains that the verb goes at the end."},
+  {id:'wichtig', de:'wichtig', en:'important', m:'Es ist wichtig', c:'dass', b:['du','jeden Tag','übst'], t:"It's important that you practise every day."},
+  {id:'gemuese', de:'das Gemüse', en:'vegetables', m:'Meine Mutter will', c:'dass', b:['ich','mehr Gemüse','esse'], t:"My mother wants me to eat more vegetables."},
+  {id:'versprechen', de:'versprechen', hl:'verspricht', en:'to promise', m:'Er verspricht', c:'dass', b:['er','pünktlich','ist'], t:"He promises that he'll be on time."},
+  {id:'urlaub', de:'der Urlaub', en:'the holiday, vacation', m:'Sie erzählt', c:'dass', b:['ihr Urlaub','toll','war'], t:"She says (that) her holiday was great."}
+];
+
+const TRAPS = [
+  {q:'Das ist das Buch, ___ ich gerade lese.', o:['das','dass'], a:'das', t:"That's the book (that) I'm reading right now.", ex:'das'},
+  {q:'Ich weiß, ___ du recht hast.', o:['das','dass'], a:'dass', t:"I know (that) you're right.", ex:'dass2'},
+  {q:'Das Auto, ___ dort steht, gehört mir.', o:['das','dass'], a:'das', t:"The car (that's) standing over there is mine.", ex:'das'},
+  {q:'Es ist gut, ___ du hier bist.', o:['das','dass'], a:'dass', t:"It's good that you're here.", ex:'dass2'},
+  {q:'Ich glaube, ___ das stimmt.', o:['das','dass'], a:'dass', t:"I believe that's true.", ex:'dass2'},
+  {q:'Das Kind, ___ dort spielt, ist mein Sohn.', o:['das','dass'], a:'das', t:"The child (who's) playing there is my son.", ex:'das'},
+  {q:'Ich bleibe zu Hause, ___ ich bin müde.', o:['weil','denn'], a:'denn', t:"I'm staying home, because I'm tired.", ex:'denn'},
+  {q:'Ich bleibe zu Hause, ___ ich müde bin.', o:['weil','denn'], a:'weil', t:"I'm staying home because I'm tired.", ex:'weil2'},
+  {q:'Wir fahren mit dem Rad, ___ das Wetter ist schön.', o:['weil','denn'], a:'denn', t:"We're cycling, because the weather is nice.", ex:'denn'},
+  {q:'Sie lernt viel, ___ sie die Prüfung bestehen will.', o:['weil','denn'], a:'weil', t:"She studies a lot because she wants to pass the exam.", ex:'weil2'},
+  {q:'Er ruft an, ___ er hat eine Frage.', o:['weil','denn'], a:'denn', t:"He's calling, because he has a question.", ex:'denn'},
+  {q:'Er ist traurig, ___ sein Hund krank ist.', o:['weil','denn'], a:'weil', t:"He's sad because his dog is sick.", ex:'weil2'}
+];
+
+const EX = {
+  weil: '<b class="cj weil">weil</b> means <i>because</i>. It gives a reason for the main clause. The conjugated verb goes to the <b>end</b>.',
+  order: 'After <b class="cj weil">weil</b> or <b class="cj dass">dass</b> the order is: subject, then the middle part, then the conjugated verb <b>last</b>. With two verbs, the conjugated one (möchte, habe, will…) comes after the other.',
+  das: '<b class="cj das">das</b> with one s points back to a neuter noun: <i>das Buch, das ich lese</i> = the book which I read. Tip: if you can swap it for <i>welches</i>, write das.',
+  dass2: '<b class="cj dass">dass</b> with two s is a conjunction meaning <i>that</i>, after verbs like wissen or glauben. You can\'t swap it for <i>welches</i>.',
+  denn: '<b class="cj denn">denn</b> also means <i>because</i>, but keeps normal word order: the verb stays in position 2 (<i>denn ich bin müde</i>).',
+  weil2: '<b class="cj weil">weil</b> sends the verb to the end (<i>weil ich müde bin</i>). <b class="cj denn">denn</b> would keep it in position 2.'
+};
+const EX_DASS_MAIN = '<b class="cj dass">dass</b> means <i>that</i>. It follows verbs like glauben, hoffen, sagen, wissen, or phrases like <i>es ist wichtig</i>, and introduces what someone thinks, says, or feels. The conjugated verb goes to the <b>end</b>.';
+
+const BYID = Object.fromEntries(W.map(w => [w.id, w]));
+const WEIL = W.filter(w => w.c === 'weil'), DASS = W.filter(w => w.c === 'dass');
+const ORDER = [];
+for (let i = 0; i < Math.max(WEIL.length, DASS.length); i++) { if (WEIL[i]) ORDER.push(WEIL[i]); if (DASS[i]) ORDER.push(DASS[i]); }
+
+/* ================= storage =================
+   Uses Claude's artifact storage when available, otherwise the browser's localStorage
+   (when you host the file yourself), otherwise memory only. */
+const KEY = 'weil-dass-runner-v1';
+const Store = {
+  async load() {
+    try { if (window.storage && window.storage.get) { const r = await window.storage.get(KEY, false); if (r && r.value) return JSON.parse(r.value); } } catch (e) {}
+    try { const v = window.localStorage.getItem(KEY); if (v) return JSON.parse(v); } catch (e) {}
+    return null;
+  },
+  async save(d) {
+    const s = JSON.stringify(d);
+    try { if (window.storage && window.storage.set) { await window.storage.set(KEY, s, false); return; } } catch (e) {}
+    try { window.localStorage.setItem(KEY, s); } catch (e) {}
+  }
+};
+const GAP_MIN = 4, GAP_MAX = 12, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}}, best:{1:0,2:0,3:0,0:0}, unlocked:1, streak:{n:0,last:''}, rounds:0, gap:GAP_DEF });
+let S = DEF();
+try {
+  const L = await Store.load();
+  if (L && L.v === 1) {
+    const d = DEF();
+    S = Object.assign(d, L);
+    S.stats = Object.assign(d.stats, L.stats || {});
+    S.best = Object.assign(d.best, L.best || {});
+    S.streak = Object.assign(d.streak, L.streak || {});
+  }
+} catch (e) {}
+let saveT = null;
+const save = () => { clearTimeout(saveT); saveT = setTimeout(() => Store.save(S), 250); };
+
+const dayStr = t => { const d = new Date(t); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
+function currentStreak() {
+  const today = dayStr(Date.now()), yest = dayStr(Date.now() - DAY);
+  return (S.streak.last === today || S.streak.last === yest) ? S.streak.n : 0;
+}
+function bumpStreak() {
+  const today = dayStr(Date.now()), yest = dayStr(Date.now() - DAY);
+  if (S.streak.last === today) return;
+  S.streak.n = (S.streak.last === yest) ? S.streak.n + 1 : 1;
+  S.streak.last = today;
+}
+
+/* ================= spaced repetition (Leitner boxes) ================= */
+const IV = [0, 1, 3, 7, 14, 30]; // days until next review per box
+function grade(id, ok) {
+  const now = Date.now();
+  const r = S.srs[id] || { box:0, due:now, seen:0, ok:0 };
+  r.seen++;
+  if (ok) { r.ok++; r.box = Math.min(5, r.box + 1); r.due = now + IV[r.box] * DAY; }
+  else { r.box = 0; r.due = now; }
+  S.srs[id] = r;
+}
+function stat(k, ok) { S.stats[k].t++; if (ok) S.stats[k].c++; }
+function reviewWords() {
+  const now = Date.now();
+  const ids = new Set([...Object.keys(S.srs).filter(id => S.srs[id].due <= now), ...Object.keys(S.bm)]);
+  return shuffle([...ids].map(id => BYID[id]).filter(Boolean));
+}
+function newWords(n) { return ORDER.filter(w => !S.intro[w.id] && !S.srs[w.id]).slice(0, n); }
+function pickWords(n, fresh) {
+  const now = Date.now();
+  const due = shuffle(W.filter(w => S.srs[w.id] && S.srs[w.id].due <= now));
+  const marked = shuffle(W.filter(w => S.bm[w.id]));
+  const seen = shuffle(W.filter(w => S.srs[w.id]));
+  const rest = shuffle(W.slice());
+  const out = [];
+  const add = (arr, cap) => { let k = 0; for (const w of arr) { if (out.length >= n || k >= cap) return; if (!out.includes(w)) { out.push(w); k++; } } };
+  add(fresh, 99); add(due, Math.ceil(n / 2)); add(marked, 2); add(seen, 2); add(rest, 99);
+  return shuffle(out);
+}
+
+/* ================= HTML renderers ================= */
+function wordHTML(w) {
+  const m = w.de.match(/^(der|die|das) (.+)$/);
+  return m ? `<span class="art ${m[1]}">${m[1]}</span>${esc(m[2])}` : esc(w.de);
+}
+function keyOf(w) { return w.hl || w.de.replace(/^(der|die|das) /, ''); }
+function sentHTML(w) {
+  const k = esc(keyOf(w));
+  const mark = s => { const e = esc(s); return e.includes(k) ? e.replace(k, `<span class="kw">${k}</span>`) : e; };
+  const mid = w.b.slice(0, -1).map(mark).join(' ');
+  return `${mark(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${mid} <span class="vb">${mark(w.b[w.b.length - 1])}</span>${w.p || '.'}`;
+}
+function trapHTML(t) { return esc(t.q).replace('___', `<b class="cj ${t.a}">${t.a}</b>`); }
+const starBtn = id => `<button class="star ${S.bm[id] ? 'on' : ''}" data-star="${id}" aria-label="Bookmark word" aria-pressed="${!!S.bm[id]}">★</button>`;
+function dotsHTML(id) { const b = S.srs[id] ? S.srs[id].box : 0; let h = '<span class="dots" aria-label="Mastery ' + b + ' of 5">'; for (let i = 1; i <= 5; i++) h += `<i class="${i <= b ? 'f' : ''}"></i>`; return h + '</span>'; }
+
+function toggleStar(id) {
+  if (S.bm[id]) delete S.bm[id];
+  else {
+    S.bm[id] = Date.now();
+    const r = S.srs[id] || { box:0, due:Date.now(), seen:0, ok:0 };
+    r.due = Math.min(r.due, Date.now()); S.srs[id] = r;
+  }
+  $$(`[data-star="${id}"]`).forEach(b => { b.classList.toggle('on', !!S.bm[id]); b.setAttribute('aria-pressed', !!S.bm[id]); });
+  save(); renderMenu();
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-star]'); if (b) { e.stopPropagation(); toggleStar(b.dataset.star); } });
+
+/* ================= 3D scene ================= */
+const RED = 0xE1251B, BLUE = 0x1F4FA3, YELLOW = 0xF7C600, BLACK = 0x000000, WHITE = 0xFFFFFF, SKY = 0xCFD8DF;
+const canvas = $('#c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(SKY);
+scene.fog = new THREE.Fog(SKY, 45, 115);
+const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 220);
+const CAM = { x:0, y:5.2, z:8.5, ly:1.2, lz:-14 };
+scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa3a8, 0.95));
+const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(6, 12, 8); scene.add(sun);
+
+const lam = c => new THREE.MeshLambertMaterial({ color:c });
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 320), lam(0xE6E9EA));
+ground.rotation.x = -Math.PI / 2; ground.position.z = -100; scene.add(ground);
+const track = new THREE.Mesh(new THREE.BoxGeometry(7.2, 0.1, 320), lam(0x2A2D30));
+track.position.set(0, 0.05, -100); scene.add(track);
+[-3.75, 3.75].forEach(x => { const curb = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.25, 320), lam(RED)); curb.position.set(x, 0.12, -100); scene.add(curb); });
+
+const LANES = [-2.2, 0, 2.2];
+const stripes = [];
+const stripeGeo = new THREE.BoxGeometry(0.12, 0.02, 2.2), stripeMat = lam(WHITE);
+for (let i = 0; i < 16; i++) for (const x of [-1.1, 1.1]) { const s = new THREE.Mesh(stripeGeo, stripeMat); s.position.set(x, 0.11, 10 - i * 8); scene.add(s); stripes.push(s); }
+
+const DECO_COL = [RED, BLUE, YELLOW, WHITE, BLACK];
+const deco = [];
+function decoMesh() {
+  const r = Math.random(), mat = lam(pick(DECO_COL)); let m;
+  if (r < 0.45) { const h = 2 + Math.random() * 7; m = new THREE.Mesh(new THREE.BoxGeometry(2 + Math.random() * 2, h, 2 + Math.random() * 2), mat); m.position.y = h / 2; }
+  else if (r < 0.7) { const h = 1.5 + Math.random() * 5; m = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, h, 24), mat); m.position.y = h / 2; }
+  else if (r < 0.85) { m = new THREE.Mesh(new THREE.SphereGeometry(1.2, 22, 16), mat); m.position.y = 1.2; }
+  else { m = new THREE.Mesh(new THREE.ConeGeometry(1.4, 3.6, 4), mat); m.position.y = 1.8; m.rotation.y = Math.PI / 4; }
+  return m;
+}
+const placeDeco = (m, z) => { m.position.x = (Math.random() < 0.5 ? -1 : 1) * (6.5 + Math.random() * 10); m.position.z = z; };
+for (let i = 0; i < 44; i++) { const m = decoMesh(); placeDeco(m, 15 - Math.random() * 135); scene.add(m); deco.push(m); }
+
+// player
+const player = new THREE.Group();
+const pBody = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.5, 1.0, 16), lam(RED)); pBody.position.y = 0.95;
+const pHead = new THREE.Mesh(new THREE.SphereGeometry(0.34, 20, 14), lam(YELLOW)); pHead.position.y = 1.78;
+const legGeo = new THREE.BoxGeometry(0.2, 0.55, 0.22), legMat = lam(BLACK);
+const legL = new THREE.Mesh(legGeo, legMat), legR = new THREE.Mesh(legGeo, legMat);
+legL.position.set(-0.18, 0.3, 0); legR.position.set(0.18, 0.3, 0);
+legGeo.translate(0, -0.2, 0); legL.position.y = 0.5; legR.position.y = 0.5;
+player.add(pBody, pHead, legL, legR); scene.add(player);
+
+// labels
+const texCache = new Map();
+function labelTex(text, bg, fg, border) {
+  const key = [text, bg, fg, border].join('|');
+  if (texCache.has(key)) return texCache.get(key);
+  const cw = 512, ch = 256, cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+  const g = cv.getContext('2d');
+  g.fillStyle = bg; g.fillRect(0, 0, cw, ch);
+  if (border) { g.strokeStyle = border; g.lineWidth = 18; g.strokeRect(9, 9, cw - 18, ch - 18); }
+  const font = s => `600 ${s}px Jost, Futura, "Century Gothic", Arial, sans-serif`;
+  let size = 128; g.font = font(size);
+  while (g.measureText(text).width > cw * 0.84 && size > 34) { size -= 6; g.font = font(size); }
+  g.fillStyle = fg; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, cw / 2, ch / 2 + 6);
+  const t = new THREE.CanvasTexture(cv);
+  t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  texCache.set(key, t); return t;
+}
+const GATE = { weil:['#1F4FA3', '#FFFFFF', BLUE], dass:['#E1251B', '#FFFFFF', RED], das:['#F7C600', '#000000', YELLOW], denn:['#000000', '#FFFFFF', BLACK] };
+const GEO = {
+  post: new THREE.BoxGeometry(0.22, 3.0, 0.22), beam: new THREE.BoxGeometry(2.15, 1.05, 0.3),
+  sign: new THREE.PlaneGeometry(2.0, 0.95), portal: new THREE.PlaneGeometry(1.6, 2.5),
+  block: new THREE.BoxGeometry(1.95, 0.98, 0.5), barrier: new THREE.BoxGeometry(1.9, 1.1, 0.4)
+};
+function makeGate(label) {
+  const [bg, fg, hex] = GATE[label] || ['#FFFFFF', '#000000', WHITE];
+  const g = new THREE.Group();
+  const pm = lam(BLACK);
+  const a = new THREE.Mesh(GEO.post, pm), b = new THREE.Mesh(GEO.post, pm);
+  a.position.set(-0.95, 1.5, 0); b.position.set(0.95, 1.5, 0);
+  const beam = new THREE.Mesh(GEO.beam, lam(BLACK)); beam.position.y = 3.15;
+  const sign = new THREE.Mesh(GEO.sign, new THREE.MeshBasicMaterial({ map: labelTex(label, bg, fg) })); sign.position.set(0, 3.15, 0.16);
+  const portal = new THREE.Mesh(GEO.portal, new THREE.MeshBasicMaterial({ color:hex, transparent:true, opacity:0.22, side:THREE.DoubleSide, depthWrite:false }));
+  portal.position.y = 1.35;
+  g.add(a, b, beam, sign, portal); return g;
+}
+function makeBarrier() {
+  const side = lam(BLACK), front = new THREE.MeshBasicMaterial({ map: labelTex('✕', '#000000', '#F7C600') });
+  const m = new THREE.Mesh(GEO.barrier, [side, side, side, side, front, side]); m.position.y = 0.55;
+  const g = new THREE.Group(); g.add(m); return g;
+}
+function makeBlock(label) {
+  const side = lam(YELLOW), front = new THREE.MeshBasicMaterial({ map: labelTex(label, '#FFFFFF', '#000000', '#000000') });
+  const m = new THREE.Mesh(GEO.block, [side, side, side, side, front, side]);
+  const g = new THREE.Group(); m.position.y = 1.0; g.add(m); g.userData.block = m; return g;
+}
+
+// particles
+const parts = [], pGeo = new THREE.BoxGeometry(0.18, 0.18, 0.18), tmpV = new THREE.Vector3();
+function burst(obj, color) {
+  obj.getWorldPosition(tmpV); tmpV.y += 1.2;
+  for (let i = 0; i < 16; i++) {
+    const m = new THREE.Mesh(pGeo, new THREE.MeshBasicMaterial({ color }));
+    m.position.copy(tmpV); scene.add(m);
+    parts.push({ m, v:new THREE.Vector3((Math.random() - .5) * 6, 2 + Math.random() * 6, 1 + Math.random() * 3), life:0.9 });
+  }
+}
+
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight, asp = w / h;
+  renderer.setSize(w, h, false);
+  camera.aspect = asp;
+  if (asp < 0.8) { camera.fov = 72; CAM.y = 6.4; CAM.z = 11; } else { camera.fov = 60; CAM.y = 5.2; CAM.z = 8.5; }
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize); resize();
+
+/* ================= game state ================= */
+const SPAWN_DIST = 78, ROW_GAP = 26;
+// spawn distance scales with the time-between-gates setting, so faster levels (Level 3) keep their shorter gap
+const spawnZ = () => -SPAWN_DIST * S.gap / GAP_DEF, rowGap = () => ROW_GAP * S.gap / GAP_DEF;
+const SPEEDS = { 1:13, 2:11.5, 3:16, 0:12 };
+let G = { running:false, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0 };
+
+function schedule(sec, fn) { G.pending = { at:G.clock + sec, fn }; }
+function clearRows() {
+  for (const r of G.rows) { scene.remove(r.group); r.group.traverse(o => { if (o.material) [].concat(o.material).forEach(m => m.dispose()); }); }
+  G.rows = [];
+}
+function spawnRow(kind, items, z, step) {
+  const grp = new THREE.Group(); grp.position.z = z;
+  items.forEach(it => {
+    const m = kind === 'gate' ? (it.barrier ? makeBarrier() : makeGate(it.label)) : makeBlock(it.label);
+    m.position.x = LANES[it.lane]; grp.add(m); it.mesh = m;
+  });
+  scene.add(grp);
+  G.rows.push({ kind, items, group:grp, step, resolved:false });
+}
+
+const gateQ = w => ({ type:'gate', w, opts:['weil', 'dass'], ans:w.c });
+const buildQ = w => ({ type:'build', w });
+const trapQ = t => ({ type:'trap', t, opts:t.o, ans:t.a });
+
+let lastLevel = 1, pendingFresh = [];
+function startLevel(l) {
+  $('#menuMsg').textContent = '';
+  if (l > S.unlocked) {
+    $('#menuMsg').textContent = l === 2 ? 'Get 6 of 8 right in Level 1 to unlock Level 2.' : 'Get 4 of 6 right in Level 2 to unlock Level 3.';
+    return;
+  }
+  if (l === 0 && reviewWords().length === 0) {
+    $('#menuMsg').textContent = 'Nothing to review yet. Play a level or star some words first.';
+    return;
+  }
+  lastLevel = l;
+  const fresh = l === 0 ? [] : newWords(3);
+  pendingFresh = fresh;
+  if (fresh.length) {
+    $('#iCards').innerHTML = fresh.map(w => `
+      <div class="wcard">
+        <div><div class="de">${wordHTML(w)}</div><div class="en">${esc(w.en)}</div></div>
+        ${starBtn(w.id)}
+        <div class="ex">${sentHTML(w)}<div class="tr">${esc(w.t)}</div></div>
+      </div>`).join('');
+    show('intro'); $('#iGo').focus();
+  } else beginRound(l, []);
+}
+
+function beginRound(l, fresh) {
+  fresh.forEach(w => { S.intro[w.id] = Date.now(); }); save();
+  let q = [];
+  if (l === 1) q = pickWords(8, fresh).map(gateQ);
+  else if (l === 2) q = pickWords(6, fresh).map(buildQ);
+  else if (l === 3) { const ws = pickWords(6, fresh); q = shuffle([...ws.slice(0, 3).map(gateQ), ...ws.slice(3).map(buildQ), ...shuffle(TRAPS.slice()).slice(0, 4).map(trapQ)]); }
+  else q = reviewWords().slice(0, 8).map((w, i) => i % 2 ? buildQ(w) : gateQ(w));
+
+  clearRows();
+  G = { running:true, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0,
+        level:l, queue:q, qi:0, q:null, lives:3, score:0, streak:0, correct:0, answered:0, mistakes:[], speed:SPEEDS[l] };
+  show(null); $('#hud').classList.add('show');
+  $('#qText').innerHTML = 'Get ready…'; $('#qHint').textContent = ''; $('#qCount').textContent = '';
+  updateHUD();
+  schedule(0.9, nextQuestion);
+}
+
+function nextQuestion() {
+  if (G.lives <= 0 || G.qi >= G.queue.length) { endRound(); return; }
+  G.q = G.queue[G.qi]; startQuestion(G.q);
+}
+
+function startQuestion(q) {
+  q.mistake = false;
+  if (q.type === 'build') {
+    q.built = []; q.builtOk = [];
+    const blocks = q.w.b;
+    blocks.forEach((b, k) => {
+      let cands = shuffle(blocks.filter((x, i) => i !== k));
+      for (const d of [q.w.c, q.w.c === 'weil' ? 'dass' : 'weil']) if (cands.length < 2) cands.push(d);
+      const labels = [b, cands[0], cands[1]], lanes = shuffle([0, 1, 2]);
+      spawnRow('block', labels.map((lab, i) => ({ lane:lanes[i], label:lab, correct:i === 0 })), spawnZ() - k * rowGap(), k);
+    });
+  } else {
+    const lanes = shuffle([0, 1, 2]);
+    spawnRow('gate', [
+      { lane:lanes[0], label:q.opts[0], correct:q.opts[0] === q.ans },
+      { lane:lanes[1], label:q.opts[1], correct:q.opts[1] === q.ans },
+      { lane:lanes[2], label:null, correct:false, barrier:true }
+    ], spawnZ(), 0);
+  }
+  renderPrompt();
+}
+
+function renderPrompt() {
+  const q = G.q; let html = '', hint = '';
+  if (q.type === 'gate') {
+    const w = q.w; html = `${esc(w.m)}, <span class="gap">?</span> ${esc(w.b.join(' '))}${w.p || '.'}`;
+    hint = 'Run through the right gate';
+  } else if (q.type === 'trap') {
+    html = esc(q.t.q).replace('___', '<span class="gap">?</span>');
+    hint = 'Careful, this one is a classic trap';
+  } else {
+    const w = q.w;
+    const slots = w.b.map((b, i) => i < q.built.length ? `<span class="slot fill ${q.builtOk[i] ? '' : 'bad'}">${esc(q.built[i])}</span>` : '<span class="slot">&nbsp;</span>').join(' ');
+    html = `${esc(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${slots}${w.p || '.'}`;
+    hint = 'Collect the words in the right order';
+  }
+  $('#qText').innerHTML = html; $('#qHint').textContent = hint;
+  $('#qCount').textContent = `${G.qi + 1} of ${G.queue.length}`;
+}
+
+function updateHUD() {
+  $('#lives').innerHTML = [0, 1, 2].map(i => `<i class="${i < G.lives ? '' : 'lost'}"></i>`).join('');
+  $('#scoreBox').textContent = G.score;
+  const sb = $('#streakBox');
+  if (G.streak >= 2) { sb.style.display = 'block'; sb.textContent = `${G.streak} in a row`; } else sb.style.display = 'none';
+}
+
+function resolveRow(row) {
+  row.resolved = true;
+  const q = G.q, hit = row.items.find(it => it.lane === G.lane);
+  hit.mesh.visible = false;
+  if (row.kind === 'gate') {
+    if (hit.correct) { burst(hit.mesh, 0x178A4A); finish(q, true); }
+    else { burst(hit.mesh, RED); loseLife(); showWrong(q, hit.barrier ? null : hit.label); finish(q, false); }
+    return;
+  }
+  const k = row.step, expect = q.w.b[k];
+  if (hit.correct) { burst(hit.mesh, 0x178A4A); q.built.push(hit.label); q.builtOk.push(true); }
+  else { burst(hit.mesh, RED); q.mistake = true; q.built.push(expect); q.builtOk.push(false); loseLife(); showWrong(q, hit.label, expect); }
+  renderPrompt();
+  if (G.lives <= 0) { clearRows(); finish(q, false); }
+  else if (k === q.w.b.length - 1) finish(q, !q.mistake);
+}
+
+function loseLife() {
+  G.lives--; G.shake = 0.45; G.streak = 0; updateHUD();
+  const f = $('#flash'); f.style.opacity = .35; setTimeout(() => f.style.opacity = 0, 160);
+}
+
+function finish(q, ok) {
+  G.answered++;
+  if (q.type === 'trap') stat('trap', ok);
+  else { stat(q.w.c, ok); grade(q.w.id, ok); }
+  if (ok) {
+    G.streak++; const pts = 10 + Math.min(G.streak - 1, 5) * 2;
+    G.score += pts; G.correct++;
+    toast(pts, q);
+  } else { G.streak = 0; G.mistakes.push(q); }
+  updateHUD(); G.qi++; save();
+  schedule(ok ? 0.8 : 0.3, nextQuestion);
+}
+
+let toastT = null;
+function toast(pts, q) {
+  const s = q.type === 'trap' ? trapHTML(q.t) : sentHTML(q.w);
+  const el = $('#toast'); el.innerHTML = `<b class="ok">Richtig! +${pts}</b><div class="s">${s}</div>`;
+  el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function showWrong(q, chose, expect) {
+  G.paused = true; $('#toast').classList.remove('show');
+  let body;
+  if (q.type === 'trap') {
+    const t = q.t;
+    body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. The answer is <b class="cj ${t.a}">${t.a}</b>.` : `You missed both gates. The answer is <b class="cj ${t.a}">${t.a}</b>.`}</p>
+      <p class="sent">${trapHTML(t)}</p><p class="tr">${esc(t.t)}</p><div class="ex">${EX[t.ex]}</div>`;
+  } else {
+    const w = q.w;
+    const line = q.type === 'build'
+      ? `The next word was <b>${esc(expect)}</b>, not <b>${esc(chose)}</b>.`
+      : (chose ? `You ran through <b>${esc(chose)}</b>. Here it's <b class="cj ${w.c}">${w.c}</b>.` : `You missed both gates. Here it's <b class="cj ${w.c}">${w.c}</b>.`);
+    const ex = q.type === 'build' ? EX.order : (w.c === 'weil' ? EX.weil : EX_DASS_MAIN);
+    body = `<p class="chose">${line}</p><p class="sent">${sentHTML(w)}</p><p class="tr">${esc(w.t)}</p>
+      <p class="legend">Underlined: the verb at the end. Highlighted: this sentence's vocabulary word.</p>
+      <div class="ex">${ex}</div>
+      <div class="wrow"><span class="grow">${wordHTML(w)} <span class="tr">${esc(w.en)}</span></span>${starBtn(w.id)}</div>`;
+  }
+  $('#wrongBody').innerHTML = body;
+  show('wrong'); $('#wGo').focus();
+}
+function closeWrong() { show(null); G.paused = false; }
+
+function endRound() {
+  G.running = false; G.pending = null; clearRows();
+  $('#hud').classList.remove('show'); $('#toast').classList.remove('show');
+  S.rounds++; bumpStreak();
+  const l = G.level; let unlock = '';
+  if (l === 1 && G.correct >= 6 && S.unlocked < 2) { S.unlocked = 2; unlock = 'Level 2 is unlocked. Time to build whole clauses.'; }
+  if (l === 2 && G.correct >= 4 && S.unlocked < 3) { S.unlocked = 3; unlock = 'Level 3 is unlocked. Watch out for das and denn.'; }
+  const newBest = G.score > (S.best[l] || 0); if (newBest) S.best[l] = G.score;
+  save();
+
+  $('#eTitle').textContent = G.lives <= 0 ? 'Out of lives' : (G.mistakes.length === 0 ? 'Perfekt!' : 'Runde vorbei!');
+  $('#eStats').innerHTML = `
+    <div class="stat"><b>${G.score}</b><span>${newBest ? 'New best score' : 'Score'}</span></div>
+    <div class="stat"><b>${G.correct}/${G.answered}</b><span>Correct</span></div>
+    <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>`;
+  $('#eUnlock').innerHTML = unlock ? `<div class="tip">${unlock}</div>` : '';
+  $('#eListTitle').style.display = G.mistakes.length ? 'block' : 'none';
+  $('#eList').innerHTML = G.mistakes.map(q => q.type === 'trap'
+    ? `<div class="item"><div><div class="s">${trapHTML(q.t)}</div><div class="tr">${esc(q.t.t)}</div></div></div>`
+    : `<div class="item"><div><div class="s">${sentHTML(q.w)}</div><div class="tr">${esc(q.w.t)}</div><div class="w">${wordHTML(q.w)}: ${esc(q.w.en)}</div></div>${starBtn(q.w.id)}</div>`
+  ).join('');
+  show('end'); $('#eAgain').focus();
+}
+
+/* ================= screens ================= */
+function show(id) {
+  $$('.screen').forEach(s => s.classList.toggle('show', s.id === id));
+  if (id === 'menu') renderMenu();
+}
+function renderMenu() {
+  const n = currentStreak();
+  $('#mStreak').textContent = n ? `${n}-day streak. Keep it going today.` : 'Play a round today to start a streak.';
+  $('#dueBadge').textContent = reviewWords().length;
+  [2, 3].forEach(l => {
+    const b = $(`[data-level="${l}"]`), locked = l > S.unlocked;
+    b.classList.toggle('locked', locked); b.setAttribute('aria-disabled', locked);
+  });
+  $('#l2s').textContent = S.unlocked >= 2 ? 'Put the verb at the end' : 'Locked: get 6 of 8 in Level 1';
+  renderGap();
+  $('#l3s').textContent = S.unlocked >= 3 ? 'Faster, plus das/dass and weil/denn traps' : 'Locked: get 4 of 6 in Level 2';
+}
+
+function renderGap() {
+  $('#gapVal').textContent = `${S.gap} s`;
+  $('#gapDn').disabled = S.gap <= GAP_MIN; $('#gapUp').disabled = S.gap >= GAP_MAX;
+}
+function setGap(d) { S.gap = Math.max(GAP_MIN, Math.min(GAP_MAX, S.gap + d)); save(); renderGap(); }
+
+let wTab = 'star';
+function renderWords() {
+  $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
+  const list = wTab === 'star' ? W.filter(w => S.bm[w.id]) : W.filter(w => S.srs[w.id] || S.intro[w.id]);
+  $('#wList').innerHTML = list.length ? list.map(w => `
+    <div class="item"><div>
+      <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
+      <div class="tr">${esc(w.en)}</div>
+      <div class="s" style="margin-top:6px">${sentHTML(w)}</div>
+    </div>${starBtn(w.id)}</div>`).join('')
+    : `<div class="empty">${wTab === 'star' ? 'No starred words yet. Tap ★ next to any word during a round, on the new-word cards, or on the results screen.' : 'No words yet. Play Level 1 to meet your first three.'}</div>`;
+}
+
+function renderProg() {
+  const st = S.stats, pct = s => s.t ? Math.round(100 * s.c / s.t) : 0;
+  const seen = W.filter(w => S.srs[w.id] || S.intro[w.id]).length;
+  const mastered = W.filter(w => S.srs[w.id] && S.srs[w.id].box >= 4).length;
+  $('#pStats').innerHTML = `
+    <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>
+    <div class="stat"><b>${S.rounds}</b><span>Rounds played</span></div>
+    <div class="stat"><b>${S.unlocked}/3</b><span>Levels unlocked</span></div>
+    <div class="stat"><b>${seen}/${W.length}</b><span>Words met</span></div>
+    <div class="stat"><b>${mastered}</b><span>Words mastered</span></div>
+    <div class="stat"><b>${Object.keys(S.bm).length}</b><span>Starred</span></div>`;
+  const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s.t ? pct(s) + '% of ' + s.t : 'not played yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
+  $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
+    + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: Level 1 ${S.best[1]}, Level 2 ${S.best[2]}, Level 3 ${S.best[3]}, review ${S.best[0]}</div>`;
+  let tip;
+  if (st.weil.t + st.dass.t < 6) tip = 'Play a few rounds and this space will tell you what to focus on.';
+  else if (pct(st.weil) + 10 < pct(st.dass)) tip = 'weil is your weaker side. Remember: weil answers <i>why?</i> If the first half is a reason-free statement like <i>Ich bleibe zu Hause</i>, the second half is the reason.';
+  else if (pct(st.dass) + 10 < pct(st.weil)) tip = 'dass is your weaker side. Look at the main clause: verbs like glauben, hoffen, sagen, wissen, or <i>es ist …</i> are almost always followed by dass.';
+  else tip = 'weil and dass are balanced. Level 2 and 3 will push your word order: the conjugated verb always goes last.';
+  $('#pTip').innerHTML = tip;
+}
+
+/* ================= input ================= */
+function move(d) { if (!G.running || G.paused) return; G.lane = Math.max(0, Math.min(2, G.lane + d)); }
+function togglePause() {
+  if (!G.running) return;
+  if ($('#wrong').classList.contains('show')) return;
+  if (G.paused) { G.paused = false; show(null); } else { G.paused = true; show('pause'); $('#pGo').focus(); }
+}
+window.addEventListener('keydown', e => {
+  if ($('#wrong').classList.contains('show') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); closeWrong(); return; }
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { move(-1); e.preventDefault(); }
+  else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { move(1); e.preventDefault(); }
+  else if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') togglePause();
+});
+$('#bL').addEventListener('pointerdown', e => { e.preventDefault(); move(-1); });
+$('#bR').addEventListener('pointerdown', e => { e.preventDefault(); move(1); });
+let tx = null;
+canvas.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive:true });
+canvas.addEventListener('touchend', e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 30) move(dx > 0 ? 1 : -1); tx = null; }, { passive:true });
+
+$$('[data-level]').forEach(b => b.addEventListener('click', () => startLevel(+b.dataset.level)));
+$('#iGo').addEventListener('click', () => beginRound(lastLevel, pendingFresh));
+$('#wGo').addEventListener('click', closeWrong);
+$('#bPause').addEventListener('click', togglePause);
+$('#pGo').addEventListener('click', togglePause);
+$('#pQuit').addEventListener('click', () => { G.running = false; G.pending = null; clearRows(); $('#hud').classList.remove('show'); show('menu'); });
+$('#eAgain').addEventListener('click', () => startLevel(lastLevel));
+$('#eMenu').addEventListener('click', () => show('menu'));
+$('#bWords').addEventListener('click', () => { renderWords(); show('words'); });
+$('#wBack').addEventListener('click', () => show('menu'));
+$$('.tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
+$('#gapDn').addEventListener('click', () => setGap(-1));
+$('#gapUp').addEventListener('click', () => setGap(1));
+$('#bProg').addEventListener('click', () => { renderProg(); show('prog'); });
+$('#pBack').addEventListener('click', () => show('menu'));
+let resetArmed = false;
+$('#pReset').addEventListener('click', e => {
+  if (!resetArmed) { resetArmed = true; e.currentTarget.textContent = 'Tap again to erase'; setTimeout(() => { resetArmed = false; $('#pReset').textContent = 'Reset progress'; }, 3000); return; }
+  S = Object.assign(DEF(), { gap:S.gap }); save(); resetArmed = false; $('#pReset').textContent = 'Reset progress'; renderProg();
+});
+
+/* ================= loop ================= */
+const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let last = performance.now(), t = 0;
+function frame(now) {
+  requestAnimationFrame(frame);
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+  const active = G.running && !G.paused;
+  const spd = active ? G.speed : (G.running ? 0 : 5);
+
+  for (const s of stripes) { s.position.z += spd * dt; if (s.position.z > 12) s.position.z -= 128; }
+  for (const m of deco) { m.position.z += spd * dt; if (m.position.z > 18) placeDeco(m, m.position.z - 135); }
+
+  const tx2 = LANES[G.running ? G.lane : 1];
+  player.position.x += (tx2 - player.position.x) * Math.min(1, dt * 14);
+  player.rotation.z = (player.position.x - tx2) * 0.12;
+  if (spd > 0) {
+    const ph = t * (6 + spd * 0.5);
+    legL.rotation.x = Math.sin(ph) * 0.8; legR.rotation.x = -Math.sin(ph) * 0.8;
+    player.position.y = Math.abs(Math.sin(ph)) * 0.12;
+  }
+
+  if (active) {
+    G.clock += dt;
+    for (const r of G.rows) {
+      r.group.position.z += spd * dt;
+      if (r.kind === 'block') r.items.forEach(it => { const b = it.mesh.userData.block; if (b) { b.position.y = 1.0 + Math.sin(G.clock * 3 + it.lane) * 0.08; } });
+      if (!r.resolved && r.group.position.z >= -0.2) { resolveRow(r); if (!G.running || G.paused || G.rows.length === 0) break; }
+    }
+    G.rows = G.rows.filter(r => {
+      if (r.group.position.z > 16) { scene.remove(r.group); r.group.traverse(o => { if (o.material) [].concat(o.material).forEach(m => m.dispose()); }); return false; }
+      return true;
+    });
+    if (G.pending && G.clock >= G.pending.at) { const fn = G.pending.fn; G.pending = null; fn(); }
+  }
+
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i]; p.life -= dt; p.v.y -= 14 * dt;
+    p.m.position.addScaledVector(p.v, dt); p.m.rotation.x += dt * 6;
+    p.m.scale.setScalar(Math.max(0.01, p.life));
+    if (p.life <= 0) { scene.remove(p.m); p.m.material.dispose(); parts.splice(i, 1); }
+  }
+
+  G.shake = Math.max(0, G.shake - dt);
+  const sh = reduceMotion ? 0 : G.shake;
+  camera.position.set(CAM.x + player.position.x * 0.35 + (Math.random() - .5) * sh, CAM.y + (Math.random() - .5) * sh, CAM.z);
+  camera.lookAt(player.position.x * 0.35, CAM.ly, CAM.lz);
+  renderer.render(scene, camera);
+}
+
+try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]); } catch (e) {}
+$('#loading').remove();
+show('menu');
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
