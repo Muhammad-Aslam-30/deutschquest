@@ -123,6 +123,82 @@ p{line-height:1.5}
 .hlist .hb .you{margin:6px 0}
 .hlist .hb .ex{border-left:6px solid var(--blue);background:#EEF2F5;padding:10px 12px;margin:10px 0}
 .hlist .hb .pic{max-width:300px}
+.hchat{overflow:visible;padding:0}
+.hrow.cafe{background:#FBF6EC}
+/* menu: choose runner game or Sprach-Café */
+.modeq{font-weight:600;margin:4px 0 0}
+.modeq span{font-weight:400;color:var(--grey);font-size:15px}
+.row2.modes{margin:10px 0 14px}
+.btn.mode{align-items:center}
+.btn.mode .mi{font-size:30px;line-height:1}
+.btn.mode.on{background:var(--black);color:var(--white)}
+.cafe-lead{color:var(--grey);margin-bottom:10px}
+.lvlpick{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:600}
+.lvlpick button{border:2px solid var(--black);background:var(--white);padding:6px 14px;font-weight:700;cursor:pointer}
+.lvlpick button.on{background:var(--black);color:var(--white)}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.topics button{border:2px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);padding:10px;text-align:left;cursor:pointer;font-size:16px;font-weight:600}
+.topics button .te{font-size:26px;display:block}
+.topics button small{display:block;font-weight:400;color:var(--grey);font-size:13.5px}
+.topics button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--black)}
+
+/* café screen */
+#cafe{background:var(--sky);padding:0}
+#cafe.show{display:block}
+.cafe-wrap{max-width:760px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding:12px 14px 10px}
+.cafe-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.cafe-top button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:20px;cursor:pointer;flex:0 0 44px}
+.cafe-top button[aria-pressed="true"]{background:var(--yellow)}
+.cafe-top .ct{flex:1;line-height:1.2}
+.cafe-top .ct b{font-size:19px;display:block}
+.cafe-top .ct small{color:var(--grey)}
+.cafe-stage{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+#lena{width:132px;height:146px;flex:0 0 132px}
+#lena svg{width:100%;height:100%;display:block}
+.cafe-name{font-weight:800;font-size:22px}
+.cafe-name span{display:block;font-weight:400;font-size:14px;color:var(--grey)}
+.chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px 8px}
+.b{max-width:86%;border:2px solid var(--black);padding:10px 12px;line-height:1.45;font-size:17px;background:var(--white)}
+.b.lena{align-self:flex-start;border-radius:0 14px 14px 14px}
+.b.me{align-self:flex-end;background:#EAF0F7;border-radius:14px 0 14px 14px}
+.b .tools{display:flex;gap:8px;margin-top:8px}
+.b .tools button{border:2px solid var(--black);background:var(--white);padding:3px 9px;font-size:14px;cursor:pointer}
+.b .trbox{margin-top:8px;border-top:2px dashed var(--grey);padding-top:8px;font-size:15.5px}
+.b .trbox .en{color:var(--black)}
+.b .trbox .gr{margin-top:6px;background:#EEF2F5;border-left:5px solid var(--blue);padding:6px 9px}
+.b .fb{margin-top:8px;font-size:15px;border-top:2px dashed var(--grey);padding-top:7px}
+.b .fb.ok{color:var(--good);font-weight:600}
+.b .fb .fix{font-weight:700;color:var(--black)}
+.b .fb .why{color:var(--grey);margin-top:3px}
+.b.typing{color:var(--grey);font-size:22px;letter-spacing:3px}
+.b.sys{align-self:center;max-width:94%;background:#FBF3DC;font-size:15px}
+.cafe-input{display:flex;gap:8px;align-items:center}
+.cafe-input input{flex:1;min-width:0;border:3px solid var(--black);padding:12px;font:inherit;font-size:17px;background:var(--white)}
+.cafe-input button{height:52px;min-width:52px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:22px;cursor:pointer}
+#cMic{background:var(--red);color:var(--white);min-width:68px}
+#cMic.rec{animation:recpulse 1s infinite}
+@keyframes recpulse{50%{box-shadow:0 0 0 8px rgba(217,103,91,.35)}}
+.cstatus{min-height:20px;font-size:14px;color:var(--grey);margin-top:6px}
+.cstatus.err{color:var(--red);font-weight:600}
+.csetup{border:3px solid var(--black);background:var(--white);padding:12px 14px;margin-bottom:8px;overflow-y:auto}
+.csetup h3{margin:0 0 6px}
+.csetup ol{margin:0 0 10px 20px;line-height:1.55}
+.keyrow{display:flex;gap:8px}
+.keyrow input{flex:1;min-width:0;border:3px solid var(--black);padding:10px;font:inherit}
+.keyrow .btn{width:auto}
+.linkbtn{background:none;border:none;color:var(--blue);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
+
+/* Lena: blink and talk */
+.lena-svg .eye{transform-box:fill-box;transform-origin:center;animation:blink 4.6s infinite}
+.lena-svg .open{display:none}
+.lena-svg.talk .smile{display:none}
+.lena-svg.talk .open{display:inline;transform-box:fill-box;transform-origin:center;animation:talk .17s infinite alternate}
+.lena-svg .head{transform-box:fill-box;transform-origin:50% 90%;animation:sway 5s ease-in-out infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes talk{from{transform:scaleY(.35)}to{transform:scaleY(1.15)}}
+@keyframes sway{50%{transform:rotate(-2deg)}}
+@media (prefers-reduced-motion:reduce){.lena-svg .eye,.lena-svg .head,#cMic.rec{animation:none}}
+@media (max-height:640px){#lena{width:96px;height:106px;flex-basis:96px}.cafe-name{font-size:18px}}
 .pic{display:block;width:100%;max-width:360px;margin:12px auto;border:3px solid var(--black);background:var(--white)}
 .item .pic{max-width:260px;margin:10px 0 0}
 #intro #iGo{position:sticky;bottom:0}
@@ -211,10 +287,15 @@ p{line-height:1.5}
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag">Run, choose, and build German sentences: weil/dass word order and prepositions.</p>
+      <p class="tag">Run, build and speak German: weil/dass word order and prepositions, plus voice chats in the Sprach-Café.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
       <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button></div>
-      <div class="levels">
+      <p class="modeq" id="modeQ">Was möchtest du machen? <span>What would you like to do?</span></p>
+      <div class="row2 modes">
+        <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner game</b><small>Run through the right gates</small></span></button>
+        <button class="btn mode" data-mode="cafe"><span class="mi">☕</span><span><b>Sprach-Café</b><small>Talk with Lena by voice</small></span></button>
+      </div>
+      <div class="levels" id="runBox" style="display:none">
         <div class="levels" id="lvWd">
           <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">Is it weil or dass?</small></span></button>
           <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Put the verb at the end</small></span></button>
@@ -226,6 +307,11 @@ p{line-height:1.5}
           <button class="btn black" data-level="6"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l6s">Faster, plus im/ins, am/an den, zum/zur</small></span></button>
         </div>
         <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
+      </div>
+      <div id="cafeBox" style="display:none">
+        <p class="cafe-lead">Pick your level and a topic. Lena will chat with you and slip in <b id="cafeFocusName">weil / dass</b> as often as she can.</p>
+        <div class="lvlpick" id="cafeLvl"><span>Level:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
+        <div class="topics" id="cafeTopics"></div>
       </div>
       <div class="row2">
         <button class="btn center" id="bWords">★ My words</button>
@@ -300,11 +386,46 @@ p{line-height:1.5}
     </div>
   </section>
 
+  <!-- SPRACH-CAFÉ -->
+  <section id="cafe" class="screen">
+    <div class="cafe-wrap">
+      <div class="cafe-top">
+        <button id="cBack" aria-label="Back to menu">←</button>
+        <div class="ct"><b id="cTopic"></b><small id="cFocus"></small></div>
+        <button id="cSlow" aria-pressed="false" title="Speak slowly">🐢</button>
+        <button id="cKeyBtn" title="Gemini key">⚙</button>
+      </div>
+      <div class="cafe-stage">
+        <div id="lena" aria-hidden="true"></div>
+        <div class="cafe-name">Lena <span>Barista im Sprach-Café</span></div>
+      </div>
+      <div id="cSetup" class="csetup" style="display:none">
+        <h3>Connect Lena to Gemini <small>(once per device)</small></h3>
+        <ol>
+          <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio → API keys</a> and sign in with your Google account.</li>
+          <li>Tap <b>Create API key</b> and copy it.</li>
+          <li>Paste it below. It stays only in this browser on this device: it is not in the game file on GitHub and not in your exported progress.</li>
+        </ol>
+        <div class="keyrow"><input id="cKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Gemini API key"><button class="btn blue center" id="cKeySave">Save &amp; test</button></div>
+        <p class="note" id="cKeyMsg"></p>
+        <p class="note">Free keys: Google may use these chats to improve its services, so don't share private details with Lena. <button class="linkbtn" id="cKeyDel">Remove key from this device</button></p>
+      </div>
+      <div id="cChat" class="chat" aria-live="polite"></div>
+      <div class="cafe-input">
+        <button id="cHelp" title="Hilfe: show me example answers">💡</button>
+        <button id="cMic" aria-label="Speak">🎤</button>
+        <input id="cText" type="text" autocomplete="off" placeholder="Sprich oder schreib auf Deutsch…">
+        <button id="cSend" aria-label="Send">➤</button>
+      </div>
+      <div id="cStatus" class="cstatus" role="status"></div>
+    </div>
+  </section>
+
   <!-- PAST ROUNDS -->
   <section id="hist" class="screen dim">
     <div class="panel">
       <h2>Past rounds</h2>
-      <p class="lead">Tap a round to see every question, your answer and the explanation.</p>
+      <p class="lead">Tap a round or a café chat to see every question or message, your answers and the explanations.</p>
       <div class="list" id="hList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="hBack">Back to menu</button></div>
     </div>
@@ -328,6 +449,14 @@ p{line-height:1.5}
       <div class="stats" id="pStats"></div>
       <div id="pBars"></div>
       <div class="tip" id="pTip"></div>
+      <h3>Backup &amp; move to another device</h3>
+      <p class="note" style="margin-bottom:10px">Export saves your progress as a small file. Import it on another device (or after clearing the browser): it is combined with what is already there, keeping the better result for every word, so nothing gets lost.</p>
+      <div class="row2" style="margin-top:0">
+        <button class="btn blue center" id="pExport">⬇ Export progress</button>
+        <button class="btn blue center" id="pImport">⬆ Import progress</button>
+      </div>
+      <input type="file" id="pFile" accept=".json,application/json" hidden>
+      <div class="msg" id="pMsg" role="status" style="min-height:22px;margin-top:10px;font-weight:600"></div>
       <div class="row2">
         <button class="btn center" id="pBack">Back to menu</button>
         <button class="btn center" id="pReset">Reset progress</button>
@@ -677,7 +806,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 12, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[] });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,0:0}, unlocked:1, unlockedP:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2' });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -1278,15 +1407,228 @@ function renderMenu() {
   $$('#topicTabs button').forEach(b => b.classList.toggle('on', b.dataset.topic === S.topic));
   $('#lvWd').style.display = S.topic === 'prep' ? 'none' : '';
   $('#lvPrep').style.display = S.topic === 'prep' ? '' : 'none';
+  $$('#menu .btn.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === cafeMode));
+  $('#modeQ').style.display = cafeMode ? 'none' : '';
+  $('#runBox').style.display = cafeMode === 'run' ? '' : 'none';
+  $('#cafeBox').style.display = cafeMode === 'cafe' ? '' : 'none';
+  if (cafeMode === 'cafe') renderCafeBox();
   renderGap();
 }
-function setTopic(t) { S.topic = t; save(); $('#menuMsg').textContent = ''; renderMenu(); }
+function setTopic(t) { S.topic = t; cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
 
 function renderGap() {
   $('#gapVal').textContent = `${S.gap} s`;
   $('#gapDn').disabled = S.gap <= GAP_MIN; $('#gapUp').disabled = S.gap >= GAP_MAX;
 }
 function setGap(d) { S.gap = Math.max(GAP_MIN, Math.min(GAP_MAX, S.gap + d)); save(); renderGap(); }
+
+/* ================= Sprach-Café =================
+   Talk with Lena (an animated barista) by voice. Speech → text uses the browser's SpeechRecognition (de-DE),
+   Lena's replies come from Google Gemini with the player's own API key, and are read aloud with speechSynthesis.
+   The key lives only in this browser's localStorage under its own name (never in S, so never exported). */
+const CAFE_TOPICS = [
+  ['familie', '👪', 'Familie', 'Family'], ['arbeit', '💼', 'Arbeit & Beruf', 'Work & jobs'], ['freizeit', '⚽', 'Freizeit & Hobbys', 'Free time & hobbies'],
+  ['essen', '🍲', 'Essen & Trinken', 'Food & drink'], ['reisen', '✈️', 'Reisen & Urlaub', 'Travel & holidays'], ['wohnen', '🏠', 'Wohnen', 'Home & living'],
+  ['gesundheit', '🩺', 'Gesundheit', 'Health'], ['einkaufen', '🛒', 'Einkaufen', 'Shopping'], ['wetter', '🌦️', 'Wetter & Jahreszeiten', 'Weather & seasons'],
+  ['lernen', '📚', 'Schule & Deutsch lernen', 'School & learning German'], ['freunde', '🤝', 'Freunde & Ausgehen', 'Friends & going out'],
+  ['stadt', '🏙️', 'In der Stadt', 'In the city'], ['frei', '💬', 'Freies Gespräch', 'Anything you like']
+];
+const CAFE_FOCUS = {
+  wd:{ name:'weil / dass', prompt:'Grammar focus: subordinate clauses with "weil" (giving a reason) and "dass" (that-clauses), where the conjugated verb goes to the END (… weil ich müde bin; … dass das Wetter schön ist). Ask many "Warum …?" questions and opinion questions ("Was denkst du …?", "Glaubst du, dass …?", "Findest du, dass …?") so the learner has to answer with weil or dass.' },
+  prep:{ name:'Präpositionen', prompt:'Grammar focus: prepositions and their case: always Akkusativ (durch, für, gegen, ohne, um), always Dativ (aus, bei, mit, nach, seit, von, zu, gegenüber) and Wechselpräpositionen (an, auf, hinter, in, neben, über, unter, vor, zwischen: location / Wo? → Dativ, movement / Wohin? → Akkusativ). Ask questions like "Wo …?", "Wohin …?", "Mit wem …?", "Für wen …?", "Seit wann …?" so the learner has to answer with a preposition.' }
+};
+const LENA_SVG = `<svg class="lena-svg" viewBox="0 0 200 222" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="112" r="98" fill="#F3E6D3"/>
+  <path d="M50 222 C52 182 76 166 100 166 C124 166 148 182 150 222 Z" fill="#FFFFFF" stroke="#2F3640" stroke-width="3"/>
+  <path d="M72 222 L76 186 L124 186 L128 222 Z" fill="#D9675B" stroke="#2F3640" stroke-width="3"/>
+  <path d="M86 186 L80 168 M114 186 L120 168" stroke="#2F3640" stroke-width="3"/>
+  <rect x="91" y="146" width="18" height="24" fill="#FCE3D3"/>
+  <g class="head">
+    <path d="M46 104 C40 36 160 36 154 104 L160 170 Q134 178 124 150 L76 150 Q66 178 40 170 Z" fill="#4A3328"/>
+    <ellipse cx="100" cy="104" rx="46" ry="52" fill="#FCE3D3"/>
+    <path d="M52 100 C52 52 148 52 148 100 C138 80 126 72 114 78 C108 64 92 66 86 80 C76 72 62 82 52 100 Z" fill="#4A3328"/>
+    <rect x="130" y="64" width="16" height="7" rx="3" fill="#EDC765" stroke="#2F3640" stroke-width="2" transform="rotate(-25 138 67)"/>
+    <path d="M70 88 Q80 83 90 87 M110 87 Q120 83 130 88" stroke="#4A3328" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <g class="eye"><ellipse cx="80" cy="104" rx="11" ry="13" fill="#FFFFFF"/><ellipse cx="80" cy="106" rx="8" ry="10.5" fill="#4F7CAC"/><ellipse cx="80" cy="107" rx="4" ry="5.5" fill="#1E2A38"/><circle cx="77" cy="101" r="3" fill="#FFFFFF"/><circle cx="83.5" cy="110" r="1.5" fill="#FFFFFF"/><path d="M68 96 Q80 87 92 96" stroke="#2F3640" stroke-width="3.2" fill="none" stroke-linecap="round"/></g>
+    <g class="eye"><ellipse cx="120" cy="104" rx="11" ry="13" fill="#FFFFFF"/><ellipse cx="120" cy="106" rx="8" ry="10.5" fill="#4F7CAC"/><ellipse cx="120" cy="107" rx="4" ry="5.5" fill="#1E2A38"/><circle cx="117" cy="101" r="3" fill="#FFFFFF"/><circle cx="123.5" cy="110" r="1.5" fill="#FFFFFF"/><path d="M108 96 Q120 87 132 96" stroke="#2F3640" stroke-width="3.2" fill="none" stroke-linecap="round"/></g>
+    <ellipse cx="68" cy="122" rx="8" ry="4.5" fill="#F2A7A0" opacity=".55"/><ellipse cx="132" cy="122" rx="8" ry="4.5" fill="#F2A7A0" opacity=".55"/>
+    <path d="M100 114 L98 119" stroke="#D9A08C" stroke-width="2" stroke-linecap="round"/>
+    <path class="smile" d="M91 129 Q100 136 109 129" stroke="#B4574C" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <ellipse class="open" cx="100" cy="131" rx="6.5" ry="5" fill="#B4574C"/>
+  </g>
+</svg>`;
+
+const AI_KEY = 'dq-gemini-key', AI_MODEL = 'dq-gemini-model', AI_BASE = 'https://generativelanguage.googleapis.com/v1beta';
+const lsGet = k => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } };
+const lsSet = (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} };
+let cafeMode = null;              // 'run' | 'cafe' for the menu; reset when a topic tab is tapped
+const C = { topic:null, focus:'wd', hist:[], busy:false, slow:false };
+
+// choose the newest general "flash" model this key can use (model names change over time, so ask the API)
+async function pickModel(key) {
+  const r = await fetch(`${AI_BASE}/models?pageSize=200`, { headers:{ 'x-goog-api-key':key } });
+  if (!r.ok) throw new Error(r.status === 400 || r.status === 403 ? 'key' : 'net');
+  const list = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent'));
+  const name = m => m.name.replace('models/', '');
+  const ok = list.map(name).filter(n => /flash/.test(n) && !/(lite|image|tts|live|audio|embed|thinking|exp|8b)/.test(n));
+  const ver = n => parseFloat((n.match(/gemini-(\d+(\.\d+)?)/) || [0, 0])[1]);
+  ok.sort((a, b) => ver(b) - ver(a) || (/preview/.test(a) ? 1 : 0) - (/preview/.test(b) ? 1 : 0) || a.length - b.length);
+  return ok[0] || (list[0] && name(list[0])) || 'gemini-2.5-flash';
+}
+const REPLY_SCHEMA = { type:'OBJECT', properties:{
+  reply_de:{ type:'STRING' }, reply_en:{ type:'STRING' }, grammar_note:{ type:'STRING' },
+  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' } },
+  required:['reply_de', 'reply_en', 'grammar_note', 'feedback_ok', 'feedback_corrected', 'feedback_explanation'] };
+function cafeSystem() {
+  const t = CAFE_TOPICS.find(x => x[0] === C.topic), lvl = S.cafeLevel || 'A2';
+  return `You are Lena, a warm, cheerful young barista in a "Sprach-Café" in Berlin. You chat in German with a language learner (CEFR level ${lvl}).
+Topic of the conversation: ${t[2]} (${t[3]}). ${t[0] === 'frei' ? 'Let the learner choose what to talk about.' : ''}
+${CAFE_FOCUS[C.focus].prompt}
+Rules:
+- reply_de: natural, friendly spoken German at ${lvl} level, 1 to 3 short sentences. Use the grammar focus yourself, and always end with ONE question that stays on the topic and makes the learner use the grammar focus. Never use English in reply_de.
+- reply_en: an accurate English translation of reply_de.
+- grammar_note: 1-2 short sentences in simple English explaining the grammar in reply_de, especially the grammar focus (e.g. why the verb is at the end after "weil", or why "dem" is Dativ after "mit").
+- feedback_*: judge ONLY the learner's last message. Ignore missing capital letters and punctuation (it comes from speech recognition). If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
+- If the learner writes English or seems lost, help with a simple German sentence they could say.`;
+}
+async function askLena(userText) {
+  const key = lsGet(AI_KEY); if (!key) throw new Error('nokey');
+  let model = lsGet(AI_MODEL); if (!model) { model = await pickModel(key); lsSet(AI_MODEL, model); }
+  C.hist.push({ role:'user', parts:[{ text:userText }] });
+  const body = { systemInstruction:{ parts:[{ text:cafeSystem() }] }, contents:C.hist,
+    generationConfig:{ temperature:0.8, responseMimeType:'application/json', responseSchema:REPLY_SCHEMA } };
+  const r = await fetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key }, body:JSON.stringify(body) });
+  if (!r.ok) {
+    C.hist.pop();
+    if (r.status === 404) lsSet(AI_MODEL, '');          // model retired: pick a new one next time
+    throw new Error(r.status === 429 ? 'limit' : (r.status === 400 || r.status === 403) ? 'key' : 'net');
+  }
+  const d = await r.json(), parts = (((d.candidates || [])[0] || {}).content || {}).parts || [];
+  const txt = parts.filter(p => !p.thought).map(p => p.text || '').join('');
+  let a; try { a = JSON.parse(txt); } catch (e) { C.hist.pop(); throw new Error('parse'); }
+  C.hist.push({ role:'model', parts:[{ text:a.reply_de }] });
+  return a;
+}
+
+// ---- voice out ----
+let deVoice = null;
+function loadVoice() {
+  const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [], de = vs.filter(v => /^de/i.test(v.lang));
+  deVoice = de.find(v => /google/i.test(v.name)) || de.find(v => /(katja|hedda|anna|marlene|vicki|petra|helena|female)/i.test(v.name)) || de[0] || null;
+}
+if (window.speechSynthesis) { loadVoice(); speechSynthesis.onvoiceschanged = loadVoice; }
+function say(text) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; if (deVoice) u.voice = deVoice; u.rate = C.slow ? 0.72 : 0.95; u.pitch = 1.1;
+  const face = $('#lena .lena-svg');
+  u.onstart = () => face && face.classList.add('talk');
+  u.onend = u.onerror = () => face && face.classList.remove('talk');
+  speechSynthesis.speak(u);
+}
+
+// ---- voice in ----
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, recOn = false;
+function toggleMic() {
+  if (!SR) { cafeStatus('Speech recognition is not available in this browser. Use Chrome, or type your answer.', true); return; }
+  if (recOn) { rec.stop(); return; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  rec = new SR(); rec.lang = 'de-DE'; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+  let finalText = '';
+  rec.onstart = () => { recOn = true; $('#cMic').classList.add('rec'); cafeStatus('Ich höre zu… speak German now.'); };
+  rec.onresult = e => {
+    let interim = ''; finalText = '';
+    for (const res of e.results) (res.isFinal ? (finalText += res[0].transcript) : (interim += res[0].transcript));
+    $('#cText').value = (finalText + ' ' + interim).trim();
+  };
+  rec.onerror = e => cafeStatus(e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'Microphone blocked. Allow the microphone for this site in Chrome settings.' : e.error === 'no-speech' ? 'I didn’t hear anything. Tap 🎤 and try again.' : 'Speech recognition problem: ' + e.error, true);
+  rec.onend = () => { recOn = false; $('#cMic').classList.remove('rec'); const t = $('#cText').value.trim(); if (t) cafeSend(t); else if (!$('#cStatus').classList.contains('err')) cafeStatus(''); };
+  try { rec.start(); } catch (e) { cafeStatus('Could not start the microphone.', true); }
+}
+
+// ---- chat UI ----
+function cafeStatus(t, err) { const s = $('#cStatus'); s.textContent = t; s.classList.toggle('err', !!err); }
+const chatEl = () => $('#cChat');
+function addBubble(cls, html) { const d = document.createElement('div'); d.className = 'b ' + cls; d.innerHTML = html; chatEl().appendChild(d); chatEl().scrollTop = chatEl().scrollHeight; return d; }
+const lenaInner = (de, en, gn) => `<div class="de">${esc(de)}</div>
+    <div class="tools"><button data-c="tr">🌐 Translate</button><button data-c="say">🔊</button></div>
+    <div class="trbox" hidden><div class="en">${esc(en)}</div><div class="gr"><b>Grammar:</b> ${esc(gn)}</div></div>`;
+function lenaBubble(a) {
+  const d = addBubble('lena', lenaInner(a.reply_de, a.reply_en, a.grammar_note));
+  d.dataset.de = a.reply_de; say(a.reply_de);
+}
+// café chats are saved to Past rounds (S.history) as soon as the learner has said something, and updated after every turn
+function cafeLog(mineText, a) {
+  if (mineText) C.msgs.push({ r:'u', de:mineText, ok:a.feedback_ok ? 1 : 0, fix:a.feedback_corrected || undefined, why:a.feedback_explanation || undefined });
+  C.msgs.push({ r:'l', de:a.reply_de, en:a.reply_en, gn:a.grammar_note });
+  if (!C.entry && mineText) {
+    C.entry = { t:Date.now(), k:'cafe', tp:C.topic, f:C.focus, lv:S.cafeLevel || 'A2', m:C.msgs };
+    S.history = S.history || []; S.history.unshift(C.entry);
+    if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
+  }
+  if (C.entry) save();
+}
+function feedbackHTML(a) {
+  if (a.feedback_ok) return a.feedback_explanation ? `<div class="fb ok">✓ ${esc(a.feedback_explanation)}</div>` : '';
+  return `<div class="fb">✎ Better: <span class="fix">${esc(a.feedback_corrected)}</span> <button class="linkbtn" data-c="sayfix">🔊</button><div class="why">${esc(a.feedback_explanation)}</div></div>`;
+}
+function cafeError(e) {
+  const m = { nokey:'Add your Gemini key first (⚙).', key:'Gemini did not accept the key. Check it under ⚙.', limit:'Lena needs a short break: the free Gemini limit was reached. Try again in a minute.', net:'Could not reach Gemini. Check your internet connection.', parse:'Lena got confused. Please try again.' }[e.message] || 'Something went wrong. Please try again.';
+  cafeStatus(m, true); if (e.message === 'nokey' || e.message === 'key') showKeySetup(true);
+}
+async function cafeTurn(userText, mine) {
+  if (C.busy) return; C.busy = true; $('#cSend').disabled = true;
+  const wait = addBubble('lena typing', '• • •'); cafeStatus('');
+  try {
+    const a = await askLena(userText);
+    wait.remove();
+    if (mine) mine.insertAdjacentHTML('beforeend', feedbackHTML(a));
+    lenaBubble(a); cafeLog(mine ? mine.dataset.de : null, a);
+  } catch (e) { wait.remove(); if (mine) mine.classList.add('failed'); cafeError(e); }
+  C.busy = false; $('#cSend').disabled = false;
+}
+function cafeSend(text) {
+  text = (text || '').trim(); if (!text || C.busy) return;
+  $('#cText').value = '';
+  const mine = addBubble('me', `<div class="de">${esc(text)}</div>`); mine.dataset.de = text;
+  cafeTurn(text, mine);
+}
+function showKeySetup(on) {
+  $('#cSetup').style.display = on ? '' : 'none';
+  $('#cKey').value = ''; $('#cKeyMsg').textContent = lsGet(AI_KEY) ? 'A key is saved on this device.' : '';
+}
+async function saveKey() {
+  const k = $('#cKey').value.trim(); if (!k) { $('#cKeyMsg').textContent = 'Paste the key first.'; return; }
+  $('#cKeyMsg').textContent = 'Testing the key…';
+  try {
+    const model = await pickModel(k);
+    lsSet(AI_KEY, k); lsSet(AI_MODEL, model);
+    $('#cKeyMsg').textContent = `Connected ✓ (using ${model}).`;
+    setTimeout(() => { showKeySetup(false); $('#cChat .b.sys').forEach(b => b.remove()); if (!C.hist.length) cafeGreet(); }, 700);
+  } catch (e) { $('#cKeyMsg').textContent = e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : 'Could not reach Google. Check your internet connection.'; }
+}
+function cafeGreet() { cafeTurn('[Start of the conversation. Greet me warmly, introduce yourself in one short sentence and ask your first question about the topic.]', null); }
+function openCafe(topicId, focus, lvl) {
+  const t = CAFE_TOPICS.find(x => x[0] === topicId); if (!t) return;
+  if (lvl) S.cafeLevel = lvl;
+  Object.assign(C, { topic:topicId, focus:focus || (S.topic === 'prep' ? 'prep' : 'wd'), hist:[], busy:false, msgs:[], entry:null });
+  $('#cTopic').textContent = `${t[1]} ${t[2]}`;
+  $('#cFocus').textContent = `${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
+  if (!$('#lena svg')) $('#lena').innerHTML = LENA_SVG;
+  chatEl().innerHTML = ''; cafeStatus('');
+  $('#cSlow').setAttribute('aria-pressed', C.slow);
+  show('cafe');
+  if (!SR) addBubble('sys', 'Voice input needs Chrome (Android or computer). You can still type your answers.');
+  if (!lsGet(AI_KEY)) { showKeySetup(true); addBubble('sys', 'Hallo! To talk with Lena, connect a free Gemini key once (steps above).'); }
+  else { showKeySetup(false); cafeGreet(); }
+}
+function closeCafe() { if (recOn && rec) rec.stop(); if (window.speechSynthesis) speechSynthesis.cancel(); show('menu'); }
+function renderCafeBox() {
+  $('#cafeFocusName').textContent = CAFE_FOCUS[S.topic === 'prep' ? 'prep' : 'wd'].name;
+  $$('#cafeLvl button').forEach(b => b.classList.toggle('on', b.dataset.lvl === (S.cafeLevel || 'A2')));
+  if (!$('#cafeTopics').children.length) $('#cafeTopics').innerHTML = CAFE_TOPICS.map(([id, e, de, en]) => `<button data-cafe="${id}"><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small></button>`).join('');
+}
 
 /* ---- past rounds ---- */
 const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 0:'Review / practice' };
@@ -1317,14 +1659,33 @@ function histItem(e, k) {
     <div class="hb"><p class="sent">${sent}</p><div class="tr">${esc(tr)}</div><div class="you">${you}</div>${extra}${pic}<div class="ex">${ex}</div>
     ${mn ? `<div class="mn">💡 ${esc(mn)}</div>` : ''}${taMn(tmn)}${id ? `<div style="text-align:right;margin-top:8px">${starBtn(id)}</div>` : ''}</div></details>`;
 }
+const cafeTopicOf = h => CAFE_TOPICS.find(x => x[0] === h.tp) || [h.tp, '💬', h.tp, ''];
+const cafeCount = h => { const us = h.m.filter(x => x.r === 'u'); return [us.filter(x => x.ok).length, us.length]; };
+function cafeRow(h, i) {
+  const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
+  return `<button class="hrow cafe" data-h="${i}"><b class="score">${ok}/${n}</b><b>☕ Sprach-Café</b> · ${t[1]} ${esc(t[2])}<span>${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${n} sentence${n === 1 ? '' : 's'} spoken · ${when(h.t)}</span></button>`;
+}
+function cafeChatHTML(h) {
+  return '<div class="chat hchat">' + h.m.map(x => x.r === 'l'
+    ? `<div class="b lena" data-de="${esc(x.de)}">${lenaInner(x.de, x.en, x.gn)}</div>`
+    : `<div class="b me" data-de="${esc(x.de)}"><div class="de">${esc(x.de)}</div>${feedbackHTML({ feedback_ok:!!x.ok, feedback_corrected:x.fix || '', feedback_explanation:x.why || '' })}</div>`).join('') + '</div>';
+}
 function renderHist() {
   const H = S.history || [];
-  $('#hList').innerHTML = H.length ? H.map((h, i) => `<button class="hrow" data-h="${i}"><b class="score">${h.c}/${h.a}</b><b>${h.q ? 'Unfinished round' : 'Round ' + h.n}</b> · ${LEVEL_NAME[h.l] || ''}<span>${h.sc} points · ${when(h.t)}</span></button>`).join('')
+  $('#hList').innerHTML = H.length ? H.map((h, i) => h.k === 'cafe' ? cafeRow(h, i) : `<button class="hrow" data-h="${i}"><b class="score">${h.c}/${h.a}</b><b>${h.q ? 'Unfinished round' : 'Round ' + h.n}</b> · ${LEVEL_NAME[h.l] || ''}<span>${h.sc} points · ${when(h.t)}</span></button>`).join('')
     : '<div class="empty">No rounds yet. Play a round and it will show up here.</div>';
 }
 let histOpen = null;
 function openHist(i) {
   const h = (S.history || [])[i]; if (!h) return; histOpen = h;
+  if (h.k === 'cafe') {
+    const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
+    $('#hdTitle').textContent = `☕ ${t[2]}`;
+    $('#hdSub').textContent = `Sprach-Café with Lena · ${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${ok} of ${n} sentences correct · ${when(h.t)}. Tap 🌐 for translations.`;
+    $('#hdList').innerHTML = cafeChatHTML(h); $('#hdPlay').textContent = 'Talk about this topic again';
+    show('histD'); $('#histD').scrollTop = 0; return;
+  }
+  $('#hdPlay').textContent = 'Practise this round again';
   $('#hdTitle').textContent = h.q ? 'Unfinished round' : 'Round ' + h.n;
   $('#hdSub').textContent = `${LEVEL_NAME[h.l] || ''} · ${h.c}/${h.a} correct · ${h.sc} points · ${when(h.t)}`;
   $('#hdList').innerHTML = h.it.map(histItem).join('');
@@ -1332,6 +1693,7 @@ function openHist(i) {
 }
 // replay exactly the questions of a past round (as a practice round, so it never unlocks levels)
 function practiseHist() {
+  if (histOpen.k === 'cafe') { openCafe(histOpen.tp, histOpen.f, histOpen.lv); return; }
   const q = histOpen.it.filter(e => !e.r).map(e => {
     if (e.y === 't') return TRAPS[e.i] ? trapQ(TRAPS[e.i]) : null;
     const x = BYID[e.i]; if (!x) return null;
@@ -1419,6 +1781,28 @@ $$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab 
 $$('#topicTabs button').forEach(b => b.addEventListener('click', () => setTopic(b.dataset.topic)));
 $('#gapDn').addEventListener('click', () => setGap(-1));
 $('#gapUp').addEventListener('click', () => setGap(1));
+$$('#menu .btn.mode').forEach(b => b.addEventListener('click', () => { cafeMode = b.dataset.mode; $('#menuMsg').textContent = ''; renderMenu(); }));
+$('#cafeLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderCafeBox(); } });
+$('#cafeTopics').addEventListener('click', e => { const b = e.target.closest('[data-cafe]'); if (b) openCafe(b.dataset.cafe); });
+$('#cBack').addEventListener('click', closeCafe);
+$('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setAttribute('aria-pressed', C.slow); });
+$('#cKeyBtn').addEventListener('click', () => showKeySetup($('#cSetup').style.display === 'none'));
+$('#cKeySave').addEventListener('click', saveKey);
+$('#cKey').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
+$('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); $('#cKeyMsg').textContent = 'Key removed from this device.'; });
+$('#cMic').addEventListener('click', toggleMic);
+$('#cSend').addEventListener('click', () => cafeSend($('#cText').value));
+$('#cText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); cafeSend($('#cText').value); } });
+$('#cHelp').addEventListener('click', () => cafeTurn('[I am stuck. Give me two short example answers I could say to your last question (in German, using the grammar focus), then ask the question again.]', null));
+function chatTools(e) {
+  const b = e.target.closest('[data-c]'); if (!b) return;
+  const bub = b.closest('.b');
+  if (b.dataset.c === 'tr') { const box = bub.querySelector('.trbox'); box.hidden = !box.hidden; b.textContent = box.hidden ? '🌐 Translate' : '🌐 Hide'; }
+  else if (b.dataset.c === 'say') say(bub.dataset.de);
+  else if (b.dataset.c === 'sayfix') say(bub.querySelector('.fix').textContent);
+}
+$('#cChat').addEventListener('click', chatTools);
+$('#hdList').addEventListener('click', chatTools);
 $('#bHist').addEventListener('click', () => { renderHist(); show('hist'); $('#hist').scrollTop = 0; });
 $('#hBack').addEventListener('click', () => show('menu'));
 $('#hList').addEventListener('click', e => { const b = e.target.closest('[data-h]'); if (b) openHist(+b.dataset.h); });
@@ -1426,6 +1810,52 @@ $('#hdBack').addEventListener('click', () => { renderHist(); show('hist'); });
 $('#hdPlay').addEventListener('click', practiseHist);
 $('#bProg').addEventListener('click', () => { renderProg(); show('prog'); });
 $('#pBack').addEventListener('click', () => show('menu'));
+/* ---- export / import ---- */
+function exportProgress() {
+  const d = new Date(), pad = n => String(n).padStart(2, '0');
+  const blob = new Blob([JSON.stringify(S)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = `deutschquest-progress-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  $('#pMsg').style.color = 'var(--good)'; $('#pMsg').textContent = `Saved ${a.download}. Keep it somewhere safe (e.g. Google Drive) or copy it to your other device.`;
+}
+// combine two saves without losing anything: per word keep the record with more practice, union stars/history, max of counters
+function mergeSaves(a, b) {
+  const m = Object.assign(DEF(), a);
+  m.srs = Object.assign({}, a.srs);
+  for (const [id, r] of Object.entries(b.srs || {})) { const o = m.srs[id]; if (!o || (r.seen || 0) > (o.seen || 0) || ((r.seen || 0) === (o.seen || 0) && (r.box || 0) > (o.box || 0))) m.srs[id] = r; }
+  m.bm = Object.assign({}, b.bm || {}, a.bm);
+  m.intro = Object.assign({}, a.intro);
+  for (const [id, t] of Object.entries(b.intro || {})) m.intro[id] = Math.min(m.intro[id] || t, t);
+  m.stats = Object.assign({}, DEF().stats, a.stats);
+  for (const [k, v] of Object.entries(b.stats || {})) { const o = m.stats[k] || { c:0, t:0 }; m.stats[k] = v.t > o.t ? v : o; }
+  m.best = Object.assign({}, DEF().best, a.best);
+  for (const [k, v] of Object.entries(b.best || {})) m.best[k] = Math.max(m.best[k] || 0, v || 0);
+  m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1);
+  m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
+  if (b.streak && (b.streak.last || '') > (a.streak && a.streak.last || '') ) m.streak = b.streak;
+  const seenT = new Set(), hist = [];
+  for (const h of [...(a.history || []), ...(b.history || [])]) if (h && !seenT.has(h.t)) { seenT.add(h.t); hist.push(h); }
+  m.history = hist.sort((x, y) => y.t - x.t).slice(0, HIST_MAX);
+  return m;
+}
+function importProgress(file) {
+  const msg = (t, ok) => { $('#pMsg').style.color = ok ? 'var(--good)' : 'var(--red)'; $('#pMsg').textContent = t; };
+  const rd = new FileReader();
+  rd.onload = () => {
+    let L; try { L = JSON.parse(rd.result); } catch (e) { msg('That file could not be read. Choose a deutschquest-progress file.', false); return; }
+    if (!L || L.v !== 1 || typeof L.srs !== 'object') { msg('This is not a Deutsch Quest progress file.', false); return; }
+    const before = Object.keys(S.srs).length;
+    S = mergeSaves(S, L); save(); renderProg();
+    msg(`Imported! ${Object.keys(S.srs).length} words practised (${Object.keys(S.srs).length - before} new on this device), ${S.history.length} past rounds.`, true);
+  };
+  rd.onerror = () => msg('That file could not be read.', false);
+  rd.readAsText(file);
+}
+$('#pExport').addEventListener('click', exportProgress);
+$('#pImport').addEventListener('click', () => { $('#pFile').value = ''; $('#pFile').click(); });
+$('#pFile').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) importProgress(f); });
+
 let resetArmed = false;
 $('#pReset').addEventListener('click', e => {
   if (!resetArmed) { resetArmed = true; e.currentTarget.textContent = 'Tap again to erase'; setTimeout(() => { resetArmed = false; $('#pReset').textContent = 'Reset progress'; }, 3000); return; }
