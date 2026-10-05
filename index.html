@@ -1476,16 +1476,20 @@ async function apiError(r) {
   return new AIError(r.status === 429 ? 'limit' : keyish ? 'key' : r.status >= 500 ? 'busy' : 'api', `${r.status}${msg ? ': ' + msg : ''}`);
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-async function pickModel(key) {
+let modelCache = null;
+async function rankModels(key) {
+  if (modelCache && modelCache.key === key) return modelCache.list;
   const r = await gfetch(`${AI_BASE}/models?pageSize=200`, { headers:{ 'x-goog-api-key':key } });
   if (!r.ok) throw await apiError(r);
-  const list = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent'));
-  const name = m => m.name.replace('models/', '');
-  const ok = list.map(name).filter(n => /flash/.test(n) && !/(lite|image|tts|live|audio|embed|thinking|exp|8b)/.test(n));
+  const names = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent')).map(m => m.name.replace('models/', ''));
+  const usable = names.filter(n => /^gemini/.test(n) && !/(image|tts|live|audio|embed|thinking|exp|8b|robotics|computer|native)/.test(n));
   const ver = n => parseFloat((n.match(/gemini-(\d+(\.\d+)?)/) || [0, 0])[1]);
-  ok.sort((a, b) => ver(b) - ver(a) || (/preview/.test(a) ? 1 : 0) - (/preview/.test(b) ? 1 : 0) || a.length - b.length);
-  return ok[0] || (list[0] && name(list[0])) || 'gemini-2.5-flash';
+  const tier = n => /flash-lite/.test(n) ? 1 : /flash/.test(n) ? 0 : /pro/.test(n) ? 2 : 3;   // flash first, then flash-lite, then pro
+  usable.sort((x, y) => tier(x) - tier(y) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0) || x.length - y.length);
+  const list = usable.length ? usable : ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+  modelCache = { key, list }; return list;
 }
+const pickModel = async key => (await rankModels(key))[0];
 const REPLY_SCHEMA = { type:'OBJECT', properties:{
   reply_de:{ type:'STRING' }, reply_en:{ type:'STRING' }, grammar_note:{ type:'STRING' },
   feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' } },
@@ -1503,23 +1507,29 @@ Rules:
 - If the learner writes English or seems lost, help with a simple German sentence they could say.`;
 }
 async function askLena(userText) {
-  const key = lsGet(AI_KEY); if (!key) throw new Error('nokey');
-  let model = lsGet(AI_MODEL); if (!model) { model = await pickModel(key); lsSet(AI_MODEL, model); }
+  const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
+  const ranked = await rankModels(key), first = C.model || lsGet(AI_MODEL) || ranked[0];
+  const order = [first, ...ranked.filter(m => m !== first)].slice(0, 5);
   C.hist.push({ role:'user', parts:[{ text:userText }] });
-  let schema = true, r;
-  const call = () => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
+  let schema = true, r = null, used = null, lastErr = null;
+  const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
     body:JSON.stringify({ systemInstruction:{ parts:[{ text:cafeSystem() + (schema ? '' : '\nAnswer ONLY with a JSON object with the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.') }] }, contents:C.hist,
       generationConfig:Object.assign({ temperature:0.8, responseMimeType:'application/json' }, schema ? { responseSchema:REPLY_SCHEMA } : {}) }) });
   try {
-    for (let attempt = 0; attempt < 4; attempt++) {
-      r = await call();
-      if (r.ok) break;
-      if (r.status === 404 && attempt < 3) { lsSet(AI_MODEL, ''); model = await pickModel(key); lsSet(AI_MODEL, model); continue; }   // model retired or not available for this key
-      if (r.status >= 500 && attempt < 2) { await sleep(1500); continue; }                                                              // Google busy: try again
-      if (r.status === 400 && schema && attempt < 3) { const e = await apiError(r); if (/schema|response_?mime|json/i.test(e.detail)) { schema = false; continue; } throw e; }
-      throw await apiError(r);
+    for (let round = 0; round < 2 && !used; round++) {
+      if (round) { cafeStatus('Gemini is busy, trying again…'); await sleep(2500); }
+      for (const model of order) {
+        r = await call(model);
+        if (r.ok) { used = model; break; }
+        const err = await apiError(r);
+        if (r.status === 400 && schema && /schema|response_?mime|json/i.test(err.detail)) { schema = false; r = await call(model); if (r.ok) { used = model; break; } lastErr = await apiError(r); continue; }
+        if (r.status === 404 || r.status === 429 || r.status >= 500) { lastErr = err; if (model !== order[order.length - 1]) cafeStatus('Lena is thinking… (switching to another Gemini model)'); continue; }
+        throw err;                                                            // key problems or other refusals: no point trying other models
+      }
     }
+    if (!used) throw lastErr || new AIError('busy');
   } catch (e) { C.hist.pop(); throw e; }
+  C.model = used; cafeStatus('');
   const d = await r.json(), cand = (d.candidates || [])[0] || {}, parts = (cand.content || {}).parts || [];
   const txt = parts.filter(p => !p.thought).map(p => p.text || '').join('').replace(/^```(json)?\s*|\s*```$/g, '');
   let a; try { a = JSON.parse(txt); } catch (e) { C.hist.pop(); throw new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); }
@@ -1593,8 +1603,8 @@ function feedbackHTML(a) {
 const AI_MSG = {
   nokey:'Add your Gemini key first (⚙).',
   key:'Gemini did not accept the key. Open ⚙ and paste it again from AI Studio.',
-  limit:'Lena needs a short break: the free Gemini limit was reached. Try again in a minute.',
-  busy:'Gemini is busy right now. Please try again in a moment.',
+  limit:'Lena needs a short break: the free Gemini limit was reached on every model. Try again in a minute.',
+  busy:'All Gemini models are busy right now. Please try again in a minute.',
   blocked:'The request never reached Google. Check the internet connection. On a work laptop or with an ad/privacy blocker, Google AI may be blocked — try your tablet or another network.',
   api:'Gemini refused the request.',
   parse:'Lena got confused. Please try again.'
@@ -1631,7 +1641,7 @@ async function saveKey() {
   $('#cKeyMsg').textContent = 'Testing the key…';
   try {
     const model = await pickModel(k);
-    lsSet(AI_KEY, k); lsSet(AI_MODEL, model);
+    lsSet(AI_KEY, k); lsSet(AI_MODEL, model); C.model = null;
     $('#cKeyMsg').textContent = `Connected ✓ (using ${model}).`;
     setTimeout(() => { showKeySetup(false); $('#cChat .b.sys').forEach(b => b.remove()); if (!C.hist.length) cafeGreet(); }, 700);
   } catch (e) { $('#cKeyMsg').textContent = (e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : AI_MSG[e.message] || 'Could not connect.') + (e.detail ? ` (Google says: ${e.detail})` : ''); }
@@ -1640,7 +1650,7 @@ function cafeGreet() { cafeTurn('[Start of the conversation. Greet me warmly, in
 function openCafe(topicId, focus, lvl) {
   const t = CAFE_TOPICS.find(x => x[0] === topicId); if (!t) return;
   if (lvl) S.cafeLevel = lvl;
-  Object.assign(C, { topic:topicId, focus:focus || (S.topic === 'prep' ? 'prep' : 'wd'), hist:[], busy:false, msgs:[], entry:null });
+  Object.assign(C, { topic:topicId, focus:focus || (S.topic === 'prep' ? 'prep' : 'wd'), hist:[], busy:false, msgs:[], entry:null, model:null });
   $('#cTopic').textContent = `${t[1]} ${t[2]}`;
   $('#cFocus').textContent = `${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
   if (!$('#lena svg')) $('#lena').innerHTML = LENA_SVG;
@@ -1818,7 +1828,7 @@ $('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setA
 $('#cKeyBtn').addEventListener('click', () => showKeySetup($('#cSetup').style.display === 'none'));
 $('#cKeySave').addEventListener('click', saveKey);
 $('#cKey').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
-$('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); $('#cKeyMsg').textContent = 'Key removed from this device.'; });
+$('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); modelCache = null; C.model = null; $('#cKeyMsg').textContent = 'Key removed from this device.'; });
 $('#cMic').addEventListener('click', toggleMic);
 $('#cSend').addEventListener('click', () => cafeSend($('#cText').value));
 $('#cText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); cafeSend($('#cText').value); } });
