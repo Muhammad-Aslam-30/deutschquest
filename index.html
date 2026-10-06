@@ -317,6 +317,7 @@ p{line-height:1.5}
 .tabs button{flex:1;border:3px solid var(--black);background:var(--white);padding:9px;font-weight:600;cursor:pointer}
 .tabs button+button{border-left:0}
 .tabs button.on{background:var(--black);color:var(--white)}
+.backtop{display:block;margin:0 0 6px;font-size:15px;font-weight:700}
 .wfilter{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;font-weight:700}
 .wfilter select{flex:1;max-width:340px;border:2px solid var(--black);background:var(--white);padding:8px 10px;font:inherit;font-size:15px;font-weight:600;color:var(--black);cursor:pointer}
 #wList h3.wgroup{margin:16px 0 6px;font-size:17px}
@@ -456,7 +457,6 @@ p{line-height:1.5}
         </div>
         <label class="gapset lanepref"><span class="l">Show the gate options early<small>in the question box, in lane order</small></span><input type="checkbox" id="lanePrev"></label>
         <label class="gapset lanepref" id="genRow"><span class="l">🎲 New sentences from Lena<small>Gemini writes a fresh set for every round; each sentence is grammar-checked</small></span><input type="checkbox" id="genNew"></label>
-        <div class="guide" id="guide"></div>
       </div>
       <div id="cafeBox" style="display:none">
         <p class="cafe-lead">Pick your level and a topic. Lena will chat with you and slip in <b id="cafeFocusName">weil / dass</b> as often as she can.</p>
@@ -481,6 +481,7 @@ p{line-height:1.5}
         <button class="btn center" id="telcGen" style="margin-top:10px">🎲 New TELC task made by Gemini</button>
         <p class="note">Practice tasks in the style of the telc exam, with a timer, word count and an assessment by the three telc criteria. A practice estimate, not an official result.</p>
       </div>
+      <div class="guide" id="guide"></div>
       <div class="row2">
         <button class="btn center" id="bWords">★ My words</button>
         <button class="btn center" id="bProg">My progress</button>
@@ -493,11 +494,12 @@ p{line-height:1.5}
   <!-- INTRO -->
   <section id="intro" class="screen dim">
     <div class="panel">
+      <button class="linkbtn backtop" id="iBackTop">← Back</button>
       <h2 id="iTitle">Neue Wörter</h2>
       <p class="lead" id="iLead">Three new words for this round. You'll meet them in the sentences you run through.</p>
       <div class="cards" id="iCards"></div>
       <p class="note" id="iNote">Tap ★ to bookmark a word. Starred words come back in your daily review.</p>
-      <button class="btn red center" id="iGo">Los geht's!</button>
+      <div class="row2"><button class="btn center" id="iBack">← Back</button><button class="btn red center" id="iGo">Los geht's!</button></div>
     </div>
   </section>
 
@@ -2247,6 +2249,13 @@ function buildQueue(l, fresh) {
 
 // every round opens with a briefing of its vocabulary (plus the full rule cards the first time a preposition level is played)
 let lastLevel = 1, pendingFresh = [], pendingRule = null, pendingQueue = [], genTok = 0, pendingLena = false;
+// the briefing screen remembers where it was opened from, so ← Back returns there (menu, a past round, the results)
+let introFrom = 'menu';
+function introOpen() {
+  const cur = ($('.screen.show') || {}).id;
+  if (cur !== 'intro') introFrom = !cur || cur === 'write' ? 'menu' : cur;
+  show('intro'); $('#intro').scrollTop = 0; $('#iGo').focus();
+}
 function startLevel(l, customQ) {
   $('#menuMsg').textContent = ''; pendingWrite = null;
   if (isLocked(l)) { $('#menuMsg').textContent = LOCK_MSG[l]; return; }
@@ -2265,7 +2274,7 @@ function startLevel(l, customQ) {
   $('#iLead').textContent = pendingRule ? rule.lead : `Here's the vocabulary for this round, with a memory trick for each.${pendingFresh.length ? ` ${pendingFresh.length} new word${pendingFresh.length > 1 ? 's' : ''} today.` : ''}`;
   $('#iNote').textContent = 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
   $('#iCards').innerHTML = ruleHTML + briefingHTML(pendingQueue, pendingFresh);
-  show('intro'); $('#intro').scrollTop = 0; $('#iGo').focus();
+  introOpen();
   const tok = ++genTok, go = $('#iGo'); go.disabled = false; go.textContent = "Los geht's!"; pendingLena = false;
   if (customQ || !l || !S.genNew || !lsGet(AI_KEY)) return;
   // 🎲 swap in fresh sentences from Lena; the fixed round above stays as the fallback
@@ -2571,7 +2580,8 @@ function renderMenu() {
   $('#lvTv').style.display = tp === 'tv' ? '' : 'none';
   $('#lvPl').style.display = tp === 'pl' ? '' : 'none';
   $('#lvMv').style.display = tp === 'mv' ? '' : 'none';
-  if (cafeMode === 'run' && $('#guide').dataset.topic !== tp) { $('#guide').innerHTML = guideHTML(tp); $('#guide').dataset.topic = tp; }
+  // the rules of the chosen topic, shown in every mode
+  if ($('#guide').dataset.topic !== tp) { $('#guide').innerHTML = guideHTML(tp); $('#guide').dataset.topic = tp; }
   $$('#menu .btn.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === cafeMode));
   $('#modeQ').style.display = cafeMode ? 'none' : '';
   $('#runBox').style.display = cafeMode === 'run' ? '' : 'none';
@@ -3645,7 +3655,7 @@ function startWriting(lv, items) {
   $('#iLead').textContent = `${WLV[lv]} · here are the words and memory tricks for these ${items.length} sentences.`;
   $('#iNote').textContent = lv === 'dik' ? 'In the Diktat you only hear the sentences, so read the words now.' : 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
   $('#iCards').innerHTML = briefingHTML(items.map(asQ), []);
-  show('intro'); $('#intro').scrollTop = 0; $('#iGo').focus();
+  introOpen();
 }
 function beginWrite() {
   const p = pendingWrite; pendingWrite = null;
@@ -4555,6 +4565,12 @@ canvas.addEventListener('touchcancel', () => { tx = null; }, { passive:true });
 
 $$('[data-level]').forEach(b => b.addEventListener('click', () => startLevel(+b.dataset.level)));
 $('#iGo').addEventListener('click', () => pendingWrite ? beginWrite() : beginRound(lastLevel, pendingFresh));
+$('#iBackTop').addEventListener('click', () => $('#iBack').click());
+$('#iBack').addEventListener('click', () => {   // cancel the round (and any 🎲 sentences still being written)
+  genTok++; pendingWrite = null; pendingQueue = []; pendingRule = null; pendingLena = false;
+  $('#iGo').disabled = false; $('#iGo').textContent = "Los geht's!";
+  show(introFrom);
+});
 $('#wGo').addEventListener('click', closeWrong);
 $('#bPause').addEventListener('click', togglePause);
 $('#pGo').addEventListener('click', togglePause);
