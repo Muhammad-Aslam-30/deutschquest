@@ -218,6 +218,72 @@ p{line-height:1.5}
 @keyframes sway{50%{transform:rotate(-2deg)}}
 @media (prefers-reduced-motion:reduce){.lena-svg .eye,.lena-svg .head,#cMic.rec{animation:none}}
 @media (max-height:640px){#lena{width:96px;height:106px;flex-basis:96px}.cafe-name{font-size:18px}}
+/* ---- Schreiben ---- */
+.row2.modes{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.wpanel{max-width:760px}
+.wtop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.wtop>button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:20px;cursor:pointer;flex:0 0 44px}
+.wtop .ct{flex:1;line-height:1.2}
+.wtop .ct b{font-size:19px;display:block}
+.wtop .ct small{color:var(--grey)}
+.wcountbig{font-weight:800;font-size:18px}
+.timer{font-weight:800;font-size:17px;white-space:nowrap}
+.timer.late{color:var(--red)}
+.wprompt .whead{color:var(--grey);font-size:15px;margin-bottom:6px}
+.wprompt .wq{font-size:22px;font-weight:600;line-height:1.5;margin-bottom:8px}
+.whint{color:var(--grey);font-weight:500;font-size:.85em}
+.whint.again{color:var(--red);font-weight:700;margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.chips span{border:2px solid var(--black);background:#FBF3DC;padding:5px 10px;font-weight:600;font-size:17px}
+.wtools{display:flex;gap:10px;margin:6px 0 10px}
+.wtools .btn{width:auto;padding:8px 14px}
+.wtools .btn[aria-pressed="true"]{background:var(--yellow)}
+.uml{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.uml button{min-width:40px;height:40px;border:2px solid var(--black);background:var(--white);font-size:19px;font-weight:600;cursor:pointer;touch-action:manipulation}
+.uml button:active{background:var(--yellow)}
+.winput{display:flex;gap:8px}
+.winput input{flex:1;min-width:0;border:3px solid var(--black);padding:12px;font:inherit;font-size:19px;background:var(--white)}
+.winput .btn{width:auto;padding:10px 18px}
+#wrNext{margin-top:12px}
+.wfb{margin-top:12px;line-height:1.5}
+.wres{font-size:19px;font-weight:800;margin-bottom:8px}
+.wres span{display:block;font-size:15px;font-weight:500;color:var(--black)}
+.wres.ok{color:var(--good)} .wres.almost{color:#A07A12} .wres.bad{color:var(--red)}
+.wlbl{font-weight:700;font-size:15px;margin:8px 0 4px}
+.wdiff{font-size:19px;line-height:1.8;background:#F7F9FA;border:2px solid var(--black);padding:8px 10px}
+.wdiff del{color:var(--red);text-decoration:line-through;background:#FBE4E1;padding:0 3px}
+.wdiff ins{color:var(--good);text-decoration:none;background:#E1F2E8;padding:0 3px;font-weight:700}
+.wdiff .dw{background:#FBF0C9;padding:0 3px;font-weight:700}
+.dlegend del{color:var(--red)} .dlegend ins{color:var(--good);text-decoration:none;font-weight:700} .dlegend .dw{background:#FBF0C9}
+.ecat{display:inline-block;background:var(--black);color:var(--white);font-size:12px;font-weight:700;padding:2px 7px;vertical-align:3px;margin-left:6px}
+.wex{border:2px solid var(--black);background:var(--white);margin-top:8px}
+.wex summary{padding:8px 10px;font-weight:700;cursor:pointer}
+.wex>*:not(summary){margin-left:10px;margin-right:10px}
+.wex .ex{border-left:6px solid var(--blue);background:#EEF2F5;padding:10px 12px;margin:10px}
+.wex .pic{margin:10px auto}
+.wfb .sent{font-size:19px;font-weight:600;margin:10px 0 2px}
+.wtask .wsit{background:#FBF6EC;border-left:6px solid var(--yellow);padding:10px 12px;line-height:1.55;font-size:17px}
+.tpoints{margin:6px 0 10px 22px;line-height:1.6}
+.tpoints li.ok{color:var(--good)} .tpoints li.bad{color:var(--red)}
+#wfMode{margin:12px 0 6px}
+#wfText{width:100%;border:3px solid var(--black);padding:12px;font:inherit;font-size:18px;line-height:1.5;background:var(--white);resize:vertical}
+.wcount{color:var(--grey);font-size:14px;text-align:right}
+.wcount.warn{color:#A07A12;font-weight:700}
+#wfCanvas{display:block;border:3px solid var(--black);touch-action:none;background:#fff;cursor:crosshair}
+.hbtns{display:flex;gap:10px;margin-top:8px}
+.hbtns .btn{width:auto;padding:8px 14px}
+.wbox{border:2px solid var(--black);background:var(--white);padding:10px 12px;margin-top:12px}
+.wbox .wtext{white-space:pre-wrap;line-height:1.6;font-size:17px}
+.wmis{border-top:1px dashed var(--grey);padding:6px 0}
+.wmis del{color:var(--red)} .wmis ins{color:var(--good);text-decoration:none;font-weight:700}
+.tgrade{display:flex;gap:10px;align-items:flex-start;margin:6px 0}
+.tgrade .g{flex:0 0 34px;height:34px;display:flex;align-items:center;justify-content:center;border:2px solid var(--black);font-size:18px}
+.g.gA{background:#CFEBDB} .g.gB{background:#E6F0C8} .g.gC{background:#FBF0C9} .g.gD{background:#FBE0DC}
+.wpick{display:flex;gap:8px;margin-bottom:6px}
+.wpick select{flex:1;min-width:0;border:3px solid var(--black);padding:10px;font:inherit;font-size:16px;background:var(--white)}
+.wpick .btn{width:auto;padding:10px 14px}
+#writeBox h3 small{display:block;font-weight:400}
+.hrow.write{background:#EEF4FB}
 .pic{display:block;width:100%;max-width:360px;margin:12px auto;border:3px solid var(--black);background:var(--white)}
 .item .pic{max-width:260px;margin:10px 0 0}
 #intro #iGo{position:sticky;bottom:0}
@@ -313,6 +379,7 @@ p{line-height:1.5}
       <div class="row2 modes">
         <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner game</b><small>Run through the right gates</small></span></button>
         <button class="btn mode" data-mode="cafe"><span class="mi">☕</span><span><b>Sprach-Café</b><small>Talk with Lena by voice</small></span></button>
+        <button class="btn mode" data-mode="write"><span class="mi">✍️</span><span><b>Schreiben</b><small>Type, write and get corrected</small></span></button>
       </div>
       <div class="levels" id="runBox" style="display:none">
         <div class="levels" id="lvWd">
@@ -343,6 +410,24 @@ p{line-height:1.5}
         <p class="cafe-lead">Pick your level and a topic. Lena will chat with you and slip in <b id="cafeFocusName">weil / dass</b> as often as she can.</p>
         <div class="lvlpick" id="cafeLvl"><span>Level:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
         <div class="topics" id="cafeTopics"></div>
+      </div>
+      <div id="writeBox" style="display:none">
+        <p class="cafe-lead">Writing practice for <b id="wrFocusName">weil / dass</b>: from typing single words to TELC-style letters.</p>
+        <div class="levels">
+          <button class="btn blue" data-wl="l1"><span class="shape"></span><span><b>Level 1: Type the gap</b><small>The runner sentences, but you type the answer</small></span></button>
+          <button class="btn red" data-wl="l2"><span class="shape circle"></span><span><b>Level 2: Build the sentence</b><small>Write whole phrases and clauses yourself</small></span></button>
+          <button class="btn black" data-wl="dik"><span class="shape tri"></span><span><b>🎧 Diktat</b><small>Listen to Lena and write what you hear</small></span></button>
+        </div>
+        <h3>Level 3 · Free writing <small class="tr">Lena corrects with Gemini · type or write by hand</small></h3>
+        <div class="lvlpick" id="wLvl"><span>Level:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
+        <div class="wpick"><select id="wfTopic" aria-label="Topic"></select><button class="btn yellow center" id="wfStart">✍️ Start writing</button></div>
+        <h3>💬 Writing chat with Lena <small class="tr">every message you type gets corrected</small></h3>
+        <div class="wpick"><select id="wcTopic" aria-label="Chat topic"></select><button class="btn center" id="wcStart">💬 Start chat</button></div>
+        <h3>📝 TELC exam training · Schreiben</h3>
+        <div class="lvlpick" id="telcLvl"><span>Exam:</span><button data-tl="A2">telc A2</button><button data-tl="B1">telc B1</button></div>
+        <div class="topics" id="telcTasks"></div>
+        <button class="btn center" id="telcGen" style="margin-top:10px">🎲 New TELC task made by Gemini</button>
+        <p class="note">Practice tasks in the style of the telc exam, with a timer, word count and an assessment by the three telc criteria. A practice estimate, not an official result.</p>
       </div>
       <div class="row2">
         <button class="btn center" id="bWords">★ My words</button>
@@ -437,6 +522,7 @@ p{line-height:1.5}
         <p class="note">Free keys: Google may use these chats to improve its services, so don't share private details with Lena. <button class="linkbtn" id="cKeyDel">Remove key from this device</button></p>
       </div>
       <div id="cChat" class="chat" aria-live="polite"></div>
+      <div class="uml" id="cUml" data-target="cText" style="display:none"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
       <div class="cafe-input">
         <button id="cHelp" title="Hilfe: show me example answers">💡</button>
         <button id="cMic" aria-label="Hold to talk">🎤<small>hold</small></button>
@@ -444,6 +530,55 @@ p{line-height:1.5}
         <button id="cSend" aria-label="Send">➤</button>
       </div>
       <div id="cStatus" class="cstatus" role="status"></div>
+    </div>
+  </section>
+
+  <!-- SCHREIBEN: exercise round (type the gap / build the sentence / Diktat) -->
+  <section id="write" class="screen dim">
+    <div class="panel wpanel">
+      <div class="wtop">
+        <button id="wrBack" aria-label="Back to menu">←</button>
+        <div class="ct"><b id="wrTitle"></b><small id="wrSub"></small></div>
+        <span id="wrCount" class="wcountbig"></span>
+      </div>
+      <div id="wrPrompt" class="wprompt"></div>
+      <div class="wtools" id="wrTools" style="display:none">
+        <button class="btn center" id="wrPlay">🔊 Hör zu</button>
+        <button class="btn center" id="wrSlow" aria-pressed="false">🐢 Langsam</button>
+      </div>
+      <div class="uml" data-target="wrInput"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
+      <div class="winput">
+        <input id="wrInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Schreib hier…">
+        <button class="btn blue center" id="wrCheck">Check</button>
+      </div>
+      <div id="wrFeedback" class="wfb"></div>
+      <button class="btn center" id="wrNext" style="display:none">Weiter →</button>
+    </div>
+  </section>
+
+  <!-- SCHREIBEN: free writing / TELC task (typed or handwritten), corrected by Gemini -->
+  <section id="wfree" class="screen dim">
+    <div class="panel wpanel">
+      <div class="wtop">
+        <button id="wfBack" aria-label="Back to menu">←</button>
+        <div class="ct"><b id="wfTitle"></b><small id="wfSub"></small></div>
+        <span id="wfTimer" class="timer"></span>
+      </div>
+      <div id="wfTask" class="wtask"></div>
+      <div class="tabs" id="wfMode"><button data-wm="type" class="on">⌨️ Type</button><button data-wm="hand">✍️ By hand</button></div>
+      <div id="wfTypeBox">
+        <div class="uml" data-target="wfText"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
+        <textarea id="wfText" rows="9" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Schreib deinen Text hier…"></textarea>
+        <div id="wfCount" class="wcount"></div>
+      </div>
+      <div id="wfHandBox" style="display:none">
+        <canvas id="wfCanvas" aria-label="Handwriting area"></canvas>
+        <div class="hbtns"><button class="btn center" id="wfUndo">↶ Undo</button><button class="btn center" id="wfClear">🗑 Clear</button></div>
+        <p class="note">Write with your finger or a stylus. Lena reads your handwriting with Gemini, then corrects it.</p>
+      </div>
+      <div class="row2"><button class="btn blue center" id="wfCheck">✔ Check with Lena</button><button class="btn center" id="wfNew">🎲 Another topic</button></div>
+      <div id="wfStatus" class="cstatus" role="status"></div>
+      <div id="wfResult"></div>
     </div>
   </section>
 
@@ -948,7 +1083,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural' });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural', wstats:{}, werr:{}, telcLvl:'B1' });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -1333,7 +1468,7 @@ function buildQueue(l, fresh) {
 // every round opens with a briefing of its vocabulary (plus the full rule cards the first time a preposition level is played)
 let lastLevel = 1, pendingFresh = [], pendingRule = null, pendingQueue = [];
 function startLevel(l, customQ) {
-  $('#menuMsg').textContent = '';
+  $('#menuMsg').textContent = ''; pendingWrite = null;
   if (isLocked(l)) { $('#menuMsg').textContent = LOCK_MSG[l]; return; }
   if (l === 0 && !customQ && reviewWords().length === 0) {
     $('#menuMsg').textContent = 'Nothing to review yet. Play a level or star some words first.';
@@ -1583,6 +1718,8 @@ function renderMenu() {
   $('#modeQ').style.display = cafeMode ? 'none' : '';
   $('#runBox').style.display = cafeMode === 'run' ? '' : 'none';
   $('#cafeBox').style.display = cafeMode === 'cafe' ? '' : 'none';
+  $('#writeBox').style.display = cafeMode === 'write' ? '' : 'none';
+  if (cafeMode === 'write') renderWriteBox();
   if (cafeMode === 'cafe') renderCafeBox();
   renderGap();
 }
@@ -1675,7 +1812,7 @@ async function fetchModels(key) {
 const pickModel = async key => (await rankModels(key))[0];
 const REPLY_SCHEMA = { type:'OBJECT', properties:{
   reply_de:{ type:'STRING' }, reply_en:{ type:'STRING' }, grammar_note:{ type:'STRING' },
-  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' } },
+  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' }, feedback_category:{ type:'STRING' } },
   required:['reply_de', 'reply_en', 'grammar_note', 'feedback_ok', 'feedback_corrected', 'feedback_explanation'] };
 function cafeSystem() {
   const t = CAFE_TOPICS.find(x => x[0] === C.topic), lvl = S.cafeLevel || 'A2';
@@ -1686,7 +1823,7 @@ Rules:
 - reply_de: natural, friendly spoken German at ${lvl} level, 1 to 3 short sentences. Use the grammar focus yourself, and always end with ONE question that stays on the topic and makes the learner use the grammar focus. Never use English in reply_de.
 - reply_en: an accurate English translation of reply_de.
 - grammar_note: 1-2 short sentences in simple English explaining the grammar in reply_de, especially the grammar focus (e.g. why the verb is at the end after "weil", or why "dem" is Dativ after "mit").
-- feedback_*: judge ONLY the learner's last message. Ignore missing capital letters and punctuation (it comes from speech recognition). If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
+- feedback_*: judge ONLY the learner's last message. ${C.write ? 'The learner TYPES their messages (this is a writing chat): also check spelling, capital letters of nouns, umlauts and commas, and set feedback_category to the main mistake type, exactly one of: ' + ERR_CATS.join(', ') + ' (or "" if correct).' : 'Ignore missing capital letters and punctuation (it comes from speech recognition).'} If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
 - If the learner writes English or seems lost, help with a simple German sentence they could say.`;
 }
 // Lena's replies are short: skip Gemini's slow "thinking" step where the model allows it
@@ -1874,35 +2011,44 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 // Android's recogniser stops by itself after a short pause, so while the button is still held we simply restart it.
 let rec = null, recOn = false, holding = false, committed = '', sessionFinal = '', finishPending = false, finishTimer = null;
 function micUI(on) { $('#cMic').classList.toggle('rec', on); }
-// Chrome on Android repeats the whole phrase in every result ("ich" → "ich mag" → "ich mag Kaffee") and sometimes again
-// after a restart, so pieces are merged instead of added up, and Android listens one phrase at a time (its reliable mode).
-const IS_ANDROID = /Android/i.test(navigator.userAgent);
+// Chrome on Android repeats the whole phrase in every result ("ich" → "ich mag" → "ich mag Kaffee"), sometimes again after
+// a restart, and sometimes inside one result ("ich ich ich ich"). Android tablets pretend to be desktops, so instead of
+// detecting Android every device listens one phrase at a time (the reliable mode), and every piece of text is cleaned.
 const normSpeech = t => (t || '').replace(/\s+/g, ' ').trim();
 function mergeSpeech(base, add) {
-  base = normSpeech(base); add = normSpeech(add);
+  base = collapseRepeats(base); add = collapseRepeats(add);
   if (!add) return base; if (!base) return add;
   const b = base.toLowerCase(), a = add.toLowerCase();
   if (a.startsWith(b)) return add;                                  // the same phrase, just longer
   if (` ${b} `.includes(` ${a} `)) return base;                     // already have it
   return base + ' ' + add;
 }
-function collapseRepeats(t) {                                        // safety net: "ich mag Kaffee ich mag Kaffee" → "ich mag Kaffee"
-  const w = normSpeech(t).split(' ');
+// "ich mag Kaffee ich mag Kaffee" → "ich mag Kaffee", "ich ich ich ich" → "ich"; a real double like "das das" stays
+const REAL_DOUBLES = /^(das|die|der|den|dem|sehr|ja|nein|so|na|haha)$/i;
+function collapseRepeats(t) {
+  const w = normSpeech(t).split(' ').filter(Boolean), lc = x => x.toLowerCase().replace(/[.,!?]$/, '');
   for (let n = Math.floor(w.length / 2); n >= 2; n--)
     for (let i = 0; i + 2 * n <= w.length;) {
-      if (w.slice(i, i + n).join(' ').toLowerCase() === w.slice(i + n, i + 2 * n).join(' ').toLowerCase()) w.splice(i + n, n); else i++;
+      if (w.slice(i, i + n).map(lc).join(' ') === w.slice(i + n, i + 2 * n).map(lc).join(' ')) w.splice(i + n, n); else i++;
     }
-  return w.join(' ');
+  const out = [];
+  for (let i = 0; i < w.length;) {
+    let j = i; while (j + 1 < w.length && lc(w[j + 1]) === lc(w[i])) j++;
+    const run = j - i + 1;
+    out.push(...(run >= 3 || (run === 2 && !REAL_DOUBLES.test(lc(w[i]))) ? [w[j]] : w.slice(i, j + 1)));
+    i = j + 1;
+  }
+  return out.join(' ');
 }
 let sessionInterim = '';
 function recStart() {
-  rec = new SR(); rec.lang = 'de-DE'; rec.interimResults = true; rec.continuous = !IS_ANDROID; rec.maxAlternatives = 1;
+  rec = new SR(); rec.lang = 'de-DE'; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
   sessionFinal = ''; sessionInterim = '';
   rec.onresult = e => {
     let fin = '', inter = '';
     for (const res of e.results) { if (res.isFinal) fin = mergeSpeech(fin, res[0].transcript); else inter = res[0].transcript; }
     sessionFinal = fin; sessionInterim = inter;
-    $('#cText').value = mergeSpeech(mergeSpeech(committed, fin), inter);
+    $('#cText').value = collapseRepeats(mergeSpeech(mergeSpeech(committed, fin), inter));
   };
   rec.onerror = e => {
     if (e.error === 'no-speech' || e.error === 'aborted') return;
@@ -1948,14 +2094,15 @@ const lenaInner = (de, en, gn) => `<div class="de">${esc(de)}</div>
     <div class="trbox" hidden><div class="en">${esc(en)}</div><div class="gr"><b>Grammar:</b> ${esc(gn)}</div></div>`;
 function lenaBubble(a) {
   const d = addBubble('lena', lenaInner(a.reply_de, a.reply_en, a.grammar_note));
-  d.dataset.de = a.reply_de; say(a.reply_de);
+  d.dataset.de = a.reply_de; if (!C.write) say(a.reply_de);
 }
 // café chats are saved to Past rounds (S.history) as soon as the learner has said something, and updated after every turn
 function cafeLog(mineText, a) {
   if (mineText) C.msgs.push({ r:'u', de:mineText, ok:a.feedback_ok ? 1 : 0, fix:a.feedback_corrected || undefined, why:a.feedback_explanation || undefined });
+  if (mineText && C.write) { const s = wst('chat'); s.t++; if (a.feedback_ok) s.c++; else logErr(a.feedback_category || 'other'); }
   C.msgs.push({ r:'l', de:a.reply_de, en:a.reply_en, gn:a.grammar_note });
   if (!C.entry && mineText) {
-    C.entry = { t:Date.now(), k:'cafe', tp:C.topic, f:C.focus, lv:S.cafeLevel || 'A2', m:C.msgs };
+    C.entry = { t:Date.now(), k:'cafe', tp:C.topic, f:C.focus, lv:S.cafeLevel || 'A2', w:C.write ? 1 : undefined, m:C.msgs };
     S.history = S.history || []; S.history.unshift(C.entry);
     if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
   }
@@ -2017,19 +2164,24 @@ async function saveKey() {
   } catch (e) { $('#cKeyMsg').textContent = (e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : AI_MSG[e.message] || 'Could not connect.') + (e.detail ? ` (Google says: ${e.detail})` : ''); }
 }
 function cafeGreet() { cafeTurn('[Start of the conversation. Greet me warmly, introduce yourself in one short sentence and ask your first question about the topic.]', null); }
-function openCafe(topicId, focus, lvl) {
+function openCafe(topicId, focus, lvl, write) {
   const t = CAFE_TOPICS.find(x => x[0] === topicId); if (!t) return;
   if (lvl) S.cafeLevel = lvl;
   audioCtx(); ttsDown = false; voiceBtn();          // unlock audio while we still have the tap
   if (!modelCache && lsGet(AI_KEY)) rankModels(lsGet(AI_KEY)).catch(() => {});
-  Object.assign(C, { topic:topicId, focus:focus || topicKey(), hist:[], busy:false, msgs:[], entry:null, model:null });
-  $('#cTopic').textContent = `${t[1]} ${t[2]}`;
-  $('#cFocus').textContent = `${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
+  Object.assign(C, { topic:topicId, focus:focus || topicKey(), hist:[], busy:false, msgs:[], entry:null, model:null, write:!!write });
+  $('#cTopic').textContent = `${C.write ? '✍️ ' : t[1] + ' '}${t[2]}`;
+  $('#cFocus').textContent = `${C.write ? 'Writing chat · ' : ''}${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
+  $('#cMic').style.display = C.write ? 'none' : '';
+  $('#cUml').style.display = C.write ? '' : 'none';
+  $('#cText').placeholder = C.write ? 'Schreib auf Deutsch… Lena checks spelling too' : 'Hold 🎤 and speak, or type here…';
+  ['autocorrect', 'autocapitalize'].forEach(a => C.write ? $('#cText').setAttribute(a, 'off') : $('#cText').removeAttribute(a));
+  $('#cText').spellcheck = !C.write;
   if (!$('#lena svg')) $('#lena').innerHTML = LENA_SVG;
   chatEl().innerHTML = ''; cafeStatus('');
   $('#cSlow').setAttribute('aria-pressed', C.slow);
   show('cafe');
-  if (!SR) addBubble('sys', 'Voice input needs Chrome (Android or computer). You can still type your answers.');
+  if (!SR && !C.write) addBubble('sys', 'Voice input needs Chrome (Android or computer). You can still type your answers.');
   if (!lsGet(AI_KEY)) { showKeySetup(true); addBubble('sys', 'Hallo! To talk with Lena, connect a free Gemini key once (steps above).'); }
   else { showKeySetup(false); cafeGreet(); }
 }
@@ -2194,6 +2346,460 @@ function guideHTML(topic) {
   return guideCache[topic];
 }
 
+/* ================= Schreiben (writing) =================
+   Level 1 type the gap, Level 2 build the phrase/clause, Diktat: checked offline (no key, instant).
+   Free writing, TELC tasks, handwriting and the writing chat: corrected by Gemini. */
+const ERR_INFO = { // category: [label, tip, Tamil tip]
+  verbpos:['Verb position', 'In a weil / dass clause the conjugated verb goes to the very end; in a main clause it stands in 2nd place.', 'weil / dass வாக்கியத்தில் வினைச்சொல் கடைசியில்; சாதாரண வாக்கியத்தில் 2-வது இடத்தில்.'],
+  wordorder:['Word order', 'Keep the verb in its place and put time before place: Ich fahre morgen nach Berlin.', 'சொல் வரிசை: நேரம் முதலில், இடம் பிறகு.'],
+  conj:['weil / dass / denn', 'weil = because (verb last), denn = because (verb 2nd), dass = that (verb last).', 'weil, denn = ஏனென்றால்; dass = என்று.'],
+  case:['Article / case', 'Check which case is needed: Akkusativ → den, Dativ → dem / der.', 'எந்த case தேவை என்று பார்: Akk → den, Dat → dem / der.'],
+  prep:['Preposition', 'Learn prepositions in whole phrases: mit dem Bus, zum Arzt, nach Hause, in die Stadt.', 'முன்னிடைச்சொற்களை முழு சொற்றொடராக கற்றுக்கொள்.'],
+  ending:['Adjective ending', 'After der/die/das: -e / -en. After ein: -er / -es where ein has no ending. No article: the der-ending.', 'der/die/das பின் -e/-en; ein பின் -er/-es; article இல்லை → der முடிவு.'],
+  gender:['der / die / das', 'Learn every noun with its article: der Tisch, die Lampe, das Buch.', 'ஒவ்வொரு பெயர்ச்சொல்லையும் அதன் article-உடன் கற்றுக்கொள்.'],
+  verbform:['Verb form', 'Match the verb to the subject: ich lerne, du lernst, er lernt, wir lernen.', 'எழுவாய்க்கு ஏற்ப வினை முடிவு: ich lerne, du lernst.'],
+  spelling:['Spelling', 'Check the letters: dass vs. das, ie vs. ei, double letters.', 'எழுத்துக்களை கவனமாக பார்: dass / das, ie / ei.'],
+  capital:['Capital letters', 'Every German noun starts with a capital letter: der Hund, die Arbeit, das Essen.', 'ஜெர்மனில் எல்லா பெயர்ச்சொற்களும் பெரிய எழுத்தில் தொடங்கும்.'],
+  umlaut:['ä ö ü ß', 'Use the ä ö ü ß buttons: schön, für, Straße.', 'ä ö ü ß பொத்தான்களை பயன்படுத்து.'],
+  punct:['Comma', 'Always a comma before weil, dass, denn and aber.', 'weil, dass, denn, aber முன் கமா போடு.'],
+  vocab:['Word choice', 'A word that doesn’t fit here: learn it inside a whole sentence.', 'பொருந்தாத சொல்: முழு வாக்கியத்தில் கற்றுக்கொள்.'],
+  other:['Other', 'Read the correction and say the sentence out loud once.', 'திருத்தத்தை படித்து ஒருமுறை சத்தமாக சொல்.']
+};
+const ERR_CATS = Object.keys(ERR_INFO);
+const WLV = { l1:'Type the gap', l2:'Build the sentence', dik:'Diktat', free:'Free writing', telc:'TELC Schreiben' };
+function logErr(cat) { S.werr = S.werr || {}; const c = ERR_INFO[cat] ? cat : 'other'; S.werr[c] = (S.werr[c] || 0) + 1; }
+const wst = k => { S.wstats = S.wstats || {}; return (S.wstats[k] = S.wstats[k] || { c:0, t:0 }); };
+const errTag = cat => cat && ERR_INFO[cat] ? `<span class="ecat">${ERR_INFO[cat][0]}</span>` : '';
+
+// ---- checking typed text ----
+const FOLD = s => s.replace(/ß/g, 'ss').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue');
+const wStrip = t => normSpeech(t).replace(/[„“”"»«]/g, '').replace(/[.,!?;:]/g, ' ').replace(/\s+/g, ' ').trim();
+// ok / almost (accepted, with a note) / wrong. Punctuation and a capital at the sentence start only give notes;
+// a noun written in small letters counts as a mistake (it is a real German spelling rule).
+function checkTyped(typed, answer, atStart) {
+  const y = wStrip(typed), a = wStrip(answer);
+  if (!y) return { st:'empty' };
+  if (y === a) return { st:'ok' };
+  if (FOLD(y) === FOLD(a)) return { st:'almost', cat:'umlaut', note:'Accepted, but write ä, ö, ü and ß instead of ae, oe, ue or ss (use the buttons).' };
+  if (FOLD(y).toLowerCase() === FOLD(a).toLowerCase()) {
+    const yw = y.split(' '), aw = a.split(' ');
+    const nounSmall = aw.some((w, i) => /^[A-ZÄÖÜ]/.test(w) && /^[a-zäöüß]/.test(yw[i] || '') && !(i === 0 && atStart));
+    if (nounSmall) return { st:'wrong', cat:'capital', note:'Only the capital letter is missing: German nouns always start with a capital letter.' };
+    return { st:'almost', note:'Accepted. Just watch the capital letters.' };
+  }
+  return { st:'wrong' };
+}
+// word-by-word comparison: red = wrong/extra, green = missing, yellow = right word, wrong letters/capitals
+function wordDiff(typed, answer) {
+  const A = normSpeech(typed).split(' ').filter(Boolean), B = normSpeech(answer).split(' ').filter(Boolean);
+  const k = w => FOLD(w.replace(/[.,!?;:„“”"]/g, '')).toLowerCase();
+  const n = A.length, m = B.length, L = Array.from({ length:n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = k(A[i]) === k(B[j]) ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  let i = 0, j = 0; const out = [];
+  while (i < n && j < m) {
+    if (k(A[i]) === k(B[j])) { const same = A[i].replace(/[.,!?;:]/g, '') === B[j].replace(/[.,!?;:]/g, ''); out.push(same ? `<span>${esc(B[j])}</span>` : `<span class="dw" title="you wrote ${esc(A[i])}">${esc(B[j])}</span>`); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) out.push(`<del>${esc(A[i++])}</del>`);
+    else out.push(`<ins>${esc(B[j++])}</ins>`);
+  }
+  while (i < n) out.push(`<del>${esc(A[i++])}</del>`);
+  while (j < m) out.push(`<ins>${esc(B[j++])}</ins>`);
+  return `<div class="wdiff">${out.join(' ')}</div>`;
+}
+const DIFF_LEGEND = '<div class="note dlegend"><del>red</del> = wrong or extra · <ins>green</ins> = missing · <span class="dw">yellow</span> = letters / capitals</div>';
+
+// ---- building writing exercises from the game's sentences ----
+const fullW = w => `${w.m}, ${w.c} ${w.b.join(' ')}${w.p || '.'}`;
+const fillGap = x => x.q.replace('___', x.a);
+function prepPhrase(p) {
+  const [before, after] = p.q.split('___'), bw = before.trim().split(/\s+/).filter(Boolean), aw = after.trim().split(/\s+/).filter(Boolean);
+  const choose = p.o.includes(p.pr), last = bw[bw.length - 1] || '';
+  const lead = !choose && last.toLowerCase() === p.pr ? last + ' ' : '';
+  const tail = []; for (const w of aw) { const c = w.replace(/[.,!?]$/, ''); tail.push(c); if (/^[A-ZÄÖÜ]/.test(c) || /[.,!?]$/.test(w) || tail.length >= 3) break; }
+  const n = NOUN[p.id];
+  return { text:(lead + p.a + ' ' + tail.join(' ')).trim(), hint:`${choose ? p.o.join(' / ') : p.pr} + ${n ? n[0] : tail.join(' ')}` };
+}
+function adjPhrase(x) {
+  const bw = x.q.split('___')[0].trim().split(/\s+/).filter(Boolean), art = x.k === 'strong' ? '' : bw[bw.length - 1];
+  const base = x.k === 'weak' ? GEN[x.g][1] : x.k === 'mixed' ? art.toLowerCase().replace(/^(k?ein|mein|dein|sein)(e|em|en|er|es)?$/, '$1') : 'no article';
+  return { text:(art ? art + ' ' : '') + x.a + ' ' + nounOf(x), hint:`${base} + ${ADJV[x.adj][0]} + ${ANOUN[x.n][0].replace(/^(der|die|das) /, '').replace(' (pl.)', '')}` };
+}
+function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap (TRAPS index), p = preposition, a = adjective
+  const src = kind === 't' ? TRAPS[id] : BYID[id]; if (!src) return null;
+  const it = { key:`${lv}:${kind}:${id}`, lv, kind, id, src, atStart:false };
+  const gap = h => h.replace('___', '<span class="gap">?</span>');
+  it.full = kind === 'w' ? fullW(src) : kind === 't' ? src.q.replace('___', src.a) : fillGap(src);
+  if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; return it; }
+  if (kind === 't') { it.prompt = gap(esc(src.q)); it.answer = src.a; it.hint = 'Type the missing word: das, dass, weil or denn?'; return it; }
+  if (kind === 'w') {
+    if (lv === 'l1') { it.prompt = `${esc(src.m)}, <span class="gap">?</span> ${esc(src.b.join(' '))}${src.p || '.'}`; it.answer = src.c; it.hint = 'Type the missing word: weil or dass?'; }
+    else { it.prompt = `${esc(src.m)}, <span class="gap">…</span>${src.p || '.'}`; it.chips = shuffle([src.c, ...src.b]); it.answer = `${src.c} ${src.b.join(' ')}`; it.hint = 'Write the rest of the sentence with these words. Where does the verb go?'; }
+    return it;
+  }
+  if (lv === 'l1') {
+    it.prompt = gap(esc(src.q)) + (kind === 'a' ? ` <span class="whint">(${esc(ADJV[src.adj][0])})</span>` : '');
+    it.answer = src.a; it.atStart = src.q.startsWith('___');
+    it.hint = kind === 'a' ? 'Type the adjective with the right ending.' : src.o.includes(src.pr) ? 'Type the missing preposition.' : 'Type the missing word (article or short form).';
+    return it;
+  }
+  const ph = kind === 'a' ? adjPhrase(src) : prepPhrase(src);
+  it.answer = ph.text; it.atStart = it.full.startsWith(ph.text);
+  it.prompt = esc(it.full.replace(ph.text, '___')).replace('___', '<span class="gap">…</span>') + ` <span class="whint">(${esc(ph.hint)})</span>`;
+  it.hint = kind === 'a' ? 'Write article + adjective + noun with the right endings.' : 'Write the preposition with the right article and the noun.';
+  return it;
+}
+function writeQueue(lv, topic) {
+  if (topic === 'wd') {
+    const items = pickWords(lv === 'l1' ? 6 : 8, []).map(w => writeItem(lv, 'w', w.id));
+    if (lv === 'l1') items.push(...shuffle(TRAPS.map((t, i) => i)).slice(0, 2).map(i => writeItem(lv, 't', i)));
+    return shuffle(items.filter(Boolean));
+  }
+  return pickPrep(topic === 'prep' ? P : A, 8).map(x => writeItem(lv, topic === 'prep' ? 'p' : 'a', x.id)).filter(Boolean);
+}
+const asQ = it => it.kind === 'w' ? gateQ(it.src) : it.kind === 't' ? trapQ(it.src) : it.kind === 'p' ? prepQ(it.src) : adjQ(it.src);
+// which kind of mistake was it? (offline guess, used for "your typical mistakes")
+function classifyWrite(it, typed) {
+  const y = wStrip(typed).toLowerCase(), a = wStrip(it.answer).toLowerCase(), yw = y.split(' '), aw = a.split(' ');
+  if (it.kind === 't' || (it.kind === 'w' && it.lv === 'l1')) return /^da(ss|ß|s)$/.test(y) && /^dass?$/.test(a) ? 'spelling' : 'conj';
+  if (it.lv === 'dik') return 'spelling';
+  if (it.kind === 'w') { const same = [...yw].sort().join(' ') === [...aw].sort().join(' '); return same || yw[yw.length - 1] !== aw[aw.length - 1] ? 'verbpos' : 'spelling'; }
+  if (it.kind === 'p') { if (it.lv === 'l1') return /^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|im|ins|am|ans|zum|zur|vom|beim)$/.test(y) ? 'case' : 'prep'; return yw[0] !== aw[0] && !/^(im|ins|am|ans|zum|zur)$/.test(aw[0]) ? 'prep' : 'case'; }
+  const stem = ADJV[it.src.adj][0].toLowerCase();
+  if (it.lv === 'l1') return y.startsWith(stem) ? 'ending' : 'spelling';
+  const artWrong = it.src.k !== 'strong' && yw[0] !== aw[0];
+  return artWrong ? 'case' : yw.some(w => w.startsWith(stem)) ? 'ending' : 'spelling';
+}
+// explanation pieces for one exercise (same pictures, rules and tricks as the runner)
+function explainOf(it) {
+  const s = it.src;
+  if (it.kind === 'w') return { sent:sentHTML(s), tr:s.t, ex:it.lv === 'l1' ? (s.c === 'weil' ? EX.weil : EX_DASS_MAIN) : EX.order, mn:(VOC[s.id] || [])[0], tmn:TA_W[s.id], pic:'', star:s.id };
+  if (it.kind === 't') return { sent:trapHTML(s), tr:s.t, ex:EX[s.ex], mn:CONJ[s.a][2], tmn:TA_C[s.a], pic:'', star:null };
+  if (it.kind === 'p') return { sent:prepHTML(s), tr:s.t, ex:EXP[s.k], mn:PV[s.pr][2], tmn:TA_P[s.pr], pic:picSVG(s), star:s.id, why:`<b>${s.pt === 'wech' ? (s.k === 'wo' ? 'Wo?' : 'Wohin?') + ' → ' + caseName(s) : esc(s.pr) + ' + ' + caseName(s)}</b>` };
+  return { sent:adjHTML(s), tr:s.t, ex:ADJ_RULE[s.k], mn:(ADJV[s.adj] || [])[3], tmn:(ADJV[s.adj] || [])[4], pic:picSVG(s), star:s.id, why:adjWhy(s) };
+}
+function explainHTML(it, open) {
+  const e = explainOf(it);
+  return `<p class="sent">${e.sent} <button class="linkbtn" data-say="${esc(it.full)}">🔊</button></p><div class="tr">${esc(e.tr)}</div>
+    <details class="wex"${open ? ' open' : ''}><summary>Why? Rule, picture and memory tricks</summary>${e.why ? `<div class="w">${e.why}</div>` : ''}${e.pic}<div class="ex">${e.ex}</div>
+    ${e.mn ? `<div class="mn">💡 ${esc(e.mn)}</div>` : ''}${taMn(e.tmn)}${e.star ? `<div style="text-align:right;margin-top:6px">${starBtn(e.star)}</div>` : ''}</details>`;
+}
+
+// ---- a writing round (Level 1, Level 2, Diktat) ----
+let WR = null, pendingWrite = null;
+function startWriting(lv, items) {
+  const topic = topicKey();
+  items = items || writeQueue(lv, topic);
+  pendingWrite = { lv, topic, items };
+  $('#iTitle').textContent = 'Vor dem Schreiben';
+  $('#iLead').textContent = `${WLV[lv]} · here are the words and memory tricks for these ${items.length} sentences.`;
+  $('#iNote').textContent = lv === 'dik' ? 'In the Diktat you only hear the sentences, so read the words now.' : 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
+  $('#iCards').innerHTML = briefingHTML(items.map(asQ), []);
+  show('intro'); $('#intro').scrollTop = 0; $('#iGo').focus();
+}
+function beginWrite() {
+  const p = pendingWrite; pendingWrite = null;
+  WR = { lv:p.lv, topic:p.topic, items:p.items.slice(), i:0, res:[], done:false, slow:false };
+  audioCtx(); show('write'); renderWriteItem();
+}
+function renderWriteItem() {
+  const it = WR.items[WR.i]; WR.done = false;
+  $('#wrTitle').textContent = `✍️ ${WLV[WR.lv]}`;
+  $('#wrSub').textContent = GUIDE[WR.topic].name;
+  $('#wrCount').textContent = `${WR.i + 1} / ${WR.items.length}`;
+  $('#wrPrompt').innerHTML = (it.retry ? '<div class="whint again">↻ Again: you missed this one.</div>' : '') + `<div class="whead">${it.hint}</div>`
+    + (it.prompt ? `<div class="wq">${it.prompt}</div>` : '') + (it.chips ? `<div class="chips">${it.chips.map(c => `<span>${esc(c)}</span>`).join('')}</div>` : '');
+  $('#wrTools').style.display = WR.lv === 'dik' ? '' : 'none';
+  $('#wrSlow').setAttribute('aria-pressed', WR.slow);
+  const inp = $('#wrInput'); inp.value = ''; inp.disabled = false;
+  $('#wrFeedback').innerHTML = ''; $('#wrNext').style.display = 'none'; $('#wrCheck').style.display = '';
+  $('#write').scrollTop = 0; setTimeout(() => inp.focus(), 50);
+  if (WR.lv === 'dik') setTimeout(playDik, 300);
+}
+function playDik() { if (!WR) return; const it = WR.items[WR.i]; C.slow = WR.slow; say(it.answer); }
+function checkWrite() {
+  if (!WR || WR.done) return;
+  const it = WR.items[WR.i], typed = $('#wrInput').value, r = checkTyped(typed, it.answer, it.atStart);
+  if (r.st === 'empty') { $('#wrInput').focus(); return; }
+  WR.done = true; $('#wrInput').disabled = true;
+  const ok = r.st !== 'wrong', cat = r.cat || (ok ? null : classifyWrite(it, typed)), first = !it.retry;
+  if (cat && (r.st === 'wrong' || cat === 'umlaut')) logErr(cat);
+  if (first) { const s = wst(WR.lv); s.t++; if (ok) s.c++; }
+  if (it.kind !== 't') grade(it.id, ok);
+  WR.res.push({ i:it.key, y:typed, st:r.st, r:it.retry ? 1 : undefined, cat:cat || undefined });
+  if (!ok && first) WR.items.push(Object.assign({}, it, { retry:true }));
+  const head = r.st === 'ok' ? '<div class="wres ok">✓ Richtig!</div>' : r.st === 'almost' ? `<div class="wres almost">≈ Richtig! <span>${esc(r.note)}</span></div>`
+    : `<div class="wres bad">✗ Not quite ${errTag(cat)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</div>`;
+  $('#wrFeedback').innerHTML = head + (r.st === 'ok' ? '' : `<div class="wlbl">Your answer → the correct one:</div>${wordDiff(typed, it.answer)}${DIFF_LEGEND}`)
+    + (cat && ERR_INFO[cat] && !ok ? `<div class="tip">💡 ${ERR_INFO[cat][1]}${taMn(ERR_INFO[cat][2])}</div>` : '') + explainHTML(it, !ok);
+  $('#wrCheck').style.display = 'none'; $('#wrNext').style.display = '';
+  $('#wrNext').textContent = WR.i + 1 < WR.items.length ? 'Weiter →' : 'Finish';
+  save(); setTimeout(() => $('#wrNext').focus(), 30);
+}
+function nextWrite() {
+  if (!WR) return;
+  if (WR.i + 1 < WR.items.length) { WR.i++; renderWriteItem(); return; }
+  endWrite();
+}
+function endWrite() {
+  const firsts = WR.res.filter(x => !x.r), c = firsts.filter(x => x.st !== 'wrong').length;
+  S.history = S.history || [];
+  S.history.unshift({ t:Date.now(), k:'write', x:WR.lv, tp:WR.topic, c, a:firsts.length, it:WR.res });
+  if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
+  bumpStreak(); save(); keepStorage();
+  const wrong = firsts.filter(x => x.st === 'wrong');
+  $('#wrCount').textContent = ''; $('#wrTools').style.display = 'none'; $('#wrCheck').style.display = 'none'; $('#wrNext').style.display = 'none';
+  $('#wrInput').disabled = true;
+  $('#wrPrompt').innerHTML = `<div class="wq">${c === firsts.length ? 'Perfekt! 🎉' : 'Fertig!'} <b>${c} / ${firsts.length}</b> right on the first try.</div>`;
+  $('#wrFeedback').innerHTML = (wrong.length ? `<h3>To practise</h3>${wrong.map(x => { const it = writeItemFromKey(x.i); return it ? `<div class="item"><div><div class="s">${explainOf(it).sent}</div><div class="w">You wrote: <i>${esc(x.y)}</i> ${errTag(x.cat)}</div></div></div>` : ''; }).join('')}` : '')
+    + `<div class="row2"><button class="btn blue center" id="wrAgain">Again</button><button class="btn center" id="wrMenu">Menu</button></div>`;
+  $('#wrAgain').onclick = () => startWriting(WR.lv); $('#wrMenu').onclick = () => { WR = null; show('menu'); };
+}
+const writeItemFromKey = key => { const [lv, kind, id] = key.split(':'); return writeItem(lv, kind, kind === 't' ? +id : id); };
+
+
+// ---- Gemini for writing: one structured request with the same timeouts / backup models as the café ----
+async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000, temperature = 0.4 }) {
+  const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
+  const ranked = await rankModels(key), now = Date.now();
+  const all = [C.model || lsGet(AI_MODEL) || ranked[0], ...ranked].filter((m, i, arr) => m && arr.indexOf(m) === i);
+  const order = [...all.filter(m => !(resting[m] > now)), ...all.filter(m => resting[m] > now)].slice(0, 4);
+  const deadline = now + budget; let useSchema = true, lastErr = null;
+  const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
+    body:JSON.stringify({ systemInstruction:{ parts:[{ text:system + (useSchema ? '' : '\nAnswer ONLY with one JSON object, no other text.') }] }, contents:[{ role:'user', parts }],
+      generationConfig:Object.assign({ temperature, maxOutputTokens:8192, responseMimeType:'application/json' }, useSchema ? { responseSchema:schema } : {},
+        THINK[thinkIdx[model] || 0] ? { thinkingConfig:THINK[thinkIdx[model] || 0] } : {}) }) }, wait);
+  for (const model of order) {
+    for (let k = 0; k < 4; k++) {
+      if (Date.now() > deadline) throw lastErr || new AIError('busy');
+      let r; try { r = await call(model); } catch (e) { if (e.message === 'timeout') { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); break; } throw e; }
+      if (r.ok) {
+        const d = await r.json(), cand = (d.candidates || [])[0] || {};
+        const txt = ((cand.content || {}).parts || []).filter(p => !p.thought).map(p => p.text || '').join('').replace(/^```(json)?\s*|\s*```$/g, '');
+        try { return JSON.parse(txt); } catch (e) { lastErr = new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); break; }
+      }
+      const err = await apiError(r);
+      if (r.status === 400 && /thinking/i.test(err.detail) && (thinkIdx[model] || 0) < THINK.length - 1) { thinkIdx[model] = (thinkIdx[model] || 0) + 1; continue; }
+      if (r.status === 400 && useSchema && /schema|response_?mime|json|enum/i.test(err.detail)) { useSchema = false; continue; }
+      if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Date.now() + (r.status === 404 ? 3600000 : REST_MS); lastErr = err; break; }
+      throw err;
+    }
+  }
+  throw lastErr || new AIError('busy');
+}
+function aiStatus(el, e, retry) {
+  el.textContent = (AI_MSG[e.message] || 'Something went wrong. Please try again.') + (e.detail ? ` (Google says: ${e.detail})` : '');
+  el.classList.add('err');
+  if (e.message === 'nokey' || e.message === 'key') { el.textContent = e.message === 'nokey' ? 'Lena needs your Gemini key to correct texts. Open the Sprach-Café once and connect it (⚙), then come back.' : el.textContent; return; }
+  if (retry) { const b = document.createElement('button'); b.className = 'linkbtn'; b.textContent = '↻ Try again'; b.style.marginLeft = '8px'; b.onclick = () => { el.textContent = ''; el.classList.remove('err'); retry(); }; el.appendChild(b); }
+}
+
+// ---- tasks ----
+const FREE_PROMPTS = {
+  familie:'Erzähl von deiner Familie: Wer gehört dazu? Was macht ihr gern zusammen?', arbeit:'Beschreib deine Arbeit oder deinen Traumjob.',
+  freizeit:'Was machst du in deiner Freizeit gern – und warum?', essen:'Was isst und trinkst du gern? Beschreib dein Lieblingsessen.',
+  reisen:'Erzähl von einer Reise oder von deinem Traumurlaub.', wohnen:'Beschreib deine Wohnung oder dein Zimmer.',
+  gesundheit:'Was machst du für deine Gesundheit?', einkaufen:'Wo und was kaufst du gern ein?',
+  wetter:'Welches Wetter und welche Jahreszeit magst du – und warum?', lernen:'Warum lernst du Deutsch, und wie lernst du?',
+  freunde:'Erzähl von einem guten Freund oder einer guten Freundin.', stadt:'Beschreib deine Stadt: Was gibt es dort?', frei:'Schreib über ein Thema, das dich interessiert.'
+};
+const FOCUS_TASK = { wd:'Use weil at least twice and dass at least once.', prep:'Use at least four prepositions (e.g. mit, für, in, auf, zu).', adj:'Use at least four adjectives in front of nouns (e.g. ein netter Kollege, die alte Wohnung).' };
+const freeTask = topic => { const t = CAFE_TOPICS.find(x => x[0] === topic) || CAFE_TOPICS[0];
+  return { kind:'free', tp:t[0], lvl:S.cafeLevel || 'A2', title:`${t[1]} ${t[2]}`, situation:FREE_PROMPTS[t[0]], points:[FOCUS_TASK[topicKey()], 'Write 4–6 sentences.'], words:[40, 90], minutes:0 }; };
+// TELC practice tasks (exam style; not official exam material)
+const TELC = [
+  { id:'a2_geburtstag', lvl:'A2', reg:'informal', title:'Einladung zum Geburtstag', situation:'Deine Freundin Anna schreibt dir: „Hallo! Am Samstag feiere ich meinen Geburtstag. Kommst du? Liebe Grüße, Anna“',
+    points:['Bedanke dich für die Einladung.', 'Schreib, dass du leider nicht kommen kannst, und warum.', 'Mach einen Vorschlag für ein anderes Treffen.'] },
+  { id:'a2_kurs', lvl:'A2', reg:'formal', title:'Entschuldigung beim Deutschkurs', situation:'Sie können morgen nicht zum Deutschkurs kommen. Schreiben Sie Ihrer Lehrerin, Frau Weber, eine E-Mail.',
+    points:['Entschuldigen Sie sich.', 'Schreiben Sie, warum Sie nicht kommen können.', 'Fragen Sie nach den Hausaufgaben.'] },
+  { id:'a2_wohnung', lvl:'A2', reg:'informal', title:'Die neue Wohnung', situation:'Du bist in eine neue Wohnung umgezogen. Schreib deinem Freund Tom eine kurze E-Mail.',
+    points:['Wo ist die Wohnung?', 'Wie ist die Wohnung (Zimmer, groß oder klein …)?', 'Lade Tom zu dir ein.'] },
+  { id:'a2_arzt', lvl:'A2', reg:'formal', title:'Termin beim Arzt absagen', situation:'Sie haben morgen um 10 Uhr einen Termin bei Dr. Müller, aber Sie können nicht kommen.',
+    points:['Sagen Sie den Termin ab.', 'Nennen Sie den Grund.', 'Bitten Sie um einen neuen Termin.'] },
+  { id:'b1_urlaub', lvl:'B1', reg:'informal', title:'Brief von Sabine: Urlaubstipps', situation:'Deine Freundin Sabine schreibt: „Ich habe lange nichts von dir gehört! Wie geht es dir? Ich plane meinen Sommerurlaub und weiß noch nicht, wohin. Du warst doch letztes Jahr im Urlaub – wie war es? Kannst du mir etwas empfehlen? Viele Grüße, Sabine“',
+    points:['Wie es dir geht', 'Wo du im Urlaub warst und wie es war', 'Was du ihr empfiehlst und warum', 'Ob ihr euch bald treffen könnt'] },
+  { id:'b1_beschwerde', lvl:'B1', reg:'formal', title:'Beschwerde an die Sprachschule', situation:'Sie haben bei der Sprachschule „Lingua“ einen Deutschkurs gebucht. Leider sind Sie nicht zufrieden. Schreiben Sie an die Schulleitung.',
+    points:['Warum Sie schreiben', 'Was nicht gut ist (z. B. Raum, Gruppengröße, Kurszeiten)', 'Was Sie von der Schule erwarten', 'Wie und wann man Sie erreichen kann'] },
+  { id:'b1_umzug', lvl:'B1', reg:'informal', title:'Ein Freund zieht in deine Stadt', situation:'Dein Freund Jonas schreibt: „Stell dir vor, ich habe eine neue Stelle in deiner Stadt! Ich ziehe im Sommer um. Wie ist es dort so? Bis bald, Jonas“',
+    points:['Wie das Leben in deiner Stadt ist', 'Wo man gut wohnen kann', 'Was man in der Freizeit machen kann', 'Welche Hilfe du anbieten kannst'] },
+  { id:'b1_wohnung', lvl:'B1', reg:'formal', title:'Anfrage zu einer Wohnung', situation:'Sie lesen die Anzeige: „Schöne 2-Zimmer-Wohnung im Zentrum, 65 m², ab 1. März frei. Hausverwaltung Klein.“ Schreiben Sie der Hausverwaltung.',
+    points:['Warum Sie schreiben', 'Fragen zur Miete und zu den Nebenkosten', 'Wann Sie die Wohnung besichtigen können', 'Etwas über sich (Beruf, Familie, Haustiere …)'] }
+].map(t => Object.assign({ kind:'telc', words:t.lvl === 'A2' ? [30, 50] : [80, 120], minutes:t.lvl === 'A2' ? 20 : 30 }, t));
+const TASK_SCHEMA = { type:'OBJECT', properties:{ title:{ type:'STRING' }, register:{ type:'STRING' }, situation:{ type:'STRING' }, points:{ type:'ARRAY', items:{ type:'STRING' } } }, required:['title', 'register', 'situation', 'points'] };
+async function telcGenerate(lvl) {
+  const n = lvl === 'A2' ? 3 : 4;
+  const t = await geminiJSON({ temperature:0.9, schema:TASK_SCHEMA, parts:[{ text:'Please create a new task.' }],
+    system:`Create ONE new practice task in the style of the telc Deutsch ${lvl} exam, part "Schreiben". ${lvl === 'A2' ? 'A short message or e-mail (about 30–50 words) about an everyday situation.' : 'A reply to a personal or semi-formal letter / e-mail (about 80–120 words).'}
+Write the situation in German (for an informal task the incoming message from a friend in quotation marks; for a formal task a short description or an advert). register: "informal" (du) or "formal" (Sie). points: exactly ${n} short German points (Leitpunkte) the learner must cover. title: a short German title. Use everyday topics (work, housing, holidays, courses, appointments, invitations, complaints).` });
+  return { kind:'telc', id:'gen_' + Date.now(), gen:1, lvl, reg:t.register === 'formal' ? 'formal' : 'informal', title:t.title, situation:t.situation, points:(t.points || []).slice(0, n), words:lvl === 'A2' ? [30, 50] : [80, 120], minutes:lvl === 'A2' ? 20 : 30 };
+}
+
+// ---- correcting a text ----
+const GRADE = { type:'OBJECT', properties:{ grade:{ type:'STRING' }, note:{ type:'STRING' } }, required:['grade', 'note'] };
+const WRITE_SCHEMA = { type:'OBJECT', properties:{
+  transcript:{ type:'STRING' }, corrected:{ type:'STRING' }, improved:{ type:'STRING' }, summary:{ type:'STRING' }, focus_note:{ type:'STRING' },
+  mistakes:{ type:'ARRAY', items:{ type:'OBJECT', properties:{ wrong:{ type:'STRING' }, right:{ type:'STRING' }, why:{ type:'STRING' }, cat:{ type:'STRING' } }, required:['wrong', 'right', 'why', 'cat'] } },
+  telc:{ type:'OBJECT', properties:{ aufgabe:GRADE, gestaltung:GRADE, richtigkeit:GRADE, points:{ type:'ARRAY', items:{ type:'OBJECT', properties:{ point:{ type:'STRING' }, covered:{ type:'BOOLEAN' } }, required:['point', 'covered'] } } } }
+}, required:['transcript', 'corrected', 'improved', 'summary', 'focus_note', 'mistakes'] };
+function writeSystem(task, hand) {
+  const lvl = task.lvl || S.cafeLevel || 'A2', telc = task.kind === 'telc';
+  return `You are an experienced, friendly German teacher${telc ? ' and telc examiner' : ''}. A learner (level ${lvl}) wrote a text. Correct it carefully and kindly.
+Grammar the learner is practising: ${CAFE_FOCUS[task.focus || topicKey()].name}.
+Task: ${task.title}. ${task.situation} ${telc ? `Register: ${task.reg === 'formal' ? 'formal (Sie)' : 'informal (du)'}. ` : ''}Points to cover: ${task.points.join(' | ')}.
+Rules:
+${hand ? '- transcript: exactly what is handwritten in the image, line by line, keeping ALL mistakes (do not fix anything here). Then correct this transcript.\n' : '- transcript: "" (empty).\n'}- corrected: the learner's text with ONLY the necessary corrections (grammar, word order, spelling, capital letters of nouns, umlauts, commas). Keep their words, ideas and line breaks as far as possible.
+- improved: a natural, well-written version at level ${lvl}, close to the learner's ideas${telc ? ', with a suitable greeting and closing for the register' : ''}.
+- mistakes: one entry per real mistake (not style): wrong = the learner's words, right = the correction, why = a short simple English explanation, cat = exactly one of: ${ERR_CATS.join(', ')}.
+- summary: 2–3 short, encouraging English sentences: what was good, what to practise next.
+- focus_note: 1–2 English sentences on how well the learner used the grammar they are practising.
+${telc ? `- telc: assess like the telc Deutsch ${lvl} "Schreiben" part. aufgabe = Aufgabenbewältigung (all points covered appropriately, right text type and register); gestaltung = Kommunikative Gestaltung (greeting and closing, logical structure, connectors, consistent du/Sie); richtigkeit = Formale Richtigkeit (grammar, vocabulary, spelling). grade = "A" (fully appropriate), "B" (mostly), "C" (partly), "D" (not appropriate); note = one short English sentence. points = for each given point: point and covered true/false.` : '- telc: leave out.'}`;
+}
+function renderCorrection(res, original, task) {
+  const ms = res.mistakes || [], tl = res.telc;
+  return `${res.transcript ? `<div class="wbox"><div class="wlbl">📷 Lena read your handwriting as:</div><div class="wtext">${esc(res.transcript)}</div></div>` : ''}
+    <div class="wbox"><div class="wlbl">✎ Your text with corrections</div>${wordDiff(original, res.corrected)}${DIFF_LEGEND}</div>
+    <div class="tip">${esc(res.summary)}${res.focus_note ? `<br><b>${esc(CAFE_FOCUS[(task && task.focus) || topicKey()].name)}:</b> ${esc(res.focus_note)}` : ''}</div>
+    ${tl && tl.aufgabe ? `<div class="wbox telcbox"><div class="wlbl">📝 telc-style assessment <small>(practice estimate, not an official telc result)</small></div>
+      ${[['aufgabe', 'I · Aufgabenbewältigung'], ['gestaltung', 'II · Kommunikative Gestaltung'], ['richtigkeit', 'III · Formale Richtigkeit']].map(([k, label]) => tl[k] ? `<div class="tgrade"><b class="g g${esc(tl[k].grade)}">${esc(tl[k].grade)}</b><div><b>${label}</b><div class="tr">${esc(tl[k].note)}</div></div></div>` : '').join('')}
+      ${(tl.points || []).length ? `<ul class="tpoints">${tl.points.map(p => `<li class="${p.covered ? 'ok' : 'bad'}">${p.covered ? '✓' : '✗'} ${esc(p.point)}</li>`).join('')}</ul>` : ''}</div>` : ''}
+    ${ms.length ? `<div class="wbox"><div class="wlbl">Mistakes (${ms.length})</div>${ms.map(m => `<div class="wmis"><div><del>${esc(m.wrong)}</del> → <ins>${esc(m.right)}</ins> ${errTag(m.cat)}</div><div class="tr">${esc(m.why)}</div></div>`).join('')}</div>` : '<div class="wres ok">✓ No mistakes found. Toll!</div>'}
+    <div class="wbox"><div class="wlbl">✨ A more natural version <button class="linkbtn" data-say="${esc(res.improved)}">🔊</button></div><div class="wtext">${esc(res.improved)}</div></div>`;
+}
+
+// ---- the free-writing / TELC screen ----
+let WF = null;
+const wordsIn = t => (t.trim().match(/\S+/g) || []).length;
+function openFree(task) {
+  task = Object.assign({ focus:topicKey() }, task);
+  clearInterval(WF && WF.timer);
+  WF = { task, mode:'type', end:task.minutes ? Date.now() + task.minutes * 60000 : 0, timer:null, busy:false };
+  $('#wfTitle').textContent = task.kind === 'telc' ? `📝 telc ${task.lvl} · ${task.title}` : `✍️ ${task.title}`;
+  $('#wfSub').textContent = task.kind === 'telc' ? `${task.reg === 'formal' ? 'Formal (Sie)' : 'Informal (du)'} · about ${task.words[0]}–${task.words[1]} words · ${task.minutes} min` : `Free writing · ${CAFE_FOCUS[task.focus].name} · level ${task.lvl}`;
+  $('#wfTask').innerHTML = `<div class="wsit">${esc(task.situation)}</div><div class="wlbl">${task.kind === 'telc' ? 'Cover these points (Leitpunkte):' : 'Your task:'}</div><ul class="tpoints">${task.points.map(p => `<li>${esc(p)}</li>`).join('')}</ul>`;
+  $('#wfText').value = ''; $('#wfResult').innerHTML = ''; $('#wfStatus').textContent = ''; $('#wfStatus').classList.remove('err');
+  $('#wfNew').textContent = task.kind === 'telc' ? '🎲 Another TELC task' : '🎲 Another topic';
+  setWriteMode('type'); updateWordCount();
+  $('#wfTimer').textContent = '';
+  if (WF.end) { WF.timer = setInterval(tickTimer, 1000); tickTimer(); }
+  show('wfree'); $('#wfree').scrollTop = 0;
+}
+function tickTimer() {
+  if (!WF || !WF.end) return;
+  const s = Math.max(0, Math.round((WF.end - Date.now()) / 1000));
+  $('#wfTimer').textContent = s ? `⏱ ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '⏱ Time is up (you can still finish)';
+  $('#wfTimer').classList.toggle('late', s < 120);
+  if (!s) clearInterval(WF.timer);
+}
+function updateWordCount() {
+  if (!WF) return; const n = wordsIn($('#wfText').value), [lo, hi] = WF.task.words;
+  $('#wfCount').textContent = `${n} words` + (WF.task.kind === 'telc' ? ` (aim: ${lo}–${hi})` : '');
+  $('#wfCount').className = 'wcount' + (n && (n < lo || n > hi * 1.3) ? ' warn' : '');
+}
+function setWriteMode(m) {
+  WF.mode = m;
+  $$('#wfMode button').forEach(b => b.classList.toggle('on', b.dataset.wm === m));
+  $('#wfTypeBox').style.display = m === 'type' ? '' : 'none';
+  $('#wfHandBox').style.display = m === 'hand' ? '' : 'none';
+  if (m === 'hand') hwSetup();
+}
+async function checkFree() {
+  if (!WF || WF.busy) return;
+  const task = WF.task, hand = WF.mode === 'hand', text = $('#wfText').value.trim();
+  if (hand ? !HW.strokes.length : wordsIn(text) < 3) { $('#wfStatus').textContent = hand ? 'Write something on the paper first.' : 'Write at least a few words first.'; return; }
+  const parts = hand ? [{ text:'Here is my handwritten text as an image.' }, { inlineData:{ mimeType:'image/png', data:hwImage() } }] : [{ text:'My text:\n' + text }];
+  WF.busy = true; $('#wfCheck').disabled = true; $('#wfStatus').classList.remove('err');
+  $('#wfStatus').textContent = hand ? '✍️ Lena is reading your handwriting…' : '✍️ Lena is correcting your text…';
+  try {
+    const res = await geminiJSON({ system:writeSystem(task, hand), parts, schema:WRITE_SCHEMA });
+    const original = hand ? (res.transcript || '') : text;
+    res.mistakes = (res.mistakes || []).map(m => Object.assign(m, { cat:ERR_INFO[m.cat] ? m.cat : 'other' }));
+    res.mistakes.forEach(m => logErr(m.cat));
+    const s = wst(task.kind === 'telc' ? 'telc' : 'free'); s.t++; if (!res.mistakes.length) s.c++;
+    S.history = S.history || [];
+    S.history.unshift({ t:Date.now(), k:'write', x:task.kind, tp:task.focus, hand:hand ? 1 : undefined, task:Object.assign({}, task), text:original, res });
+    if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
+    bumpStreak(); save(); keepStorage();
+    $('#wfStatus').textContent = '';
+    $('#wfResult').innerHTML = renderCorrection(res, original, task) + `<div class="row2"><button class="btn blue center" id="wfAgain">✏️ Improve my text and check again</button><button class="btn center" id="wfDone">Menu</button></div>`;
+    $('#wfAgain').onclick = () => { if (hand) setWriteMode('type'); if (!$('#wfText').value.trim()) $('#wfText').value = original; updateWordCount(); $('#wfText').focus(); $('#wfText').scrollIntoView({ block:'center' }); };
+    $('#wfDone').onclick = closeFree;
+    $('#wfResult').scrollIntoView({ block:'start', behavior:'smooth' });
+  } catch (e) { $('#wfStatus').classList.remove('err'); aiStatus($('#wfStatus'), e, checkFree); }
+  WF.busy = false; $('#wfCheck').disabled = false;
+}
+function closeFree() { if (WF) clearInterval(WF.timer); WF = null; stopVoice(); show('menu'); }
+async function newFreeTask() {
+  if (!WF) return;
+  const t = WF.task;
+  if (t.kind !== 'telc') { const others = CAFE_TOPICS.filter(x => x[0] !== t.tp); openFree(freeTask(pick(others)[0])); return; }
+  const list = TELC.filter(x => x.lvl === t.lvl && x.id !== t.id); openFree(pick(list));
+}
+
+// ---- handwriting: draw with finger / stylus, Gemini reads the image ----
+const HW = { strokes:[], cur:null, w:0, h:0, dpr:1 };
+function hwSetup() {
+  const cv = $('#wfCanvas'), w = Math.max(280, cv.parentElement.clientWidth), h = 380, dpr = Math.min(2, window.devicePixelRatio || 1);
+  if (HW.w !== w) { HW.w = w; HW.h = h; HW.dpr = dpr; cv.width = w * dpr; cv.height = h * dpr; cv.style.width = w + 'px'; cv.style.height = h + 'px'; }
+  hwDraw();
+}
+function hwDraw() {
+  const g = $('#wfCanvas').getContext('2d');
+  g.setTransform(HW.dpr, 0, 0, HW.dpr, 0, 0);
+  g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, HW.w, HW.h);
+  g.strokeStyle = '#DCE3E8'; g.lineWidth = 1;
+  for (let y = 46; y < HW.h; y += 46) { g.beginPath(); g.moveTo(10, y); g.lineTo(HW.w - 10, y); g.stroke(); }
+  g.strokeStyle = '#1E2A38'; g.lineWidth = 2.6; g.lineCap = 'round'; g.lineJoin = 'round';
+  for (const s of HW.strokes) { g.beginPath(); s.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); if (s.length === 1) g.lineTo(s[0][0] + 0.1, s[0][1] + 0.1); g.stroke(); }
+}
+function hwImage() { hwDraw(); return $('#wfCanvas').toDataURL('image/png').split(',')[1]; }
+function hwInit() {
+  const cv = $('#wfCanvas'), pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener('pointerdown', e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {} HW.cur = [pos(e)]; HW.strokes.push(HW.cur); hwDraw(); });
+  cv.addEventListener('pointermove', e => {
+    if (!HW.cur) return; const p = pos(e), q = HW.cur[HW.cur.length - 1]; HW.cur.push(p);
+    const g = cv.getContext('2d'); g.beginPath(); g.moveTo(q[0], q[1]); g.lineTo(p[0], p[1]); g.stroke();
+  });
+  const end = () => { HW.cur = null; };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end); cv.addEventListener('lostpointercapture', end);
+  $('#wfUndo').addEventListener('click', () => { HW.strokes.pop(); hwDraw(); });
+  $('#wfClear').addEventListener('click', () => { HW.strokes = []; hwDraw(); });
+  window.addEventListener('resize', () => { if (WF && WF.mode === 'hand') { HW.w = 0; hwSetup(); } });
+}
+
+// ---- menu box + history for writing ----
+function renderWriteBox() {
+  const tp = topicKey();
+  $('#wrFocusName').textContent = CAFE_FOCUS[tp].name;
+  $$('#wLvl button').forEach(b => b.classList.toggle('on', b.dataset.lvl === (S.cafeLevel || 'A2')));
+  const opts = CAFE_TOPICS.map(([id, e, de]) => `<option value="${id}">${e} ${esc(de)}</option>`).join('');
+  if (!$('#wfTopic').options.length) { $('#wfTopic').innerHTML = opts; $('#wcTopic').innerHTML = opts; }
+  const lvl = S.telcLvl || 'B1';
+  $$('#telcLvl button').forEach(b => b.classList.toggle('on', b.dataset.tl === lvl));
+  $('#telcTasks').innerHTML = TELC.filter(t => t.lvl === lvl).map(t => `<button data-telc="${t.id}"><span class="te">${t.reg === 'formal' ? '📨' : '💌'}</span>${esc(t.title)}<small>${t.reg === 'formal' ? 'formal · Sie' : 'informal · du'} · ${t.minutes} min</small></button>`).join('');
+}
+function writeRow(h, i) {
+  const ex = h.x === 'l1' || h.x === 'l2' || h.x === 'dik';
+  const score = ex ? `${h.c}/${h.a}` : `${(h.res.mistakes || []).length} ✎`;
+  const what = ex ? `${WLV[h.x]} · ${(GUIDE[h.tp] || GUIDE.wd).name}` : `${h.x === 'telc' ? 'telc ' + h.task.lvl : WLV.free}${h.hand ? ' · ✍️ by hand' : ''} · ${esc(h.task.title)}`;
+  return `<button class="hrow write" data-h="${i}"><b class="score">${score}</b><b>✍️ Schreiben</b> · ${what}<span>${ex ? `${h.c} of ${h.a} right` : `${wordsIn(h.text || '')} words`} · ${when(h.t)}</span></button>`;
+}
+function writeHistHTML(h) {
+  if (h.x === 'free' || h.x === 'telc') return `<div class="wbox"><div class="wsit">${esc(h.task.situation)}</div><ul class="tpoints">${h.task.points.map(p => `<li>${esc(p)}</li>`).join('')}</ul></div>` + renderCorrection(h.res, h.text, h.task);
+  return '<div class="hlist">' + h.it.map((e, k) => {
+    const it = writeItemFromKey(e.i); if (!it) return '';
+    const ok = e.st !== 'wrong';
+    return `<details class="${ok ? 'ok' : 'bad'}" ${ok ? '' : 'open'}><summary><span class="hm">${ok ? '✓' : '✗'}</span>${k + 1}. ${it.prompt || '🎧 Diktat'}${e.r ? ' <span class="newtag again">↻ 2nd try</span>' : ''}</summary>
+      <div class="hb"><div class="wlbl">You wrote → correct ${errTag(e.cat)}</div>${wordDiff(e.y, it.answer)}${explainHTML(it, !ok)}</div></details>`;
+  }).join('') + '</div>';
+}
+
+
+function writeProgHTML() {
+  const ws = S.wstats || {}, pct = s => s && s.t ? Math.round(100 * s.c / s.t) : 0;
+  const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s && s.t ? pct(s) + '% of ' + s.t : 'not tried yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
+  const errs = Object.entries(S.werr || {}).filter(([c, n]) => n && ERR_INFO[c]).sort((x, y) => y[1] - x[1]).slice(0, 6);
+  return '<h3>✍️ Writing</h3>' + bar('Type the gap', ws.l1, 'var(--blue)') + bar('Build the sentence', ws.l2, 'var(--red)') + bar('Diktat', ws.dik, 'var(--yellow)')
+    + bar('Free writing (texts without mistakes)', ws.free, 'var(--blue)') + bar('TELC tasks (texts without mistakes)', ws.telc, 'var(--red)') + bar('Writing chat (correct messages)', ws.chat, 'var(--yellow)')
+    + (errs.length ? `<h3>Your typical writing mistakes</h3>${errs.map(([c, n]) => `<div class="wmis"><b>${ERR_INFO[c][0]}</b> × ${n}<div class="tr">${ERR_INFO[c][1]}</div>${taMn(ERR_INFO[c][2])}</div>`).join('')}` : '');
+}
 /* ---- past rounds ---- */
 const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 0:'Review / practice' };
 const when = t => new Date(t).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
@@ -2232,7 +2838,7 @@ const cafeTopicOf = h => CAFE_TOPICS.find(x => x[0] === h.tp) || [h.tp, '💬', 
 const cafeCount = h => { const us = h.m.filter(x => x.r === 'u'); return [us.filter(x => x.ok).length, us.length]; };
 function cafeRow(h, i) {
   const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
-  return `<button class="hrow cafe" data-h="${i}"><b class="score">${ok}/${n}</b><b>☕ Sprach-Café</b> · ${t[1]} ${esc(t[2])}<span>${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${n} sentence${n === 1 ? '' : 's'} spoken · ${when(h.t)}</span></button>`;
+  return `<button class="hrow cafe" data-h="${i}"><b class="score">${ok}/${n}</b><b>${h.w ? '✍️ Writing chat' : '☕ Sprach-Café'}</b> · ${t[1]} ${esc(t[2])}<span>${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${n} sentence${n === 1 ? '' : 's'} ${h.w ? 'written' : 'spoken'} · ${when(h.t)}</span></button>`;
 }
 function cafeChatHTML(h) {
   return '<div class="chat hchat">' + h.m.map(x => x.r === 'l'
@@ -2241,12 +2847,20 @@ function cafeChatHTML(h) {
 }
 function renderHist() {
   const H = S.history || [];
-  $('#hList').innerHTML = H.length ? H.map((h, i) => h.k === 'cafe' ? cafeRow(h, i) : `<button class="hrow" data-h="${i}"><b class="score">${h.c}/${h.a}</b><b>${h.q ? 'Unfinished round' : 'Round ' + h.n}</b> · ${LEVEL_NAME[h.l] || ''}<span>${h.sc} points · ${when(h.t)}</span></button>`).join('')
+  $('#hList').innerHTML = H.length ? H.map((h, i) => h.k === 'cafe' ? cafeRow(h, i) : h.k === 'write' ? writeRow(h, i) : `<button class="hrow" data-h="${i}"><b class="score">${h.c}/${h.a}</b><b>${h.q ? 'Unfinished round' : 'Round ' + h.n}</b> · ${LEVEL_NAME[h.l] || ''}<span>${h.sc} points · ${when(h.t)}</span></button>`).join('')
     : '<div class="empty">No rounds yet. Play a round and it will show up here.</div>';
 }
 let histOpen = null;
 function openHist(i) {
   const h = (S.history || [])[i]; if (!h) return; histOpen = h;
+  if (h.k === 'write') {
+    const ex = h.x === 'l1' || h.x === 'l2' || h.x === 'dik';
+    $('#hdTitle').textContent = ex ? `✍️ ${WLV[h.x]}` : `✍️ ${h.task.title}`;
+    $('#hdSub').textContent = ex ? `${(GUIDE[h.tp] || GUIDE.wd).name} · ${h.c} of ${h.a} right on the first try · ${when(h.t)}`
+      : `${h.x === 'telc' ? `telc ${h.task.lvl} Schreiben` : WLV.free}${h.hand ? ' · written by hand' : ''} · ${(h.res.mistakes || []).length} mistakes · ${when(h.t)}`;
+    $('#hdList').innerHTML = writeHistHTML(h); $('#hdPlay').textContent = ex ? 'Practise these sentences again' : 'Write this task again';
+    show('histD'); $('#histD').scrollTop = 0; return;
+  }
   if (h.k === 'cafe') {
     const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
     $('#hdTitle').textContent = `☕ ${t[2]}`;
@@ -2262,7 +2876,13 @@ function openHist(i) {
 }
 // replay exactly the questions of a past round (as a practice round, so it never unlocks levels)
 function practiseHist() {
-  if (histOpen.k === 'cafe') { openCafe(histOpen.tp, histOpen.f, histOpen.lv); return; }
+  if (histOpen.k === 'cafe') { openCafe(histOpen.tp, histOpen.f, histOpen.lv, histOpen.w); return; }
+  if (histOpen.k === 'write') {
+    if (histOpen.x === 'free' || histOpen.x === 'telc') { openFree(histOpen.task); return; }
+    const items = histOpen.it.filter(e => !e.r).map(e => writeItemFromKey(e.i)).filter(Boolean);
+    if (items.length) startWriting(histOpen.x, items);
+    return;
+  }
   const q = histOpen.it.filter(e => !e.r).map(e => {
     if (e.y === 't') return TRAPS[e.i] ? trapQ(TRAPS[e.i]) : null;
     const x = BYID[e.i]; if (!x) return null;
@@ -2300,7 +2920,7 @@ function renderProg() {
   $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
     + bar('Prepositions with a fixed case', st.pfix, 'var(--blue)') + bar('Wechselpräpositionen (wo/wohin)', st.pwech, 'var(--red)')
     + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)')
-    + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, review ${S.best[0]}</div>`;
+    + writeProgHTML() + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, review ${S.best[0]}</div>`;
   let tip;
   if (st.weil.t + st.dass.t < 6) tip = 'Play a few rounds and this space will tell you what to focus on.';
   else if (pct(st.weil) + 10 < pct(st.dass)) tip = 'weil is your weaker side. Remember: weil answers <i>why?</i> If the first half is a reason-free statement like <i>Ich bleibe zu Hause</i>, the second half is the reason.';
@@ -2339,7 +2959,7 @@ canvas.addEventListener('touchend', () => { tx = null; }, { passive:true });
 canvas.addEventListener('touchcancel', () => { tx = null; }, { passive:true });
 
 $$('[data-level]').forEach(b => b.addEventListener('click', () => startLevel(+b.dataset.level)));
-$('#iGo').addEventListener('click', () => beginRound(lastLevel, pendingFresh));
+$('#iGo').addEventListener('click', () => pendingWrite ? beginWrite() : beginRound(lastLevel, pendingFresh));
 $('#wGo').addEventListener('click', closeWrong);
 $('#bPause').addEventListener('click', togglePause);
 $('#pGo').addEventListener('click', togglePause);
@@ -2381,6 +3001,43 @@ function chatTools(e) {
 }
 $('#cChat').addEventListener('click', chatTools);
 $('#hdList').addEventListener('click', chatTools);
+// ---- Schreiben: events ----
+$$('[data-wl]').forEach(b => b.addEventListener('click', () => startWriting(b.dataset.wl)));
+$('#wLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderWriteBox(); } });
+$('#wfStart').addEventListener('click', () => openFree(freeTask($('#wfTopic').value)));
+$('#wcStart').addEventListener('click', () => openCafe($('#wcTopic').value, topicKey(), null, true));
+$('#telcLvl').addEventListener('click', e => { const b = e.target.closest('[data-tl]'); if (b) { S.telcLvl = b.dataset.tl; save(); renderWriteBox(); } });
+$('#telcTasks').addEventListener('click', e => { const b = e.target.closest('[data-telc]'); if (b) openFree(TELC.find(t => t.id === b.dataset.telc)); });
+$('#telcGen').addEventListener('click', async () => {
+  const m = $('#menuMsg'), btn = $('#telcGen'); m.classList.remove('err'); m.style.color = 'var(--grey)'; m.textContent = '🎲 Lena is preparing a new TELC task…'; btn.disabled = true;
+  try { const t = await telcGenerate(S.telcLvl || 'B1'); m.textContent = ''; openFree(t); }
+  catch (e) { m.style.color = ''; aiStatus(m, e, () => btn.click()); }
+  btn.disabled = false;
+});
+$('#wrBack').addEventListener('click', () => { WR = null; stopVoice(); show('menu'); });
+$('#wrCheck').addEventListener('click', checkWrite);
+$('#wrNext').addEventListener('click', nextWrite);
+$('#wrInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); WR && WR.done ? nextWrite() : checkWrite(); } });
+$('#wrNext').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); nextWrite(); } });
+$('#wrPlay').addEventListener('click', () => { audioCtx(); playDik(); });
+$('#wrSlow').addEventListener('click', () => { if (!WR) return; WR.slow = !WR.slow; $('#wrSlow').setAttribute('aria-pressed', WR.slow); audioCtx(); playDik(); });
+$('#wfBack').addEventListener('click', closeFree);
+$$('#wfMode button').forEach(b => b.addEventListener('click', () => setWriteMode(b.dataset.wm)));
+$('#wfText').addEventListener('input', updateWordCount);
+$('#wfCheck').addEventListener('click', checkFree);
+$('#wfNew').addEventListener('click', newFreeTask);
+hwInit();
+// ä ö ü ß buttons type into their box without closing the tablet keyboard
+document.addEventListener('pointerdown', e => {
+  const b = e.target.closest('.uml [data-ch]'); if (!b) return;
+  e.preventDefault();
+  const el = document.getElementById(b.closest('.uml').dataset.target); if (!el || el.disabled) return;
+  const s = el.selectionStart ?? el.value.length, en = el.selectionEnd ?? el.value.length;
+  el.value = el.value.slice(0, s) + b.dataset.ch + el.value.slice(en);
+  el.focus(); el.setSelectionRange(s + 1, s + 1); el.dispatchEvent(new Event('input'));
+});
+// 🔊 buttons in writing feedback and history
+document.addEventListener('click', e => { const b = e.target.closest('[data-say]'); if (!b) return; e.preventDefault(); audioCtx(); C.slow = false; say(b.dataset.say); });
 $('#bHist').addEventListener('click', () => { renderHist(); show('hist'); $('#hist').scrollTop = 0; });
 $('#hBack').addEventListener('click', () => show('menu'));
 $('#hList').addEventListener('click', e => { const b = e.target.closest('[data-h]'); if (b) openHist(+b.dataset.h); });
@@ -2409,6 +3066,10 @@ function mergeSaves(a, b) {
   for (const [k, v] of Object.entries(b.stats || {})) { const o = m.stats[k] || { c:0, t:0 }; m.stats[k] = v.t > o.t ? v : o; }
   m.best = Object.assign({}, DEF().best, a.best);
   for (const [k, v] of Object.entries(b.best || {})) m.best[k] = Math.max(m.best[k] || 0, v || 0);
+  m.wstats = Object.assign({}, a.wstats || {});
+  for (const [k, v] of Object.entries(b.wstats || {})) if (!m.wstats[k] || v.t > m.wstats[k].t) m.wstats[k] = v;
+  m.werr = Object.assign({}, a.werr || {});
+  for (const [k, v] of Object.entries(b.werr || {})) m.werr[k] = Math.max(m.werr[k] || 0, v || 0);
   m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1); m.unlockedA = Math.max(a.unlockedA || 1, b.unlockedA || 1);
   m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
   if (b.streak && (b.streak.last || '') > (a.streak && a.streak.last || '') ) m.streak = b.streak;
