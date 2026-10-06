@@ -83,6 +83,8 @@ p{line-height:1.5}
 .cj.akk{color:var(--red)} .cj.dat{color:var(--blue)}
 .cj.adj-weak{color:var(--blue)} .cj.adj-mixed{color:#A07A12} .cj.adj-strong{color:var(--red)}
 .cj.vsep{color:var(--blue)} .cj.vins{color:var(--red)} .cj.vge{color:#A07A12}
+.cj.plp{color:var(--blue)} .cj.pls{color:var(--red)}
+#topicTabs button{font-size:.92em}
 #topicTabs button{padding:9px 4px;line-height:1.15}
 .guide{margin-top:18px}
 .guide>h3{margin:0 0 2px}
@@ -390,9 +392,9 @@ p{line-height:1.5}
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag">Run, build and speak German: weil/dass word order, prepositions, adjective endings and separable verbs, plus voice chats in the Sprach-Café.</p>
+      <p class="tag">Run, build and speak German: weil/dass word order, prepositions, adjective endings, separable verbs and plurals, plus voice chats in the Sprach-Café.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
-      <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button><button data-topic="adj">Adjektive</button><button data-topic="tv">Trennbare Verben</button></div>
+      <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button><button data-topic="adj">Adjektive</button><button data-topic="tv">Trennbare Verben</button><button data-topic="pl">Singular / Plural</button></div>
       <p class="modeq" id="modeQ">Was möchtest du machen? <span>What would you like to do?</span></p>
       <div class="row2 modes">
         <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner game</b><small>Run through the right gates</small></span></button>
@@ -423,6 +425,12 @@ p{line-height:1.5}
           <button class="btn red" data-level="14"><span class="shape circle"></span><span><b>Level 2: Perfekt</b><small id="l14s">aufgestanden · verstanden</small></span></button>
           <button class="btn black" data-level="15"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l15s">Faster, plus weil / dass: …, weil ich aufstehe</small></span></button>
           <button class="btn green" data-level="16"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l16s">One word is wrong. Run through it!</small></span></button>
+        </div>
+        <div class="levels" id="lvPl" style="display:none">
+          <button class="btn blue" data-level="17"><span class="shape"></span><span><b>Level 1: Die Pluralform</b><small id="l17s">der Tag → die Tage · das Kind → die Kinder</small></span></button>
+          <button class="btn red" data-level="18"><span class="shape circle"></span><span><b>Level 2: Singular oder Plural?</b><small id="l18s">ein Kind · zwei Kinder</small></span></button>
+          <button class="btn black" data-level="19"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l19s">Faster, plus Dativ plural: mit den Kindern</small></span></button>
+          <button class="btn green" data-level="20"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l20s">One word is wrong. Run through it!</small></span></button>
         </div>
         <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
         <div class="gapset">
@@ -1064,10 +1072,15 @@ const wasMissed = id => !!(S.srs[id] && S.srs[id].box === 0 && S.srs[id].seen > 
 const vcard = (big, sub, ta, mn, extra = '', tmn = '') => `<div class="vcard">${extra}<div class="big">${big}</div><div class="en">${sub}</div><div class="ta">தமிழ்: ${esc(ta)}</div>${mn ? `<div class="mn">💡 ${mn}</div>` : ''}${taMn(tmn)}</div>`;
 function briefingHTML(q, fresh) {
   const spot = q.some(x => x.type === 'spot');
-  q = q.flatMap(x => x.type !== 'spot' ? [x] : x.src === 'w' ? [{ w:x.x }] : x.src === 't' ? [{ type:'trap', opts:x.x.o }] : x.src === 'v' ? [{ type:'verb', p:x.x, k:x.v }] : [{ type:x.src === 'p' ? 'prep' : 'adj', p:x.x }]);
+  q = q.flatMap(x => x.type !== 'spot' ? [x] : x.src === 'w' ? [{ w:x.x }] : x.src === 't' ? [{ type:'trap', opts:x.x.o }] : x.src === 'v' ? [{ type:'verb', p:x.x, k:x.v }] : x.src === 'n' ? [{ type:'noun', p:x.x, k:x.v === 'dn' ? 'dn' : 'pf' }] : [{ type:x.src === 'p' ? 'prep' : 'adj', p:x.x }]);
   const preps = q.filter(x => x.type === 'prep').map(x => x.p), words = q.filter(x => x.w).map(x => x.w), traps = q.filter(x => x.type === 'trap');
   const adjs = q.filter(x => x.type === 'adj').map(x => x.p);
   let h = spot ? '<div class="tip">🔍 <b>Spot the error:</b> every sentence has exactly one wrong word. The three gates show three words from the sentence. Run through the gate with the <b>wrong</b> word. Use the strip under the sentence to see the gate words early.</div>' : '';
+  const nouns = q.filter(x => x.type === 'noun');
+  if (nouns.length) {
+    h += nounTipsHTML([...new Set(nouns.map(x => nRuleKey(x.p, x.k)))]);
+    h += `<h3>Nouns</h3><div class="vgrid">${[...new Set(nouns.map(x => x.p))].map(nounCard).join('')}</div>`;
+  }
   const verbs = q.filter(x => x.type === 'verb');
   if (verbs.length) {
     h += verbTipsHTML([...new Set(verbs.map(x => vRuleKey(x.p, x.k)))]);
@@ -1388,7 +1401,123 @@ const verbTipsHTML = keys => `<div class="vgrid tips">${keys.map(k => `<div clas
 const verbCard = x => vcard(VINF(x), `${esc(x.en)} · Perfekt: ${vAux(x) === 'sein' ? 'ist' : 'hat'} ${esc(x.pp)}`, x.ta, esc(x.mn), `<span class="case ${x.sep ? 'dat' : 'akk'}">${x.sep ? 'trennbar' : 'nicht trennbar'}</span>`, x.tmn);
 const verbWhy = (x, k) => `<b>${esc(x.inf)}</b> is <b>${x.sep ? 'trennbar' : 'nicht trennbar'}</b> (${esc(x.pf)}-)` + (k === 'pp' ? ` → Perfekt <b>${esc(x.pp)}</b>` : k === 'ns' ? ' → side clause: one word at the end' : x.sep ? ' → prefix at the end' : ' → stays in one piece');
 const verbItemHTML = (x, k = 'pr') => `<div class="item"><div><div class="s">${verbHTML(x, k)}</div><div class="tr">${esc(verbTr(x, k))}</div><div class="w">${verbWhy(x, k)}</div>${picSVG(x, k)}</div>${starBtn(x.id)}</div>`;
-const BYID = Object.fromEntries([...W, ...P, ...A, ...V].map(w => [w.id, w]));
+/* ================= Singular / Plural =================
+   sg / pl = singular and plural noun, art = singular article, wr = a typical wrong plural.
+   qs = sentence that needs the singular, qp = one that needs the plural, qd = Dativ plural (only where the -n shows).
+   The plural pattern (+e, +er, +(e)n, +s, no ending, with or without umlaut) is worked out from sg → pl. */
+const NPL = [
+  // ---- +e (often with umlaut) ----
+  {id:'n_tag', sg:'Tag', art:'der', pl:'Tage', wr:'Täge', qs:'Heute ist ein schöner ___.', ts:'Today is a nice day.', qp:'Die Woche hat sieben ___.', tp:'The week has seven days.', qd:'In den letzten ___ war es kalt.', td:'It was cold over the last few days.', e:'☀️', en:'day', ta:'நாள்', mn:'Tag ≈ day: one Tag, seven Tage.', tmn:'டாக்: ஒரு நாள் Tag, ஏழு நாட்கள் Tage — +e'},
+  {id:'n_hund', sg:'Hund', art:'der', pl:'Hunde', wr:'Hünde', qs:'Mein Nachbar hat einen ___.', ts:'My neighbour has a dog.', qp:'Im Park spielen drei ___.', tp:'Three dogs are playing in the park.', qd:'Sie geht mit den ___ spazieren.', td:'She takes the dogs for a walk.', e:'🐕', en:'dog', ta:'நாய்', mn:'Hund ≈ hound; a pack of hounds = Hunde.', tmn:'ஹுண்ட்: நாய்கள் கூட்டம் "ஹுண்டே" — +e, புள்ளி இல்லை'},
+  {id:'n_tisch', sg:'Tisch', art:'der', pl:'Tische', wr:'Tischs', qs:'In der Küche steht ein ___.', ts:'There is a table in the kitchen.', qp:'Im Restaurant sind alle ___ frei.', tp:'All the tables in the restaurant are free.', qd:'Die Kinder sitzen an den ___.', td:'The children are sitting at the tables.', e:'🍽️', en:'table', ta:'மேசை', mn:'Tisch ≈ dish: the dishes go on the Tische.', tmn:'டிஷ்: "டிஷ்" (dish) வைக்கும் மேசைகள் Tische'},
+  {id:'n_schuh', sg:'Schuh', art:'der', pl:'Schuhe', wr:'Schuhs', qs:'Wo ist mein linker ___?', ts:'Where is my left shoe?', qp:'Ich brauche neue ___.', tp:'I need new shoes.', qd:'Mit diesen ___ kann ich gut laufen.', td:'I can walk well in these shoes.', e:'👟', en:'shoe', ta:'காலணி', mn:'Schuh ≈ shoe; shoes come in pairs: Schuhe.', tmn:'ஷூ: ஒரு ஜோடி ஷூ = Schuhe — +e'},
+  {id:'n_freund', sg:'Freund', art:'der', pl:'Freunde', wr:'Freunds', qs:'Tom ist ein guter ___.', ts:'Tom is a good friend.', qp:'Ich habe viele ___ in Berlin.', tp:'I have many friends in Berlin.', qd:'Am Wochenende fahre ich mit meinen ___ weg.', td:'At the weekend I go away with my friends.', e:'🙂', en:'friend', ta:'நண்பன்', mn:'Freund ≈ friend; Freunde = friends.', tmn:'ஃப்ராய்ண்ட்: நண்பர்கள் Freunde — +e'},
+  {id:'n_baum', sg:'Baum', art:'der', pl:'Bäume', wr:'Baume', qs:'Vor dem Haus steht ein großer ___.', ts:'There is a big tree in front of the house.', qp:'Im Herbst verlieren die ___ ihre Blätter.', tp:'In autumn the trees lose their leaves.', qd:'Die Vögel sitzen auf den ___.', td:'The birds are sitting in the trees.', e:'🌳', en:'tree', ta:'மரம்', mn:'Baum ≈ beam (wood). Many trees grow dots on top: Bäume.', tmn:'பவ்ம்: மரங்களின் மேல் இரண்டு பறவைப் புள்ளிகள் → Bäume'},
+  {id:'n_stuhl', sg:'Stuhl', art:'der', pl:'Stühle', wr:'Stuhle', qs:'Der ___ ist kaputt.', ts:'The chair is broken.', qp:'Wir brauchen noch zwei ___.', tp:'We still need two chairs.', qd:'Die Taschen liegen unter den ___.', td:'The bags are under the chairs.', e:'🪑', en:'chair', ta:'நாற்காலி', mn:'Stuhl ≈ stool; two stools get dots: Stühle.', tmn:'ஷ்டூல்: "ஸ்டூல்" (stool) — பன்மையில் ü: Stühle'},
+  {id:'n_zug', sg:'Zug', art:'der', pl:'Züge', wr:'Zuge', qs:'Der ___ hat Verspätung.', ts:'The train is late.', qp:'Heute fahren keine ___.', tp:'There are no trains today.', qd:'Ich fahre gern mit schnellen ___.', td:'I like travelling on fast trains.', e:'🚆', en:'train', ta:'ரயில்', mn:'Zug: the engine tugs; many trains = Züge (with dots).', tmn:'ட்சூக்: ரயில்கள் "ட்ஸ்யூகே" — ü + e'},
+  {id:'n_stadt', sg:'Stadt', art:'die', pl:'Städte', wr:'Stadten', qs:'Berlin ist eine große ___.', ts:'Berlin is a big city.', qp:'Wir besuchen im Urlaub drei ___.', tp:'We visit three cities on holiday.', qd:'In vielen ___ gibt es eine U-Bahn.', td:'Many cities have an underground.', e:'🏙️', en:'city, town', ta:'நகரம்', mn:'An exception: feminine but Städte (ä + e), not Stadten.', tmn:'ஷ்டாட்: பெண்பால் ஆனாலும் Städte (ä + e) — விதிவிலக்கு!'},
+  // ---- +er (with umlaut where possible) ----
+  {id:'n_kind', sg:'Kind', art:'das', pl:'Kinder', wr:'Kinds', qs:'Das ___ schläft schon.', ts:'The child is already asleep.', qp:'Unsere Nachbarn haben vier ___.', tp:'Our neighbours have four children.', qd:'Die Lehrerin spricht mit den ___.', td:'The teacher is talking to the children.', e:'🧒', en:'child', ta:'குழந்தை', mn:'Kindergarten = a garden of Kinder.', tmn:'கிண்ட்: "கிண்டர்கார்டன்" = குழந்தைகளின் தோட்டம் → Kinder'},
+  {id:'n_bild', sg:'Bild', art:'das', pl:'Bilder', wr:'Bilde', qs:'Das ___ hängt an der Wand.', ts:'The picture is hanging on the wall.', qp:'Im Museum hängen viele ___.', tp:'Lots of pictures hang in the museum.', qd:'Was siehst du auf den ___?', td:'What can you see in the pictures?', e:'🖼️', en:'picture', ta:'படம்', mn:'Bild ≈ build an image; a picture book = Bilderbuch.', tmn:'பில்ட்: Bilderbuch = படங்களின் புத்தகம் → Bilder'},
+  {id:'n_ei', sg:'Ei', art:'das', pl:'Eier', wr:'Eien', qs:'Ich esse ein ___ zum Frühstück.', ts:'I eat an egg for breakfast.', qp:'Für den Kuchen brauchen wir sechs ___.', tp:'We need six eggs for the cake.', qd:'Ich mache einen Kuchen mit vier ___.', td:'I make a cake with four eggs.', e:'🥚', en:'egg', ta:'முட்டை', mn:'Ei sounds like "eye": two eyes, two Eier.', tmn:'ஐ: ஒரு முட்டை "ஐ", பல முட்டைகள் "ஐயர்" → Eier'},
+  {id:'n_buch', sg:'Buch', art:'das', pl:'Bücher', wr:'Buchs', qs:'Das ___ ist sehr spannend.', ts:'The book is very exciting.', qp:'Im Regal stehen viele ___.', tp:'There are many books on the shelf.', qd:'Ich lerne mit diesen ___ Deutsch.', td:'I learn German with these books.', e:'📕', en:'book', ta:'புத்தகம்', mn:'Buch ≈ book; a library is full of Bücher (ü + er).', tmn:'பூஹ்: புத்தகங்கள் "ப்யூஹர்" → ü + er'},
+  {id:'n_haus', sg:'Haus', art:'das', pl:'Häuser', wr:'Hause', qs:'Meine Eltern haben ein ___.', ts:'My parents have a house.', qp:'In unserer Straße gibt es alte ___.', tp:'There are old houses in our street.', qd:'Zwischen den ___ ist ein kleiner Park.', td:'There is a small park between the houses.', e:'🏠', en:'house', ta:'வீடு', mn:'Haus ≈ house; many houses get dots and -er: Häuser.', tmn:'ஹவுஸ்: பல வீடுகள் "ஹொய்சர்" → ä + er'},
+  {id:'n_glas', sg:'Glas', art:'das', pl:'Gläser', wr:'Glase', qs:'Ich trinke ein ___ Wasser.', ts:"I'm drinking a glass of water.", qp:'Auf dem Tisch stehen fünf ___.', tp:'There are five glasses on the table.', qd:'Wir trinken aus den neuen ___.', td:'We drink from the new glasses.', e:'🥛', en:'glass', ta:'கண்ணாடிக் குவளை', mn:'Glas ≈ glass; Gläser like the Haus → Häuser pattern.', tmn:'க்ளாஸ்: பல க்ளாஸ்கள் Gläser → ä + er'},
+  {id:'n_mann', sg:'Mann', art:'der', pl:'Männer', wr:'Manne', qs:'Der ___ dort ist mein Chef.', ts:'The man over there is my boss.', qp:'Zwei ___ warten an der Tür.', tp:'Two men are waiting at the door.', qd:'Sie spricht mit den ___.', td:"She's talking to the men.", e:'👨', en:'man', ta:'ஆண்', mn:'Mann ≈ man; men = Männer (ä + er).', tmn:'மன்: ஆண்கள் "மென்னர்" → ä + er'},
+  // ---- +(e)n ----
+  {id:'n_frau', sg:'Frau', art:'die', pl:'Frauen', wr:'Fraue', qs:'Die ___ heißt Maria.', ts:'The woman is called Maria.', qp:'Im Kurs sind zehn ___.', tp:'There are ten women in the course.', e:'👩', en:'woman', ta:'பெண்', mn:'Most die-words take -en: Frau → Frauen.', tmn:'ஃப்ரவ்: die-சொற்கள் பெரும்பாலும் -en → Frauen'},
+  {id:'n_lampe', sg:'Lampe', art:'die', pl:'Lampen', wr:'Lampes', qs:'Die ___ ist neu.', ts:'The lamp is new.', qp:'Im Zimmer sind drei ___.', tp:'There are three lamps in the room.', e:'💡', en:'lamp', ta:'விளக்கு', mn:'Ends in -e? Just add -n: Lampe → Lampen.', tmn:'லாம்பெ: -e-இல் முடிந்தால் -n சேர் → Lampen'},
+  {id:'n_blume', sg:'Blume', art:'die', pl:'Blumen', wr:'Blumes', qs:'Ich schenke dir eine ___.', ts:"I'm giving you a flower.", qp:'Im Garten blühen viele ___.', tp:'Lots of flowers are blooming in the garden.', e:'🌷', en:'flower', ta:'பூ', mn:'Blume ≈ bloom; many blooms = Blumen.', tmn:'ப்ளூமெ: "ப்ளூம்" (bloom) பல பூக்கள் → Blumen'},
+  {id:'n_tasche', sg:'Tasche', art:'die', pl:'Taschen', wr:'Tasches', qs:'Meine ___ ist zu schwer.', ts:'My bag is too heavy.', qp:'Sie hat zwei ___ dabei.', tp:'She has two bags with her.', e:'👜', en:'bag', ta:'பை', mn:'Tasche: -e word → +n: Taschen.', tmn:'டாஷெ: -e → +n → Taschen'},
+  {id:'n_uhr', sg:'Uhr', art:'die', pl:'Uhren', wr:'Uhre', qs:'Die ___ geht falsch.', ts:'The clock is wrong.', qp:'Im Laden gibt es schöne ___.', tp:'There are nice watches in the shop.', e:'⌚', en:'clock, watch', ta:'கடிகாரம்', mn:'Uhr ≈ hour; many hours, many Uhren (die-word → -en).', tmn:'ஊர்: மணி (hour) → பல கடிகாரங்கள் Uhren'},
+  {id:'n_zeitung', sg:'Zeitung', art:'die', pl:'Zeitungen', wr:'Zeitunge', qs:'Mein Vater liest jeden Tag eine ___.', ts:'My father reads a newspaper every day.', qp:'Am Kiosk gibt es viele ___.', tp:'There are lots of newspapers at the kiosk.', e:'📰', en:'newspaper', ta:'செய்தித்தாள்', mn:'Every -ung word is feminine and takes -en: Zeitungen.', tmn:'-ung சொற்கள் எல்லாம் die, பன்மை -en → Zeitungen'},
+  {id:'n_tuer', sg:'Tür', art:'die', pl:'Türen', wr:'Türs', qs:'Die ___ klemmt.', ts:'The door is stuck.', qp:'Das Auto hat vier ___.', tp:'The car has four doors.', e:'🚪', en:'door', ta:'கதவு', mn:'Tür ≈ door (d → t); die-word → Türen.', tmn:'ட்யூர்: கதவுகள் Türen — die → -en'},
+  {id:'n_junge', sg:'Junge', art:'der', pl:'Jungen', wr:'Jüngen', qs:'Der ___ spielt Fußball.', ts:'The boy is playing football.', qp:'Drei ___ fahren Fahrrad.', tp:'Three boys are riding their bikes.', e:'👦', en:'boy', ta:'சிறுவன்', mn:'Masculine but ends in -e: Junge → Jungen (no dots!).', tmn:'யுங்கெ: der ஆனாலும் -e → Jungen, புள்ளி இல்லை'},
+  {id:'n_katze', sg:'Katze', art:'die', pl:'Katzen', wr:'Katzes', qs:'Unsere ___ schläft gern.', ts:'Our cat likes to sleep.', qp:'Meine Oma hat zwei ___.', tp:'My grandma has two cats.', e:'🐈', en:'cat', ta:'பூனை', mn:'Katze ≈ cat; -e → +n: Katzen.', tmn:'காட்ஸெ: -e → +n → Katzen'},
+  // ---- +s ----
+  {id:'n_auto', sg:'Auto', art:'das', pl:'Autos', wr:'Auten', qs:'Mein ___ ist rot.', ts:'My car is red.', qp:'Auf der Straße stehen viele ___.', tp:'There are lots of cars on the street.', e:'🚗', en:'car', ta:'கார்', mn:'Ends in a vowel (-o)? Add -s, like English: Autos.', tmn:'அவ்டோ: உயிரெழுத்தில் முடிந்தால் -s → Autos'},
+  {id:'n_handy', sg:'Handy', art:'das', pl:'Handys', wr:'Handies', qs:'Ich habe ein neues ___.', ts:'I have a new phone.', qp:'Die Kinder haben alle ___.', tp:'All the children have phones.', e:'📱', en:'mobile phone', ta:'கைபேசி', mn:'English-looking word → -s, and -y stays: Handys (not Handies).', tmn:'ஹேண்டி: -y அப்படியே + s → Handys'},
+  {id:'n_hotel', sg:'Hotel', art:'das', pl:'Hotels', wr:'Hotele', qs:'Das ___ ist direkt am Meer.', ts:'The hotel is right by the sea.', qp:'In der Stadt gibt es viele ___.', tp:'There are lots of hotels in the city.', e:'🏨', en:'hotel', ta:'விடுதி', mn:'Foreign word (from French) → -s: Hotels.', tmn:'ஹோட்டல்: வெளிநாட்டுச் சொல் → -s → Hotels'},
+  {id:'n_foto', sg:'Foto', art:'das', pl:'Fotos', wr:'Foten', qs:'Das ___ ist sehr schön.', ts:'The photo is very nice.', qp:'Ich mache im Urlaub viele ___.', tp:'I take lots of photos on holiday.', e:'📷', en:'photo', ta:'புகைப்படம்', mn:'Ends in -o → -s: Fotos.', tmn:'ஃபோட்டோ: -o → +s → Fotos'},
+  {id:'n_kino', sg:'Kino', art:'das', pl:'Kinos', wr:'Kinoen', qs:'Das ___ ist gleich um die Ecke.', ts:'The cinema is just around the corner.', qp:'Hamburg hat viele ___.', tp:'Hamburg has lots of cinemas.', e:'🎬', en:'cinema', ta:'திரையரங்கம்', mn:'Kino ends in -o → Kinos.', tmn:'கினோ: -o → +s → Kinos'},
+  {id:'n_oma', sg:'Oma', art:'die', pl:'Omas', wr:'Omaen', qs:'Meine ___ wohnt in Köln.', ts:'My grandma lives in Cologne.', qp:'Ich habe zwei ___.', tp:'I have two grandmas.', e:'👵', en:'grandma', ta:'பாட்டி', mn:'Ends in -a → -s: Omas (also Opas, Mamas, Papas).', tmn:'ஓமா: -a → +s → Omas (Opas, Mamas)'},
+  // ---- no ending (-er / -el / -en), sometimes umlaut ----
+  {id:'n_lehrer', sg:'Lehrer', art:'der', pl:'Lehrer', wr:'Lehrers', qs:'Der ___ erklärt die Grammatik.', ts:'The teacher explains the grammar.', qp:'An unserer Schule gibt es 30 ___.', tp:'There are 30 teachers at our school.', qd:'Die Eltern sprechen mit den ___.', td:'The parents talk to the teachers.', e:'👨‍🏫', en:'teacher', ta:'ஆசிரியர்', mn:'-er words don\'t change: der Lehrer → die Lehrer. Only the article tells you.', tmn:'லேரர்: -er சொல் மாறாது; article die மட்டும் சொல்லும்'},
+  {id:'n_zimmer', sg:'Zimmer', art:'das', pl:'Zimmer', wr:'Zimmers', qs:'Mein ___ ist klein.', ts:'My room is small.', qp:'Die Wohnung hat drei ___.', tp:'The flat has three rooms.', qd:'In allen ___ ist es warm.', td:'It is warm in all the rooms.', e:'🛏️', en:'room', ta:'அறை', mn:'Zimmer ends in -er → no change: drei Zimmer.', tmn:'ட்ஸிம்மர்: -er → மாறாது: drei Zimmer'},
+  {id:'n_fenster', sg:'Fenster', art:'das', pl:'Fenster', wr:'Fensters', qs:'Das ___ ist offen.', ts:'The window is open.', qp:'Unser Haus hat zehn ___.', tp:'Our house has ten windows.', qd:'Vor den ___ stehen Blumen.', td:'There are flowers in front of the windows.', e:'🪟', en:'window', ta:'ஜன்னல்', mn:'Fenster ends in -er → no change: zehn Fenster.', tmn:'ஃபென்ஸ்டர்: -er → மாறாது: zehn Fenster'},
+  {id:'n_koffer', sg:'Koffer', art:'der', pl:'Koffer', wr:'Koffers', qs:'Wo ist mein ___?', ts:'Where is my suitcase?', qp:'Wir nehmen zwei ___ mit.', tp:"We're taking two suitcases.", qd:'Er kommt mit drei ___ an.', td:'He arrives with three suitcases.', e:'🧳', en:'suitcase', ta:'பெட்டி', mn:'Koffer ≈ coffer (a box); -er → no change.', tmn:'கொஃபர்: -er → மாறாது: zwei Koffer'},
+  {id:'n_apfel', sg:'Apfel', art:'der', pl:'Äpfel', wr:'Apfeln', qs:'Ich esse jeden Tag einen ___.', ts:'I eat an apple every day.', qp:'Im Korb liegen fünf ___.', tp:'There are five apples in the basket.', qd:'Ich backe einen Kuchen mit ___.', td:"I'm baking a cake with apples.", e:'🍎', en:'apple', ta:'ஆப்பிள்', mn:'-el word: no ending, but the apples get two dots on top: Äpfel.', tmn:'அப்ஃபல்: முடிவு இல்லை, மேலே இரண்டு புள்ளிகள் மட்டும் → Äpfel'},
+  {id:'n_mutter', sg:'Mutter', art:'die', pl:'Mütter', wr:'Mutters', qs:'Meine ___ arbeitet im Krankenhaus.', ts:'My mother works in the hospital.', qp:'Die ___ warten vor der Schule.', tp:'The mothers are waiting outside the school.', qd:'Der Kindergarten macht ein Fest mit den ___.', td:'The nursery is having a party with the mothers.', e:'👩‍👧', en:'mother', ta:'அம்மா', mn:'Mutter → Mütter: no ending, only dots (like Vater → Väter).', tmn:'முட்டர்: முடிவு இல்லை, ü மட்டும் → Mütter'},
+  {id:'n_vater', sg:'Vater', art:'der', pl:'Väter', wr:'Vaters', qs:'Mein ___ kocht gern.', ts:'My father likes cooking.', qp:'Viele ___ bleiben heute zu Hause.', tp:'Many fathers stay at home today.', qd:'Die Kinder spielen mit ihren ___.', td:'The children are playing with their fathers.', e:'👨‍👧', en:'father', ta:'அப்பா', mn:'Vater ≈ father; Väter: no ending, only dots.', tmn:'ஃபாட்டர்: ä மட்டும் → Väter'},
+  {id:'n_garten', sg:'Garten', art:'der', pl:'Gärten', wr:'Gartens', qs:'Wir haben einen kleinen ___.', ts:'We have a small garden.', qp:'Hier haben alle Häuser schöne ___.', tp:'All the houses here have lovely gardens.', e:'🏡', en:'garden', ta:'தோட்டம்', mn:'-en word: no ending, only dots: Gärten.', tmn:'கார்டன்: -en சொல், ä மட்டும் → Gärten'}
+];
+NPL.forEach(x => { x.pn = 1; });
+const UML = { a:'ä', o:'ö', u:'ü', A:'Ä', O:'Ö', U:'Ü' };
+// how the plural is built from the singular: { pre, um (umlaut letter or ''), mid, suf (ending) }, or null if it isn't a regular pattern
+function nounParts(sg, pl) {
+  if (!sg || !pl) return null;
+  if (pl.startsWith(sg)) return { pre:sg, um:'', mid:'', suf:pl.slice(sg.length) };
+  for (let i = 0; i < sg.length; i++) if (sg[i] !== pl[i]) {
+    if (UML[sg[i]] !== pl[i] || pl.slice(i + 1, sg.length) !== sg.slice(i + 1)) return null;
+    return { pre:sg.slice(0, i), um:pl[i], mid:sg.slice(i + 1), suf:pl.slice(sg.length) };
+  }
+  return null;
+}
+const nType = x => { const p = nounParts(x.sg, x.pl); return !p ? '0' : { '':'0', e:'e', er:'er', n:'n', en:'n', s:'s' }[p.suf] || '0'; };
+const nUml = x => !!(nounParts(x.sg, x.pl) || {}).um;
+const N_LABEL = { e:'+e', er:'+er', n:'+(e)n', s:'+s', 0:'no ending' };
+const nLabel = x => N_LABEL[nType(x)] + (nUml(x) ? ' + umlaut' : '');
+const nDat = x => /[ns]$/.test(x.pl) ? x.pl : x.pl + 'n';
+const nKinds = x => ['pf', ...(x.sg !== x.pl ? ['ss', 'sp'] : []), ...(x.qd ? ['dn'] : [])];
+// pf = plural form (Tage / Tagen), ss / sp = singular or plural? (sentence needs the singular / the plural), dn = Dativ plural -n
+function nounOpts(x, k) {
+  if (k === 'ss') return { q:x.qs, ans:x.sg, wrong:x.pl };
+  if (k === 'sp') return { q:x.qp, ans:x.pl, wrong:x.sg };
+  if (k === 'dn') return { q:x.qd, ans:nDat(x), wrong:x.pl };
+  return { q:x.qp, ans:x.pl, wrong:x.wr };
+}
+const nounQ = (x, k) => { const o = nounOpts(x, k); return { type:'noun', p:x, k, opts:[o.ans, o.wrong], ans:o.ans }; };
+// the plural with its umlaut and ending in colour: B<ä>um<e>
+function plMark(x, word = x.pl) {
+  const p = nounParts(x.sg, x.pl); if (!p) return esc(word);
+  const extra = word.length > x.pl.length ? `<b class="cj vge">${esc(word.slice(x.pl.length))}</b>` : '';
+  return `${esc(p.pre)}${p.um ? `<b class="cj vge">${esc(p.um)}</b>` : ''}${esc(p.mid)}${p.suf ? `<b class="cj vge">${esc(p.suf)}</b>` : ''}${extra}`;
+}
+function nounHTML(x, k) {
+  const o = nounOpts(x, k), w = k === 'ss' ? `<b class="cj pls">${esc(x.sg)}</b>` : `<b class="cj plp">${plMark(x, o.ans)}</b>`;
+  return esc(o.q).replace('___', w);
+}
+const nounPlain = (x, k) => { const o = nounOpts(x, k); return o.q.replace('___', o.ans); };
+const nounTr = (x, k) => k === 'ss' ? x.ts : k === 'dn' ? x.td : x.tp;
+function nounPrompt(x, k) {
+  const o = nounOpts(x, k), hint = k === 'ss' || k === 'sp' ? `${x.art} ${x.sg} – die ${x.pl}` : `${x.art} ${x.sg}`;
+  return esc(o.q).replace('___', '<span class="gap">?</span>') + ` <span class="whint">(${esc(hint)})</span>`;
+}
+const NHINT = { pf:'Which plural is right?', ss:'Singular or plural? Look at the clues', sp:'Singular or plural? Look at the clues', dn:'Dativ plural: does it need an extra -n?' };
+const NRULE = {
+  e:'<b>+e</b>: many masculine (and some neuter) nouns, short ones often with an <b>umlaut</b>: der Tag → die Tag<b>e</b>, der Baum → die B<b>ä</b>um<b>e</b>, der Stuhl → die St<b>ü</b>hl<b>e</b>.',
+  er:'<b>+er</b>: many short neuter nouns (and a few masculine), always with an <b>umlaut</b> when there is a, o, u: das Kind → die Kind<b>er</b>, das Haus → die H<b>ä</b>us<b>er</b>, der Mann → die M<b>ä</b>nn<b>er</b>.',
+  n:'<b>+(e)n</b>: almost all feminine nouns, and masculine nouns ending in -e: die Frau → die Frau<b>en</b>, die Lampe → die Lampe<b>n</b>, der Junge → die Junge<b>n</b>. Never an umlaut.',
+  s:'<b>+s</b>: nouns ending in a vowel (-a, -o, -i, -u, -y) and many words from English or French: das Auto → die Auto<b>s</b>, das Handy → die Handy<b>s</b>, das Hotel → die Hotel<b>s</b>.',
+  0:'<b>No ending</b>: masculine and neuter nouns ending in <b>-er, -el, -en</b> stay the same, some get an umlaut: der Lehrer → die Lehrer, der Apfel → die <b>Ä</b>pfel. The article <b>die</b> shows it is plural.',
+  num:'<b>Singular or plural?</b> Look for clues: <b>ein / eine / mein / der / das</b> and <b>ist / hat</b> → singular; <b>zwei, drei, viele, alle, keine</b> and <b>sind / haben</b> → plural. In the plural the article is always <b>die</b>.',
+  dn:'<b>Dativ plural</b>: the article is <b>den</b> and the noun adds <b>-n</b>: mit den Kinder<b>n</b>, auf den Bäume<b>n</b>. If the plural already ends in -n or -s, nothing is added: mit den Frauen, mit den Autos.'
+};
+const nRuleKey = (x, k) => k === 'dn' ? 'dn' : k === 'ss' || k === 'sp' ? 'num' : nType(x);
+const NTIPS = { // rule: [title, tip, Tamil tip]
+  e:['+e (often with dots)', 'Short der-words love <b>-e</b>: Tag → Tag<b>e</b>. One syllable with a, o, u? Often dots too: Baum → B<b>ä</b>ume.', 'சிறிய der-சொற்கள் → -e: Tage; a/o/u இருந்தால் பெரும்பாலும் புள்ளிகள்: Bäume.'],
+  er:['+er (with dots)', 'Short das-words go "er-er": Kind → Kind<b>er</b>, Haus → H<b>ä</b>us<b>er</b>. The plural grows, so it gets more letters.', 'சிறிய das-சொற்கள் → -er: Kinder, Häuser (a/o/u-க்கு புள்ளிகள்).'],
+  n:['+(e)n for die-words', 'Nearly every <b>die</b>-word, and der-words ending in -e, take <b>-(e)n</b>: Frau<b>en</b>, Lampe<b>n</b>, Junge<b>n</b>. No dots, ever.', 'die-சொற்கள் → -(e)n: Frauen, Lampen. புள்ளிகள் வராது.'],
+  s:['+s like English', 'Ends in a vowel (Auto, Oma, Handy) or comes from English / French (Hotel)? Then <b>-s</b>, just like in English.', 'உயிரெழுத்தில் முடிந்தால் அல்லது ஆங்கிலச் சொல் → -s: Autos, Omas.'],
+  0:['-er / -el / -en: no ending', '<b>Lehrer, Zimmer, Koffer</b> stay the same; some get dots: <b>Ä</b>pfel, M<b>ü</b>tter, G<b>ä</b>rten. The article <b>die</b> tells you it is plural.', '-er / -el / -en சொற்கள் மாறாது (Lehrer); சிலவற்றுக்கு புள்ளிகள் மட்டும்: Äpfel.'],
+  num:['Count the clues', '<b>ein, mein, ist</b> → one. <b>zwei, viele, alle, sind</b> → many. In the plural the article is always <b>die</b> (Dativ: <b>den</b>); "ein" has no plural.', 'ein / ist → ஒருமை; zwei / viele / sind → பன்மை. பன்மையில் article எப்போதும் die.'],
+  dn:['Dativ plural: +n', '<b>mit den Kinder<u>n</u></b>: Dativ plural = <b>den</b> + noun + <b>n</b>. Already ends in -n or -s? Nothing extra: mit den Frauen, mit den Autos.', 'Dativ பன்மை: den + சொல் + n → mit den Kindern. -n / -s-இல் முடிந்தால் எதுவும் சேர்க்க வேண்டாம்.']
+};
+const nounTipsHTML = keys => `<div class="vgrid tips">${keys.map(k => `<div class="vcard"><div class="big sm">${NTIPS[k][0]}</div><div class="mn">💡 ${NTIPS[k][1]}</div>${taMn(NTIPS[k][2])}</div>`).join('')}</div>`;
+const nounCard = x => vcard(`${wordHTML({ de:`${x.art} ${x.sg}` })} → <span class="cj plp">die ${plMark(x)}</span>`, esc(x.en), x.ta, esc(x.mn), `<span class="case dat">${esc(nLabel(x))}</span>`, x.tmn);
+const nounWhy = (x, k) => `<b>${esc(x.art)} ${esc(x.sg)}</b> → <b>die ${esc(x.pl)}</b> (${esc(nLabel(x))})` + (k === 'dn' ? ` → Dativ plural: <b>den ${esc(nDat(x))}</b>` : k === 'ss' ? ' → here only one: singular' : k === 'sp' ? ' → here more than one: plural' : '');
+const nounItemHTML = (x, k = 'pf') => `<div class="item"><div><div class="s">${nounHTML(x, k)}</div><div class="tr">${esc(nounTr(x, k))}</div><div class="w">${nounWhy(x, k)}</div>${picSVG(x, k)}</div>${starBtn(x.id)}</div>`;
+const BYID = Object.fromEntries([...W, ...P, ...A, ...V, ...NPL].map(w => [w.id, w]));
 const WEIL = W.filter(w => w.c === 'weil'), DASS = W.filter(w => w.c === 'dass');
 const ORDER = [];
 for (let i = 0; i < Math.max(WEIL.length, DASS.length); i++) { if (WEIL[i]) ORDER.push(WEIL[i]); if (DASS[i]) ORDER.push(DASS[i]); }
@@ -1410,7 +1539,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}, spot:{c:0,t:0}, vpr:{c:0,t:0}, vpp:{c:0,t:0}, vns:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, unlockedT:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural', wstats:{}, werr:{}, telcLvl:'B1', lanePreview:true, genNew:false });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}, spot:{c:0,t:0}, vpr:{c:0,t:0}, vpp:{c:0,t:0}, vns:{c:0,t:0}, npf:{c:0,t:0}, nsp:{c:0,t:0}, ndn:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, unlockedT:1, unlockedN:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural', wstats:{}, werr:{}, telcLvl:'B1', lanePreview:true, genNew:false });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -1636,6 +1765,7 @@ function fixedSVG(p, [kind, a, b]) {
 }
 function picSVG(p, k) {
   if (!p) return '';
+  if (p.pn) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(nounTr(p, k || 'pf'))}">${nounSVG(p, k || 'pf')}</svg>`;
   if (p.tv) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(verbTr(p, k || 'pr'))}">${verbSVG(p, k || 'pr')}</svg>`;
   if (p.ak) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(p.t)}">${adjSVG(p)}</svg>`;
   const spec = PIC[p.id] || p.pic; if (!spec) return '';
@@ -1770,7 +1900,7 @@ window.addEventListener('resize', resize); resize();
 const SPAWN_DIST = 78, ROW_GAP = 26;
 // spawn distance scales with the time-between-gates setting, so faster levels (Level 3) keep their shorter gap
 const spawnZ = () => -SPAWN_DIST * S.gap / GAP_DEF, rowGap = () => ROW_GAP * S.gap / GAP_DEF;
-const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 7:12, 8:12, 9:15, 10:11.5, 11:11.5, 12:11.5, 13:12, 14:12, 15:15, 16:11.5, 0:12 };
+const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 7:12, 8:12, 9:15, 10:11.5, 11:11.5, 12:11.5, 13:12, 14:12, 15:15, 16:11.5, 17:12, 18:12, 19:15, 20:11.5, 0:12 };
 let G = { running:false, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0 };
 
 function schedule(sec, fn) { G.pending = { at:G.clock + sec, fn }; }
@@ -1815,6 +1945,13 @@ function spotQ(src, x, v) {
     } else {
       v = 'c'; before = `${x.m}, `; err = x.c === 'weil' ? 'dass' : 'weil'; after = ` ${x.b.join(' ')}${p}`; fix = x.c; skip = [];
     }
+  } else if (src === 'n') {    // nouns: a wrong plural, the singular where the plural is needed, or the Dativ plural without -n
+    if (!(v === 'sp' && x.sg !== x.pl) && !(v === 'dn' && x.qd)) v = 'pf';
+    const o = nounOpts(x, v);
+    [before, after] = o.q.split('___'); err = v === 'sp' ? x.sg : v === 'dn' ? x.pl : x.wr; fix = o.ans;
+    // only the word right before the noun (zwei, ein …) could also fix a singular / plural mistake, and another preposition
+    // could fix a missing Dativ -n (über den Lehrer), so those are never offered
+    skip = v === 'sp' ? [spotTok(before).pop()] : v === 'dn' ? spotTok(before + ' ' + after).filter(t => PV[t.toLowerCase()]) : [];
   } else if (src === 'v') {    // separable verbs: unsplit in Präsens, ge- in the wrong place, split in a side clause
     if (!x.sep || !['pr', 'ns'].includes(v)) v = 'pp';
     if (v === 'pr') { before = `${x.a} `; err = x.v; after = ` ${x.m}${x.p}`; fix = `${vStem(x)} … ${x.pf}`; }
@@ -1839,24 +1976,32 @@ function spotFromKey(k) {
   return x ? spotQ(src, x, v || undefined) : null;
 }
 function spotQueue(tp) {
+  if (tp === 'pl') return pickPrep(NPL, 8).map(x => spotQ('n', x, nSpotKind(x)));
   if (tp === 'tv') return pickV(5, 3).map(x => spotQ('v', x, x.sep ? ['pr', 'pp', 'ns'][Math.floor(Math.random() * 3)] : 'pp'));
   if (tp === 'wd') { const ws = pickWords(5, []); return shuffle([...ws.map((w, i) => spotQ('w', w, i % 2 ? 'o' : 'c')), ...shuffle(TRAPS.slice()).slice(0, 3).map(t => spotQ('t', t))]); }
   return pickPrep(tp === 'prep' ? P : A, 8).map(x => spotQ(tp === 'prep' ? 'p' : 'a', x));
 }
 const spotLine = q => `${esc(q.before)}<s class="spoterr">${esc(q.err)}</s>${esc(q.after)}`;
-const spotRight = q => q.src === 'v' ? verbHTML(q.x, q.v) : q.src === 'w' ? sentHTML(q.x) : q.src === 't' ? trapHTML(q.x) : q.src === 'p' ? prepHTML(q.x) : adjHTML(q.x);
+const nSpotKind = x => { const ks = ['pf', ...(x.sg !== x.pl ? ['sp'] : []), ...(x.qd ? ['dn'] : [])]; return ks[Math.floor(Math.random() * ks.length)]; };
+const spotRight = q => q.src === 'n' ? nounHTML(q.x, q.v) : q.src === 'v' ? verbHTML(q.x, q.v) : q.src === 'w' ? sentHTML(q.x) : q.src === 't' ? trapHTML(q.x) : q.src === 'p' ? prepHTML(q.x) : adjHTML(q.x);
 const spotFix = q => q.v === 'o' ? `<b>${esc(q.err)}</b> has to go to the end` : `<s class="spoterr">${esc(q.err)}</s> → <b>${esc(q.fix)}</b>`;
-const spotEx = q => q.src === 'v' ? VRULE[vRuleKey(q.x, q.v)] : q.src === 'w' ? (q.v === 'o' ? EX.order : q.x.c === 'weil' ? EX.weil : EX_DASS_MAIN) : q.src === 't' ? EX[q.x.ex] : q.src === 'p' ? EXP[q.x.k] : ADJ_RULE[q.x.k] + `<div class="w" style="margin-top:6px">${adjWhy(q.x)}</div>`;
-const spotPic = q => q.src === 'v' ? picSVG(q.x, q.v) : q.src === 'p' || q.src === 'a' ? picSVG(q.x) : '';
+const spotEx = q => q.src === 'n' ? NRULE[nRuleKey(q.x, q.v)] : q.src === 'v' ? VRULE[vRuleKey(q.x, q.v)] : q.src === 'w' ? (q.v === 'o' ? EX.order : q.x.c === 'weil' ? EX.weil : EX_DASS_MAIN) : q.src === 't' ? EX[q.x.ex] : q.src === 'p' ? EXP[q.x.k] : ADJ_RULE[q.x.k] + `<div class="w" style="margin-top:6px">${adjWhy(q.x)}</div>`;
+const spotPic = q => q.src === 'n' ? picSVG(q.x, q.v === 'dn' ? 'dn' : 'pf') : q.src === 'v' ? picSVG(q.x, q.v) : q.src === 'p' || q.src === 'a' ? picSVG(q.x) : '';
 
 // levels 1-3 are weil/dass, 4-6 prepositions, 7-9 adjective endings (each topic unlocks on its own);
 // 10-12 are each topic's "Spot the error" level, open together with that topic's Level 3
-const isLocked = l => l === 16 ? (S.unlockedT || 1) < 3 : l >= 13 ? l - 12 > (S.unlockedT || 1) : l >= 10 ? [S.unlocked, S.unlockedP, S.unlockedA || 1][l - 10] < 3 : l >= 7 ? l - 6 > (S.unlockedA || 1) : l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
-const LOCK_MSG = { 14:'Get 6 of 8 right in Trennbare Verben Level 1 to unlock Level 2.', 15:'Get 6 of 8 right in Trennbare Verben Level 2 to unlock Level 3.', 16:'Spot the error opens together with Trennbare Verben Level 3.', 10:'Spot the error opens together with Level 3.', 11:'Spot the error opens together with Präpositionen Level 3.', 12:'Spot the error opens together with Adjektive Level 3.',
+const isLocked = l => l === 20 ? (S.unlockedN || 1) < 3 : l >= 17 ? l - 16 > (S.unlockedN || 1) : l === 16 ? (S.unlockedT || 1) < 3 : l >= 13 ? l - 12 > (S.unlockedT || 1) : l >= 10 ? [S.unlocked, S.unlockedP, S.unlockedA || 1][l - 10] < 3 : l >= 7 ? l - 6 > (S.unlockedA || 1) : l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
+const LOCK_MSG = { 18:'Get 6 of 8 right in Singular / Plural Level 1 to unlock Level 2.', 19:'Get 6 of 8 right in Singular / Plural Level 2 to unlock Level 3.', 20:'Spot the error opens together with Singular / Plural Level 3.', 14:'Get 6 of 8 right in Trennbare Verben Level 1 to unlock Level 2.', 15:'Get 6 of 8 right in Trennbare Verben Level 2 to unlock Level 3.', 16:'Spot the error opens together with Trennbare Verben Level 3.', 10:'Spot the error opens together with Level 3.', 11:'Spot the error opens together with Präpositionen Level 3.', 12:'Spot the error opens together with Adjektive Level 3.',
   2:'Get 6 of 8 right in Level 1 to unlock Level 2.', 3:'Get 4 of 6 right in Level 2 to unlock Level 3.',
   5:'Get 6 of 8 right in Präpositionen Level 1 to unlock Level 2.', 6:'Get 6 of 8 right in Präpositionen Level 2 to unlock Level 3.',
   8:'Get 6 of 8 right in Adjektive Level 1 to unlock Level 2.', 9:'Get 6 of 8 right in Adjektive Level 2 to unlock Level 3.' };
 const RULES = {
+  17: { key:'rule:npf', title:'Die Pluralform', lead:'German has five plural patterns, and in the plural the article is always die.',
+       cards:[['+e / +er, often with an umlaut', NRULE.e, nounHTML(BYID.n_baum, 'pf'), 'n_baum~pf'], ['+(e)n for die-words', NRULE.n, nounHTML(BYID.n_lampe, 'pf'), 'n_lampe~pf'], ['+s and no ending', NRULE.s + ' ' + NRULE[0], nounHTML(BYID.n_apfel, 'pf'), 'n_apfel~pf']] },
+  18: { key:'rule:nsp', title:'Singular oder Plural?', lead:'Look at the clues in the sentence: ein / mein, numbers like zwei or viele, and the verb.',
+       cards:[['One → singular', NRULE.num, nounHTML(BYID.n_kind, 'ss'), 'n_kind~ss'], ['More → plural', 'zwei, drei, viele, alle, keine and a plural verb (sind, haben, spielen) need the plural.', nounHTML(BYID.n_kind, 'sp'), 'n_kind~sp']] },
+  19: { key:'rule:ndn', title:'Dativ Plural', lead:'After mit den, von den, auf den … the plural noun adds an -n.',
+       cards:[['den + noun + n', NRULE.dn, nounHTML(BYID.n_kind, 'dn'), 'n_kind~dn']] },
   13: { key:'rule:vpr', title:'Trennbar oder nicht?', lead:'Some prefixes split off in the Präsens and go to the end of the sentence. Others stay glued to the verb.',
        cards:[['trennbar → prefix to the end', VRULE.sepPr, verbHTML(BYID.v_aufstehen, 'pr'), 'v_aufstehen~pr'], ['nicht trennbar → one word', VRULE.insPr, verbHTML(BYID.v_verstehen, 'pr'), 'v_verstehen~pr']] },
   14: { key:'rule:vpp', title:'Perfekt: wo steht ge?', lead:'Separable verbs take ge in the middle. Inseparable verbs take no ge at all.',
@@ -1885,12 +2030,16 @@ function buildQueue(l, fresh) {
   if (l === 7) return pickPrep(AWEAK, 8).map(adjQ);
   if (l === 8) return pickPrep(AMIXED, 8).map(adjQ);
   if (l === 9) return shuffle([...pickPrep(AWEAK, 3), ...pickPrep(AMIXED, 3), ...pickPrep(ASTRONG, 4)]).map(adjQ);
+  if (l === 17) return pickPrep(NPL, 8).map(x => nounQ(x, 'pf'));
+  if (l === 18) return pickPrep(NPL.filter(x => x.sg !== x.pl), 8).map((x, i) => nounQ(x, i % 2 ? 'ss' : 'sp'));
+  if (l === 19) { const d = pickPrep(NPL.filter(x => x.qd), 4); return shuffle([...d.map(x => nounQ(x, 'dn')), ...pickPrep(NPL.filter(x => !d.includes(x)), 6).map((x, i) => nounQ(x, i < 3 || x.sg === x.pl ? 'pf' : i % 2 ? 'ss' : 'sp'))]); }
+  if (l === 20) return spotQueue('pl');
   if (l === 13) return pickV(5, 3).map(x => verbQ(x, 'pr'));
   if (l === 14) return pickV(5, 3).map(x => verbQ(x, 'pp'));
   if (l === 15) return shuffle([...pickPrep(VSEP, 4).map(x => verbQ(x, 'ns')), ...pickV(3, 3).map((x, i) => verbQ(x, i % 2 ? 'pp' : 'pr'))]);
   if (l === 16) return spotQueue('tv');
   if (l >= 10) return spotQueue(['wd', 'prep', 'adj'][l - 10]);
-  return reviewWords().slice(0, 8).map((w, i) => w.tv ? verbQ(w, vKinds(w)[Math.floor(Math.random() * vKinds(w).length)]) : w.ak ? adjQ(w) : w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
+  return reviewWords().slice(0, 8).map((w, i) => w.pn ? nounQ(w, nKinds(w)[Math.floor(Math.random() * nKinds(w).length)]) : w.tv ? verbQ(w, vKinds(w)[Math.floor(Math.random() * vKinds(w).length)]) : w.ak ? adjQ(w) : w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
 }
 
 // every round opens with a briefing of its vocabulary (plus the full rule cards the first time a preposition level is played)
@@ -1970,7 +2119,7 @@ function startQuestion(q) {
     spawnRow('gate', q.opts.map((o, i) => ({ lane:lanes[i], label:o, correct:o === q.ans, plain:true })), spawnZ(), 0);
   } else {
     // article gates stay neutral white so the das/dass colour coding doesn't hint at an answer
-    const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep' || q.type === 'adj' || q.type === 'verb';
+    const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep' || q.type === 'adj' || q.type === 'verb' || q.type === 'noun';
     spawnRow('gate', [
       { lane:lanes[0], label:q.opts[0], correct:q.opts[0] === q.ans, plain },
       { lane:lanes[1], label:q.opts[1], correct:q.opts[1] === q.ans, plain },
@@ -1985,6 +2134,8 @@ function renderPrompt() {
   if (q.type === 'spot') {
     html = esc(q.before + q.err + q.after);
     hint = '🔍 One word is wrong. Run through the gate with that word';
+  } else if (q.type === 'noun') {
+    html = nounPrompt(q.p, q.k); hint = NHINT[q.k];
   } else if (q.type === 'verb') {
     html = verbPrompt(q.p, q.k); hint = VHINT[q.k];
   } else if (q.type === 'gate') {
@@ -2042,7 +2193,7 @@ function loseLife() {
   const f = $('#flash'); f.style.opacity = .35; setTimeout(() => f.style.opacity = 0, 160);
 }
 
-const histKey = q => q.type === 'verb' ? `${q.p.id}:${q.k}` : q.type === 'spot' ? [q.src, q.src === 't' && !q.x.gen ? TRAPS.indexOf(q.x) : q.x.id, q.v || ''].join(':') : q.type === 'trap' ? (q.t.gen ? q.t.id : TRAPS.indexOf(q.t)) : (q.type === 'prep' || q.type === 'adj') ? q.p.id : q.w.id;
+const histKey = q => q.type === 'noun' ? `${q.p.id}:${q.k}` : q.type === 'verb' ? `${q.p.id}:${q.k}` : q.type === 'spot' ? [q.src, q.src === 't' && !q.x.gen ? TRAPS.indexOf(q.x) : q.x.id, q.v || ''].join(':') : q.type === 'trap' ? (q.t.gen ? q.t.id : TRAPS.indexOf(q.t)) : (q.type === 'prep' || q.type === 'adj') ? q.p.id : q.w.id;
 function finish(q, ok) {
   const first = !q.retry;
   G.log.push({ y:q.type[0], i:histKey(q), o:ok ? 1 : 0, c:q.chose, w:q.type === 'build' && q.wrong.length ? q.wrong : undefined, r:q.retry ? 1 : undefined });
@@ -2050,13 +2201,14 @@ function finish(q, ok) {
     G.answered++;
     if (q.type === 'spot') stat('spot', ok);
     else if (q.type === 'verb') stat('v' + q.k, ok);
+    else if (q.type === 'noun') stat('n' + (q.k === 'ss' ? 'sp' : q.k), ok);
     else if (q.type === 'trap') stat('trap', ok);
     else if (q.type === 'prep') stat('p' + q.p.pt, ok);
     else if (q.type === 'adj') stat('a' + q.p.k, ok);
     else stat(q.w.c, ok);
   }
   if (q.type === 'spot') { if (q.src !== 't') grade(q.x.id, ok); }
-  else if (q.type === 'verb') grade(q.p.id, ok);
+  else if (q.type === 'verb' || q.type === 'noun') grade(q.p.id, ok);
   else if (q.type !== 'trap') grade(histKey(q), ok);
   if (ok) {
     G.streak++; const pts = 10 + Math.min(G.streak - 1, 5) * 2;
@@ -2072,8 +2224,8 @@ function finish(q, ok) {
 
 let toastT = null;
 function toast(pts, q) {
-  const s = q.type === 'verb' ? verbHTML(q.p, q.k) : q.type === 'spot' ? `${spotFix(q)}<br>${spotRight(q)}` : q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : q.type === 'adj' ? adjHTML(q.p) : sentHTML(q.w);
-  const el = $('#toast'); const pic = q.type === 'verb' ? picSVG(q.p, q.k) : q.type === 'spot' ? spotPic(q) : (q.type === 'prep' || q.type === 'adj') ? picSVG(q.p) : '';
+  const s = q.type === 'noun' ? nounHTML(q.p, q.k) : q.type === 'verb' ? verbHTML(q.p, q.k) : q.type === 'spot' ? `${spotFix(q)}<br>${spotRight(q)}` : q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : q.type === 'adj' ? adjHTML(q.p) : sentHTML(q.w);
+  const el = $('#toast'); const pic = q.type === 'noun' ? picSVG(q.p, q.k === 'dn' ? 'dn' : q.k) : q.type === 'verb' ? picSVG(q.p, q.k) : q.type === 'spot' ? spotPic(q) : (q.type === 'prep' || q.type === 'adj') ? picSVG(q.p) : '';
   el.innerHTML = `<div class="trow"><div><b class="ok">Richtig! +${pts}</b><div class="s">${s}</div></div>${pic}</div>`;
   el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), pic ? 3000 : 2200);
 }
@@ -2086,6 +2238,11 @@ function showWrong(q, chose, expect) {
     body = `<p class="chose">${chose ? `<b>${esc(chose)}</b> is correct here. ` : ''}The mistake: ${spotFix(q)}</p>
       <p class="sent">${spotLine(q)}</p><p class="sent">✓ ${spotRight(q)}</p><p class="tr">${esc(x.t)}</p>${spotPic(q)}<div class="ex">${spotEx(q)}</div>
       ${q.src === 't' ? '' : `<div class="wrow"><span class="grow"></span>${starBtn(x.id)}</div>`}`;
+  } else if (q.type === 'noun') {
+    const x = q.p, ans = `<b class="cj ${q.k === 'ss' ? 'pls' : 'plp'}">${esc(q.ans)}</b>`;
+    body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
+      <p class="sent">${nounHTML(x, q.k)}</p><p class="tr">${esc(nounTr(x, q.k))}</p>${picSVG(x, q.k)}<div class="ex">${NRULE[nRuleKey(x, q.k)]}</div>
+      <div class="wrow"><span class="grow">${nounWhy(x, q.k)}</span>${starBtn(x.id)}</div>`;
   } else if (q.type === 'verb') {
     const x = q.p, ans = `<b class="cj ${x.sep ? 'vsep' : 'vins'}">${esc(q.ans)}</b>`;
     body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
@@ -2140,6 +2297,8 @@ function endRound() {
   if (l === 7 && G.correct >= 6 && (S.unlockedA || 1) < 2) { S.unlockedA = 2; unlock = 'Adjektive Level 2 is unlocked: endings after ein / kein / mein.'; }
   if (l === 8 && G.correct >= 6 && (S.unlockedA || 1) < 3) { S.unlockedA = 3; unlock = 'Adjektive Level 3 is unlocked: now with no article (kalter Kaffee).'; }
   if (l === 13 && G.correct >= 6 && (S.unlockedT || 1) < 2) { S.unlockedT = 2; unlock = 'Trennbare Verben Level 2 is unlocked: the Perfekt (aufgestanden, verstanden).'; }
+  if (l === 17 && G.correct >= 6 && (S.unlockedN || 1) < 2) { S.unlockedN = 2; unlock = 'Singular / Plural Level 2 is unlocked: singular or plural?'; }
+  if (l === 18 && G.correct >= 6 && (S.unlockedN || 1) < 3) { S.unlockedN = 3; unlock = 'Singular / Plural Level 3 and Spot the error are unlocked.'; }
   if (l === 14 && G.correct >= 6 && (S.unlockedT || 1) < 3) { S.unlockedT = 3; unlock = 'Trennbare Verben Level 3 and Spot the error are unlocked.'; }
   const newBest = G.score > (S.best[l] || 0); if (newBest) S.best[l] = G.score;
   save(); keepStorage();
@@ -2158,6 +2317,7 @@ function endRound() {
     : q.type === 'prep' ? prepItemHTML(q.p)
     : q.type === 'adj' ? adjItemHTML(q.p)
     : q.type === 'verb' ? verbItemHTML(q.p, q.k)
+    : q.type === 'noun' ? nounItemHTML(q.p, q.k)
     : `<div class="item"><div><div class="s">${sentHTML(q.w)}</div><div class="tr">${esc(q.w.t)}</div><div class="w">${wordHTML(q.w)}: ${esc(q.w.en)}</div></div>${starBtn(q.w.id)}</div>`
   ).join('');
   show('end'); $('#eAgain').focus();
@@ -2172,7 +2332,7 @@ function renderMenu() {
   const n = currentStreak();
   $('#mStreak').textContent = n ? `${n}-day streak. Keep it going today.` : 'Play a round today to start a streak.';
   $('#dueBadge').textContent = reviewWords().length;
-  [2, 3, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16].forEach(l => {
+  [2, 3, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20].forEach(l => {
     const b = $(`[data-level="${l}"]`), locked = isLocked(l);
     b.classList.toggle('locked', locked); b.setAttribute('aria-disabled', locked);
   });
@@ -2184,13 +2344,16 @@ function renderMenu() {
   $('#l9s').textContent = (S.unlockedA || 1) >= 3 ? 'Faster, plus no article: kalter Kaffee' : 'Locked: get 6 of 8 in Level 2';
   $('#l14s').textContent = (S.unlockedT || 1) >= 2 ? 'aufgestanden · verstanden' : 'Locked: get 6 of 8 in Level 1';
   $('#l15s').textContent = (S.unlockedT || 1) >= 3 ? 'Faster, plus weil / dass: …, weil ich aufstehe' : 'Locked: get 6 of 8 in Level 2';
-  [10, 11, 12, 16].forEach(l => { $('#l' + l + 's').textContent = isLocked(l) ? 'Locked: opens together with Level 3' : 'One word is wrong. Run through it!'; });
+  $('#l18s').textContent = (S.unlockedN || 1) >= 2 ? 'ein Kind · zwei Kinder' : 'Locked: get 6 of 8 in Level 1';
+  $('#l19s').textContent = (S.unlockedN || 1) >= 3 ? 'Faster, plus Dativ plural: mit den Kindern' : 'Locked: get 6 of 8 in Level 2';
+  [10, 11, 12, 16, 20].forEach(l => { $('#l' + l + 's').textContent = isLocked(l) ? 'Locked: opens together with Level 3' : 'One word is wrong. Run through it!'; });
   $$('#topicTabs button').forEach(b => b.classList.toggle('on', b.dataset.topic === S.topic));
   const tp = topicKey();
   $('#lvWd').style.display = tp === 'wd' ? '' : 'none';
   $('#lvPrep').style.display = tp === 'prep' ? '' : 'none';
   $('#lvAdj').style.display = tp === 'adj' ? '' : 'none';
   $('#lvTv').style.display = tp === 'tv' ? '' : 'none';
+  $('#lvPl').style.display = tp === 'pl' ? '' : 'none';
   if (cafeMode === 'run' && $('#guide').dataset.topic !== tp) { $('#guide').innerHTML = guideHTML(tp); $('#guide').dataset.topic = tp; }
   $$('#menu .btn.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === cafeMode));
   $('#modeQ').style.display = cafeMode ? 'none' : '';
@@ -2203,7 +2366,7 @@ function renderMenu() {
   $('#lanePrev').checked = S.lanePreview !== false;
   $('#genRow').style.display = lsGet(AI_KEY) ? '' : 'none'; $('#genNew').checked = !!S.genNew;
 }
-const topicKey = () => ['prep', 'adj', 'tv'].includes(S.topic) ? S.topic : 'wd';
+const topicKey = () => ['prep', 'adj', 'tv', 'pl'].includes(S.topic) ? S.topic : 'wd';
 function setTopic(t) { S.topic = t; cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
 
 function renderGap() {
@@ -2224,6 +2387,7 @@ const CAFE_TOPICS = [
   ['stadt', '🏙️', 'In der Stadt', 'In the city'], ['frei', '💬', 'Freies Gespräch', 'Anything you like']
 ];
 const CAFE_FOCUS = {
+  pl:{ name:'Singular / Plural', prompt:'Grammar focus: the plural of nouns. The five patterns: +e, often with umlaut (Tag → Tage, Baum → Bäume); +er with umlaut (Kind → Kinder, Haus → Häuser); +(e)n for most feminine nouns and der-words on -e (Frau → Frauen, Lampe → Lampen, Junge → Jungen); +s for vowel endings and foreign words (Auto → Autos, Hotel → Hotels); no ending for der/das-words on -er, -el, -en (Lehrer → Lehrer, Apfel → Äpfel). The plural article is always die, and the Dativ plural adds -n (mit den Kindern). Use many plurals yourself and ask about things there are several of: family, rooms, friends, pets, food, shopping lists, e.g. "Wie viele Geschwister hast du?", "Was für Geschäfte gibt es in deiner Straße?", "Was kaufst du heute ein?", "Mit wem spielst du gern?". In the feedback, correct wrong plural forms, a singular where a plural is needed, and a missing Dativ -n.' },
   tv:{ name:'Trennbare Verben', prompt:'Grammar focus: separable verbs (trennbare Verben: aufstehen, anrufen, einkaufen, fernsehen, mitkommen, abholen, ankommen, aufräumen, einladen…) and inseparable verbs (verstehen, bekommen, besuchen, erzählen, bezahlen, vergessen…). In the Präsens the separable prefix goes to the end (Ich stehe um 7 Uhr auf), in the Perfekt ge goes in the middle (aufgestanden, eingekauft) while inseparable verbs take no ge- (verstanden, besucht), and in weil / dass / wenn clauses the verb is one word at the end (…, weil ich früh aufstehe). Use BOTH kinds about equally often: alternate between a separable and an inseparable verb from one message to the next, in your own sentences and in your questions. Ask about daily routine, plans and the past, e.g. separable: "Wann stehst du auf?", "Was hast du gestern eingekauft?", "Wen rufst du oft an?"; inseparable: "Hast du alles verstanden?", "Wen besuchst du am Wochenende?", "Was hast du zum Geburtstag bekommen?", "Was erzählst du gern?". In the feedback, point out mistakes with both kinds: a separable prefix not at the end, a wrong participle (geaufstanden → aufgestanden) and ge- on an inseparable verb (geverstanden → verstanden).' },
   adj:{ name:'Adjektivendungen', prompt:'Grammar focus: adjective endings (Adjektivdeklination) after der/die/das (weak: -e/-en), after ein/kein/mein (mixed: -er/-es where ein has no ending) and without article (strong: der → -er, das → -es, dem → -em), in Nominativ, Akkusativ and Dativ. Use adjectives in front of nouns yourself in all three patterns, and ask questions that make the learner describe people and things: "Wie ist dein …?", "Was für ein … hast du?", "Beschreib mal deinen / deine / dein …", "Welche … magst du?".' },
   wd:{ name:'weil / dass', prompt:'Grammar focus: subordinate clauses with "weil" (giving a reason) and "dass" (that-clauses), where the conjugated verb goes to the END (… weil ich müde bin; … dass das Wetter schön ist). Ask many "Warum …?" questions and opinion questions ("Was denkst du …?", "Glaubst du, dass …?", "Findest du, dass …?") so the learner has to answer with weil or dass.' },
@@ -2914,6 +3078,53 @@ GUIDE.tv = { name:'Trennbare Verben', sections:() => [
     <li><b>zu + infinitive</b>: zu goes in the middle: Ich habe keine Lust, auf<b>zu</b>räumen. (but: zu verstehen)</li></ul>`],
   ['💡 Memory tricks', `${verbTipsHTML(['sepPr', 'insPr', 'sepPp', 'insPp', 'ns'])}<h3>Verbs in the game</h3><div class="vgrid">${V.map(verbCard).join('')}</div>`]
 ] };
+// plural picture: one thing → several, and the umlaut + ending fly into the plural word; Dativ: the extra -n flies on
+function nounSVG(x, k) {
+  const col = VCOL.sep, ge = VCOL.ge, dark = '#2F3640', grey = '#8F9BA5', p = nounParts(x.sg, x.pl) || { pre:x.pl, um:'', mid:'', suf:'' };
+  const fitSize = (t, max, S) => { const w = textW(t, S); return w > max ? S * max / w : S; };
+  let s = '', cap;
+  if (k === 'dn') {
+    s += [120, 160, 200].map((cx, i) => appear(em(x.e, cx, 60, 30), 0.1 + i * 0.1)).join('');
+    const extra = nDat(x).slice(x.pl.length);
+    s += verbRow([{ t:'mit den', c:grey, sp:1 }, { t:x.pl, c:dark, wt:800 }, ...(extra ? [{ t:extra, c:ge, wt:800, from:[300, 40] }] : [])], 124, 28);
+    cap = extra ? `Dativ plural: den + ${x.pl} + n` : `already ends in -${x.pl.slice(-1)}: no extra n`;
+  } else {
+    const sgT = `${x.art} ${x.sg}`;
+    s += em(x.e, 74, 62, 36) + txt(esc(sgT), 74, 100, fitSize(sgT, 120, 16), dark, 700);
+    s += arrowSVG(118, 62, 180, 62, grey, 4);
+    s += [210, 246, 282].map((cx, i) => appear(em(x.e, cx, 62, 28), 0.15 + i * 0.12)).join('');
+    const segs = [{ t:'die', c:col, wt:800, sp:1 }, { t:p.pre, c:dark, wt:800 }];
+    if (p.um) segs.push({ t:p.um, c:ge, wt:800, from:[74, 100] });
+    if (p.mid) segs.push({ t:p.mid, c:dark, wt:800 });
+    if (p.suf) segs.push({ t:p.suf, c:ge, wt:800, from:[300, 104] });
+    s += verbRow(segs.filter(g => g.t), 140, 28);
+    cap = k === 'pf' ? `${nLabel(x)}: ${x.art} ${x.sg} → die ${x.pl}` : `one: ${x.art} ${x.sg} · more: die ${x.pl}`;
+  }
+  s += txt(esc(cap), 160, 176, fitSize(cap, 300, 13), dark, 600);
+  return s + badge(`${nLabel(x)} · ${k === 'dn' ? 'Dativ plural' : k === 'pf' ? 'Plural' : 'Singular or plural?'}`, col);
+}
+const nPic = (id, k = 'pf') => picSVG(BYID[id], k);
+const nEx = list => `<ul class="gex">${list.map(([id, k]) => { const x = BYID[id]; return x ? `<li>${nounHTML(x, k)} <span class="tr">${esc(nounTr(x, k))}</span></li>` : ''; }).join('')}</ul>`;
+const nTable = ty => `<table class="gtab"><tr><th>Singular</th><th>Plural</th></tr>${NPL.filter(x => !x.gen && nType(x) === ty).map(x => `<tr><td>${wordHTML({ de:`${x.art} ${x.sg}` })}</td><td>die <b>${plMark(x)}</b></td></tr>`).join('')}</table>`;
+GUIDE.pl = { name:'Singular / Plural', sections:() => [
+  ['1 · Plural: always die, and five patterns', `<p>In the plural every noun takes <b>die</b>, whether it is der, die or das in the singular: der Tag → <b>die</b> Tage, das Kind → <b>die</b> Kinder (Dativ: <b>den</b>). "ein" has no plural: ein Kind → zwei / viele / keine Kinder.</p>
+    <p>German has <b>five plural patterns</b>. They are not 100 % predictable, so learn every noun with its plural (der Tag, die Tage), but these rules give very good guesses:</p>
+    <table class="gtab"><tr><th>Pattern</th><th>Typical nouns</th><th>Example</th></tr>
+    <tr><td><b>+e</b> (often ¨)</td><td>short der-words</td><td>Tag → Tage, Baum → Bäume</td></tr>
+    <tr><td><b>+er</b> (always ¨)</td><td>short das-words</td><td>Kind → Kinder, Haus → Häuser</td></tr>
+    <tr><td><b>+(e)n</b></td><td>die-words, der-words on -e</td><td>Frau → Frauen, Lampe → Lampen</td></tr>
+    <tr><td><b>+s</b></td><td>vowel endings, English / French words</td><td>Auto → Autos, Hotel → Hotels</td></tr>
+    <tr><td><b>no ending</b> (sometimes ¨)</td><td>der / das-words on -er, -el, -en</td><td>Lehrer → Lehrer, Apfel → Äpfel</td></tr></table>
+    ${nPic('n_kind')}${nPic('n_frau')}`],
+  ['2 · +e, often with an umlaut', `<p>${NRULE.e}</p>${nPic('n_baum')}${nTable('e')}${taMn(NTIPS.e[2])}`],
+  ['3 · +er, with an umlaut', `<p>${NRULE.er}</p>${nPic('n_haus')}${nTable('er')}${taMn(NTIPS.er[2])}`],
+  ['4 · +(e)n', `<p>${NRULE.n}</p>${nPic('n_lampe')}${nTable('n')}${taMn(NTIPS.n[2])}`],
+  ['5 · +s', `<p>${NRULE.s}</p>${nPic('n_auto')}${nTable('s')}${taMn(NTIPS.s[2])}`],
+  ['6 · No ending (-er, -el, -en)', `<p>${NRULE[0]}</p>${nPic('n_apfel')}${nTable('0')}${taMn(NTIPS[0][2])}`],
+  ['7 · Singular or plural?', `<p>${NRULE.num}</p>${nPic('n_kind', 'ss')}${nEx([['n_kind', 'ss'], ['n_kind', 'sp'], ['n_buch', 'ss'], ['n_buch', 'sp'], ['n_katze', 'ss'], ['n_katze', 'sp']])}${taMn(NTIPS.num[2])}`],
+  ['8 · Dativ plural: + n', `<p>${NRULE.dn}</p>${nPic('n_kind', 'dn')}${nEx([['n_hund', 'dn'], ['n_baum', 'dn'], ['n_freund', 'dn'], ['n_apfel', 'dn']])}${taMn(NTIPS.dn[2])}`],
+  ['💡 Memory tricks', `${nounTipsHTML(['e', 'er', 'n', 's', '0', 'num', 'dn'])}<h3>Nouns in the game</h3><div class="vgrid">${NPL.filter(x => !x.gen).map(nounCard).join('')}</div>`]
+] };
 const guideCache = {};
 function guideHTML(topic) {
   if (!guideCache[topic]) {
@@ -2936,6 +3147,7 @@ const ERR_INFO = { // category: [label, tip, Tamil tip]
   ending:['Adjective ending', 'After der/die/das: -e / -en. After ein: -er / -es where ein has no ending. No article: the der-ending.', 'der/die/das பின் -e/-en; ein பின் -er/-es; article இல்லை → der முடிவு.'],
   gender:['der / die / das', 'Learn every noun with its article: der Tisch, die Lampe, das Buch.', 'ஒவ்வொரு பெயர்ச்சொல்லையும் அதன் article-உடன் கற்றுக்கொள்.'],
   verbform:['Verb form', 'Match the verb to the subject: ich lerne, du lernst, er lernt, wir lernen.', 'எழுவாய்க்கு ஏற்ப வினை முடிவு: ich lerne, du lernst.'],
+  plural:['Plural', 'Learn every noun together with its plural: der Tag – die Tage, das Kind – die Kinder, die Frau – die Frauen. Dativ plural: + n (mit den Kindern).', 'ஒவ்வொரு பெயர்ச்சொல்லையும் அதன் பன்மையுடன் கற்றுக்கொள்: der Tag – die Tage. Dativ பன்மை: +n (mit den Kindern).'],
   prefix:['Separable verbs', 'trennbar: the prefix goes to the end (Ich stehe um 7 Uhr auf), but stays on in a weil / dass clause (…, weil ich aufstehe); Perfekt: auf-ge-standen. be- / ver- / er- never split and take no ge-.', 'பிரியும் வினை: முன்னொட்டு கடைசிக்கு (Ich stehe … auf); weil/dass-இல் ஒட்டியே (aufstehe); Perfekt: auf-ge-standen. be-/ver-/er- பிரியாது, ge- இல்லை.'],
   spelling:['Spelling', 'Check the letters: dass vs. das, ie vs. ei, double letters.', 'எழுத்துக்களை கவனமாக பார்: dass / das, ie / ei.'],
   capital:['Capital letters', 'Every German noun starts with a capital letter: der Hund, die Arbeit, das Essen.', 'ஜெர்மனில் எல்லா பெயர்ச்சொற்களும் பெரிய எழுத்தில் தொடங்கும்.'],
@@ -3003,10 +3215,19 @@ function adjPhrase(x) {
   return { text:(art ? art + ' ' : '') + x.a + ' ' + nounOf(x), hint:`${base} + ${ADJV[x.adj][0]} + ${ANOUN[x.n][0].replace(/^(der|die|das) /, '').replace(' (pl.)', '')}` };
 }
 function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap (TRAPS index), p = preposition, a = adjective, v = verb ("id~pr|pp|ns")
-  const [vid, vk] = kind === 'v' ? String(id).split('~') : [id];
+  const [vid, vk] = kind === 'v' || kind === 'n' ? String(id).split('~') : [id];
   const src = kind === 't' ? TRAPS[id] : BYID[vid]; if (!src) return null;
   const it = { key:`${lv}:${kind}:${id}`, lv, kind, id, src, atStart:false, vk };
   const gap = h => h.replace('___', '<span class="gap">?</span>');
+  if (kind === 'n') {
+    if (lv === 'l2') { it.full = `die ${src.pl}`; it.answer = it.full; it.prompt = `${wordHTML({ de:`${src.art} ${src.sg}` })} → <span class="gap">…</span> <span class="whint">(plural with its article)</span>`; it.hint = 'Write the plural with its article.'; }
+    else {
+      it.full = nounPlain(src, vk || 'pf');
+      if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; }
+      else { it.prompt = nounPrompt(src, vk || 'pf'); it.answer = nounOpts(src, vk || 'pf').ans; it.hint = vk === 'dn' ? 'Type the Dativ plural: does it need an extra -n?' : 'Type the plural form.'; }
+    }
+    return it;
+  }
   if (kind === 'v') {
     it.full = verbPlain(src, vk);
     if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; }
@@ -3035,6 +3256,7 @@ function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap
   return it;
 }
 function writeQueue(lv, topic) {
+  if (topic === 'pl') return pickPrep(NPL, 8).map(x => writeItem(lv, 'n', `${x.id}~${lv === 'l1' && x.qd && Math.random() < 0.4 ? 'dn' : 'pf'}`)).filter(Boolean);
   if (topic === 'tv') return pickV(5, 3).map(x => writeItem(lv, 'v', `${x.id}~${lv === 'l1' ? (x.sep && Math.random() < 0.5 ? 'ns' : 'pp') : 'pr'}`)).filter(Boolean);
   if (topic === 'wd') {
     const items = pickWords(lv === 'l1' ? 6 : 8, []).map(w => writeItem(lv, 'w', w.id));
@@ -3043,11 +3265,12 @@ function writeQueue(lv, topic) {
   }
   return pickPrep(topic === 'prep' ? P : A, 8).map(x => writeItem(lv, topic === 'prep' ? 'p' : 'a', x.id)).filter(Boolean);
 }
-const asQ = it => it.kind === 'v' ? verbQ(it.src, it.vk) : it.kind === 'w' ? gateQ(it.src) : it.kind === 't' ? trapQ(it.src) : it.kind === 'p' ? prepQ(it.src) : adjQ(it.src);
+const asQ = it => it.kind === 'n' ? nounQ(it.src, it.vk || 'pf') : it.kind === 'v' ? verbQ(it.src, it.vk) : it.kind === 'w' ? gateQ(it.src) : it.kind === 't' ? trapQ(it.src) : it.kind === 'p' ? prepQ(it.src) : adjQ(it.src);
 // which kind of mistake was it? (offline guess, used for "your typical mistakes")
 function classifyWrite(it, typed) {
   const y = wStrip(typed).toLowerCase(), a = wStrip(it.answer).toLowerCase(), yw = y.split(' '), aw = a.split(' ');
   // same letters in another order (aufstehe ↔ stehe auf) or only ge- added / missing (geferngesehen) → a separable-verb mistake
+  if (it.kind === 'n') return 'plural';
   if (it.kind === 'v') { const letters = s => [...s.replace(/[\s…]/g, '').replace(/ge/g, '')].sort().join(''); return letters(y) === letters(a) ? 'prefix' : it.lv === 'dik' ? 'spelling' : 'verbform'; }
   if (it.kind === 't' || (it.kind === 'w' && it.lv === 'l1')) return /^da(ss|ß|s)$/.test(y) && /^dass?$/.test(a) ? 'spelling' : 'conj';
   if (it.lv === 'dik') return 'spelling';
@@ -3061,6 +3284,7 @@ function classifyWrite(it, typed) {
 // explanation pieces for one exercise (same pictures, rules and tricks as the runner)
 function explainOf(it) {
   const s = it.src;
+  if (it.kind === 'n') { const k = it.vk || 'pf'; return { sent:it.lv === 'l2' ? `${wordHTML({ de:`${s.art} ${s.sg}` })} → <b class="cj plp">die ${plMark(s)}</b>` : nounHTML(s, k), tr:it.lv === 'l2' ? s.en : nounTr(s, k), ex:NRULE[nRuleKey(s, k)], mn:s.mn, tmn:s.tmn, pic:picSVG(s, k), star:s.id, why:nounWhy(s, k) }; }
   if (it.kind === 'v') return { sent:verbHTML(s, it.vk), tr:verbTr(s, it.vk), ex:VRULE[vRuleKey(s, it.vk)], mn:s.mn, tmn:s.tmn, pic:picSVG(s, it.vk), star:s.id, why:verbWhy(s, it.vk) };
   if (it.kind === 'w') return { sent:sentHTML(s), tr:s.t, ex:it.lv === 'l1' ? (s.c === 'weil' ? EX.weil : EX_DASS_MAIN) : EX.order, mn:(VOC[s.id] || [])[0], tmn:TA_W[s.id], pic:'', star:s.id };
   if (it.kind === 't') return { sent:trapHTML(s), tr:s.t, ex:EX[s.ex], mn:CONJ[s.a][2], tmn:TA_C[s.a], pic:'', star:null };
@@ -3284,6 +3508,29 @@ function checkV(x, strict) {
   if (/[,.!?]/.test(x.m + x.pm) || (x.sep && gWords(x.m).map(gLc).pop() === x.pf)) return 'sentence parts';
   return '';
 }
+const PURE_PL = /^(zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|viele|vielen|alle|allen|einige|mehrere|beide|\d+)$/;
+const PURE_SG = /^(ein|einen|einem|eines|der|das|dem|des|mein|dein|sein|unser|euer|kein)$/;
+const DAT_PL_PREV = /^(den|meinen|deinen|seinen|ihren|unseren|euren|diesen|vielen|allen|beiden|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|mit|von|aus|bei|nach|seit|zu|\d+|\w+en)$/;
+function checkN(x, strict) {
+  if (!['der', 'die', 'das'].includes(x.art)) return 'article';
+  if (![x.sg, x.pl, x.wr].every(w => /^[A-ZÄÖÜ][a-zäöüß]+$/.test(w || ''))) return 'noun form';
+  const p = nounParts(x.sg, x.pl);
+  if (!p || !['', 'e', 'er', 'n', 'en', 's'].includes(p.suf)) return 'plural pattern';
+  if (!p.suf && !p.um && !/(er|el|en|chen|lein)$/.test(x.sg)) return 'plural pattern';
+  if (x.art === 'die' && p.suf === 'er') return 'plural pattern';
+  if (strict && p.suf === 's' && !/[aiouy]$/.test(x.sg)) return 'plural pattern';
+  const known = NPL.find(y => !y.gen && y.sg === x.sg && y.art === x.art); if (known && known.pl !== x.pl) return 'plural differs from the known one';
+  if (x.wr === x.pl || x.wr === nDat(x)) return 'wrong option';
+  for (const [q, t] of [[x.qs, x.ts], [x.qp, x.tp]]) if ((q || '').split('___').length !== 2 || !t) return 'sentence';
+  const prev = q => gLc(gWords(q.split('___')[0]).pop());
+  if (PURE_PL.test(prev(x.qs))) return 'singular sentence looks plural';
+  if (PURE_SG.test(prev(x.qp))) return 'plural sentence looks singular';
+  if (x.qd) {
+    if (/[ns]$/.test(x.pl) || x.qd.split('___').length !== 2 || !x.td) return 'Dativ sentence';
+    if (!DAT_PL_PREV.test(prev(x.qd))) return 'Dativ sentence';
+  }
+  return '';
+}
 // generated items become normal game items for this session (and again on every load, from Past rounds)
 function regGen(x) {
   if (!x || !x.id || (BYID[x.id] && BYID[x.id] !== x)) return;
@@ -3293,25 +3540,27 @@ function regGen(x) {
   else if (x.gk === 'p') { x.pt = (x.k === 'akk' || x.k === 'dat') ? 'fix' : 'wech'; x.cs = (x.k === 'akk' || x.k === 'wohin') ? 'akk' : 'dat'; NOUN[x.id] = x.noun; }
   else if (x.gk === 'a') { x.ak = x.k; if (!ADJV[x.adj]) ADJV[x.adj] = x.adjInfo; if (!ANOUN[x.n]) ANOUN[x.n] = x.nounInfo; }
   else if (x.gk === 'v') x.tv = 1;
+  else if (x.gk === 'n') x.pn = 1;
 }
 // Lena's sentences you have played stay in your sentence lists for good (S.lib): memory boxes, stars, Daily review,
 // normal rounds and writing. The list is capped so the save never fills the browser's storage (about 5 MB):
 // when it is full, mastered sentences that are not starred make room first, oldest first.
-const LIB_MAX = 2000, DERIVED = ['gen', 'ak', 'pt', 'cs', 'tv', 'trap'];
+const LIB_MAX = 2000, DERIVED = ['gen', 'ak', 'pt', 'cs', 'tv', 'trap', 'pn'];
 function libPools(x) {
   if (x.gk === 'w') return [W];
   if (x.gk === 'p') return [P, x.mix ? PMIX : x.pt === 'fix' ? PFIX : PWECH];
   if (x.gk === 'a') return [A, { weak:AWEAK, mixed:AMIXED, strong:ASTRONG }[x.k]];
   if (x.gk === 'v') return [V, x.sep ? VSEP : VINS];
+  if (x.gk === 'n') return [NPL];
   return [];   // traps are kept for Past rounds only
 }
 function poolAdd(x) { libPools(x).forEach(p => { if (p && !p.includes(x)) p.push(x); }); }
-const sentText = x => x.b ? fullW(x) : x.tv ? verbPlain(x, 'pr') : (x.q || '').replace('___', x.a);
+const sentText = x => x.b ? fullW(x) : x.pn ? nounPlain(x, 'pf') : x.tv ? verbPlain(x, 'pr') : (x.q || '').replace('___', x.a);
 function libAdd(items) {
   S.lib = S.lib || {}; let texts = null;
   for (const x of items) {
     if (!x.gen || S.lib[x.id]) continue;
-    texts = texts || new Set([...W, ...P, ...A, ...V].filter(y => y !== x).map(sentText));
+    texts = texts || new Set([...W, ...P, ...A, ...V, ...NPL].filter(y => y !== x).map(sentText));
     if (x.gk !== 't' && texts.has(sentText(x))) continue;   // the same sentence is already in your lists
     const c = { ts:Date.now() }; for (const [k, v] of Object.entries(x)) if (!DERIVED.includes(k)) c[k] = v;
     S.lib[x.id] = c; x.ts = c.ts; texts.add(sentText(x)); poolAdd(x);
@@ -3334,7 +3583,7 @@ let genSeq = 0;
 const gid = k => `g${k}_${Date.now().toString(36)}${(genSeq++).toString(36)}`;
 const gS = v => typeof v === 'string' ? v.trim() : '';
 const gEmoji = (e, d) => /^[^\p{L}\p{N}\s]{1,10}$/u.test(gS(e)) ? gS(e) : d;
-const GEN_TOPIC = l => l <= 3 || l === 10 ? 'wd' : l <= 6 || l === 11 ? 'prep' : l <= 9 || l === 12 ? 'adj' : 'tv';
+const GEN_TOPIC = l => l >= 17 ? 'pl' : l <= 3 || l === 10 ? 'wd' : l <= 6 || l === 11 ? 'prep' : l <= 9 || l === 12 ? 'adj' : 'tv';
 const GEN_ASK = {
   1:{ s:11 }, 2:{ s:9 }, 3:{ s:8, t:6 }, 10:{ s:8, t:5 },
   4:{ n:11, how:'Use ONLY prepositions with a fixed case: durch, für, gegen, ohne, um (always Akkusativ) or aus, bei, mit, nach, seit, von, zu, gegenüber (always Dativ). In about 3 sentences the gap is the preposition itself (then "wrong" is a preposition that takes the OTHER case); otherwise the gap is the article.' },
@@ -3345,6 +3594,10 @@ const GEN_ASK = {
   8:{ n:11, how:'Only type "mixed": the adjective comes after ein / eine / einen / einem / einer / kein / mein / dein / sein / ihr / unser in any form.' },
   9:{ n:14, how:'Mix 3 of type "weak" (after der/die/das), 4 "mixed" (after ein/kein/mein) and 6 "strong" (no article at all, e.g. "Ich trinke ___ Kaffee", "mit ___ Wasser").' },
   12:{ n:11, how:'Mix all three types: weak (after der/die/das), mixed (after ein/kein/mein) and strong (no article).' },
+  17:{ n:11, how:'Mix the plural patterns: about 3 with +e, 2 with +er, 3 with +(e)n, 1–2 with +s and 2 with no ending.' },
+  18:{ n:11, how:'Only nouns whose plural is different from the singular (NOT Lehrer, Zimmer, Fenster).' },
+  19:{ n:12, how:'Mix all patterns. At least 5 must have a dative_sentence, so choose those nouns from the +e, +er and no-ending groups (plural not ending in -n or -s).' },
+  20:{ n:11, how:'Mix all patterns; about half with a dative_sentence.' },
   13:{ sep:7, ins:4 }, 14:{ sep:7, ins:4 }, 15:{ sep:8, ins:5 }, 16:{ sep:7, ins:4 }
 };
 const GSTR = { type:'STRING' }, gObj = (props, extra = {}) => ({ type:'OBJECT', properties:Object.assign(Object.fromEntries(props.map(k => [k, GSTR])), extra), required:[...props, ...Object.keys(extra)] });
@@ -3357,6 +3610,8 @@ const GEN_SCHEMA = {
     { type:{ type:'STRING', enum:['akk', 'dat', 'wo', 'wohin'] }, noun_article:NART }) } }, required:['items'] },
   adj:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['sentence', 'answer', 'wrong', 'adjective', 'noun', 'noun_base', 'noun_en', 'noun_ta', 'adj_en', 'adj_ta', 'adj_mn', 'adj_tmn', 'en'],
     { type:{ type:'STRING', enum:['weak', 'mixed', 'strong'] }, gender:{ type:'STRING', enum:['m', 'f', 'n', 'pl'] }, case:{ type:'STRING', enum:['nom', 'akk', 'dat'] }, noun_article:NART }) } }, required:['items'] },
+  pl:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['singular', 'plural', 'wrong_plural', 'singular_sentence', 'singular_en', 'plural_sentence', 'plural_en', 'dative_sentence', 'dative_en', 'emoji', 'en', 'ta', 'mn', 'tmn'],
+    { article:{ type:'STRING', enum:['der', 'die', 'das'] } }) } }, required:['items'] },
   tv:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['infinitive', 'prefix', 'subject', 'present_verb', 'present_rest', 'present_en', 'aux', 'perfekt_middle', 'participle', 'perfekt_en',
     'side_lead', 'side_middle', 'side_en', 'emoji', 'en', 'ta', 'mn', 'tmn'], { separable:{ type:'BOOLEAN' } }) } }, required:['items'] }
 };
@@ -3368,11 +3623,13 @@ ${a.t ? `Traps (write ${a.t}): a sentence with ___ where "options" are exactly [
 ${a.how}`,
   adj:a => `Adjective ending sentences (write ${a.n}): "sentence" contains ___ exactly once, directly in front of the noun. "answer" = the adjective with the right ending, "wrong" = the same adjective with a wrong ending. "adjective" = its base form (e.g. alt); only use adjectives where the ending is simply added to the base form (NOT teuer, dunkel, sauer, hoch, rosa, lila). "type" = weak (after der/die/das/dieser/jeder), mixed (after ein/kein/mein/dein/sein/ihr/unser) or strong (no article). "gender" m/f/n/pl and "case" nom/akk/dat of that noun phrase. "noun" as written in the sentence, "noun_base" its Nominativ form, "noun_article" der / die / das, or "plural".
 ${a.how}`,
+  pl:a => `Singular / plural nouns (write ${a.n}, all different everyday nouns): "singular" and "plural" in the Nominativ, capitalised (e.g. Baum / Bäume); "article" = der / die / das of the singular; "wrong_plural" = one typical WRONG plural a learner might write (wrong ending or wrong umlaut, e.g. Baume or Bäumen). "singular_sentence" = a short sentence with ___ where ONLY the singular fits (use ein / mein / der / das and a singular verb); "plural_sentence" = a short sentence with ___ where ONLY the plural fits (use zwei, drei, viele, alle, keine or a plural verb); "dative_sentence" = a short sentence with ___ for the Dativ plural (after mit den, auf den, mit meinen, in vielen …), ONLY if the Dativ plural adds -n (the plural does not end in -n or -s), otherwise "". English translation for each sentence (singular_en, plural_en, dative_en). Only nouns with a regular plural (+e, +er, +(e)n, +s or no ending, with or without umlaut); avoid irregular ones (Museum, Thema, Firma, Visum, Kaktus). "en" / "ta" = the meaning of the noun, "mn" / "tmn" = memory tricks that help to remember the PLURAL. "emoji" = one emoji that shows the thing.
+${a.how}`,
   tv:a => `Verbs with a prefix: write ${a.sep} sentences with SEPARABLE verbs (prefixes ab, an, auf, aus, ein, mit, vor, weg, zu, zurück, los, fern, nach, her, hin …) and ${a.ins} with INSEPARABLE verbs (be-, ver-, er-, ent-, emp-, ge-, zer-, miss-). All different verbs. Avoid verbs whose prefix can be either (über, unter, um, durch, wieder, hinter) and verbs on -ieren.
 For each: "infinitive" (aufstehen), "prefix" (auf), "separable" true/false, "subject" (Ich, Du, Er, Sie, Wir, Anna, Der Zug …), "present_verb" = the conjugated verb for that subject as ONE word with its prefix (aufstehe, verstehe), "present_rest" = the rest of a Präsens main clause after the verb, WITHOUT the separable prefix and without punctuation (Ich stehe | jeden Morgen um 7 Uhr | auf → "jeden Morgen um 7 Uhr"), "present_en"; "aux" = the conjugated haben / sein for the subject, "perfekt_middle" = the words between aux and participle, "participle" = Partizip II, "perfekt_en". Separable verbs only: "side_lead" = a main clause + comma + weil / dass / wenn / bis + the SAME subject (e.g. "Ich bin müde, weil ich"), "side_middle" = the words before the verb at the end, "side_en". For inseparable verbs the three side_ fields are "". "emoji" = one emoji that shows the verb.`
 };
 function genExamples(tp) {
-  const pool = tp === 'wd' ? W.map(fullW) : tp === 'prep' ? P.map(fillGap) : tp === 'adj' ? A.map(fillGap) : V.map(x => verbPlain(x, 'pr'));
+  const pool = tp === 'pl' ? NPL.map(x => nounPlain(x, 'pf')) : tp === 'wd' ? W.map(fullW) : tp === 'prep' ? P.map(fillGap) : tp === 'adj' ? A.map(fillGap) : V.map(x => verbPlain(x, 'pr'));
   return shuffle(pool.slice()).slice(0, 8).join(' | ');
 }
 function genSystem(tp, ask) {
@@ -3387,7 +3644,7 @@ ${GEN_RULES[tp](ask)}`;
 }
 // turn Gemini's answer into game items; only sentences that pass the check are kept
 function genConvert(tp, d) {
-  const out = { w:[], t:[], p:[], a:[], v:[] }; let dropped = 0;
+  const out = { w:[], t:[], p:[], a:[], v:[], n:[] }; let dropped = 0;
   const keep = (list, x, why) => { if (why) dropped++; else { regGen(x); list.push(x); } };
   if (tp === 'wd') {
     for (const r of (d.sentences || [])) {
@@ -3415,6 +3672,13 @@ function genConvert(tp, d) {
         adjInfo:[base, gS(r.adj_en), gS(r.adj_ta), gS(r.adj_mn), gS(r.adj_tmn)], nounInfo:[nde, gS(r.noun_en), gS(r.noun_ta)] };
       const gOk = { der:'m', die:'f', das:'n', plural:'pl' }[r.noun_article] === g || (r.noun_article === 'die' && g === 'f');
       keep(out.a, x, checkA(x, base) || (!gOk && 'gender'));
+    }
+  } else if (tp === 'pl') {
+    for (const r of (d.items || [])) {
+      const pl = gS(r.plural), dq = /[ns]$/.test(pl) ? '' : gS(r.dative_sentence);
+      const x = { id:gid('n'), gk:'n', sg:gS(r.singular), art:gLc(gS(r.article)), pl, wr:gS(r.wrong_plural), qs:gS(r.singular_sentence), ts:gS(r.singular_en), qp:gS(r.plural_sentence), tp:gS(r.plural_en),
+        qd:dq || undefined, td:dq ? gS(r.dative_en) : undefined, e:gEmoji(r.emoji, '📦'), en:gS(r.en), ta:gS(r.ta), mn:gS(r.mn), tmn:gS(r.tmn) };
+      keep(out.n, x, checkN(x, true));
     }
   } else {
     for (const r of (d.items || [])) {
@@ -3456,6 +3720,11 @@ function genBuild(l, it) {
   else if (l === 13 || l === 14) q = mixV(5, 3).map(x => verbQ(x, l === 13 ? 'pr' : 'pp'));
   else if (l === 15) q = [...vs.slice(0, 4).map(x => verbQ(x, 'ns')), ...sp([...vs.slice(4, 7), ...vi.slice(0, 3)]).map((x, i) => verbQ(x, i % 2 ? 'pp' : 'pr'))];
   else if (l === 16) q = mixV(5, 3).map(x => spotQ('v', x, x.sep ? ['pr', 'pp', 'ns'][Math.floor(Math.random() * 3)] : 'pp'));
+  const ns = sp(it.n || []);
+  if (l === 17) q = ns.slice(0, 8).map(x => nounQ(x, 'pf'));
+  else if (l === 18) q = ns.filter(x => x.sg !== x.pl).slice(0, 8).map((x, i) => nounQ(x, i % 2 ? 'ss' : 'sp'));
+  else if (l === 19) { const d = ns.filter(x => x.qd).slice(0, 4), o = ns.filter(x => !d.includes(x)); q = [...d.map(x => nounQ(x, 'dn')), ...o.slice(0, 6).map((x, i) => nounQ(x, i < 3 || x.sg === x.pl ? 'pf' : i % 2 ? 'ss' : 'sp'))]; }
+  else if (l === 20) q = ns.slice(0, 8).map(x => spotQ('n', x, nSpotKind(x)));
   const n = q.length;
   if (n < fixed.length) q = q.concat(fixed.slice(0, fixed.length - n));
   return { queue:sp(q), n };
@@ -3484,7 +3753,7 @@ const FREE_PROMPTS = {
   wetter:'Welches Wetter und welche Jahreszeit magst du – und warum?', lernen:'Warum lernst du Deutsch, und wie lernst du?',
   freunde:'Erzähl von einem guten Freund oder einer guten Freundin.', stadt:'Beschreib deine Stadt: Was gibt es dort?', frei:'Schreib über ein Thema, das dich interessiert.'
 };
-const FOCUS_TASK = { tv:'Use at least four separable verbs (e.g. aufstehen, einkaufen, anrufen) and at least one in the Perfekt (e.g. ich habe … eingekauft).', wd:'Use weil at least twice and dass at least once.', prep:'Use at least four prepositions (e.g. mit, für, in, auf, zu).', adj:'Use at least four adjectives in front of nouns (e.g. ein netter Kollege, die alte Wohnung).' };
+const FOCUS_TASK = { pl:'Use at least five nouns in the plural (e.g. zwei Kinder, viele Freunde, die Häuser) and one Dativ plural (e.g. mit meinen Freunden).', tv:'Use at least four separable verbs (e.g. aufstehen, einkaufen, anrufen) and at least one in the Perfekt (e.g. ich habe … eingekauft).', wd:'Use weil at least twice and dass at least once.', prep:'Use at least four prepositions (e.g. mit, für, in, auf, zu).', adj:'Use at least four adjectives in front of nouns (e.g. ein netter Kollege, die alte Wohnung).' };
 const freeTask = topic => { const t = CAFE_TOPICS.find(x => x[0] === topic) || CAFE_TOPICS[0];
   return { kind:'free', tp:t[0], lvl:S.cafeLevel || 'A2', title:`${t[1]} ${t[2]}`, situation:FREE_PROMPTS[t[0]], points:[FOCUS_TASK[topicKey()], 'Write 4–6 sentences.'], words:[40, 90], minutes:0 }; };
 // TELC practice tasks (exam style; not official exam material)
@@ -3684,7 +3953,7 @@ function writeProgHTML() {
     + (errs.length ? `<h3>Your typical writing mistakes</h3>${errs.map(([c, n]) => `<div class="wmis"><b>${ERR_INFO[c][0]}</b> × ${n}<div class="tr">${ERR_INFO[c][1]}</div>${taMn(ERR_INFO[c][2])}</div>`).join('')}` : '');
 }
 /* ---- past rounds ---- */
-const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 13:'Trennbare Verben · Level 1', 14:'Trennbare Verben · Perfekt', 15:'Trennbare Verben · Boss mix', 16:'Trennbare Verben · Spot the error', 10:'weil / dass · Spot the error', 11:'Präpositionen · Spot the error', 12:'Adjektive · Spot the error', 0:'Review / practice' };
+const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 13:'Trennbare Verben · Level 1', 14:'Trennbare Verben · Perfekt', 15:'Trennbare Verben · Boss mix', 16:'Trennbare Verben · Spot the error', 17:'Singular / Plural · Level 1', 18:'Singular / Plural · Level 2', 19:'Singular / Plural · Boss mix', 20:'Singular / Plural · Spot the error', 10:'weil / dass · Spot the error', 11:'Präpositionen · Spot the error', 12:'Adjektive · Spot the error', 0:'Review / practice' };
 const when = t => new Date(t).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
 const gapQ = h => h.replace('___', '<span class="gap">?</span>');
 function histItem(e, k) {
@@ -3694,9 +3963,13 @@ function histItem(e, k) {
     const x = sq.x; qline = `🔍 ${spotLine(sq)}`; sent = spotRight(sq); tr = x.t; ex = spotEx(sq); pic = spotPic(sq);
     if (sq.src === 'w') { const v = VOC[x.id] || ['', '']; mn = v[0]; tmn = TA_W[x.id]; extra = `<div class="w">${wordHTML(x)} — ${esc(x.en)} · <span class="ta">${esc(v[1])}</span></div>`; }
     else if (sq.src === 't') { mn = CONJ[x.a][2]; tmn = TA_C[x.a]; }
-    else if (sq.src === 'v') { mn = x.mn; tmn = x.tmn; }
+    else if (sq.src === 'v' || sq.src === 'n') { mn = x.mn; tmn = x.tmn; }
     else if (sq.src === 'p') { mn = PV[x.pr][2]; tmn = TA_P[x.pr]; }
     else { const v = ADJV[x.adj] || []; mn = v[3] || ''; tmn = v[4]; }
+  } else if (e.y === 'n') {
+    const [nid, k] = String(e.i).split(':'), x = BYID[nid]; if (!x) return '';
+    qline = nounPrompt(x, k); sent = nounHTML(x, k); tr = nounTr(x, k); ex = NRULE[nRuleKey(x, k)]; ans = nounOpts(x, k).ans; pic = picSVG(x, k);
+    mn = x.mn; tmn = x.tmn; extra = `<div class="w">${nounWhy(x, k)}</div>`;
   } else if (e.y === 'v') {
     const [vid, k] = String(e.i).split(':'), x = BYID[vid]; if (!x) return '';
     qline = verbPrompt(x, k); sent = verbHTML(x, k); tr = verbTr(x, k); ex = VRULE[vRuleKey(x, k)]; ans = verbOpts(x, k).ans; pic = picSVG(x, k);
@@ -3725,7 +3998,7 @@ function histItem(e, k) {
     : e.y === 'b'
     ? (e.o ? 'You built the clause correctly ✓' : 'Your mistakes: ' + (e.w || []).map(([got, exp]) => `<b>${esc(got)}</b> instead of <b>${esc(exp)}</b>`).join(', '))
     : e.o ? `You chose <b>${esc(e.c)}</b> ✓` : (e.c ? `You chose <b>${esc(e.c)}</b> ✗ — the answer is <b>${esc(ans)}</b>` : `You missed both gates — the answer is <b>${esc(ans)}</b>`);
-  const id = sq ? (sq.src === 't' ? null : sq.x.id) : e.y === 't' ? null : e.y === 'v' ? String(e.i).split(':')[0] : e.i;
+  const id = sq ? (sq.src === 't' ? null : sq.x.id) : e.y === 't' ? null : e.y === 'v' || e.y === 'n' ? String(e.i).split(':')[0] : e.i;
   return `<details class="${e.o ? 'ok' : 'bad'}" ${e.o ? '' : 'open'}><summary><span class="hm">${e.o ? '✓' : '✗'}</span>${k + 1}. ${qline}${e.r ? ' <span class="newtag again">↻ 2nd try</span>' : ''}</summary>
     <div class="hb"><p class="sent">${sent}</p><div class="tr">${esc(tr)}</div><div class="you">${you}</div>${extra}${pic}<div class="ex">${ex}</div>
     ${mn ? `<div class="mn">💡 ${esc(mn)}</div>` : ''}${taMn(tmn)}${id ? `<div style="text-align:right;margin-top:8px">${starBtn(id)}</div>` : ''}</div></details>`;
@@ -3798,6 +4071,7 @@ function practiseHist() {
   }
   const q = histOpen.it.filter(e => !e.r).map(e => {
     if (e.y === 's') return spotFromKey(e.i);
+    if (e.y === 'n') { const [nid, k] = String(e.i).split(':'); return BYID[nid] ? nounQ(BYID[nid], k) : null; }
     if (e.y === 'v') { const [vid, k] = String(e.i).split(':'); return BYID[vid] ? verbQ(BYID[vid], k) : null; }
     if (e.y === 't') { const t = trapOf(e.i); return t ? trapQ(t) : null; }
     const x = BYID[e.i]; if (!x) return null;
@@ -3810,8 +4084,8 @@ let wTab = 'star';
 function renderWords() {
   $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
   const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
-  const list = [...W.filter(has), ...P.filter(has), ...A.filter(has), ...V.filter(has)];
-  $('#wList').innerHTML = list.length ? list.map(w => w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
+  const list = [...W.filter(has), ...P.filter(has), ...A.filter(has), ...V.filter(has), ...NPL.filter(has)];
+  $('#wList').innerHTML = list.length ? list.map(w => w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
       <div class="tr">${esc(w.en)}</div>
@@ -3827,16 +4101,17 @@ function renderProg() {
   $('#pStats').innerHTML = `
     <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>
     <div class="stat"><b>${S.rounds}</b><span>Rounds played</span></div>
-    <div class="stat"><b>${S.unlocked + S.unlockedP + (S.unlockedA || 1) + (S.unlockedT || 1) + [10, 11, 12, 16].filter(l => !isLocked(l)).length}/16</b><span>Levels unlocked</span></div>
+    <div class="stat"><b>${S.unlocked + S.unlockedP + (S.unlockedA || 1) + (S.unlockedT || 1) + (S.unlockedN || 1) + [10, 11, 12, 16, 20].filter(l => !isLocked(l)).length}/20</b><span>Levels unlocked</span></div>
     <div class="stat"><b>${seen}/${W.length}</b><span>Words met</span></div>
     <div class="stat"><b>${mastered}</b><span>Words mastered</span></div>
     <div class="stat"><b>${Object.keys(S.bm).length}</b><span>Starred</span></div>`;
   const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s.t ? pct(s) + '% of ' + s.t : 'not played yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
   $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
     + bar('Prepositions with a fixed case', st.pfix, 'var(--blue)') + bar('Wechselpräpositionen (wo/wohin)', st.pwech, 'var(--red)')
-    + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)') + bar('Trennbare Verben: Präsens', st.vpr || { c:0, t:0 }, 'var(--blue)') + bar('Trennbare Verben: Perfekt', st.vpp || { c:0, t:0 }, 'var(--yellow)') + bar('Trennbare Verben: weil / dass clause', st.vns || { c:0, t:0 }, 'var(--red)')
+    + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)') + bar('Plural forms', st.npf || { c:0, t:0 }, 'var(--blue)') + bar('Singular or plural?', st.nsp || { c:0, t:0 }, 'var(--yellow)') + bar('Dativ plural (-n)', st.ndn || { c:0, t:0 }, 'var(--red)')
+    + bar('Trennbare Verben: Präsens', st.vpr || { c:0, t:0 }, 'var(--blue)') + bar('Trennbare Verben: Perfekt', st.vpp || { c:0, t:0 }, 'var(--yellow)') + bar('Trennbare Verben: weil / dass clause', st.vns || { c:0, t:0 }, 'var(--red)')
     + bar('🔍 Spot the error', st.spot || { c:0, t:0 }, 'var(--good)')
-    + writeProgHTML() + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, Adjektive ${S.best[7] || 0} / ${S.best[8] || 0} / ${S.best[9] || 0}, Trennbare Verben ${S.best[13] || 0} / ${S.best[14] || 0} / ${S.best[15] || 0}, Spot the error ${S.best[10] || 0} / ${S.best[11] || 0} / ${S.best[12] || 0} / ${S.best[16] || 0}, review ${S.best[0]}</div>`
+    + writeProgHTML() + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, Adjektive ${S.best[7] || 0} / ${S.best[8] || 0} / ${S.best[9] || 0}, Singular / Plural ${S.best[17] || 0} / ${S.best[18] || 0} / ${S.best[19] || 0}, Trennbare Verben ${S.best[13] || 0} / ${S.best[14] || 0} / ${S.best[15] || 0}, Spot the error ${S.best[10] || 0} / ${S.best[11] || 0} / ${S.best[12] || 0} / ${S.best[16] || 0} / ${S.best[20] || 0}, review ${S.best[0]}</div>`
     + `<div class="lbl" style="margin-top:6px">🎲 Sentences from Lena in your lists: <b>${Object.keys(S.lib || {}).length}</b> (up to ${LIB_MAX}; mastered ones make room first, starred ones always stay)</div>`;
   let tip;
   if (st.weil.t + st.dass.t < 6) tip = 'Play a few rounds and this space will tell you what to focus on.';
@@ -3995,7 +4270,7 @@ function mergeSaves(a, b) {
   for (const [k, v] of Object.entries(b.wstats || {})) if (!m.wstats[k] || v.t > m.wstats[k].t) m.wstats[k] = v;
   m.werr = Object.assign({}, a.werr || {});
   for (const [k, v] of Object.entries(b.werr || {})) m.werr[k] = Math.max(m.werr[k] || 0, v || 0);
-  m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1); m.unlockedA = Math.max(a.unlockedA || 1, b.unlockedA || 1); m.unlockedT = Math.max(a.unlockedT || 1, b.unlockedT || 1);
+  m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1); m.unlockedA = Math.max(a.unlockedA || 1, b.unlockedA || 1); m.unlockedT = Math.max(a.unlockedT || 1, b.unlockedT || 1); m.unlockedN = Math.max(a.unlockedN || 1, b.unlockedN || 1);
   m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
   if (b.streak && (b.streak.last || '') > (a.streak && a.streak.last || '') ) m.streak = b.streak;
   m.histDel = [...new Set([...(a.histDel || []), ...(b.histDel || [])])].slice(-300);
