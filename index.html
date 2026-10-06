@@ -317,6 +317,13 @@ p{line-height:1.5}
 .tabs button{flex:1;border:3px solid var(--black);background:var(--white);padding:9px;font-weight:600;cursor:pointer}
 .tabs button+button{border-left:0}
 .tabs button.on{background:var(--black);color:var(--white)}
+.wfilter{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 12px}
+.wfilter button{border:2px solid var(--black);background:var(--white);padding:5px 10px;font-size:14px;font-weight:600;cursor:pointer}
+.wfilter button.on{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.wfilter small{margin-left:6px;opacity:.75;font-weight:700}
+#wList h3.wgroup{margin:16px 0 6px;font-size:17px}
+#wList h3.wgroup:first-child{margin-top:4px}
+#wList h3.wgroup small{color:var(--grey);font-weight:600}
 
 /* progress */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
@@ -538,6 +545,7 @@ p{line-height:1.5}
       <h2>My words</h2>
       <p class="lead">The squares show how well you know each word. Five filled means mastered.</p>
       <div class="tabs"><button data-tab="star" class="on">Starred</button><button data-tab="all">All seen</button></div>
+      <div class="wfilter" id="wFilter" role="group" aria-label="Filter by topic"></div>
       <div class="list" id="wList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="wBack">Back to menu</button></div>
     </div>
@@ -4466,18 +4474,28 @@ function practiseHist() {
   if (q.length) startLevel(0, q);
 }
 
-let wTab = 'star';
-function renderWords() {
-  $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
-  const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
-  const list = [...W.filter(has), ...P.filter(has), ...A.filter(has), ...V.filter(has), ...NPL.filter(has), ...MSN.filter(has)];
-  $('#wList').innerHTML = list.length ? list.map(w => w.mo ? modalItemHTML(w) : w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
+let wTab = 'star', wTopic = 'all';
+// topics in the same (CEFR) order as the tabs on the menu
+const WTOPICS = [['pl', 'Singular / Plural', () => NPL], ['tv', 'Trennbare Verben', () => V], ['mv', 'Modalverben', () => MSN],
+  ['prep', 'Präpositionen', () => P], ['wd', 'Nebensätze', () => W], ['adj', 'Adjektive', () => A]];
+const wordItemHTML = w => w.mo ? modalItemHTML(w) : w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
       <div class="tr">${esc(w.en)}</div>
       <div class="s" style="margin-top:6px">${sentHTML(w)}</div>
-    </div>${starBtn(w.id)}</div>`).join('')
-    : `<div class="empty">${wTab === 'star' ? 'No starred words yet. Tap ★ next to any word during a round, on the new-word cards, or on the results screen.' : 'No words yet. Play Level 1 to meet your first three.'}</div>`;
+    </div>${starBtn(w.id)}</div>`;
+function renderWords() {
+  $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
+  const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
+  const groups = WTOPICS.map(([key, name, pool]) => ({ key, name, list:pool().filter(has) })), total = groups.reduce((n, g) => n + g.list.length, 0);
+  $('#wFilter').innerHTML = [['all', 'All', total], ...groups.map(g => [g.key, g.name, g.list.length])]
+    .map(([key, name, n]) => `<button data-wt="${key}" class="${key === wTopic ? 'on' : ''}" aria-pressed="${key === wTopic}">${esc(name)}<small>${n}</small></button>`).join('');
+  const shown = wTopic === 'all' ? groups.filter(g => g.list.length) : groups.filter(g => g.key === wTopic);
+  const none = wTab === 'star' ? 'No starred words yet. Tap ★ next to any word during a round, on the new-word cards, or on the results screen.' : 'No words yet. Play Level 1 to meet your first three.';
+  $('#wList').innerHTML = wTopic === 'all'
+    ? (total ? shown.map(g => `<h3 class="wgroup">${esc(g.name)} <small>· ${g.list.length}</small></h3>${g.list.map(wordItemHTML).join('')}`).join('') : `<div class="empty">${none}</div>`)
+    : (shown[0] && shown[0].list.length ? shown[0].list.map(wordItemHTML).join('')
+      : `<div class="empty">${wTab === 'star' ? 'No starred words' : 'No words seen'} in ${esc((WTOPICS.find(t => t[0] === wTopic) || [])[1] || '')} yet.${total ? ' Tap <b>All</b> to see the other topics.' : ''}</div>`);
 }
 
 function renderProg() {
@@ -4545,7 +4563,8 @@ $('#pGo').addEventListener('click', togglePause);
 $('#pQuit').addEventListener('click', () => { if (G.log && G.log.length) { recordRound(true); save(); } G.running = false; G.pending = null; clearRows(); $('#hud').classList.remove('show'); show('menu'); });
 $('#eAgain').addEventListener('click', () => startLevel(lastLevel));
 $('#eMenu').addEventListener('click', () => show('menu'));
-$('#bWords').addEventListener('click', () => { renderWords(); show('words'); });
+$('#bWords').addEventListener('click', () => { wTopic = topicKey(); renderWords(); show('words'); });   // opens on the topic of the current tab
+$('#wFilter').addEventListener('click', e => { const b = e.target.closest('[data-wt]'); if (b) { wTopic = b.dataset.wt; renderWords(); } });
 $('#wBack').addEventListener('click', () => show('menu'));
 $$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
 $$('#topicTabs button').forEach(b => b.addEventListener('click', () => setTopic(b.dataset.topic)));
