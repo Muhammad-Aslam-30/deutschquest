@@ -84,6 +84,8 @@ p{line-height:1.5}
 .cj.adj-weak{color:var(--blue)} .cj.adj-mixed{color:#A07A12} .cj.adj-strong{color:var(--red)}
 .cj.vsep{color:var(--blue)} .cj.vins{color:var(--red)} .cj.vge{color:#A07A12}
 .cj.plp{color:var(--blue)} .cj.pls{color:var(--red)}
+.cj.mvf{color:#A07A12} .cj.mvi{color:var(--blue)}
+.cj.wenn{color:var(--good)} .cj.obwohl,.cj.ob{color:#A07A12} .cj.aber,.cj.deshalb{color:var(--black);text-decoration:underline}
 #topicTabs button{font-size:.92em}
 #topicTabs button{padding:9px 4px;line-height:1.15}
 .guide{margin-top:18px}
@@ -92,6 +94,8 @@ p{line-height:1.5}
 .guide summary{padding:10px 12px;font-weight:700;cursor:pointer;font-size:16.5px}
 .guide .gb{padding:0 12px 12px;line-height:1.55;font-size:16px}
 .guide .gb p{margin:8px 0}
+.guide .gflat{border:2px solid var(--black);background:var(--white);margin-top:10px;padding:10px 0 2px}
+.guide .gflat h4{margin:0 12px 4px;font-size:17px}
 .gsvg{display:block;width:100%;max-width:440px;margin:10px auto;border:2px solid var(--black);background:#fff}
 .guide .pic{max-width:340px}
 .gex{margin:8px 0 6px 20px;line-height:1.65}
@@ -392,9 +396,9 @@ p{line-height:1.5}
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag">Run, build and speak German: weil/dass word order, prepositions, adjective endings, separable verbs and plurals, plus voice chats in the Sprach-Café.</p>
+      <p class="tag">Run, build and speak German: plurals, separable and modal verbs, prepositions, Nebensätze and adjective endings, plus voice chats in the Sprach-Café.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
-      <div class="tabs" id="topicTabs"><button data-topic="wd" class="on">weil / dass</button><button data-topic="prep">Präpositionen</button><button data-topic="adj">Adjektive</button><button data-topic="tv">Trennbare Verben</button><button data-topic="pl">Singular / Plural</button></div>
+      <div class="tabs" id="topicTabs"><button data-topic="pl" class="on">Singular / Plural</button><button data-topic="tv">Trennbare Verben</button><button data-topic="mv">Modalverben</button><button data-topic="prep">Präpositionen</button><button data-topic="wd">Nebensätze</button><button data-topic="adj">Adjektive</button></div>
       <p class="modeq" id="modeQ">Was möchtest du machen? <span>What would you like to do?</span></p>
       <div class="row2 modes">
         <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner game</b><small>Run through the right gates</small></span></button>
@@ -403,8 +407,8 @@ p{line-height:1.5}
       </div>
       <div class="levels" id="runBox" style="display:none">
         <div class="levels" id="lvWd">
-          <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">Is it weil or dass?</small></span></button>
-          <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Put the verb at the end</small></span></button>
+          <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">weil, dass, wenn, obwohl, ob, denn …?</small></span></button>
+          <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Verb at the end, or in 2nd place?</small></span></button>
           <button class="btn black" data-level="3"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l3s">Faster, plus das/dass and weil/denn traps</small></span></button>
           <button class="btn green" data-level="10"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l10s">One word is wrong. Run through it!</small></span></button>
         </div>
@@ -431,6 +435,12 @@ p{line-height:1.5}
           <button class="btn red" data-level="18"><span class="shape circle"></span><span><b>Level 2: Singular oder Plural?</b><small id="l18s">ein Kind · zwei Kinder</small></span></button>
           <button class="btn black" data-level="19"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l19s">Faster, plus Dativ plural: mit den Kindern</small></span></button>
           <button class="btn green" data-level="20"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l20s">One word is wrong. Run through it!</small></span></button>
+        </div>
+        <div class="levels" id="lvMv" style="display:none">
+          <button class="btn blue" data-level="21"><span class="shape"></span><span><b>Level 1: Die richtige Form</b><small id="l21s">ich kann · du kannst · er kann</small></span></button>
+          <button class="btn red" data-level="22"><span class="shape circle"></span><span><b>Level 2: Welches Modalverb?</b><small id="l22s">muss nicht or darf nicht?</small></span></button>
+          <button class="btn black" data-level="23"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l23s">Faster, plus Nebensatz: …, weil ich arbeiten muss</small></span></button>
+          <button class="btn green" data-level="24"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l24s">One word is wrong. Run through it!</small></span></button>
         </div>
         <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
         <div class="gapset">
@@ -785,7 +795,29 @@ const W = [
   {id:'wuenschen', de:'wünschen', hl:'wünsche', en:'to wish', m:'Ich wünsche mir', c:'dass', b:['du','gesund','bleibst'], t:"I hope (that) you stay healthy."},
   {id:'leid', de:'es tut mir leid', hl:'leid', en:"I'm sorry", m:'Es tut mir leid', c:'dass', b:['ich','so spät','komme'], t:"I'm sorry (that) I'm so late."},
   {id:'lesen', de:'lesen', hl:'gelesen', en:'to read', m:'Ich habe gelesen', c:'dass', b:['das Museum','montags geschlossen','ist'], t:"I've read that the museum is closed on Mondays."},
-  {id:'klar', de:'klar', en:'clear', m:'Es ist klar', c:'dass', b:['wir','mehr','üben','müssen'], t:"It's clear that we have to practise more."}
+  {id:'klar', de:'klar', en:'clear', m:'Es ist klar', c:'dass', b:['wir','mehr','üben','müssen'], t:"It's clear that we have to practise more."},
+  // ---- more Nebensätze: wenn, obwohl, ob, relative clauses (verb at the end) ----
+  {id:'sn_wenn_zeit', de:'anrufen', hl:'Ruf', en:'to call', m:'Ruf mich an', c:'wenn', o:['wenn','ob'], b:['du','Zeit','hast'], t:'Call me when you have time.'},
+  {id:'sn_wenn_regen', de:'drinnen', en:'inside', m:'Wir bleiben drinnen', c:'wenn', o:['wenn','ob'], b:['es','morgen','regnet'], t:"We'll stay inside if it rains tomorrow."},
+  {id:'sn_wenn_muede', de:'morgens', en:'in the morning', m:'Ich trinke Kaffee', c:'wenn', o:['wenn','ob'], b:['ich','morgens','müde','bin'], t:"I drink coffee when I'm tired in the morning."},
+  {id:'sn_obwohl_regen', de:'spazieren gehen', hl:'spazieren', en:'to go for a walk', m:'Wir gehen spazieren', c:'obwohl', o:['obwohl','weil'], b:['es','stark','regnet'], t:"We go for a walk although it's raining hard."},
+  {id:'sn_obwohl_krank', de:'arbeiten', hl:'arbeitet', en:'to work', m:'Er arbeitet', c:'obwohl', o:['obwohl','weil'], b:['er','krank','ist'], t:"He's working although he is sick."},
+  {id:'sn_obwohl_teuer', de:'das Kleid', en:'the dress', m:'Sie kauft das Kleid', c:'obwohl', o:['obwohl','weil'], b:['es','sehr teuer','ist'], t:"She buys the dress although it's very expensive."},
+  {id:'sn_ob_kommt', de:'wissen', hl:'weiß', en:'to know', m:'Ich weiß nicht', c:'ob', o:['ob','dass'], b:['er','heute','kommt'], t:"I don't know whether he's coming today."},
+  {id:'sn_ob_frage', de:'fragen', hl:'fragt', en:'to ask', m:'Sie fragt', c:'ob', o:['ob','dass'], b:['der Bus','pünktlich','ist'], t:'She asks whether the bus is on time.'},
+  {id:'sn_ob_mitkommen', de:'sich fragen', hl:'frage', en:'to wonder', m:'Ich frage mich', c:'ob', o:['ob','dass'], b:['Lisa','heute','mitkommt'], t:'I wonder whether Lisa is coming along today.'},
+  {id:'sn_rel_buch', de:'das Buch', en:'the book', m:'Das ist das Buch', c:'das', o:['das','dass'], b:['ich','gerade','lese'], t:"That's the book (that) I'm reading right now."},
+  {id:'sn_rel_auto', de:'kaufen', hl:'gekauft', en:'to buy', m:'Wo ist das Auto', c:'das', o:['das','dass'], b:['du','gestern','gekauft','hast'], p:'?', t:'Where is the car (that) you bought yesterday?'},
+  {id:'sn_rel_maedchen', de:'das Mädchen', en:'the girl', m:'Ich kenne das Mädchen', c:'das', o:['das','dass'], b:['dort','Gitarre','spielt'], t:'I know the girl who is playing the guitar over there.'},
+  // ---- Hauptsatz connectors: the verb is NOT at the end ----
+  {id:'hs_denn_hunger', de:'der Hunger', en:'hunger', m:'Ich esse jetzt', c:'denn', o:['denn','weil'], b:['ich','habe','Hunger'], vi:1, t:"I'm eating now, because I'm hungry."},
+  {id:'hs_denn_muede', de:'müde', en:'tired', m:'Ich gehe ins Bett', c:'denn', o:['denn','weil'], b:['ich','bin','sehr müde'], vi:1, t:"I'm going to bed, because I'm very tired."},
+  {id:'hs_denn_taxi', de:'das Taxi', en:'the taxi', m:'Wir nehmen ein Taxi', c:'denn', o:['denn','weil'], b:['der Bus','kommt','heute nicht'], vi:1, t:"We're taking a taxi, because the bus isn't coming today."},
+  {id:'hs_aber_kalt', de:'trotzdem', en:'anyway, still', m:'Es ist kalt', c:'aber', o:['aber','obwohl'], b:['wir','gehen','trotzdem raus'], vi:1, t:"It's cold, but we're going out anyway."},
+  {id:'hs_aber_zeit', de:'die Zeit', en:'time', m:'Ich möchte kommen', c:'aber', o:['aber','obwohl'], b:['ich','habe','keine Zeit'], vi:1, t:"I'd like to come, but I have no time."},
+  {id:'hs_deshalb_krank', de:'zu Hause', en:'at home', m:'Ich bin krank', c:'deshalb', o:['deshalb','weil'], b:['bleibe','ich','zu Hause'], vi:0, t:"I'm sick, that's why I'm staying at home."},
+  {id:'hs_deshalb_regen', de:'der Schirm', en:'the umbrella', m:'Es regnet', c:'deshalb', o:['deshalb','weil'], b:['nehme','ich','einen Schirm'], vi:0, t:"It's raining, so I'm taking an umbrella."},
+  {id:'hs_deshalb_pruefung', de:'lernen', hl:'lerne', en:'to learn, to study', m:'Morgen habe ich eine Prüfung', c:'deshalb', o:['deshalb','weil'], b:['lerne','ich','heute viel'], vi:0, t:"I have an exam tomorrow, so I'm studying a lot today."}
 ];
 
 const TRAPS = [
@@ -817,7 +849,13 @@ const EX = {
   das: '<b class="cj das">das</b> with one s points back to a neuter noun: <i>das Buch, das ich lese</i> = the book which I read. Tip: if you can swap it for <i>welches</i>, write das.',
   dass2: '<b class="cj dass">dass</b> with two s is a conjunction meaning <i>that</i>, after verbs like wissen or glauben. You can\'t swap it for <i>welches</i>.',
   denn: '<b class="cj denn">denn</b> also means <i>because</i>, but keeps normal word order: the verb stays in position 2 (<i>denn ich bin müde</i>).',
-  weil2: '<b class="cj weil">weil</b> sends the verb to the end (<i>weil ich müde bin</i>). <b class="cj denn">denn</b> would keep it in position 2.'
+  weil2: '<b class="cj weil">weil</b> sends the verb to the end (<i>weil ich müde bin</i>). <b class="cj denn">denn</b> would keep it in position 2.',
+  wenn: '<b class="cj wenn">wenn</b> means <i>when / if</i> (a condition, or something that happens every time). It starts a Nebensatz, so the conjugated verb goes to the <b>end</b>.',
+  obwohl: '<b class="cj obwohl">obwohl</b> means <i>although</i>: something happens even though you would expect the opposite. Nebensatz → verb at the <b>end</b>.',
+  ob: '<b class="cj ob">ob</b> means <i>whether / if</i>: a yes/no question inside a sentence (Ich weiß nicht, ob …; Sie fragt, ob …). Not dass! Nebensatz → verb at the <b>end</b>.',
+  rel: 'This is a <b>relative clause</b>: <b class="cj das">das</b> points back to a noun (das Buch, das ich lese). A relative clause is a Nebensatz, so the conjugated verb goes to the <b>end</b>, even without weil or dass.',
+  aber: '<b class="cj aber">aber</b> (but) joins two main clauses, like und, oder and denn. It does not count as a position, so the verb stays in <b>position 2</b>: aber ich <b>habe</b> keine Zeit.',
+  deshalb: '<b class="cj deshalb">deshalb</b> (that’s why) itself takes position 1 of a main clause, so the verb comes <b>right after it</b>, then the subject: deshalb <b>bleibe</b> ich zu Hause.'
 };
 const EX_DASS_MAIN = '<b class="cj dass">dass</b> means <i>that</i>. It follows verbs like glauben, hoffen, sagen, wissen, or phrases like <i>es ist wichtig</i>, and introduces what someone thinks, says, or feels. The conjugated verb goes to the <b>end</b>.';
 
@@ -954,7 +992,17 @@ const VOC = { // weil/dass words: [memory trick, Tamil]
   gut:['gut ≈ good.', 'நல்லது'], schoen:['schön ≈ shine: lovely things shine.', 'அழகு'],
   behaupten:['be-HAUPT-en: Haupt = head; you claim it with your head held high.', 'உறுதியாகச் சொல்'], erklaert:['klar = clear: er-klären = make clear, explain.', 'விளக்கு'],
   wuenschen:['wünschen ≈ wish.', 'விரும்பு'], leid:['leid ≈ "laid low": you feel sorry.', 'வருந்துகிறேன்'],
-  lesen:['lesen → lesson: you read.', 'படி'], klar:['klar ≈ clear.', 'தெளிவு']
+  lesen:['lesen → lesson: you read.', 'படி'], klar:['klar ≈ clear.', 'தெளிவு'],
+  sn_wenn_zeit:['wenn ≈ when: call me when you have time.', 'போன் செய்'], sn_wenn_regen:['drinnen: "drin" = in → inside.', 'உள்ளே'],
+  sn_wenn_muede:['morgens = every Morgen (morning).', 'காலையில்'], sn_obwohl_regen:['spazieren: just wander about, for fun.', 'நடைப்பயிற்சி செல்'],
+  sn_obwohl_krank:['obwohl = although: the opposite of what you expect.', 'வேலை செய்'], sn_obwohl_teuer:['Kleid ≈ clad: what you are clad in.', 'உடை'],
+  sn_ob_kommt:['ob = whether: a yes-or-no question inside a sentence.', 'தெரியும்'], sn_ob_frage:['fragen = to ask; after "sie fragt" comes ob.', 'கேள்'],
+  sn_ob_mitkommen:['Ich frage mich = I ask myself = I wonder.', 'யோசி'], sn_rel_buch:['A relative clause: das points back to das Buch.', 'புத்தகம்'],
+  sn_rel_auto:['das points back to das Auto; the verb goes last.', 'வாங்கு'], sn_rel_maedchen:['-chen words are always das: das Mädchen, das …', 'சிறுமி'],
+  hs_denn_hunger:['denn keeps the normal order: denn ich habe Hunger.', 'பசி'], hs_denn_muede:['denn + normal order: ich bin müde.', 'களைப்பு'],
+  hs_denn_taxi:['Taxi = taxi.', 'டாக்ஸி'], hs_aber_kalt:['trotzdem: in spite of it.', 'இருந்தாலும்'],
+  hs_aber_zeit:['aber = but: nothing moves after it.', 'நேரம்'], hs_deshalb_krank:['deshalb = that\'s why: the verb jumps right behind it.', 'வீட்டில்'],
+  hs_deshalb_regen:['Schirm ≈ screen: a screen against the rain.', 'குடை'], hs_deshalb_pruefung:['lernen ≈ learn.', 'கற்றுக்கொள்']
 };
 const PV = { // prepositions: [English, Tamil, memory trick, case]
   durch:['through', 'வழியாக', 'durch ≈ through: German d often matches English th.', 'akk'], 'für':['for', 'க்காக', 'für ≈ for.', 'akk'],
@@ -1002,7 +1050,12 @@ const CONJ = { // trap words: [English, Tamil, memory trick]
   weil:['because (verb goes to the end)', 'ஏனென்றால்', 'weil sends the verb for a long walk to the end of the sentence.'],
   denn:['because (verb stays in 2nd place)', 'ஏனெனில்', 'denn keeps normal order: "denn ich bin müde".'],
   dass:['that (joins two clauses)', 'என்று', 'dass with two s connects two Sätze (sentences).'],
-  das:['the / which (for a das-noun)', 'அந்த / எது', 'If you can swap it for welches, write das with one s.']
+  das:['the / which (for a das-noun)', 'அந்த / எது', 'If you can swap it for welches, write das with one s.'],
+  wenn:['when, if (verb to the end)', 'போது / என்றால்', 'wenn ≈ when: a condition or a time.'],
+  obwohl:['although (verb to the end)', 'இருந்தபோதிலும்', 'obwohl: something happens even though you expect the opposite.'],
+  ob:['whether, if (verb to the end)', '…ஆ இல்லையா', 'ob = "yes or no?": a question hidden inside a sentence.'],
+  aber:['but (verb stays in position 2)', 'ஆனால்', 'aber is like und and oder: it joins two main clauses, nothing moves.'],
+  deshalb:["that's why, so (verb right after it)", 'அதனால்', 'deshalb takes position 1, so the verb jumps right behind it: deshalb bleibe ich.']
 };
 const TIPS = {
   akk:['Akkusativ club: DOGFU', '<b>D</b>urch, <b>O</b>hne, <b>G</b>egen, <b>F</b>ür, <b>U</b>m → always Akkusativ. Say it like a kung-fu move: "DOG-FU!"'],
@@ -1046,7 +1099,17 @@ const TA_W = {
   gut:'கூட்: "குட்" (good) → நல்லது', schoen:'ஷ்யோன்: "ஷைன்" (shine) — மின்னும் அழகு',
   behaupten:'Haupt = தலை → தலை நிமிர்ந்து அடித்துச் சொல்வது = உறுதியாகச் சொல்', erklaert:'klar = தெளிவு → தெளிவாக்கு = விளக்கு',
   wuenschen:'வ்யூன்ஷன்: "விஷ்" (wish) → விரும்பு', leid:'லைட்: மனசு "லைட்"டா இல்ல → வருத்தம்',
-  lesen:'லேசன்: "லெசன்" (lesson) படி!', klar:'க்ளார்: "க்ளியர்" (clear) → தெளிவு'
+  lesen:'லேசன்: "லெசன்" (lesson) படி!', klar:'க்ளார்: "க்ளியர்" (clear) → தெளிவு',
+  sn_wenn_zeit:'வென் = எப்போது: நேரம் இருக்கும்போது போன் செய்', sn_wenn_regen:'ட்ரின்னன்: "இன்" (in) → உள்ளே',
+  sn_wenn_muede:'Morgen = காலை → morgens = ஒவ்வொரு காலையும்', sn_obwohl_regen:'ஷ்பாட்ஸீரன்: சும்மா சுற்றி நடப்பது',
+  sn_obwohl_krank:'ஓப்வோல் = இருந்தாலும்: உடம்பு சரியில்லை, இருந்தாலும் வேலை!', sn_obwohl_teuer:'க்ளைட்: "clad" (அணிந்த) → உடை',
+  sn_ob_kommt:'ஓப்: "வருவாரா இல்லையா?" — தெரியாது', sn_ob_frage:'ஃப்ராகன் = கேள் → ob = …ஆ இல்லையா',
+  sn_ob_mitkommen:'என்னையே கேட்கிறேன் = யோசிக்கிறேன்', sn_rel_buch:'das → das Buch-ஐக் குறிக்கிறது; வினை கடைசியில்',
+  sn_rel_auto:'das = அந்த கார்; வினை (hast) கடைசியில்', sn_rel_maedchen:'-chen எப்போதும் das → das Mädchen, das …',
+  hs_denn_hunger:'டென்: வினை 2-வது இடம் — denn ich habe Hunger', hs_denn_muede:'denn → ich bin (2-வது இடம்)',
+  hs_denn_taxi:'டாக்ஸி: அதே சொல்', hs_aber_kalt:'ட்ரொட்ஸ்டெம்: அப்படி இருந்தும் → இருந்தாலும்',
+  hs_aber_zeit:'ஆபர் = ஆனால்; வினை 2-வது இடம்', hs_deshalb_krank:'டெஸ்ஹால்ப் = அதனால் → உடனே வினை: bleibe',
+  hs_deshalb_regen:'ஷிர்ம்: மழையை மறைக்கும் "ஸ்க்ரீன்" → குடை', hs_deshalb_pruefung:'லெர்னன்: "learn" → கற்றுக்கொள்'
 };
 const TA_P = {
   durch:'டுர்ஷ்: "துருவி" உள்ளே போவது → வழியாக', 'für':'ஃபியூர்: "for" போலவே → für dich = உனக்காக', gegen:'கேகன்: gegen ≈ against → எதிராக',
@@ -1060,7 +1123,10 @@ const TA_P = {
 };
 const TA_C = {
   weil:'வைல்: "வெயில்"ல நடந்து வினைச்சொல் கடைசிக்குப் போகுது!', denn:'டென்: denn-க்குப் பிறகு வழக்கமான வரிசை — வினைச்சொல் 2-வது இடத்தில்',
-  dass:'டாஸ்: இரண்டு s = இரண்டு வாக்கியங்களை இணைக்கும் "என்று"', das:'டாஸ் (ஒரு s): "welches" என்று மாற்ற முடிந்தால் das'
+  dass:'டாஸ்: இரண்டு s = இரண்டு வாக்கியங்களை இணைக்கும் "என்று"', das:'டாஸ் (ஒரு s): "welches" என்று மாற்ற முடிந்தால் das',
+  wenn:'வென்: "when" → -போது / -ஆல்; வினை கடைசியில்', obwohl:'ஓப்வோல்: இருந்தாலும் — வினை கடைசியில்',
+  ob:'ஓப்: "…ஆ இல்லையா?" — வினை கடைசியில்', aber:'ஆபர்: ஆனால் — வினை 2-வது இடத்தில்',
+  deshalb:'டெஸ்ஹால்ப்: அதனால் — உடனே வினை, பிறகு எழுவாய்'
 };
 const TA_TIPS = {
   akk:'DOGFU: நாய் (DOG) குங்ஃபூ (FU) அடிக்குது! durch, ohne, gegen, für, um → எப்போதும் Akkusativ',
@@ -1072,10 +1138,17 @@ const wasMissed = id => !!(S.srs[id] && S.srs[id].box === 0 && S.srs[id].seen > 
 const vcard = (big, sub, ta, mn, extra = '', tmn = '') => `<div class="vcard">${extra}<div class="big">${big}</div><div class="en">${sub}</div><div class="ta">தமிழ்: ${esc(ta)}</div>${mn ? `<div class="mn">💡 ${mn}</div>` : ''}${taMn(tmn)}</div>`;
 function briefingHTML(q, fresh) {
   const spot = q.some(x => x.type === 'spot');
-  q = q.flatMap(x => x.type !== 'spot' ? [x] : x.src === 'w' ? [{ w:x.x }] : x.src === 't' ? [{ type:'trap', opts:x.x.o }] : x.src === 'v' ? [{ type:'verb', p:x.x, k:x.v }] : x.src === 'n' ? [{ type:'noun', p:x.x, k:x.v === 'dn' ? 'dn' : 'pf' }] : [{ type:x.src === 'p' ? 'prep' : 'adj', p:x.x }]);
+  q = q.flatMap(x => x.type !== 'spot' ? [x] : x.src === 'w' ? [{ w:x.x }] : x.src === 't' ? [{ type:'trap', opts:x.x.o }] : x.src === 'v' ? [{ type:'verb', p:x.x, k:x.v }] : x.src === 'n' ? [{ type:'noun', p:x.x, k:x.v === 'dn' ? 'dn' : 'pf' }] : x.src === 'm' ? [{ type:'modal', p:x.x, k:x.v === 'ns' ? 'ns' : 'kj' }] : [{ type:x.src === 'p' ? 'prep' : 'adj', p:x.x }]);
   const preps = q.filter(x => x.type === 'prep').map(x => x.p), words = q.filter(x => x.w).map(x => x.w), traps = q.filter(x => x.type === 'trap');
   const adjs = q.filter(x => x.type === 'adj').map(x => x.p);
   let h = spot ? '<div class="tip">🔍 <b>Spot the error:</b> every sentence has exactly one wrong word. The three gates show three words from the sentence. Run through the gate with the <b>wrong</b> word. Use the strip under the sentence to see the gate words early.</div>' : '';
+  const modals = q.filter(x => x.type === 'modal');
+  if (modals.length) {
+    h += modalTipsHTML([...new Set(modals.map(x => x.k))]);
+    h += `<h3>Modal verbs</h3><div class="vgrid">${[...new Set(modals.map(x => x.p.mv))].map(modalCard).join('')}</div>`;
+    const vs = [...new Map(modals.map(x => [x.p.inf, x.p])).values()];
+    h += `<h3>Verbs in the sentences</h3><div class="nlist">${vs.map(x => `<div><b>${esc(x.inf)}</b> <span class="tr">${esc(x.ie || '')} · ${esc(x.ita || '')}</span></div>`).join('')}</div>`;
+  }
   const nouns = q.filter(x => x.type === 'noun');
   if (nouns.length) {
     h += nounTipsHTML([...new Set(nouns.map(x => nRuleKey(x.p, x.k)))]);
@@ -1110,8 +1183,10 @@ function briefingHTML(q, fresh) {
     h += `<h3>Trap words</h3><div class="vgrid">${cj.map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`;
   }
   if (words.length) {
+    const cs = [...new Set(words.map(w => w.c))].filter(c => CONJ[c]);
+    h += `<h3>Connectors</h3><div class="vgrid">${cs.map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`;
     const uniq = [...new Set(words)];
-    h += `<h3>${preps.length ? 'weil / dass words' : 'Words in this round'}</h3><div class="cards">${uniq.map(w => { const [mn, ta] = VOC[w.id] || ['', ''];
+    h += `<h3>${preps.length ? 'Nebensatz words' : 'Words in this round'}</h3><div class="cards">${uniq.map(w => { const [mn, ta] = VOC[w.id] || ['', ''];
       return `<div class="wcard">
         <div><div class="de">${fresh.includes(w) ? '<span class="newtag">NEW</span> ' : wasMissed(w.id) ? '<span class="newtag again">↻ AGAIN</span> ' : ''}${wordHTML(w)}</div><div class="en">${esc(w.en)} · <span class="ta">${esc(ta)}</span></div></div>
         ${starBtn(w.id)}
@@ -1517,10 +1592,110 @@ const nounTipsHTML = keys => `<div class="vgrid tips">${keys.map(k => `<div clas
 const nounCard = x => vcard(`${wordHTML({ de:`${x.art} ${x.sg}` })} → <span class="cj plp">die ${plMark(x)}</span>`, esc(x.en), x.ta, esc(x.mn), `<span class="case dat">${esc(nLabel(x))}</span>`, x.tmn);
 const nounWhy = (x, k) => `<b>${esc(x.art)} ${esc(x.sg)}</b> → <b>die ${esc(x.pl)}</b> (${esc(nLabel(x))})` + (k === 'dn' ? ` → Dativ plural: <b>den ${esc(nDat(x))}</b>` : k === 'ss' ? ' → here only one: singular' : k === 'sp' ? ' → here more than one: plural' : '');
 const nounItemHTML = (x, k = 'pf') => `<div class="item"><div><div class="s">${nounHTML(x, k)}</div><div class="tr">${esc(nounTr(x, k))}</div><div class="w">${nounWhy(x, k)}</div>${picSVG(x, k)}</div>${starBtn(x.id)}</div>`;
-const BYID = Object.fromEntries([...W, ...P, ...A, ...V, ...NPL].map(w => [w.id, w]));
+/* ================= Modalverben =================
+   MODV: the six modal verbs with all forms (ich, du, er/sie/es, wir, ihr, sie/Sie), meaning, icon and memory tricks.
+   MSN: sentences. a + f + m + inf = the main clause (modal 2nd, infinitive at the end); wf = a typical wrong form;
+   alt = another modal (same person) with a clearly different meaning; nl + nm + inf + f = the Nebensatz (modal last). */
+const MODV = {
+  'können':{ f:['kann', 'kannst', 'kann', 'können', 'könnt', 'können'], en:'can, to be able to', ta:'முடியும்', icon:'💪', mean:'ability or possibility', mn:'können ≈ can: you can because you know how (kennen).', tmn:'கேனன்: "can" — முடியும்' },
+  'müssen':{ f:['muss', 'musst', 'muss', 'müssen', 'müsst', 'müssen'], en:'must, to have to', ta:'கட்டாயம் வேண்டும்', icon:'❗', mean:'necessity: no choice', mn:'müssen ≈ must. Careful: nicht müssen = don’t have to.', tmn:'ம்யூஸன்: "must" — கட்டாயம்; nicht müssen = தேவையில்லை' },
+  'dürfen':{ f:['darf', 'darfst', 'darf', 'dürfen', 'dürft', 'dürfen'], en:'may, to be allowed to', ta:'அனுமதி உண்டு', icon:'✅', mean:'permission (nicht dürfen = not allowed)', mn:'dürfen: a door (Tür) opens for you: you may go in. nicht dürfen = must not.', tmn:'ட்யூர்ஃபன்: "டோர்" திறந்திருக்கு — அனுமதி; nicht dürfen = கூடாது' },
+  'wollen':{ f:['will', 'willst', 'will', 'wollen', 'wollt', 'wollen'], en:'to want to', ta:'விரும்பு', icon:'🎯', mean:'your own wish or plan', mn:'False friend! ich will = I want (not "I will").', tmn:'வொல்லன்: ich will = நான் விரும்புகிறேன் ("will" அல்ல!)' },
+  'sollen':{ f:['soll', 'sollst', 'soll', 'sollen', 'sollt', 'sollen'], en:'should, to be supposed to', ta:'செய்ய வேண்டும் (மற்றவர் சொல்வது)', icon:'📢', mean:'someone else says so', mn:'sollen ≈ shall / should: someone else tells you to.', tmn:'ஸொல்லன்: மற்றவர் "சொல்"கிறார் → செய்ய வேண்டும்' },
+  'möchten':{ f:['möchte', 'möchtest', 'möchte', 'möchten', 'möchtet', 'möchten'], en:'would like to', ta:'விரும்புகிறேன் (மரியாதையாக)', icon:'🙏', mean:'a polite wish', mn:'möchten = would like: the polite way to say what you want.', tmn:'ம்யோஷ்டன்: மரியாதையான விருப்பம் — "would like"' }
+};
+const MPRON = ['ich', 'du', 'er / sie / es', 'wir', 'ihr', 'sie / Sie'];
+// which forms fit this subject: ich → 0, du → 1, wir → 3, ihr → 4, sie / Sie → 2 or 5, a plural noun → 5, anything else (er, man, Anna) → 2
+function mPerson(a) {
+  const s = (a || '').trim(), l = s.toLowerCase();
+  if (l === 'ich') return [0]; if (l === 'du') return [1]; if (l === 'wir') return [3]; if (l === 'ihr') return [4];
+  if (l === 'sie') return [2, 5];
+  if (/^(die|meine|deine|unsere|alle|viele) \S+/.test(l)) return [5];
+  return [2];
+}
+const MSN = [
+  // ---- können ----
+  {id:'m_k1', mv:'können', a:'Er', f:'kann', wf:'kannt', m:'sehr gut', inf:'schwimmen', alt:'muss', p:'.', t:'He can swim very well.', nl:'Er gewinnt oft, weil er', nm:'sehr gut', nt:'He often wins because he can swim very well.', e:'🏊', ie:'to swim', ita:'நீந்து'},
+  {id:'m_k2', mv:'können', a:'Ich', f:'kann', wf:'könne', m:'heute leider nicht', inf:'kommen', alt:'will', p:'.', t:"Unfortunately I can't come today.", nl:'Es tut mir leid, dass ich', nm:'heute nicht', nt:"I'm sorry that I can't come today.", e:'📅', ie:'to come', ita:'வா'},
+  {id:'m_k3', mv:'können', a:'Du', f:'kannst', wf:'kannt', m:'gut', inf:'kochen', alt:'musst', p:'.', t:'You can cook well.', nl:'Wir essen gern bei dir, weil du', nm:'so gut', nt:'We like eating at your place because you can cook so well.', e:'🍳', ie:'to cook', ita:'சமை'},
+  {id:'m_k4', mv:'können', a:'Wir', f:'können', wf:'kannen', m:'morgen ins Kino', inf:'gehen', alt:'müssen', p:'.', t:'We can go to the cinema tomorrow.', nl:'Ich freue mich, dass wir', nm:'morgen ins Kino', nt:"I'm glad that we can go to the cinema tomorrow.", e:'🎬', ie:'to go', ita:'போ'},
+  {id:'m_k5', mv:'können', a:'Ihr', f:'könnt', wf:'kannt', m:'hier', inf:'parken', alt:'müsst', p:'.', t:'You (all) can park here.', nl:'Es ist gut, dass ihr', nm:'hier', nt:"It's good that you can park here.", e:'🅿️', ie:'to park', ita:'வண்டியை நிறுத்து'},
+  {id:'m_k6', mv:'können', a:'Anna', f:'kann', wf:'kannt', m:'drei Sprachen', inf:'sprechen', alt:'soll', p:'.', t:'Anna can speak three languages.', nl:'Sie findet schnell Arbeit, weil sie', nm:'drei Sprachen', nt:'She finds work quickly because she can speak three languages.', e:'🗣️', ie:'to speak', ita:'பேசு'},
+  // ---- müssen ----
+  {id:'m_m1', mv:'müssen', a:'Ich', f:'muss', wf:'musse', m:'heute lange', inf:'arbeiten', alt:'darf', p:'.', t:'I have to work late today.', nl:'Ich komme später, weil ich', nm:'heute lange', nt:"I'm coming later because I have to work late today.", e:'💼', ie:'to work', ita:'வேலை செய்'},
+  {id:'m_m2', mv:'müssen', a:'Du', f:'musst', wf:'muss', m:'mehr Wasser', inf:'trinken', alt:'darfst', p:'.', t:'You must drink more water.', nl:'Der Arzt sagt, dass du', nm:'mehr Wasser', nt:'The doctor says that you must drink more water.', e:'💧', ie:'to drink', ita:'குடி'},
+  {id:'m_m3', mv:'müssen', a:'Er', f:'muss', wf:'musst', m:'jeden Tag früh', inf:'aufstehen', alt:'will', p:'.', t:'He has to get up early every day.', nl:'Er ist müde, weil er', nm:'jeden Tag früh', nt:"He's tired because he has to get up early every day.", e:'⏰', ie:'to get up', ita:'எழுந்திரு'},
+  {id:'m_m4', mv:'müssen', a:'Wir', f:'müssen', wf:'muss', m:'den Zug', inf:'nehmen', alt:'dürfen', p:'.', t:'We have to take the train.', nl:'Es ist schade, dass wir', nm:'den Zug', nt:"It's a pity that we have to take the train.", e:'🚆', ie:'to take', ita:'எடு'},
+  {id:'m_m5', mv:'müssen', a:'Ihr', f:'müsst', wf:'musst', m:'jetzt leise', inf:'sein', alt:'könnt', p:'.', t:'You (all) have to be quiet now.', nl:'Mama sagt, dass ihr', nm:'jetzt leise', nt:'Mum says that you have to be quiet now.', e:'🤫', ie:'to be', ita:'இரு'},
+  {id:'m_m6', mv:'müssen', a:'Du', f:'musst', wf:'muss', m:'heute nicht', inf:'kochen', alt:'darfst', p:'.', t:"You don't have to cook today.", nl:'Wie schön, dass du', nm:'heute nicht', nt:"How nice that you don't have to cook today.", e:'🍕', ie:'to cook', ita:'சமை'},
+  // ---- dürfen ----
+  {id:'m_d1', mv:'dürfen', a:'Man', f:'darf', wf:'darft', m:'hier nicht', inf:'rauchen', alt:'muss', p:'.', t:'You are not allowed to smoke here.', nl:'Ich gehe raus, weil man', nm:'hier nicht', nt:"I'm going outside because you're not allowed to smoke here.", e:'🚭', ie:'to smoke', ita:'புகைபிடி'},
+  {id:'m_d2', mv:'dürfen', a:'Die Kinder', f:'dürfen', wf:'darfen', m:'heute lange', inf:'fernsehen', alt:'müssen', p:'.', t:'The children are allowed to watch TV late today.', nl:'Die Kinder sind froh, weil sie', nm:'heute lange', nt:"The children are happy because they're allowed to watch TV late today.", e:'📺', ie:'to watch TV', ita:'டிவி பார்'},
+  {id:'m_d3', mv:'dürfen', a:'Ich', f:'darf', wf:'darfe', m:'nicht so viel Zucker', inf:'essen', alt:'muss', p:'.', t:"I'm not allowed to eat so much sugar.", nl:'Ich trinke Tee ohne Zucker, weil ich', nm:'nicht so viel Zucker', nt:"I drink tea without sugar because I'm not allowed to eat so much sugar.", e:'🍬', ie:'to eat', ita:'சாப்பிடு'},
+  {id:'m_d4', mv:'dürfen', a:'Du', f:'darfst', wf:'darft', m:'mein Fahrrad', inf:'nehmen', alt:'musst', p:'.', t:'You may take my bike.', nl:'Papa sagt, dass du', nm:'mein Fahrrad', nt:'Dad says that you may take my bike.', e:'🚲', ie:'to take', ita:'எடு'},
+  {id:'m_d5', mv:'dürfen', a:'Wir', f:'dürfen', wf:'darfen', m:'im Museum keine Fotos', inf:'machen', alt:'wollen', p:'.', t:"We're not allowed to take photos in the museum.", nl:'Ich bin traurig, weil wir', nm:'im Museum keine Fotos', nt:"I'm sad because we're not allowed to take photos in the museum.", e:'📷', ie:'to make, to do', ita:'செய்'},
+  {id:'m_d6', mv:'dürfen', a:'Sie', f:'dürfen', wf:'darfen', m:'hier', inf:'warten', alt:'müssen', p:'.', t:'You may wait here. (polite)', nl:'Die Ärztin sagt, dass Sie', nm:'hier', nt:'The doctor says that you may wait here.', e:'🪑', ie:'to wait', ita:'காத்திரு'},
+  // ---- wollen ----
+  {id:'m_w1', mv:'wollen', a:'Ich', f:'will', wf:'wille', m:'Deutsch', inf:'lernen', alt:'muss', p:'.', t:'I want to learn German.', nl:'Ich lese viel, weil ich', nm:'gut Deutsch', nt:'I read a lot because I want to learn German well.', e:'📚', ie:'to learn', ita:'கற்றுக்கொள்'},
+  {id:'m_w2', mv:'wollen', a:'Du', f:'willst', wf:'willt', m:'im Sommer nach Italien', inf:'fahren', alt:'musst', p:'.', t:'You want to go to Italy in the summer.', nl:'Ich weiß, dass du', nm:'im Sommer nach Italien', nt:'I know that you want to go to Italy in the summer.', e:'✈️', ie:'to go, to travel', ita:'பயணம் செய்'},
+  {id:'m_w3', mv:'wollen', a:'Er', f:'will', wf:'willt', m:'ein neues Handy', inf:'kaufen', alt:'darf', p:'.', t:'He wants to buy a new phone.', nl:'Er spart Geld, weil er', nm:'ein neues Handy', nt:"He's saving money because he wants to buy a new phone.", e:'📱', ie:'to buy', ita:'வாங்கு'},
+  {id:'m_w4', mv:'wollen', a:'Wir', f:'wollen', wf:'willen', m:'am Samstag eine Party', inf:'machen', alt:'müssen', p:'.', t:'We want to have a party on Saturday.', nl:'Wir kaufen Getränke, weil wir', nm:'am Samstag eine Party', nt:"We're buying drinks because we want to have a party on Saturday.", e:'🎉', ie:'to make, to do', ita:'செய்'},
+  {id:'m_w5', mv:'wollen', a:'Ihr', f:'wollt', wf:'willt', m:'heute Abend Pizza', inf:'essen', alt:'müsst', p:'.', t:'You (all) want to eat pizza tonight.', nl:'Ich weiß, dass ihr', nm:'heute Abend Pizza', nt:'I know that you want to eat pizza tonight.', e:'🍕', ie:'to eat', ita:'சாப்பிடு'},
+  {id:'m_w6', mv:'wollen', a:'Tom', f:'will', wf:'willt', m:'Arzt', inf:'werden', alt:'soll', p:'.', t:'Tom wants to become a doctor.', nl:'Er lernt viel, weil er', nm:'Arzt', nt:'He studies a lot because he wants to become a doctor.', e:'🩺', ie:'to become', ita:'ஆகு'},
+  // ---- sollen ----
+  {id:'m_s1', mv:'sollen', a:'Du', f:'sollst', wf:'sollt', m:'die Tabletten zweimal am Tag', inf:'nehmen', alt:'willst', p:'.', t:'You should take the tablets twice a day (the doctor says).', nl:'Die Ärztin meint, dass du', nm:'die Tabletten zweimal am Tag', nt:'The doctor says that you should take the tablets twice a day.', e:'💊', ie:'to take', ita:'எடு'},
+  {id:'m_s2', mv:'sollen', a:'Ich', f:'soll', wf:'solle', m:'um 8 Uhr im Büro', inf:'sein', alt:'will', p:'.', t:"I'm supposed to be in the office at 8 (my boss says).", nl:'Ich fahre früh los, weil ich', nm:'um 8 Uhr im Büro', nt:"I set off early because I'm supposed to be in the office at 8.", e:'🏢', ie:'to be', ita:'இரு'},
+  {id:'m_s3', mv:'sollen', a:'Er', f:'soll', wf:'sollt', m:'sein Zimmer', inf:'aufräumen', alt:'will', p:'.', t:"He's supposed to tidy his room (his mum says).", nl:'Mama sagt, dass er', nm:'sein Zimmer', nt:'Mum says that he should tidy his room.', e:'🧹', ie:'to tidy up', ita:'ஒழுங்குபடுத்து'},
+  {id:'m_s4', mv:'sollen', a:'Wir', f:'sollen', wf:'soll', m:'die Hausaufgaben bis Montag', inf:'machen', alt:'wollen', p:'.', t:"We're supposed to do the homework by Monday (the teacher says).", nl:'Die Lehrerin sagt, dass wir', nm:'die Hausaufgaben bis Montag', nt:'The teacher says that we should do the homework by Monday.', e:'📝', ie:'to make, to do', ita:'செய்'},
+  {id:'m_s5', mv:'sollen', a:'Ihr', f:'sollt', wf:'soll', m:'nicht so laut', inf:'sprechen', alt:'wollt', p:'.', t:"You (all) shouldn't talk so loudly (the neighbour says).", nl:'Der Nachbar sagt, dass ihr', nm:'nicht so laut', nt:"The neighbour says that you shouldn't talk so loudly.", e:'🔇', ie:'to speak', ita:'பேசு'},
+  {id:'m_s6', mv:'sollen', a:'Man', f:'soll', wf:'sollt', m:'viel Obst', inf:'essen', alt:'will', p:'.', t:'You should eat a lot of fruit (doctors say).', nl:'Ich kaufe Äpfel, weil man', nm:'viel Obst', nt:'I buy apples because you should eat a lot of fruit.', e:'🍎', ie:'to eat', ita:'சாப்பிடு'},
+  // ---- möchten ----
+  {id:'m_c1', mv:'möchten', a:'Ich', f:'möchte', wf:'möcht', m:'einen Kaffee', inf:'trinken', alt:'muss', p:'.', t:"I'd like to drink a coffee.", nl:'Ich gehe ins Café, weil ich', nm:'einen Kaffee', nt:"I'm going to the café because I'd like to drink a coffee.", e:'☕', ie:'to drink', ita:'குடி'},
+  {id:'m_c2', mv:'möchten', a:'Du', f:'möchtest', wf:'möchte', m:'Ärztin', inf:'werden', alt:'sollst', p:'.', t:'You would like to become a doctor.', nl:'Ich weiß, dass du', nm:'Ärztin', nt:'I know that you would like to become a doctor.', e:'👩‍⚕️', ie:'to become', ita:'ஆகு'},
+  {id:'m_c3', mv:'möchten', a:'Sie', f:'möchte', wf:'möchtet', m:'ein Zimmer', inf:'reservieren', alt:'muss', p:'.', t:'She would like to book a room.', nl:'Sie ruft im Hotel an, weil sie', nm:'ein Zimmer', nt:"She's calling the hotel because she would like to book a room.", e:'🏨', ie:'to book', ita:'முன்பதிவு செய்'},
+  {id:'m_c4', mv:'möchten', a:'Wir', f:'möchten', wf:'möchte', m:'bitte', inf:'bestellen', alt:'müssen', p:'.', t:"We'd like to order, please.", nl:'Der Kellner kommt, weil wir', nm:'jetzt', nt:"The waiter comes because we'd like to order now.", e:'🍽️', ie:'to order', ita:'ஆர்டர் செய்'},
+  {id:'m_c5', mv:'möchten', a:'Ihr', f:'möchtet', wf:'möchtest', m:'im Urlaub ans Meer', inf:'fahren', alt:'müsst', p:'.', t:'You (all) would like to go to the seaside on holiday.', nl:'Ich weiß, dass ihr', nm:'im Urlaub ans Meer', nt:'I know that you would like to go to the seaside on holiday.', e:'🏖️', ie:'to go, to travel', ita:'பயணம் செய்'},
+  {id:'m_c6', mv:'möchten', a:'Er', f:'möchte', wf:'möchtet', m:'mit dir', inf:'sprechen', alt:'soll', p:'.', t:'He would like to talk to you.', nl:'Er ruft dich an, weil er', nm:'mit dir', nt:"He's calling you because he would like to talk to you.", e:'📞', ie:'to speak', ita:'பேசு'}
+];
+MSN.forEach(x => { x.mo = 1; });
+const altMv = x => Object.keys(MODV).find(k => k !== x.mv && MODV[k].f.includes(x.alt)) || '';
+// kj = which form (kann / kannt), bd = which modal fits the meaning, ns = Nebensatz: infinitive + modal at the end
+function modalOpts(x, k) {
+  if (k === 'ns') return { q:`${x.nl} ${x.nm} ___${x.p}`, ans:`${x.inf} ${x.f}`, wrong:`${x.f} ${x.inf}` };
+  return { q:`${x.a} ___ ${x.m} ${x.inf}${x.p}`, ans:x.f, wrong:k === 'bd' ? x.alt : x.wf };
+}
+const modalQ = (x, k) => { const o = modalOpts(x, k); return { type:'modal', p:x, k, opts:[o.ans, o.wrong], ans:o.ans }; };
+const modalHTML = (x, k) => k === 'ns'
+  ? `${esc(x.nl)} ${esc(x.nm)} <b class="cj mvi">${esc(x.inf)}</b> <b class="cj mvf">${esc(x.f)}</b>${x.p}`
+  : `${esc(x.a)} <b class="cj mvf">${esc(x.f)}</b> ${esc(x.m)} <b class="cj mvi">${esc(x.inf)}</b>${x.p}`;
+const modalPlain = (x, k) => k === 'ns' ? `${x.nl} ${x.nm} ${x.inf} ${x.f}${x.p}` : `${x.a} ${x.f} ${x.m} ${x.inf}${x.p}`;
+const modalTr = (x, k) => k === 'ns' ? x.nt : x.t;
+function modalPrompt(x, k) {
+  const o = modalOpts(x, k), hint = k === 'bd' ? `“${x.t}”` : `(${x.mv})`;
+  return esc(o.q).replace('___', '<span class="gap">?</span>') + ` <span class="whint">${esc(hint)}</span>`;
+}
+const MHINT = { kj:'Which form of the modal verb?', bd:'Which modal verb fits the meaning?', ns:'Nebensatz: which word comes last?' };
+const MRULE = {
+  kj:'Modal verbs are irregular in the singular: <b>ich</b> and <b>er / sie / es</b> have the same form with <b>no ending</b> (ich kann, er kann, never "er kannt"), and most change their vowel (können → kann, müssen → muss, dürfen → darf, wollen → will). The plural is regular: wir können, ihr könnt, sie können.',
+  bd:'Choose by meaning: <b>können</b> = ability or possibility, <b>müssen</b> = necessity, <b>dürfen</b> = permission, <b>wollen</b> = your own wish, <b>sollen</b> = someone else wants it, <b>möchten</b> = a polite wish. Careful: <b>nicht müssen</b> = don’t have to, <b>nicht dürfen</b> = must not.',
+  sb:'Satzklammer (sentence bracket): the modal verb stands in <b>position 2</b> and the second verb goes to the <b>very end</b>, as an infinitive: Ich <b class="cj mvf">kann</b> heute nicht <b class="cj mvi">kommen</b>.',
+  ns:'In a Nebensatz (weil, dass, wenn …) the conjugated modal verb goes to the <b>very end</b>, after the infinitive: …, weil ich heute lange <b class="cj mvi">arbeiten</b> <b class="cj mvf">muss</b>.'
+};
+const MTIPS = { // rule: [title, tip, Tamil tip]
+  kj:['ich = er: no ending', 'In the singular, ich and er look the same and have no -t: ich <b>kann</b>, er <b>kann</b>, ich <b>muss</b>, er <b>muss</b>. Only du gets -st.', 'ஒருமையில் ich-உம் er-உம் ஒன்றே, -t இல்லை: ich kann, er kann. du-க்கு மட்டும் -st.'],
+  bd:['müssen nicht ≠ dürfen nicht', '<b>Du musst nicht kommen</b> = you don’t have to (it’s OK if you come). <b>Du darfst nicht kommen</b> = you must not (it’s forbidden).', 'nicht müssen = தேவையில்லை; nicht dürfen = கூடாது (தடை).'],
+  sb:['The bracket', 'Modal in position 2, infinitive at the end, everything else in between: Ich <b>muss</b> heute lange <b>arbeiten</b>.', 'Modal 2-வது இடம், மற்ற வினை கடைசியில்: Ich muss … arbeiten.'],
+  ns:['Nebensatz: modal last', 'After weil / dass / wenn the modal jumps to the very end: …, weil ich arbeiten <b>muss</b>.', 'weil / dass-க்குப் பிறகு modal வினை கடைசியில்: …, weil ich arbeiten muss.']
+};
+const modalTipsHTML = keys => `<div class="vgrid tips">${keys.map(k => `<div class="vcard"><div class="big sm">${MTIPS[k][0]}</div><div class="mn">💡 ${MTIPS[k][1]}</div>${taMn(MTIPS[k][2])}</div>`).join('')}</div>`;
+const modalCard = mv => { const d = MODV[mv]; return vcard(`${d.icon} ${esc(mv)}`, `${esc(d.en)} · ich ${d.f[0]}, du ${d.f[1]}, er ${d.f[2]}, wir ${d.f[3]}`, d.ta, esc(d.mn), `<span class="case dat">${esc(d.mean.split(' (')[0])}</span>`, d.tmn); };
+const modalWhy = (x, k) => `<b>${esc(x.mv)}</b> = ${esc(MODV[x.mv].en)}` + (k === 'kj' ? ` → ${esc(x.a)}: <b>${esc(x.f)}</b>` : k === 'ns' ? ' → in the Nebensatz the modal verb comes last' : ` (${esc(MODV[x.mv].mean)})` + (altMv(x) ? `, not ${esc(altMv(x))} (${esc(MODV[altMv(x)].en)})` : ''));
+const modalItemHTML = (x, k = 'kj') => `<div class="item"><div><div class="s">${modalHTML(x, k)}</div><div class="tr">${esc(modalTr(x, k))}</div><div class="w">${modalWhy(x, k)}</div>${picSVG(x, k)}</div>${starBtn(x.id)}</div>`;
+const BYID = Object.fromEntries([...W, ...P, ...A, ...V, ...NPL, ...MSN].map(w => [w.id, w]));
 const WEIL = W.filter(w => w.c === 'weil'), DASS = W.filter(w => w.c === 'dass');
 const ORDER = [];
 for (let i = 0; i < Math.max(WEIL.length, DASS.length); i++) { if (WEIL[i]) ORDER.push(WEIL[i]); if (DASS[i]) ORDER.push(DASS[i]); }
+W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   // wenn, obwohl, ob, relative clauses, denn, aber, deshalb
 
 /* ================= storage =================
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
@@ -1539,7 +1714,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}, spot:{c:0,t:0}, vpr:{c:0,t:0}, vpp:{c:0,t:0}, vns:{c:0,t:0}, npf:{c:0,t:0}, nsp:{c:0,t:0}, ndn:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, unlockedT:1, unlockedN:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural', wstats:{}, werr:{}, telcLvl:'B1', lanePreview:true, genNew:false });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}, spot:{c:0,t:0}, vpr:{c:0,t:0}, vpp:{c:0,t:0}, vns:{c:0,t:0}, npf:{c:0,t:0}, nsp:{c:0,t:0}, ndn:{c:0,t:0}, mkj:{c:0,t:0}, mbd:{c:0,t:0}, mns:{c:0,t:0}, cj2:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, unlockedT:1, unlockedN:1, unlockedM:1, topic:'pl', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural', wstats:{}, werr:{}, telcLvl:'B1', lanePreview:true, genNew:false });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -1622,8 +1797,9 @@ function keyOf(w) { return w.hl || w.de.replace(/^(der|die|das) /, ''); }
 function sentHTML(w) {
   const k = esc(keyOf(w));
   const mark = s => { const e = esc(s); return e.includes(k) ? e.replace(k, `<span class="kw">${k}</span>`) : e; };
-  const mid = w.b.slice(0, -1).map(mark).join(' ');
-  return `${mark(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${mid} <span class="vb">${mark(w.b[w.b.length - 1])}</span>${w.p || '.'}`;
+  const vi = w.vi ?? w.b.length - 1;   // the conjugated verb: last in a Nebensatz, 2nd (or 1st after deshalb) in a main clause
+  const clause = w.b.map((x, i) => i === vi ? `<span class="vb">${mark(x)}</span>` : mark(x)).join(' ');
+  return `${mark(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${clause}${w.p || '.'}`;
 }
 function trapHTML(t) { return esc(t.q).replace('___', `<b class="cj ${t.a}">${t.a}</b>`); }
 function prepHTML(p) { return esc(p.q).replace('___', `<b class="cj ${p.cs}">${esc(p.a)}</b>`); }
@@ -1765,6 +1941,7 @@ function fixedSVG(p, [kind, a, b]) {
 }
 function picSVG(p, k) {
   if (!p) return '';
+  if (p.mo) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(modalTr(p, k || 'kj'))}">${modalSVG(p, k || 'kj')}</svg>`;
   if (p.pn) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(nounTr(p, k || 'pf'))}">${nounSVG(p, k || 'pf')}</svg>`;
   if (p.tv) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(verbTr(p, k || 'pr'))}">${verbSVG(p, k || 'pr')}</svg>`;
   if (p.ak) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(p.t)}">${adjSVG(p)}</svg>`;
@@ -1900,7 +2077,7 @@ window.addEventListener('resize', resize); resize();
 const SPAWN_DIST = 78, ROW_GAP = 26;
 // spawn distance scales with the time-between-gates setting, so faster levels (Level 3) keep their shorter gap
 const spawnZ = () => -SPAWN_DIST * S.gap / GAP_DEF, rowGap = () => ROW_GAP * S.gap / GAP_DEF;
-const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 7:12, 8:12, 9:15, 10:11.5, 11:11.5, 12:11.5, 13:12, 14:12, 15:15, 16:11.5, 17:12, 18:12, 19:15, 20:11.5, 0:12 };
+const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 7:12, 8:12, 9:15, 10:11.5, 11:11.5, 12:11.5, 13:12, 14:12, 15:15, 16:11.5, 17:12, 18:12, 19:15, 20:11.5, 21:12, 22:12, 23:15, 24:11.5, 0:12 };
 let G = { running:false, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0 };
 
 function schedule(sec, fn) { G.pending = { at:G.clock + sec, fn }; }
@@ -1927,7 +2104,10 @@ function spawnRow(kind, items, z, step) {
   G.rows.push({ kind, items, group:grp, step, resolved:false });
 }
 
-const gateQ = w => ({ type:'gate', w, opts:['weil', 'dass'], ans:w.c });
+const gateQ = w => ({ type:'gate', w, opts:w.o || ['weil', 'dass'], ans:w.c });
+// words that start a Nebensatz (verb at the end); denn, aber, deshalb keep a main clause
+const CJ_SUB = new Set(['weil', 'dass', 'wenn', 'obwohl', 'ob', 'das']), cjSub = c => CJ_SUB.has(c);
+const exOf = w => ({ weil:EX.weil, dass:EX_DASS_MAIN, wenn:EX.wenn, obwohl:EX.obwohl, ob:EX.ob, das:EX.rel, denn:EX.denn, aber:EX.aber, deshalb:EX.deshalb })[w.c] || EX.weil;
 const buildQ = w => ({ type:'build', w });
 const trapQ = t => ({ type:'trap', t, opts:t.o, ans:t.a });
 const prepQ = p => ({ type:'prep', p, opts:p.o, ans:p.a });
@@ -1940,11 +2120,17 @@ function spotQ(src, x, v) {
   let before, err, after, fix, skip;
   if (src === 'w') {
     const p = x.p || '.', verb = x.b[x.b.length - 1];
-    if (v === 'o' && x.b.length >= 3) {   // "weil ich bin müde": dropping weil/dass or using denn would also fix it, so the conjunction is never offered
+    if (v === 'o' && x.b.length >= 3 && cjSub(x.c)) {   // "weil ich bin müde": dropping weil/dass or using denn would also fix it, so the conjunction is never offered
       before = `${x.m}, ${x.c} ${x.b[0]} `; err = verb; after = ` ${x.b.slice(1, -1).join(' ')}${p}`; fix = x.c; skip = [x.c];
     } else {
-      v = 'c'; before = `${x.m}, `; err = x.c === 'weil' ? 'dass' : 'weil'; after = ` ${x.b.join(' ')}${p}`; fix = x.c; skip = [];
+      // the wrong connector; after denn / aber / deshalb, moving the verb would also "fix" it, so those words are never offered
+      v = 'c'; before = `${x.m}, `; err = (x.o || [])[1] || (x.c === 'weil' ? 'dass' : 'weil'); after = ` ${x.b.join(' ')}${p}`; fix = x.c; skip = cjSub(x.c) ? [] : spotTok(after);
     }
+  } else if (src === 'm') {    // modal verbs: a wrong form, or the modal not at the end of a Nebensatz
+    if (v !== 'ns') v = 'kj';
+    if (v === 'ns') { before = `${x.nl} ${x.nm} `; err = x.f; after = ` ${x.inf}${x.p}`; fix = x.f; }
+    else { before = `${x.a} `; err = x.wf; after = ` ${x.m} ${x.inf}${x.p}`; fix = x.f; }
+    skip = ['weil', 'dass', 'wenn', 'obwohl', 'ob', 'damit'];
   } else if (src === 'n') {    // nouns: a wrong plural, the singular where the plural is needed, or the Dativ plural without -n
     if (!(v === 'sp' && x.sg !== x.pl) && !(v === 'dn' && x.qd)) v = 'pf';
     const o = nounOpts(x, v);
@@ -1976,6 +2162,7 @@ function spotFromKey(k) {
   return x ? spotQ(src, x, v || undefined) : null;
 }
 function spotQueue(tp) {
+  if (tp === 'mv') return pickPrep(MSN, 8).map((x, i) => spotQ('m', x, i % 2 ? 'ns' : 'kj'));
   if (tp === 'pl') return pickPrep(NPL, 8).map(x => spotQ('n', x, nSpotKind(x)));
   if (tp === 'tv') return pickV(5, 3).map(x => spotQ('v', x, x.sep ? ['pr', 'pp', 'ns'][Math.floor(Math.random() * 3)] : 'pp'));
   if (tp === 'wd') { const ws = pickWords(5, []); return shuffle([...ws.map((w, i) => spotQ('w', w, i % 2 ? 'o' : 'c')), ...shuffle(TRAPS.slice()).slice(0, 3).map(t => spotQ('t', t))]); }
@@ -1983,19 +2170,25 @@ function spotQueue(tp) {
 }
 const spotLine = q => `${esc(q.before)}<s class="spoterr">${esc(q.err)}</s>${esc(q.after)}`;
 const nSpotKind = x => { const ks = ['pf', ...(x.sg !== x.pl ? ['sp'] : []), ...(x.qd ? ['dn'] : [])]; return ks[Math.floor(Math.random() * ks.length)]; };
-const spotRight = q => q.src === 'n' ? nounHTML(q.x, q.v) : q.src === 'v' ? verbHTML(q.x, q.v) : q.src === 'w' ? sentHTML(q.x) : q.src === 't' ? trapHTML(q.x) : q.src === 'p' ? prepHTML(q.x) : adjHTML(q.x);
-const spotFix = q => q.v === 'o' ? `<b>${esc(q.err)}</b> has to go to the end` : `<s class="spoterr">${esc(q.err)}</s> → <b>${esc(q.fix)}</b>`;
-const spotEx = q => q.src === 'n' ? NRULE[nRuleKey(q.x, q.v)] : q.src === 'v' ? VRULE[vRuleKey(q.x, q.v)] : q.src === 'w' ? (q.v === 'o' ? EX.order : q.x.c === 'weil' ? EX.weil : EX_DASS_MAIN) : q.src === 't' ? EX[q.x.ex] : q.src === 'p' ? EXP[q.x.k] : ADJ_RULE[q.x.k] + `<div class="w" style="margin-top:6px">${adjWhy(q.x)}</div>`;
-const spotPic = q => q.src === 'n' ? picSVG(q.x, q.v === 'dn' ? 'dn' : 'pf') : q.src === 'v' ? picSVG(q.x, q.v) : q.src === 'p' || q.src === 'a' ? picSVG(q.x) : '';
+const spotRight = q => q.src === 'm' ? modalHTML(q.x, q.v === 'ns' ? 'ns' : 'kj') : q.src === 'n' ? nounHTML(q.x, q.v) : q.src === 'v' ? verbHTML(q.x, q.v) : q.src === 'w' ? sentHTML(q.x) : q.src === 't' ? trapHTML(q.x) : q.src === 'p' ? prepHTML(q.x) : adjHTML(q.x);
+const spotFix = q => q.v === 'o' || (q.src === 'm' && q.v === 'ns') ? `<b>${esc(q.err)}</b> has to go to the end` : `<s class="spoterr">${esc(q.err)}</s> → <b>${esc(q.fix)}</b>`;
+const spotEx = q => q.src === 'm' ? MRULE[q.v === 'ns' ? 'ns' : 'kj'] : q.src === 'n' ? NRULE[nRuleKey(q.x, q.v)] : q.src === 'v' ? VRULE[vRuleKey(q.x, q.v)] : q.src === 'w' ? (q.v === 'o' ? EX.order : exOf(q.x)) : q.src === 't' ? EX[q.x.ex] : q.src === 'p' ? EXP[q.x.k] : ADJ_RULE[q.x.k] + `<div class="w" style="margin-top:6px">${adjWhy(q.x)}</div>`;
+const spotPic = q => q.src === 'm' ? picSVG(q.x, q.v === 'ns' ? 'ns' : 'kj') : q.src === 'n' ? picSVG(q.x, q.v === 'dn' ? 'dn' : 'pf') : q.src === 'v' ? picSVG(q.x, q.v) : q.src === 'p' || q.src === 'a' ? picSVG(q.x) : '';
 
 // levels 1-3 are weil/dass, 4-6 prepositions, 7-9 adjective endings (each topic unlocks on its own);
 // 10-12 are each topic's "Spot the error" level, open together with that topic's Level 3
-const isLocked = l => l === 20 ? (S.unlockedN || 1) < 3 : l >= 17 ? l - 16 > (S.unlockedN || 1) : l === 16 ? (S.unlockedT || 1) < 3 : l >= 13 ? l - 12 > (S.unlockedT || 1) : l >= 10 ? [S.unlocked, S.unlockedP, S.unlockedA || 1][l - 10] < 3 : l >= 7 ? l - 6 > (S.unlockedA || 1) : l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
-const LOCK_MSG = { 18:'Get 6 of 8 right in Singular / Plural Level 1 to unlock Level 2.', 19:'Get 6 of 8 right in Singular / Plural Level 2 to unlock Level 3.', 20:'Spot the error opens together with Singular / Plural Level 3.', 14:'Get 6 of 8 right in Trennbare Verben Level 1 to unlock Level 2.', 15:'Get 6 of 8 right in Trennbare Verben Level 2 to unlock Level 3.', 16:'Spot the error opens together with Trennbare Verben Level 3.', 10:'Spot the error opens together with Level 3.', 11:'Spot the error opens together with Präpositionen Level 3.', 12:'Spot the error opens together with Adjektive Level 3.',
+const isLocked = l => l === 24 ? (S.unlockedM || 1) < 3 : l >= 21 ? l - 20 > (S.unlockedM || 1) : l === 20 ? (S.unlockedN || 1) < 3 : l >= 17 ? l - 16 > (S.unlockedN || 1) : l === 16 ? (S.unlockedT || 1) < 3 : l >= 13 ? l - 12 > (S.unlockedT || 1) : l >= 10 ? [S.unlocked, S.unlockedP, S.unlockedA || 1][l - 10] < 3 : l >= 7 ? l - 6 > (S.unlockedA || 1) : l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
+const LOCK_MSG = { 22:'Get 6 of 8 right in Modalverben Level 1 to unlock Level 2.', 23:'Get 6 of 8 right in Modalverben Level 2 to unlock Level 3.', 24:'Spot the error opens together with Modalverben Level 3.', 18:'Get 6 of 8 right in Singular / Plural Level 1 to unlock Level 2.', 19:'Get 6 of 8 right in Singular / Plural Level 2 to unlock Level 3.', 20:'Spot the error opens together with Singular / Plural Level 3.', 14:'Get 6 of 8 right in Trennbare Verben Level 1 to unlock Level 2.', 15:'Get 6 of 8 right in Trennbare Verben Level 2 to unlock Level 3.', 16:'Spot the error opens together with Trennbare Verben Level 3.', 10:'Spot the error opens together with Level 3.', 11:'Spot the error opens together with Präpositionen Level 3.', 12:'Spot the error opens together with Adjektive Level 3.',
   2:'Get 6 of 8 right in Level 1 to unlock Level 2.', 3:'Get 4 of 6 right in Level 2 to unlock Level 3.',
   5:'Get 6 of 8 right in Präpositionen Level 1 to unlock Level 2.', 6:'Get 6 of 8 right in Präpositionen Level 2 to unlock Level 3.',
   8:'Get 6 of 8 right in Adjektive Level 1 to unlock Level 2.', 9:'Get 6 of 8 right in Adjektive Level 2 to unlock Level 3.' };
 const RULES = {
+  21: { key:'rule:mkj', title:'Die richtige Form', lead:'Modal verbs have their own forms in the singular, and ich and er look the same.',
+       cards:[['ich = er: no ending', MRULE.kj, modalHTML(BYID.m_k1, 'kj'), 'm_k1~kj'], ['The Satzklammer', MRULE.sb, modalHTML(BYID.m_k2, 'kj'), 'm_k2~sb']] },
+  22: { key:'rule:mbd', title:'Welches Modalverb?', lead:'Each modal verb has its own meaning. Read the English hint and pick the one that fits.',
+       cards:[['müssen nicht = don’t have to', MRULE.bd, modalHTML(BYID.m_m6, 'kj'), 'm_m6~bd'], ['dürfen nicht = must not', 'Not allowed, forbidden: Hier darf man nicht rauchen.', modalHTML(BYID.m_d1, 'kj'), 'm_d1~bd']] },
+  23: { key:'rule:mns', title:'Modalverb im Nebensatz', lead:'After weil, dass, wenn … the modal verb goes to the very end, after the infinitive.',
+       cards:[['Infinitive, then the modal', MRULE.ns, modalHTML(BYID.m_m1, 'ns'), 'm_m1~ns']] },
   17: { key:'rule:npf', title:'Die Pluralform', lead:'German has five plural patterns, and in the plural the article is always die.',
        cards:[['+e / +er, often with an umlaut', NRULE.e, nounHTML(BYID.n_baum, 'pf'), 'n_baum~pf'], ['+(e)n for die-words', NRULE.n, nounHTML(BYID.n_lampe, 'pf'), 'n_lampe~pf'], ['+s and no ending', NRULE.s + ' ' + NRULE[0], nounHTML(BYID.n_apfel, 'pf'), 'n_apfel~pf']] },
   18: { key:'rule:nsp', title:'Singular oder Plural?', lead:'Look at the clues in the sentence: ein / mein, numbers like zwei or viele, and the verb.',
@@ -2030,6 +2223,10 @@ function buildQueue(l, fresh) {
   if (l === 7) return pickPrep(AWEAK, 8).map(adjQ);
   if (l === 8) return pickPrep(AMIXED, 8).map(adjQ);
   if (l === 9) return shuffle([...pickPrep(AWEAK, 3), ...pickPrep(AMIXED, 3), ...pickPrep(ASTRONG, 4)]).map(adjQ);
+  if (l === 21) return pickPrep(MSN, 8).map(x => modalQ(x, 'kj'));
+  if (l === 22) return pickPrep(MSN, 8).map(x => modalQ(x, 'bd'));
+  if (l === 23) return pickPrep(MSN, 10).map((x, i) => modalQ(x, i < 4 ? 'ns' : i % 2 ? 'kj' : 'bd'));
+  if (l === 24) return spotQueue('mv');
   if (l === 17) return pickPrep(NPL, 8).map(x => nounQ(x, 'pf'));
   if (l === 18) return pickPrep(NPL.filter(x => x.sg !== x.pl), 8).map((x, i) => nounQ(x, i % 2 ? 'ss' : 'sp'));
   if (l === 19) { const d = pickPrep(NPL.filter(x => x.qd), 4); return shuffle([...d.map(x => nounQ(x, 'dn')), ...pickPrep(NPL.filter(x => !d.includes(x)), 6).map((x, i) => nounQ(x, i < 3 || x.sg === x.pl ? 'pf' : i % 2 ? 'ss' : 'sp'))]); }
@@ -2039,7 +2236,7 @@ function buildQueue(l, fresh) {
   if (l === 15) return shuffle([...pickPrep(VSEP, 4).map(x => verbQ(x, 'ns')), ...pickV(3, 3).map((x, i) => verbQ(x, i % 2 ? 'pp' : 'pr'))]);
   if (l === 16) return spotQueue('tv');
   if (l >= 10) return spotQueue(['wd', 'prep', 'adj'][l - 10]);
-  return reviewWords().slice(0, 8).map((w, i) => w.pn ? nounQ(w, nKinds(w)[Math.floor(Math.random() * nKinds(w).length)]) : w.tv ? verbQ(w, vKinds(w)[Math.floor(Math.random() * vKinds(w).length)]) : w.ak ? adjQ(w) : w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
+  return reviewWords().slice(0, 8).map((w, i) => w.mo ? modalQ(w, ['kj', 'bd', 'ns'][Math.floor(Math.random() * 3)]) : w.pn ? nounQ(w, nKinds(w)[Math.floor(Math.random() * nKinds(w).length)]) : w.tv ? verbQ(w, vKinds(w)[Math.floor(Math.random() * vKinds(w).length)]) : w.ak ? adjQ(w) : w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
 }
 
 // every round opens with a briefing of its vocabulary (plus the full rule cards the first time a preposition level is played)
@@ -2109,7 +2306,7 @@ function startQuestion(q) {
     const blocks = q.w.b;
     blocks.forEach((b, k) => {
       let cands = shuffle(blocks.filter((x, i) => i !== k));
-      for (const d of [q.w.c, q.w.c === 'weil' ? 'dass' : 'weil']) if (cands.length < 2) cands.push(d);
+      for (const d of (q.w.o || [q.w.c, q.w.c === 'weil' ? 'dass' : 'weil'])) if (cands.length < 2) cands.push(d);
       const labels = [b, cands[0], cands[1]], lanes = shuffle([0, 1, 2]);
       spawnRow('block', labels.map((lab, i) => ({ lane:lanes[i], label:lab, correct:i === 0 })), spawnZ() - k * rowGap(), k);
     });
@@ -2119,7 +2316,7 @@ function startQuestion(q) {
     spawnRow('gate', q.opts.map((o, i) => ({ lane:lanes[i], label:o, correct:o === q.ans, plain:true })), spawnZ(), 0);
   } else {
     // article gates stay neutral white so the das/dass colour coding doesn't hint at an answer
-    const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep' || q.type === 'adj' || q.type === 'verb' || q.type === 'noun';
+    const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep' || q.type === 'adj' || q.type === 'verb' || q.type === 'noun' || q.type === 'modal';
     spawnRow('gate', [
       { lane:lanes[0], label:q.opts[0], correct:q.opts[0] === q.ans, plain },
       { lane:lanes[1], label:q.opts[1], correct:q.opts[1] === q.ans, plain },
@@ -2134,6 +2331,8 @@ function renderPrompt() {
   if (q.type === 'spot') {
     html = esc(q.before + q.err + q.after);
     hint = '🔍 One word is wrong. Run through the gate with that word';
+  } else if (q.type === 'modal') {
+    html = modalPrompt(q.p, q.k); hint = MHINT[q.k];
   } else if (q.type === 'noun') {
     html = nounPrompt(q.p, q.k); hint = NHINT[q.k];
   } else if (q.type === 'verb') {
@@ -2156,7 +2355,7 @@ function renderPrompt() {
     const w = q.w;
     const slots = w.b.map((b, i) => i < q.built.length ? `<span class="slot fill ${q.builtOk[i] ? '' : 'bad'}">${esc(q.built[i])}</span>` : '<span class="slot">&nbsp;</span>').join(' ');
     html = `${esc(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${slots}${w.p || '.'}`;
-    hint = 'Collect the words in the right order';
+    hint = 'Collect the words in the right order · ' + (cjSub(w.c) ? 'Nebensatz: verb last' : w.c === 'deshalb' ? 'after deshalb: verb first' : 'Hauptsatz: verb in 2nd place');
   }
   $('#qText').innerHTML = html; $('#qHint').textContent = (q.retry ? '↻ Again — you missed this one. ' : '') + hint;
   $('#qCount').textContent = `${G.qi + 1} of ${G.queue.length}`;
@@ -2193,7 +2392,7 @@ function loseLife() {
   const f = $('#flash'); f.style.opacity = .35; setTimeout(() => f.style.opacity = 0, 160);
 }
 
-const histKey = q => q.type === 'noun' ? `${q.p.id}:${q.k}` : q.type === 'verb' ? `${q.p.id}:${q.k}` : q.type === 'spot' ? [q.src, q.src === 't' && !q.x.gen ? TRAPS.indexOf(q.x) : q.x.id, q.v || ''].join(':') : q.type === 'trap' ? (q.t.gen ? q.t.id : TRAPS.indexOf(q.t)) : (q.type === 'prep' || q.type === 'adj') ? q.p.id : q.w.id;
+const histKey = q => q.type === 'modal' || q.type === 'noun' ? `${q.p.id}:${q.k}` : q.type === 'verb' ? `${q.p.id}:${q.k}` : q.type === 'spot' ? [q.src, q.src === 't' && !q.x.gen ? TRAPS.indexOf(q.x) : q.x.id, q.v || ''].join(':') : q.type === 'trap' ? (q.t.gen ? q.t.id : TRAPS.indexOf(q.t)) : (q.type === 'prep' || q.type === 'adj') ? q.p.id : q.w.id;
 function finish(q, ok) {
   const first = !q.retry;
   G.log.push({ y:q.type[0], i:histKey(q), o:ok ? 1 : 0, c:q.chose, w:q.type === 'build' && q.wrong.length ? q.wrong : undefined, r:q.retry ? 1 : undefined });
@@ -2202,13 +2401,14 @@ function finish(q, ok) {
     if (q.type === 'spot') stat('spot', ok);
     else if (q.type === 'verb') stat('v' + q.k, ok);
     else if (q.type === 'noun') stat('n' + (q.k === 'ss' ? 'sp' : q.k), ok);
+    else if (q.type === 'modal') stat('m' + q.k, ok);
     else if (q.type === 'trap') stat('trap', ok);
     else if (q.type === 'prep') stat('p' + q.p.pt, ok);
     else if (q.type === 'adj') stat('a' + q.p.k, ok);
-    else stat(q.w.c, ok);
+    else stat(['weil', 'dass'].includes(q.w.c) ? q.w.c : 'cj2', ok);
   }
   if (q.type === 'spot') { if (q.src !== 't') grade(q.x.id, ok); }
-  else if (q.type === 'verb' || q.type === 'noun') grade(q.p.id, ok);
+  else if (q.type === 'verb' || q.type === 'noun' || q.type === 'modal') grade(q.p.id, ok);
   else if (q.type !== 'trap') grade(histKey(q), ok);
   if (ok) {
     G.streak++; const pts = 10 + Math.min(G.streak - 1, 5) * 2;
@@ -2224,8 +2424,8 @@ function finish(q, ok) {
 
 let toastT = null;
 function toast(pts, q) {
-  const s = q.type === 'noun' ? nounHTML(q.p, q.k) : q.type === 'verb' ? verbHTML(q.p, q.k) : q.type === 'spot' ? `${spotFix(q)}<br>${spotRight(q)}` : q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : q.type === 'adj' ? adjHTML(q.p) : sentHTML(q.w);
-  const el = $('#toast'); const pic = q.type === 'noun' ? picSVG(q.p, q.k === 'dn' ? 'dn' : q.k) : q.type === 'verb' ? picSVG(q.p, q.k) : q.type === 'spot' ? spotPic(q) : (q.type === 'prep' || q.type === 'adj') ? picSVG(q.p) : '';
+  const s = q.type === 'modal' ? modalHTML(q.p, q.k) : q.type === 'noun' ? nounHTML(q.p, q.k) : q.type === 'verb' ? verbHTML(q.p, q.k) : q.type === 'spot' ? `${spotFix(q)}<br>${spotRight(q)}` : q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : q.type === 'adj' ? adjHTML(q.p) : sentHTML(q.w);
+  const el = $('#toast'); const pic = q.type === 'modal' ? picSVG(q.p, q.k) : q.type === 'noun' ? picSVG(q.p, q.k === 'dn' ? 'dn' : q.k) : q.type === 'verb' ? picSVG(q.p, q.k) : q.type === 'spot' ? spotPic(q) : (q.type === 'prep' || q.type === 'adj') ? picSVG(q.p) : '';
   el.innerHTML = `<div class="trow"><div><b class="ok">Richtig! +${pts}</b><div class="s">${s}</div></div>${pic}</div>`;
   el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), pic ? 3000 : 2200);
 }
@@ -2238,6 +2438,11 @@ function showWrong(q, chose, expect) {
     body = `<p class="chose">${chose ? `<b>${esc(chose)}</b> is correct here. ` : ''}The mistake: ${spotFix(q)}</p>
       <p class="sent">${spotLine(q)}</p><p class="sent">✓ ${spotRight(q)}</p><p class="tr">${esc(x.t)}</p>${spotPic(q)}<div class="ex">${spotEx(q)}</div>
       ${q.src === 't' ? '' : `<div class="wrow"><span class="grow"></span>${starBtn(x.id)}</div>`}`;
+  } else if (q.type === 'modal') {
+    const x = q.p, ans = `<b class="cj mvf">${esc(q.ans)}</b>`;
+    body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
+      <p class="sent">${modalHTML(x, q.k)}</p><p class="tr">${esc(modalTr(x, q.k))}</p>${picSVG(x, q.k)}<div class="ex">${MRULE[q.k]}</div>
+      <div class="wrow"><span class="grow">${modalWhy(x, q.k)}</span>${starBtn(x.id)}</div>`;
   } else if (q.type === 'noun') {
     const x = q.p, ans = `<b class="cj ${q.k === 'ss' ? 'pls' : 'plp'}">${esc(q.ans)}</b>`;
     body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. Here it's ${ans}.` : `You missed both gates. Here it's ${ans}.`}</p>
@@ -2268,9 +2473,9 @@ function showWrong(q, chose, expect) {
     const line = q.type === 'build'
       ? `The next word was <b>${esc(expect)}</b>, not <b>${esc(chose)}</b>.`
       : (chose ? `You ran through <b>${esc(chose)}</b>. Here it's <b class="cj ${w.c}">${w.c}</b>.` : `You missed both gates. Here it's <b class="cj ${w.c}">${w.c}</b>.`);
-    const ex = q.type === 'build' ? EX.order : (w.c === 'weil' ? EX.weil : EX_DASS_MAIN);
+    const ex = q.type === 'build' && cjSub(w.c) ? EX.order : exOf(w);
     body = `<p class="chose">${line}</p><p class="sent">${sentHTML(w)}</p><p class="tr">${esc(w.t)}</p>
-      <p class="legend">Underlined: the verb at the end. Highlighted: this sentence's vocabulary word.</p>
+      <p class="legend">Underlined: the conjugated verb. Highlighted: this sentence's vocabulary word.</p>
       <div class="ex">${ex}</div>
       <div class="wrow"><span class="grow">${wordHTML(w)} <span class="tr">${esc(w.en)}</span></span>${starBtn(w.id)}</div>`;
   }
@@ -2297,6 +2502,8 @@ function endRound() {
   if (l === 7 && G.correct >= 6 && (S.unlockedA || 1) < 2) { S.unlockedA = 2; unlock = 'Adjektive Level 2 is unlocked: endings after ein / kein / mein.'; }
   if (l === 8 && G.correct >= 6 && (S.unlockedA || 1) < 3) { S.unlockedA = 3; unlock = 'Adjektive Level 3 is unlocked: now with no article (kalter Kaffee).'; }
   if (l === 13 && G.correct >= 6 && (S.unlockedT || 1) < 2) { S.unlockedT = 2; unlock = 'Trennbare Verben Level 2 is unlocked: the Perfekt (aufgestanden, verstanden).'; }
+  if (l === 21 && G.correct >= 6 && (S.unlockedM || 1) < 2) { S.unlockedM = 2; unlock = 'Modalverben Level 2 is unlocked: which modal verb fits?'; }
+  if (l === 22 && G.correct >= 6 && (S.unlockedM || 1) < 3) { S.unlockedM = 3; unlock = 'Modalverben Level 3 and Spot the error are unlocked.'; }
   if (l === 17 && G.correct >= 6 && (S.unlockedN || 1) < 2) { S.unlockedN = 2; unlock = 'Singular / Plural Level 2 is unlocked: singular or plural?'; }
   if (l === 18 && G.correct >= 6 && (S.unlockedN || 1) < 3) { S.unlockedN = 3; unlock = 'Singular / Plural Level 3 and Spot the error are unlocked.'; }
   if (l === 14 && G.correct >= 6 && (S.unlockedT || 1) < 3) { S.unlockedT = 3; unlock = 'Trennbare Verben Level 3 and Spot the error are unlocked.'; }
@@ -2318,6 +2525,7 @@ function endRound() {
     : q.type === 'adj' ? adjItemHTML(q.p)
     : q.type === 'verb' ? verbItemHTML(q.p, q.k)
     : q.type === 'noun' ? nounItemHTML(q.p, q.k)
+    : q.type === 'modal' ? modalItemHTML(q.p, q.k)
     : `<div class="item"><div><div class="s">${sentHTML(q.w)}</div><div class="tr">${esc(q.w.t)}</div><div class="w">${wordHTML(q.w)}: ${esc(q.w.en)}</div></div>${starBtn(q.w.id)}</div>`
   ).join('');
   show('end'); $('#eAgain').focus();
@@ -2332,11 +2540,11 @@ function renderMenu() {
   const n = currentStreak();
   $('#mStreak').textContent = n ? `${n}-day streak. Keep it going today.` : 'Play a round today to start a streak.';
   $('#dueBadge').textContent = reviewWords().length;
-  [2, 3, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20].forEach(l => {
+  [2, 3, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 22, 23, 24].forEach(l => {
     const b = $(`[data-level="${l}"]`), locked = isLocked(l);
     b.classList.toggle('locked', locked); b.setAttribute('aria-disabled', locked);
   });
-  $('#l2s').textContent = S.unlocked >= 2 ? 'Put the verb at the end' : 'Locked: get 6 of 8 in Level 1';
+  $('#l2s').textContent = S.unlocked >= 2 ? 'Verb at the end, or in 2nd place?' : 'Locked: get 6 of 8 in Level 1';
   $('#l3s').textContent = S.unlocked >= 3 ? 'Faster, plus das/dass and weil/denn traps' : 'Locked: get 4 of 6 in Level 2';
   $('#l5s').textContent = S.unlockedP >= 2 ? 'Wechselpräpositionen' : 'Locked: get 6 of 8 in Level 1';
   $('#l6s').textContent = S.unlockedP >= 3 ? 'Faster, plus im/ins, am/an den, zum/zur' : 'Locked: get 6 of 8 in Level 2';
@@ -2346,7 +2554,9 @@ function renderMenu() {
   $('#l15s').textContent = (S.unlockedT || 1) >= 3 ? 'Faster, plus weil / dass: …, weil ich aufstehe' : 'Locked: get 6 of 8 in Level 2';
   $('#l18s').textContent = (S.unlockedN || 1) >= 2 ? 'ein Kind · zwei Kinder' : 'Locked: get 6 of 8 in Level 1';
   $('#l19s').textContent = (S.unlockedN || 1) >= 3 ? 'Faster, plus Dativ plural: mit den Kindern' : 'Locked: get 6 of 8 in Level 2';
-  [10, 11, 12, 16, 20].forEach(l => { $('#l' + l + 's').textContent = isLocked(l) ? 'Locked: opens together with Level 3' : 'One word is wrong. Run through it!'; });
+  $('#l22s').textContent = (S.unlockedM || 1) >= 2 ? 'muss nicht or darf nicht?' : 'Locked: get 6 of 8 in Level 1';
+  $('#l23s').textContent = (S.unlockedM || 1) >= 3 ? 'Faster, plus Nebensatz: …, weil ich arbeiten muss' : 'Locked: get 6 of 8 in Level 2';
+  [10, 11, 12, 16, 20, 24].forEach(l => { $('#l' + l + 's').textContent = isLocked(l) ? 'Locked: opens together with Level 3' : 'One word is wrong. Run through it!'; });
   $$('#topicTabs button').forEach(b => b.classList.toggle('on', b.dataset.topic === S.topic));
   const tp = topicKey();
   $('#lvWd').style.display = tp === 'wd' ? '' : 'none';
@@ -2354,6 +2564,7 @@ function renderMenu() {
   $('#lvAdj').style.display = tp === 'adj' ? '' : 'none';
   $('#lvTv').style.display = tp === 'tv' ? '' : 'none';
   $('#lvPl').style.display = tp === 'pl' ? '' : 'none';
+  $('#lvMv').style.display = tp === 'mv' ? '' : 'none';
   if (cafeMode === 'run' && $('#guide').dataset.topic !== tp) { $('#guide').innerHTML = guideHTML(tp); $('#guide').dataset.topic = tp; }
   $$('#menu .btn.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === cafeMode));
   $('#modeQ').style.display = cafeMode ? 'none' : '';
@@ -2366,7 +2577,7 @@ function renderMenu() {
   $('#lanePrev').checked = S.lanePreview !== false;
   $('#genRow').style.display = lsGet(AI_KEY) ? '' : 'none'; $('#genNew').checked = !!S.genNew;
 }
-const topicKey = () => ['prep', 'adj', 'tv', 'pl'].includes(S.topic) ? S.topic : 'wd';
+const topicKey = () => ['prep', 'adj', 'tv', 'pl', 'mv'].includes(S.topic) ? S.topic : 'wd';
 function setTopic(t) { S.topic = t; cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
 
 function renderGap() {
@@ -2387,10 +2598,11 @@ const CAFE_TOPICS = [
   ['stadt', '🏙️', 'In der Stadt', 'In the city'], ['frei', '💬', 'Freies Gespräch', 'Anything you like']
 ];
 const CAFE_FOCUS = {
+  mv:{ name:'Modalverben', prompt:'Grammar focus: the modal verbs können, müssen, dürfen, wollen, sollen and möchten. Forms: ich / er have no ending (ich kann, er kann, ich muss, er will). Word order: the modal verb in position 2 and the infinitive at the END (Ich kann heute nicht kommen); in a weil / dass clause the modal goes last (…, weil ich arbeiten muss). Meaning: nicht müssen = don’t have to, nicht dürfen = must not. Ask about abilities, duties, rules, wishes and plans: "Was kannst du gut?", "Was musst du heute noch machen?", "Was darf man bei dir zu Hause nicht machen?", "Was möchtest du am Wochenende machen?", "Was willst du später werden?". Use all six modal verbs yourself. In feedback, correct wrong forms, a missing infinitive at the end, and müssen / dürfen mix-ups.' },
   pl:{ name:'Singular / Plural', prompt:'Grammar focus: the plural of nouns. The five patterns: +e, often with umlaut (Tag → Tage, Baum → Bäume); +er with umlaut (Kind → Kinder, Haus → Häuser); +(e)n for most feminine nouns and der-words on -e (Frau → Frauen, Lampe → Lampen, Junge → Jungen); +s for vowel endings and foreign words (Auto → Autos, Hotel → Hotels); no ending for der/das-words on -er, -el, -en (Lehrer → Lehrer, Apfel → Äpfel). The plural article is always die, and the Dativ plural adds -n (mit den Kindern). Use many plurals yourself and ask about things there are several of: family, rooms, friends, pets, food, shopping lists, e.g. "Wie viele Geschwister hast du?", "Was für Geschäfte gibt es in deiner Straße?", "Was kaufst du heute ein?", "Mit wem spielst du gern?". In the feedback, correct wrong plural forms, a singular where a plural is needed, and a missing Dativ -n.' },
   tv:{ name:'Trennbare Verben', prompt:'Grammar focus: separable verbs (trennbare Verben: aufstehen, anrufen, einkaufen, fernsehen, mitkommen, abholen, ankommen, aufräumen, einladen…) and inseparable verbs (verstehen, bekommen, besuchen, erzählen, bezahlen, vergessen…). In the Präsens the separable prefix goes to the end (Ich stehe um 7 Uhr auf), in the Perfekt ge goes in the middle (aufgestanden, eingekauft) while inseparable verbs take no ge- (verstanden, besucht), and in weil / dass / wenn clauses the verb is one word at the end (…, weil ich früh aufstehe). Use BOTH kinds about equally often: alternate between a separable and an inseparable verb from one message to the next, in your own sentences and in your questions. Ask about daily routine, plans and the past, e.g. separable: "Wann stehst du auf?", "Was hast du gestern eingekauft?", "Wen rufst du oft an?"; inseparable: "Hast du alles verstanden?", "Wen besuchst du am Wochenende?", "Was hast du zum Geburtstag bekommen?", "Was erzählst du gern?". In the feedback, point out mistakes with both kinds: a separable prefix not at the end, a wrong participle (geaufstanden → aufgestanden) and ge- on an inseparable verb (geverstanden → verstanden).' },
   adj:{ name:'Adjektivendungen', prompt:'Grammar focus: adjective endings (Adjektivdeklination) after der/die/das (weak: -e/-en), after ein/kein/mein (mixed: -er/-es where ein has no ending) and without article (strong: der → -er, das → -es, dem → -em), in Nominativ, Akkusativ and Dativ. Use adjectives in front of nouns yourself in all three patterns, and ask questions that make the learner describe people and things: "Wie ist dein …?", "Was für ein … hast du?", "Beschreib mal deinen / deine / dein …", "Welche … magst du?".' },
-  wd:{ name:'weil / dass', prompt:'Grammar focus: subordinate clauses with "weil" (giving a reason) and "dass" (that-clauses), where the conjugated verb goes to the END (… weil ich müde bin; … dass das Wetter schön ist). Ask many "Warum …?" questions and opinion questions ("Was denkst du …?", "Glaubst du, dass …?", "Findest du, dass …?") so the learner has to answer with weil or dass.' },
+  wd:{ name:'Nebensätze', prompt:'Grammar focus: Hauptsatz vs. Nebensatz. In a Nebensatz (after weil, dass, wenn, obwohl, ob, and in relative clauses such as "das Buch, das ich lese") the conjugated verb goes to the END; after und, aber, oder, denn the verb stays in position 2; after deshalb / trotzdem the verb comes right after them (deshalb bleibe ich zu Hause). Ask many "Warum …?" questions, "Was machst du, wenn …?", opinion questions ("Glaubst du, dass …?"), "Weißt du, ob …?", and questions that invite relative clauses ("Was ist das für ein Buch, das du liest?"). In feedback, say whether the clause is a Hauptsatz or a Nebensatz and where the verb has to go.' },
   prep:{ name:'Präpositionen', prompt:'Grammar focus: prepositions and their case: always Akkusativ (durch, für, gegen, ohne, um), always Dativ (aus, bei, mit, nach, seit, von, zu, gegenüber) and Wechselpräpositionen (an, auf, hinter, in, neben, über, unter, vor, zwischen: location / Wo? → Dativ, movement / Wohin? → Akkusativ). Ask questions like "Wo …?", "Wohin …?", "Mit wem …?", "Für wen …?", "Seit wann …?" so the learner has to answer with a preposition.' }
 };
 const LENA_SVG = `<svg class="lena-svg" viewBox="0 0 200 222" xmlns="http://www.w3.org/2000/svg">
@@ -2859,7 +3071,7 @@ function renderCafeBox() {
   if (!$('#cafeTopics').children.length) $('#cafeTopics').innerHTML = CAFE_TOPICS.map(([id, e, de, en]) => `<button data-cafe="${id}"><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small></button>`).join('');
 }
 
-/* ================= animated grammar pictures for adjectives + revision guides ================= */
+/* ================= animated grammar pictures for adjectives + rules pages ================= */
 // a label flying along a path, then resting (GIF-style loop; still under "reduce motion")
 function flyText(label, size, col, path, [ex, ey]) {
   if (STILL) return txt(label, ex, ey, size, col, 800);
@@ -2945,18 +3157,29 @@ function adjDecisionSVG() {
 const gEx = ids => `<ul class="gex">${ids.map(id => { const x = BYID[id]; if (!x) return ''; return `<li>${x.ak ? adjHTML(x) : x.pt ? prepHTML(x) : sentHTML(x)} <span class="tr">${esc(x.t)}</span></li>`; }).join('')}</ul>`;
 const COLS4 = ['masc.', 'fem.', 'neut.', 'plural'], ROWS3 = ['Nominativ', 'Akkusativ', 'Dativ'];
 const GUIDE = {
-  wd:{ name:'weil / dass', sections:() => [
-    ['1 · weil = because → verb to the end', `<p><b class="cj weil">weil</b> gives a <b>reason</b> (it answers <i>Warum?</i>). It starts a side clause, and in a side clause the conjugated verb goes to the <b>very end</b>.</p>
-      ${orderAnim('Ich bleibe zu Hause,', ['weil', 'ich', 'bin', 'müde'], ['weil', 'ich', 'müde', 'bin'], ['bin'], 'weil', 'weil pushes the verb "bin" to the end')}${gEx(['muede', 'regen', 'hunger'])}`],
-    ['2 · dass = that → verb to the end', `<p><b class="cj dass">dass</b> introduces what someone <b>thinks, says, knows or feels</b>. It follows verbs like <i>glauben, hoffen, wissen, sagen, denken</i> and phrases like <i>es ist wichtig, ich bin froh</i>. Same rule: verb at the end.</p>
-      ${orderAnim('Ich glaube,', ['dass', 'er', 'hat', 'recht'], ['dass', 'er', 'recht', 'hat'], ['hat'], 'dass', 'dass pushes "hat" to the end')}${gEx(['glauben', 'hoffen', 'wichtig'])}`],
-    ['3 · Two verbs? The conjugated one is last', `<p>With a helper verb (<i>möchte, will, kann, muss, habe, bin</i>) the other verb comes first and the <b>conjugated verb is the very last word</b>.</p>
-      ${orderAnim('Ich lerne Deutsch,', ['weil', 'ich', 'möchte', 'in Berlin', 'arbeiten'], ['weil', 'ich', 'in Berlin', 'arbeiten', 'möchte'], ['möchte'], 'weil', '"möchte" jumps behind "arbeiten"')}${gEx(['arbeiten', 'schluessel', 'fahrrad'])}`],
-    ['4 · Always a comma', `<p>German always puts a <b>comma before weil and dass</b>: <i>Ich weiß<b>,</b> dass du recht hast.</i> Use the comma as your signal: "now the verb goes to the end".</p>`],
-    ['5 · weil or denn?', `<p>Both mean <i>because</i>. <b class="cj weil">weil</b> sends the verb to the end; <b class="cj denn">denn</b> keeps the normal order (verb in 2nd place).</p>
-      ${orderAnim('weil:', ['weil', 'ich', 'bin', 'müde'], ['weil', 'ich', 'müde', 'bin'], ['bin'], 'weil', 'weil → the verb moves to the end')}${orderAnim('denn:', ['denn', 'ich', 'bin', 'müde'], ['denn', 'ich', 'bin', 'müde'], ['bin'], 'denn', 'denn → nothing moves, the verb stays 2nd')}`],
-    ['6 · das or dass?', `<p><b class="cj das">das</b> (one s) points to a <b>thing</b> (das Buch, das ich lese) or means "the / this". <b class="cj dass">dass</b> (two s) joins two sentences. <b>Test:</b> if you can replace it with <i>welches</i>, write <b>das</b>.</p>
+  wd:{ name:'Nebensätze', sections:() => [
+    ['1 · The big rule: Hauptsatz or Nebensatz?', `<p>In a <b>Hauptsatz</b> (main clause) the conjugated verb stands in <b>position 2</b>. In a <b>Nebensatz</b> (subordinate clause) it goes to the <b>very end</b>. So don't learn "weil puts the verb at the end"; learn which words start a Nebensatz.</p>
+      <table class="gtab"><tr><th>Nebensatz → verb at the END</th><th>Hauptsatz → verb in position 2</th></tr>
+      <tr><td><b>dass, weil, wenn, obwohl, ob</b> (also als, damit, bis) and <b>relative clauses</b> (der / die / das …)</td><td><b>und, aber, oder, denn, sondern</b>: they join two main clauses and don't count as a position</td></tr>
+      <tr><td>…, weil ich müde <b>bin</b>.</td><td>…, denn ich <b>bin</b> müde.</td></tr></table>
+      <p>A third group: <b>deshalb, trotzdem, dann</b> take position 1 themselves, so the verb comes <b>right after them</b>: deshalb <b>bleibe</b> ich zu Hause.</p>
+      ${orderAnim('Ich bleibe zu Hause,', ['weil', 'ich', 'bin', 'krank'], ['weil', 'ich', 'krank', 'bin'], ['bin'], 'weil', 'Nebensatz: the verb moves to the end')}${orderAnim('Ich bleibe zu Hause,', ['denn', 'ich', 'bin', 'krank'], ['denn', 'ich', 'bin', 'krank'], ['bin'], 'denn', 'Hauptsatz: nothing moves, the verb stays 2nd')}`],
+    ['2 · dass and ob: what someone thinks, says or asks', `<p><b class="cj dass">dass</b> (that) follows verbs like <i>glauben, wissen, sagen, hoffen, finden</i> and phrases like <i>es ist wichtig</i>. <b class="cj ob">ob</b> (whether) is a yes/no question inside a sentence: <i>Ich weiß nicht, ob …; Sie fragt, ob …</i></p>
+      ${orderAnim('Ich glaube,', ['dass', 'er', 'hat', 'recht'], ['dass', 'er', 'recht', 'hat'], ['hat'], 'dass', 'dass → verb at the end')}${gEx(['glauben', 'sn_ob_kommt', 'sn_ob_frage'])}`],
+    ['3 · weil, wenn, obwohl: reason, condition, contrast', `<p><b class="cj weil">weil</b> = because (a reason), <b class="cj wenn">wenn</b> = when / if (a condition or time), <b class="cj obwohl">obwohl</b> = although (the opposite of what you expect). All three start a Nebensatz.</p>
+      ${gEx(['muede', 'sn_wenn_zeit', 'sn_wenn_regen', 'sn_obwohl_regen', 'sn_obwohl_krank'])}`],
+    ['4 · Relative clauses: das Buch, das ich lese', `<p>A <b>relative clause</b> describes a noun: <i>das Buch, <b>das</b> ich gerade lese</i>. The relative pronoun (der / die / das …) points back to the noun, and because it is a Nebensatz, the verb goes to the end. There is no weil or dass in sight, and the verb still moves!</p>
+      ${orderAnim('Das ist das Buch,', ['das', 'ich', 'lese', 'gerade'], ['das', 'ich', 'gerade', 'lese'], ['lese'], 'das', 'relative clause → verb at the end')}${gEx(['sn_rel_buch', 'sn_rel_auto', 'sn_rel_maedchen'])}`],
+    ['5 · Two verbs? The conjugated one is last', `<p>With a helper verb (<i>möchte, will, kann, muss, habe, bin</i>) the other verb comes first and the <b>conjugated verb is the very last word</b> of the Nebensatz.</p>
+      ${orderAnim('Ich lerne Deutsch,', ['weil', 'ich', 'möchte', 'in Berlin', 'arbeiten'], ['weil', 'ich', 'in Berlin', 'arbeiten', 'möchte'], ['möchte'], 'weil', '"möchte" jumps behind "arbeiten"')}${gEx(['arbeiten', 'schluessel', 'sn_rel_auto'])}`],
+    ['6 · Same meaning, different grammar', `<table class="gtab"><tr><th>Nebensatz (verb last)</th><th>Hauptsatz (verb 2nd / right after)</th></tr>
+      <tr><td>…, <b class="cj weil">weil</b> ich krank <b>bin</b>.</td><td>…, <b class="cj denn">denn</b> ich <b>bin</b> krank.</td></tr>
+      <tr><td><b class="cj obwohl">Obwohl</b> es kalt <b>ist</b>, gehen wir raus.</td><td>Es ist kalt, <b class="cj aber">aber</b> wir <b>gehen</b> raus.</td></tr>
+      <tr><td>Ich bleibe zu Hause, <b class="cj weil">weil</b> ich krank <b>bin</b>.</td><td>Ich bin krank, <b class="cj deshalb">deshalb</b> <b>bleibe</b> ich zu Hause.</td></tr></table>
+      ${orderAnim('Ich bin krank,', ['deshalb', 'ich', 'bleibe', 'zu Hause'], ['deshalb', 'bleibe', 'ich', 'zu Hause'], ['bleibe'], 'deshalb', 'deshalb → the verb jumps right behind it')}${gEx(['hs_denn_hunger', 'hs_aber_zeit', 'hs_deshalb_regen'])}`],
+    ['7 · das or dass?', `<p><b class="cj das">das</b> (one s) is an article or a relative pronoun that points to a noun (das Buch, das ich lese). <b class="cj dass">dass</b> (two s) joins two clauses. <b>Test:</b> if you can replace it with <i>welches</i>, write <b>das</b>.</p>
       <ul class="gex">${TRAPS.slice(0, 4).map(t => `<li>${trapHTML(t)} <span class="tr">${esc(t.t)}</span></li>`).join('')}</ul>`],
+    ['8 · The comma is your signal', `<p>German always puts a <b>comma</b> between a Hauptsatz and a Nebensatz: <i>Ich weiß<b>,</b> dass du recht hast.</i> When you see the comma plus dass / weil / wenn / obwohl / ob or der / die / das, get ready to send the verb to the end.</p>`],
     ['💡 Memory tricks', `<div class="vgrid">${Object.keys(CONJ).map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`]
   ] },
   prep:{ name:'Präpositionen', sections:() => [
@@ -2982,25 +3205,13 @@ const GUIDE = {
       const tag = k === 'wech' ? '<span class="case wech">Dativ / Akk.</span>' : `<span class="case ${k}">${k === 'akk' ? 'Akkusativ' : 'Dativ'}</span>`;
       return vcard(esc(pr), esc(en), ta, esc(mn), tag, TA_P[pr]); }).join('')}</div>`]
   ] },
-  adj:{ name:'Adjektivdeklination', sections:() => [
-    ['1 · The big idea', `<p>In front of a noun, <b>gender and case must be shown once</b>. If the <b>article</b> already shows them, the adjective just adds a small <b>-e / -en</b>. If there is <b>no article</b>, or <i>ein</i> without an ending, the <b>adjective</b> has to show them with a "strong" ending, borrowed from der / das / dem.</p>
-      ${picSVG(BYID.a_w1)}${picSVG(BYID.a_m1)}${picSVG(BYID.a_s2)}<p>Adjectives <b>after</b> the noun never change: <i>Der Mann ist alt.</i></p>`],
-    ['2 · Which type? Ask three questions', `<p>Look at what stands in front of the adjective:</p>${adjDecisionSVG()}`],
-    ['3 · After der / die / das: -e or -en', `<p>${ADJ_RULE.weak}</p>
-      ${tableSVG(COLS4, ROWS3, [[['der', '-e'], ['die', '-e'], ['das', '-e'], ['die', '-en']], [['den', '-en'], ['die', '-e'], ['das', '-e'], ['die', '-en']], [['dem', '-en'], ['der', '-en'], ['dem', '-en'], ['den', '-en']]], [[0, 0], [0, 1], [0, 2], [1, 1], [1, 2]], ADJ_COL.weak, '-e only in the 5 marked spots, everywhere else -en')}
-      ${gEx(['a_w2', 'a_w7', 'a_w10', 'a_w13'])}${taMn(ADJ_TIPS.weak[2])}`],
-    ['4 · After ein / kein / mein: mixed', `<p>${ADJ_RULE.mixed}</p>
-      ${tableSVG(COLS4, ROWS3, [[['ein', '-er'], ['eine', '-e'], ['ein', '-es'], ['keine', '-en']], [['einen', '-en'], ['eine', '-e'], ['ein', '-es'], ['keine', '-en']], [['einem', '-en'], ['einer', '-en'], ['einem', '-en'], ['keinen', '-en']]], [[0, 0], [0, 2], [1, 2]], ADJ_COL.mixed, 'ein without ending → the adjective shows it: -er / -es')}
-      ${picSVG(BYID.a_m4)}${gEx(['a_m2', 'a_m6', 'a_m7', 'a_m11'])}${taMn(ADJ_TIPS.mixed[2])}`],
-    ['5 · No article: strong', `<p>${ADJ_RULE.strong}</p>
-      ${tableSVG(COLS4, ROWS3, [[['(der)', '-er'], ['(die)', '-e'], ['(das)', '-es'], ['(die)', '-e']], [['(den)', '-en'], ['(die)', '-e'], ['(das)', '-es'], ['(die)', '-e']], [['(dem)', '-em'], ['(der)', '-er'], ['(dem)', '-em'], ['(den)', '-en']]], [[0, 0], [0, 2], [2, 0], [2, 1], [2, 2]], ADJ_COL.strong, 'ending = last letters of the der-word in (brackets)')}
-      ${picSVG(BYID.a_s7)}${gEx(['a_s1', 'a_s6', 'a_s10', 'a_s11'])}${taMn(ADJ_TIPS.strong[2])}`],
-    ['6 · Watch out', `<ul class="gex"><li><b>Dativ</b> after any article → always <b>-en</b>: mit dem alt<b>en</b> Mann, mit einer nett<b>en</b> Frau.</li>
-      <li><b>Plural</b> after die / keine / meine → always <b>-en</b>: die neu<b>en</b> Freunde, meine neu<b>en</b> Freunde.</li>
-      <li><b>Plural without article</b> → <b>-e</b> (Nom./Akk.): gut<b>e</b> Freunde, nett<b>e</b> Leute — but Dativ: mit nett<b>en</b> Leute<b>n</b>.</li>
-      <li>Adjective <b>after</b> the noun (with sein / werden / bleiben) → <b>no ending</b>: Das Auto ist neu.</li></ul>`],
-    ['💡 Memory tricks', `<div class="vgrid tips">${['weak', 'mixed', 'strong'].map(k => `<div class="vcard"><div class="big sm">${ADJ_TIPS[k][0]}</div><div class="mn">💡 ${ADJ_TIPS[k][1]}</div>${taMn(ADJ_TIPS[k][2])}</div>`).join('')}</div>
-      <h3>Adjectives in the game</h3><div class="vgrid">${Object.values(ADJV).map(([b, en, ta, mn, tmn]) => vcard(esc(b), esc(en), ta, esc(mn), '', tmn)).join('')}</div>`]
+  adj:{ name:'Adjektivdeklination', flat:true, sections:() => [
+    ['Mit bestimmtem Artikel (der, die, das)', `${adjTableSVG('weak')}
+      <p>The article already shows the case, so the adjective only takes <b class="cj adj-weak">-e</b> (in the five lit-up boxes) or <b class="cj adj-weak">-en</b> (everywhere else).</p>${picSVG(BYID.a_w2)}`],
+    ['Mit unbestimmtem Artikel (ein, kein, mein …)', `${adjTableSVG('mixed')}
+      <p>Like the table above, except in the three boxes where <i>ein</i> has <b>no ending</b>: there the ending of der / das jumps onto the adjective: <b class="cj adj-mixed">-er</b>, <b class="cj adj-mixed">-es</b>. <i>ein</i> has no plural, so the plural uses <i>keine, meine …</i></p>${picSVG(BYID.a_m1)}`],
+    ['Ohne Artikel: the adjective takes the article’s ending', `${adjTableSVG('strong')}
+      <p>No article in front? Then the adjective carries the ending the article would have: der → <b class="cj adj-strong">-er</b>, das → <b class="cj adj-strong">-es</b>, die → <b class="cj adj-strong">-e</b>, den → <b class="cj adj-strong">-en</b>, dem → <b class="cj adj-strong">-em</b>, der → <b class="cj adj-strong">-er</b>. Only exception: Genitiv masculine / neuter is <b>-en</b>, because the noun already gets an -s (trotz kalt<b>en</b> Wetter<b>s</b>).</p>${picSVG(BYID.a_s2)}`]
   ] }
 };
 // separable verbs: the prefix flies to the end (Präsens), ge- drops into the middle (Perfekt),
@@ -3125,12 +3336,121 @@ GUIDE.pl = { name:'Singular / Plural', sections:() => [
   ['8 · Dativ plural: + n', `<p>${NRULE.dn}</p>${nPic('n_kind', 'dn')}${nEx([['n_hund', 'dn'], ['n_baum', 'dn'], ['n_freund', 'dn'], ['n_apfel', 'dn']])}${taMn(NTIPS.dn[2])}`],
   ['💡 Memory tricks', `${nounTipsHTML(['e', 'er', 'n', 's', '0', 'num', 'dn'])}<h3>Nouns in the game</h3><div class="vgrid">${NPL.filter(x => !x.gen).map(nounCard).join('')}</div>`]
 ] };
+// the three adjective-ending tables (columns masculine, neuter, feminine, plural; rows Nom, Akk, Dat, Gen), animated:
+// weak = the five -e boxes glow; mixed = where ein has no ending, the der/das ending jumps onto the adjective;
+// strong = every ending flies out of the (missing) article into the adjective
+const ATAB_ART = {
+  weak:[['der', 'das', 'die', 'die'], ['den', 'das', 'die', 'die'], ['dem', 'dem', 'der', 'den'], ['des', 'des', 'der', 'der']],
+  mixed:[['ein', 'ein', 'eine', 'keine'], ['einen', 'ein', 'eine', 'keine'], ['einem', 'einem', 'einer', 'keinen'], ['eines', 'eines', 'einer', 'keiner']],
+  strong:[['der', 'das', 'die', 'die'], ['den', 'das', 'die', 'die'], ['dem', 'dem', 'der', 'den'], ['des', 'des', 'der', 'der']]
+};
+const ATAB_GEN = { weak:['en', 'en', 'en', 'en'], mixed:['en', 'en', 'en', 'en'], strong:['en', 'en', 'er', 'er'] };
+function adjTableSVG(kind) {
+  const G4 = ['m', 'n', 'f', 'pl'], cases = ['nom', 'akk', 'dat'], col = ADJ_COL[kind], W = 360, x0 = 78, cw = 70, rh = 44, y0 = 28;
+  const end = (r, c) => r < 3 ? AEND[kind][cases[r]][G4[c]] : ATAB_GEN[kind][c];
+  let s = ['Masculine', 'Neuter', 'Feminine', 'Plural'].map((h, j) => `<rect x="${x0 + cw * j + 1}" y="2" width="${cw - 2}" height="${y0 - 4}" fill="#1E5F82"/>` + txt(h, x0 + cw * j + cw / 2, y0 / 2, 11.5, '#fff', 700)).join('');
+  ['Nominativ', 'Akkusativ', 'Dativ', 'Genitiv'].forEach((h, r) => {
+    const y = y0 + r * rh;
+    s += `<rect x="2" y="${y + 1}" width="${x0 - 4}" height="${rh - 2}" fill="${r % 2 ? '#E6EAEE' : '#D3D9DF'}"/>` + txt(h, x0 / 2, y + rh / 2, 12, '#2F3640', 700);
+    G4.forEach((g, c) => {
+      const x = x0 + cw * c, e = end(r, c), cx = x + cw / 2, art = ATAB_ART[kind][r][c];
+      s += `<rect x="${x + 1}" y="${y + 1}" width="${cw - 2}" height="${rh - 2}" fill="${r % 2 ? '#F2F4F6' : '#E6EAEE'}"/>`;
+      const special = kind === 'weak' ? e === 'e' : kind === 'mixed' ? (r < 2 && (e === 'er' || e === 'es')) : (r === 3 && c < 2);
+      if (special) s += pulseRect(x + 3, y + 3, cw - 6, rh - 6, kind === 'strong' ? C_AKK : col);
+      const ey = y + rh / 2 + 9, ay = y + rh / 2 - 10;
+      if (kind === 'strong') {
+        // the missing article in grey, its last letters in colour, and the ending flying across into the adjective slot
+        const tail = art.endsWith(e) ? e : '';
+        s += `<text x="${cx}" y="${ay}" font-size="11" text-anchor="middle" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif" fill="#8F9BA5">(${esc(art.slice(0, art.length - tail.length))}<tspan fill="${col}" font-weight="800">${esc(tail)}</tspan>)</text>`;
+        s += flyText('-' + e, 14, r === 3 && c < 2 ? C_AKK : col, `M${cx + 10} ${ay} Q${cx + 14} ${ay + 2} ${cx} ${ey}`, [cx, ey]);
+      } else {
+        s += txt(esc(art), cx, ay, 11.5, '#5B6670', 600);
+        if (kind === 'mixed' && special) {   // ein has no ending → the der / das ending jumps over
+          s += txt(r === 0 && c === 0 ? 'der' : 'das', cx + 22, ay - 1, 9, '#8F9BA5', 600);
+          s += flyText('-' + e, 14, col, `M${cx + 22} ${ay} Q${cx + 26} ${ay + 10} ${cx} ${ey}`, [cx, ey]);
+        } else s += txt('-' + e, cx, ey, 14, special || e !== 'en' ? col : '#2F3640', 800);
+      }
+    });
+  });
+  const H = y0 + 4 * rh + 4;
+  return `<svg class="gsvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Adjective endings table">${s}</svg>`;
+}
+// word chips that slide into their new places (inside the 320 × 190 picture); movers jump in an arc
+function chipSlide(before, after, movers, y, fill) {
+  let S = 15; const pad = 12, gap = 6;
+  const w = t => textW(t, S) + pad, total = arr => arr.reduce((a, t) => a + w(t) + gap, -gap);
+  while (total(before) > 304 && S > 8) S -= 0.5;
+  const pos = arr => { let p = (320 - total(arr)) / 2; return arr.map(t => { const r = p; p += w(t) + gap; return r; }); };
+  const pb = pos(before), pa = pos(after); let s = '';
+  before.forEach((t, i) => {
+    const xb = pb[i], xa = pa[after.indexOf(t)], mv = movers.includes(t), H = 30;
+    const chip = `<rect x="0" y="${y - H / 2}" width="${w(t)}" height="${H}" rx="6" fill="${fill(t)}" stroke="#2F3640" stroke-width="2"/>` + txt(esc(t), w(t) / 2, y, S, '#2F3640', 700);
+    s += STILL || Math.abs(xb - xa) < 0.5 ? `<g transform="translate(${xa} 0)">${chip}</g>`
+      : `<g transform="translate(${xb} 0)">${chip}<animateTransform attributeName="transform" type="translate" values="${mv ? `${xb} 0;${xb} 0;${(xb + xa) / 2} -34;${xa} 0;${xa} 0` : `${xb} 0;${xb} 0;${xb} 0;${xa} 0;${xa} 0`}" keyTimes="0;0.3;0.48;0.65;1" ${loopAttr(3.6)}/></g>`;
+  });
+  return { svg:s, mid:t => pa[after.indexOf(t)] + w(t) / 2 };
+}
+function modalSVG(x, k) {
+  const d = MODV[x.mv], dark = '#2F3640', grey = '#8F9BA5', blue = VCOL.sep, red = VCOL.ins;
+  const fitS = (t, max, S) => { const w = textW(t, S); return w > max ? S * max / w : S; };
+  let s = bob(em(x.e, 292, 26, 26)), cap, label;
+  if (k === 'kj') {
+    // the whole conjugation; the subject's box lights up, ich and er share the same form
+    const me = mPerson(x.a);
+    MPRON.forEach((p, i) => {
+      const cx = i < 3 ? 86 : 234, cy = 62 + (i % 3) * 36, on = me.includes(i) && d.f[i] === x.f;
+      s += `<rect x="${cx - 70}" y="${cy - 15}" width="140" height="30" rx="5" fill="${on ? '#FFF6D8' : '#fff'}" stroke="${on ? '#A07A12' : dark}" stroke-width="${on ? 3 : 1.5}"/>`;
+      if (on) s += pulseRect(cx - 68, cy - 13, 136, 26, '#EDC765');
+      s += txt(esc(p), cx - 34, cy, 12, grey, 700) + txt(esc(d.f[i]), cx + 30, cy, 16, i === 0 || i === 2 ? blue : dark, 800);
+    });
+    cap = `${x.a} → ${x.f}` + (mPerson(x.a).some(i => i === 0 || i === 2) ? ' · ich = er: no ending' : '');
+    label = `${x.mv} · Konjugation`;
+  } else if (k === 'bd') {
+    // the right modal glows, the other one gets crossed out
+    const am = altMv(x), card = (cx, mv, form, ok) => {
+      const m = MODV[mv] || { icon:'?', en:'' };
+      return `<rect x="${cx - 70}" y="44" width="140" height="96" rx="8" fill="#fff" stroke="${ok ? blue : grey}" stroke-width="${ok ? 3 : 2}"/>` + (ok ? pulseRect(cx - 68, 46, 136, 92, blue) : '')
+        + em(m.icon, cx, 70, 26) + txt(esc(form), cx, 102, 20, ok ? blue : grey, 800) + txt(esc(m.en), cx, 126, fitS(m.en, 128, 11.5), ok ? dark : grey, 600);
+    };
+    s += card(84, x.mv, x.f, true) + card(236, am, x.alt, false);
+    s += appear(`<line x1="176" y1="54" x2="296" y2="130" stroke="${red}" stroke-width="5" stroke-linecap="round"/><line x1="296" y1="54" x2="176" y2="130" stroke="${red}" stroke-width="5" stroke-linecap="round"/>`, 0.35);
+    cap = `“${x.t}”`;
+    label = `${x.mv} · meaning`;
+  } else {
+    // ns: the modal jumps behind the infinitive; sb (main clause): the infinitive goes to the end, under a bracket
+    const ns = k === 'ns', lead = ns ? x.nl.split(', ').pop() : x.a;
+    const before = ns ? [lead, x.nm, x.f, x.inf] : [lead, x.f, x.inf, x.m], after = ns ? [lead, x.nm, x.inf, x.f] : [lead, x.f, x.m, x.inf];
+    const fill = t => t === x.f ? '#EDC765' : t === x.inf ? '#DDEFFF' : t === lead && ns ? '#EEF2F5' : '#fff';
+    const r = chipSlide(before, after, ns ? [x.f] : [x.inf], 104, fill);
+    s += r.svg;
+    if (!ns) { const a = r.mid(x.f), b = r.mid(x.inf); s += appear(`<path d="M${a} 84 L${a} 74 L${b} 74 L${b} 84" fill="none" stroke="${blue}" stroke-width="3"/>`, 0.68); }
+    s += txt(ns ? 'Nebensatz: the modal verb goes last' : 'Satzklammer: modal 2nd … infinitive last', 160, 52, 13, dark, 700);
+    cap = modalTr(x, ns ? 'ns' : 'kj');
+    label = `${x.mv} · ${ns ? 'Nebensatz' : 'word order'}`;
+  }
+  s += txt(esc(cap), 160, 176, fitS(cap, 300, 12.5), dark, 600);
+  return s + badge(label, blue);
+}
+const mPic = (id, k) => picSVG(BYID[id], k);
+const mEx = list => `<ul class="gex">${list.map(([id, k]) => { const x = BYID[id]; return x ? `<li>${modalHTML(x, k)} <span class="tr">${esc(modalTr(x, k))}</span></li>` : ''; }).join('')}</ul>`;
+GUIDE.mv = { name:'Modalverben', sections:() => [
+  ['1 · Six modal verbs and what they mean', `<p>A modal verb says <b>how</b> you do something: because you can, must, may, want to, should or would like to.</p>
+    <table class="gtab"><tr><th></th><th>Modal verb</th><th>Meaning</th><th>Example</th></tr>${Object.keys(MODV).map(mv => { const d = MODV[mv], x = MSN.find(y => y.mv === mv && !y.gen);
+      return `<tr><td>${d.icon}</td><td><b>${esc(mv)}</b></td><td>${esc(d.en)}<br><span class="tr">${esc(d.mean)}</span></td><td>${x ? modalHTML(x, 'kj') : ''}</td></tr>`; }).join('')}</table>`],
+  ['2 · Conjugation: ich = er, no ending', `<p>${MRULE.kj}</p>${mPic('m_k1', 'kj')}
+    <table class="gtab"><tr><th></th>${Object.keys(MODV).map(mv => `<th>${esc(mv)}</th>`).join('')}</tr>${MPRON.map((p, i) => `<tr><td><b>${esc(p)}</b></td>${Object.keys(MODV).map(mv => `<td>${i === 0 || i === 2 ? `<b class="cj mvf">${MODV[mv].f[i]}</b>` : MODV[mv].f[i]}</td>`).join('')}</tr>`).join('')}</table>${taMn(MTIPS.kj[2])}`],
+  ['3 · Satzklammer: modal 2nd, infinitive at the end', `<p>${MRULE.sb}</p>${mPic('m_k2', 'sb')}${mEx([['m_m1', 'kj'], ['m_w3', 'kj'], ['m_d1', 'kj'], ['m_c1', 'kj']])}${taMn(MTIPS.sb[2])}`],
+  ['4 · müssen nicht or dürfen nicht?', `<p>${MRULE.bd}</p>${mPic('m_m6', 'bd')}${mPic('m_d1', 'bd')}${taMn(MTIPS.bd[2])}`],
+  ['5 · In a Nebensatz: the modal goes last', `<p>${MRULE.ns}</p>${mPic('m_m1', 'ns')}${mEx([['m_k1', 'ns'], ['m_w3', 'ns'], ['m_s2', 'ns']])}${taMn(MTIPS.ns[2])}`],
+  ['💡 Memory tricks', `${modalTipsHTML(['kj', 'bd', 'sb', 'ns'])}<h3>The six modal verbs</h3><div class="vgrid">${Object.keys(MODV).map(modalCard).join('')}</div>`]
+] };
 const guideCache = {};
 function guideHTML(topic) {
   if (!guideCache[topic]) {
     const g = GUIDE[topic];
-    guideCache[topic] = `<h3>📖 Revision: ${g.name}</h3><p class="note">Read before you play. Tap a section to open it; the pictures move to show the rule.</p>`
-      + g.sections().map(([t, h], i) => `<details${i ? '' : ' open'}><summary>${t}</summary><div class="gb">${h}</div></details>`).join('');
+    // "flat" rules are one page to read (Adjektive); the others fold out section by section
+    guideCache[topic] = `<h3>📖 Rules: ${g.name}</h3><p class="note">Read before you play. ${g.flat ? 'The tables move to show where the endings come from.' : 'Tap a section to open it; the pictures move to show the rule.'}</p>`
+      + g.sections().map(([t, h], i) => g.flat ? `<div class="gflat"><h4>${t}</h4><div class="gb">${h}</div></div>` : `<details${i ? '' : ' open'}><summary>${t}</summary><div class="gb">${h}</div></details>`).join('');
   }
   return guideCache[topic];
 }
@@ -3139,14 +3459,15 @@ function guideHTML(topic) {
    Level 1 type the gap, Level 2 build the phrase/clause, Diktat: checked offline (no key, instant).
    Free writing, TELC tasks, handwriting and the writing chat: corrected by Gemini. */
 const ERR_INFO = { // category: [label, tip, Tamil tip]
-  verbpos:['Verb position', 'In a weil / dass clause the conjugated verb goes to the very end; in a main clause it stands in 2nd place.', 'weil / dass வாக்கியத்தில் வினைச்சொல் கடைசியில்; சாதாரண வாக்கியத்தில் 2-வது இடத்தில்.'],
+  verbpos:['Verb position', 'In a Nebensatz (weil, dass, wenn, obwohl, ob, relative clause) the conjugated verb goes to the very end; in a main clause (also after denn, aber, und) it stands in 2nd place.', 'weil / dass வாக்கியத்தில் வினைச்சொல் கடைசியில்; சாதாரண வாக்கியத்தில் 2-வது இடத்தில்.'],
   wordorder:['Word order', 'Keep the verb in its place and put time before place: Ich fahre morgen nach Berlin.', 'சொல் வரிசை: நேரம் முதலில், இடம் பிறகு.'],
-  conj:['weil / dass / denn', 'weil = because (verb last), denn = because (verb 2nd), dass = that (verb last).', 'weil, denn = ஏனென்றால்; dass = என்று.'],
+  conj:['Connectors', 'weil = because (verb last), denn = because (verb 2nd), dass = that (verb last).', 'weil, denn = ஏனென்றால்; dass = என்று.'],
   case:['Article / case', 'Check which case is needed: Akkusativ → den, Dativ → dem / der.', 'எந்த case தேவை என்று பார்: Akk → den, Dat → dem / der.'],
   prep:['Preposition', 'Learn prepositions in whole phrases: mit dem Bus, zum Arzt, nach Hause, in die Stadt.', 'முன்னிடைச்சொற்களை முழு சொற்றொடராக கற்றுக்கொள்.'],
   ending:['Adjective ending', 'After der/die/das: -e / -en. After ein: -er / -es where ein has no ending. No article: the der-ending.', 'der/die/das பின் -e/-en; ein பின் -er/-es; article இல்லை → der முடிவு.'],
   gender:['der / die / das', 'Learn every noun with its article: der Tisch, die Lampe, das Buch.', 'ஒவ்வொரு பெயர்ச்சொல்லையும் அதன் article-உடன் கற்றுக்கொள்.'],
   verbform:['Verb form', 'Match the verb to the subject: ich lerne, du lernst, er lernt, wir lernen.', 'எழுவாய்க்கு ஏற்ப வினை முடிவு: ich lerne, du lernst.'],
+  modal:['Modal verbs', 'ich / er have no ending: ich kann, er kann, er muss. The second verb goes to the end as an infinitive (Ich kann heute nicht kommen); in a weil / dass clause the modal verb is last.', 'ich / er-க்கு முடிவு இல்லை: er kann. மற்ற வினை கடைசியில் (infinitive); weil / dass-இல் modal கடைசியில்.'],
   plural:['Plural', 'Learn every noun together with its plural: der Tag – die Tage, das Kind – die Kinder, die Frau – die Frauen. Dativ plural: + n (mit den Kindern).', 'ஒவ்வொரு பெயர்ச்சொல்லையும் அதன் பன்மையுடன் கற்றுக்கொள்: der Tag – die Tage. Dativ பன்மை: +n (mit den Kindern).'],
   prefix:['Separable verbs', 'trennbar: the prefix goes to the end (Ich stehe um 7 Uhr auf), but stays on in a weil / dass clause (…, weil ich aufstehe); Perfekt: auf-ge-standen. be- / ver- / er- never split and take no ge-.', 'பிரியும் வினை: முன்னொட்டு கடைசிக்கு (Ich stehe … auf); weil/dass-இல் ஒட்டியே (aufstehe); Perfekt: auf-ge-standen. be-/ver-/er- பிரியாது, ge- இல்லை.'],
   spelling:['Spelling', 'Check the letters: dass vs. das, ie vs. ei, double letters.', 'எழுத்துக்களை கவனமாக பார்: dass / das, ie / ei.'],
@@ -3215,10 +3536,17 @@ function adjPhrase(x) {
   return { text:(art ? art + ' ' : '') + x.a + ' ' + nounOf(x), hint:`${base} + ${ADJV[x.adj][0]} + ${ANOUN[x.n][0].replace(/^(der|die|das) /, '').replace(' (pl.)', '')}` };
 }
 function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap (TRAPS index), p = preposition, a = adjective, v = verb ("id~pr|pp|ns")
-  const [vid, vk] = kind === 'v' || kind === 'n' ? String(id).split('~') : [id];
+  const [vid, vk] = kind === 'v' || kind === 'n' || kind === 'm' ? String(id).split('~') : [id];
   const src = kind === 't' ? TRAPS[id] : BYID[vid]; if (!src) return null;
   const it = { key:`${lv}:${kind}:${id}`, lv, kind, id, src, atStart:false, vk };
   const gap = h => h.replace('___', '<span class="gap">?</span>');
+  if (kind === 'm') {
+    it.full = modalPlain(src, vk === 'ns' ? 'ns' : 'kj');
+    if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; }
+    else if (lv === 'l1') { it.prompt = modalPrompt(src, vk || 'kj'); it.answer = modalOpts(src, vk || 'kj').ans; it.hint = vk === 'ns' ? 'Type the end of the Nebensatz: infinitive + modal verb.' : 'Type the right form of the modal verb.'; }
+    else { it.prompt = `<span class="gap">…</span> <span class="whint">(${esc(src.mv)})</span>`; it.chips = shuffle([src.a, src.mv, src.m, src.inf]); it.answer = it.full; it.atStart = true; it.hint = 'Write the whole sentence: the modal verb in position 2, the infinitive at the end.'; }
+    return it;
+  }
   if (kind === 'n') {
     if (lv === 'l2') { it.full = `die ${src.pl}`; it.answer = it.full; it.prompt = `${wordHTML({ de:`${src.art} ${src.sg}` })} → <span class="gap">…</span> <span class="whint">(plural with its article)</span>`; it.hint = 'Write the plural with its article.'; }
     else {
@@ -3239,7 +3567,7 @@ function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap
   if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; return it; }
   if (kind === 't') { it.prompt = gap(esc(src.q)); it.answer = src.a; it.hint = 'Type the missing word: das, dass, weil or denn?'; return it; }
   if (kind === 'w') {
-    if (lv === 'l1') { it.prompt = `${esc(src.m)}, <span class="gap">?</span> ${esc(src.b.join(' '))}${src.p || '.'}`; it.answer = src.c; it.hint = 'Type the missing word: weil or dass?'; }
+    if (lv === 'l1') { it.prompt = `${esc(src.m)}, <span class="gap">?</span> ${esc(src.b.join(' '))}${src.p || '.'}`; it.answer = src.c; it.hint = `Type the missing word: ${(src.o || ['weil', 'dass']).join(' or ')}?`; }
     else { it.prompt = `${esc(src.m)}, <span class="gap">…</span>${src.p || '.'}`; it.chips = shuffle([src.c, ...src.b]); it.answer = `${src.c} ${src.b.join(' ')}`; it.hint = 'Write the rest of the sentence with these words. Where does the verb go?'; }
     return it;
   }
@@ -3256,6 +3584,7 @@ function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap
   return it;
 }
 function writeQueue(lv, topic) {
+  if (topic === 'mv') return pickPrep(MSN, 8).map(x => writeItem(lv, 'm', `${x.id}~${lv === 'l1' && Math.random() < 0.35 ? 'ns' : 'kj'}`)).filter(Boolean);
   if (topic === 'pl') return pickPrep(NPL, 8).map(x => writeItem(lv, 'n', `${x.id}~${lv === 'l1' && x.qd && Math.random() < 0.4 ? 'dn' : 'pf'}`)).filter(Boolean);
   if (topic === 'tv') return pickV(5, 3).map(x => writeItem(lv, 'v', `${x.id}~${lv === 'l1' ? (x.sep && Math.random() < 0.5 ? 'ns' : 'pp') : 'pr'}`)).filter(Boolean);
   if (topic === 'wd') {
@@ -3265,12 +3594,13 @@ function writeQueue(lv, topic) {
   }
   return pickPrep(topic === 'prep' ? P : A, 8).map(x => writeItem(lv, topic === 'prep' ? 'p' : 'a', x.id)).filter(Boolean);
 }
-const asQ = it => it.kind === 'n' ? nounQ(it.src, it.vk || 'pf') : it.kind === 'v' ? verbQ(it.src, it.vk) : it.kind === 'w' ? gateQ(it.src) : it.kind === 't' ? trapQ(it.src) : it.kind === 'p' ? prepQ(it.src) : adjQ(it.src);
+const asQ = it => it.kind === 'm' ? modalQ(it.src, it.vk === 'ns' ? 'ns' : 'kj') : it.kind === 'n' ? nounQ(it.src, it.vk || 'pf') : it.kind === 'v' ? verbQ(it.src, it.vk) : it.kind === 'w' ? gateQ(it.src) : it.kind === 't' ? trapQ(it.src) : it.kind === 'p' ? prepQ(it.src) : adjQ(it.src);
 // which kind of mistake was it? (offline guess, used for "your typical mistakes")
 function classifyWrite(it, typed) {
   const y = wStrip(typed).toLowerCase(), a = wStrip(it.answer).toLowerCase(), yw = y.split(' '), aw = a.split(' ');
   // same letters in another order (aufstehe ↔ stehe auf) or only ge- added / missing (geferngesehen) → a separable-verb mistake
   if (it.kind === 'n') return 'plural';
+  if (it.kind === 'm') return 'modal';
   if (it.kind === 'v') { const letters = s => [...s.replace(/[\s…]/g, '').replace(/ge/g, '')].sort().join(''); return letters(y) === letters(a) ? 'prefix' : it.lv === 'dik' ? 'spelling' : 'verbform'; }
   if (it.kind === 't' || (it.kind === 'w' && it.lv === 'l1')) return /^da(ss|ß|s)$/.test(y) && /^dass?$/.test(a) ? 'spelling' : 'conj';
   if (it.lv === 'dik') return 'spelling';
@@ -3284,9 +3614,10 @@ function classifyWrite(it, typed) {
 // explanation pieces for one exercise (same pictures, rules and tricks as the runner)
 function explainOf(it) {
   const s = it.src;
+  if (it.kind === 'm') { const k = it.vk === 'ns' ? 'ns' : 'kj'; return { sent:modalHTML(s, k), tr:modalTr(s, k), ex:MRULE[it.lv === 'l2' ? 'sb' : k], mn:MODV[s.mv].mn, tmn:MODV[s.mv].tmn, pic:picSVG(s, it.lv === 'l2' ? 'sb' : k), star:s.id, why:modalWhy(s, k) }; }
   if (it.kind === 'n') { const k = it.vk || 'pf'; return { sent:it.lv === 'l2' ? `${wordHTML({ de:`${s.art} ${s.sg}` })} → <b class="cj plp">die ${plMark(s)}</b>` : nounHTML(s, k), tr:it.lv === 'l2' ? s.en : nounTr(s, k), ex:NRULE[nRuleKey(s, k)], mn:s.mn, tmn:s.tmn, pic:picSVG(s, k), star:s.id, why:nounWhy(s, k) }; }
   if (it.kind === 'v') return { sent:verbHTML(s, it.vk), tr:verbTr(s, it.vk), ex:VRULE[vRuleKey(s, it.vk)], mn:s.mn, tmn:s.tmn, pic:picSVG(s, it.vk), star:s.id, why:verbWhy(s, it.vk) };
-  if (it.kind === 'w') return { sent:sentHTML(s), tr:s.t, ex:it.lv === 'l1' ? (s.c === 'weil' ? EX.weil : EX_DASS_MAIN) : EX.order, mn:(VOC[s.id] || [])[0], tmn:TA_W[s.id], pic:'', star:s.id };
+  if (it.kind === 'w') return { sent:sentHTML(s), tr:s.t, ex:it.lv === 'l1' || !cjSub(s.c) ? exOf(s) : EX.order, mn:(VOC[s.id] || [])[0], tmn:TA_W[s.id], pic:'', star:s.id };
   if (it.kind === 't') return { sent:trapHTML(s), tr:s.t, ex:EX[s.ex], mn:CONJ[s.a][2], tmn:TA_C[s.a], pic:'', star:null };
   if (it.kind === 'p') return { sent:prepHTML(s), tr:s.t, ex:EXP[s.k], mn:PV[s.pr][2], tmn:TA_P[s.pr], pic:picSVG(s), star:s.id, why:`<b>${s.pt === 'wech' ? (s.k === 'wo' ? 'Wo?' : 'Wohin?') + ' → ' + caseName(s) : esc(s.pr) + ' + ' + caseName(s)}</b>` };
   return { sent:adjHTML(s), tr:s.t, ex:ADJ_RULE[s.k], mn:(ADJV[s.adj] || [])[3], tmn:(ADJV[s.adj] || [])[4], pic:picSVG(s), star:s.id, why:adjWhy(s) };
@@ -3423,7 +3754,7 @@ const derFits = (w, c, g) => { const d = DEFART[c][g], x = gLc(w); return x === 
 const artFits = (w, c, g) => derFits(w, c, g) || einFits(w, c, g);
 const NOT_VERB = new Set(['nicht', 'sehr', 'gern', 'heute', 'morgen', 'hier', 'dort', 'auch', 'noch', 'schon', 'da', 'zu', 'mehr', 'viel', 'gut', 'oft', 'immer', 'jetzt', 'bald',
   'ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'der', 'die', 'das', 'den', 'dem', 'ein', 'eine', 'einen', 'einem', 'einer', 'mit', 'für', 'in', 'an', 'auf', 'und', 'oder']);
-const FINITE_IRR = new Set(['kann', 'will', 'muss', 'soll', 'darf', 'mag', 'war', 'weiß', 'wird', 'tut', 'sind', 'sind', 'seid', 'hast', 'bist', 'gibt', 'weißt', 'kannst', 'willst', 'musst', 'magst']);
+const FINITE_IRR = new Set(['kann', 'will', 'muss', 'soll', 'darf', 'mag', 'war', 'weiß', 'wird', 'tut', 'sind', 'sind', 'seid', 'hast', 'bist', 'gibt', 'weißt', 'kannst', 'willst', 'musst', 'magst', 'bin', 'ist', 'hat', 'habt']);
 const ADJ_EXTRA = ['müde', 'krank', 'kaputt', 'leer', 'voll', 'spät', 'früh', 'teuer', 'toll', 'wichtig', 'richtig', 'falsch', 'fertig', 'frei', 'glücklich', 'traurig', 'froh', 'sicher', 'klar',
   'möglich', 'schwer', 'leicht', 'lustig', 'spannend', 'offen', 'geschlossen', 'gesund', 'krank', 'stark', 'schnell', 'langsam', 'leise', 'dunkel', 'nass', 'trocken', 'sauber', 'schmutzig', 'zufrieden', 'nervös', 'pünktlich', 'allein'];
 let adjWords = null;
@@ -3433,15 +3764,30 @@ const INS_PF = ['be', 'emp', 'ent', 'er', 'ge', 'miss', 'ver', 'zer'];
 const VAUX = { ich:['bin', 'habe'], du:['bist', 'hast'], er:['ist', 'hat'], es:['ist', 'hat'], wir:['sind', 'haben'], ihr:['seid', 'habt'] };
 const VEND = { ich:/e$/, du:/st$/, er:/t$/, es:/t$/, wir:/n$/, ihr:/t$/ };
 // each check returns '' when the sentence is right, otherwise the reason it was dropped
+// all connectors of the Nebensätze topic: the gate partner of each, and where the conjugated verb sits
+// (Nebensatz: last; denn / aber: 2nd block after the subject; deshalb: right after it)
+const CJ_ALL = ['weil', 'dass', 'wenn', 'obwohl', 'ob', 'das', 'denn', 'aber', 'deshalb'];
+const CJ_PAIR = { wenn:['wenn', 'ob'], obwohl:['obwohl', 'weil'], ob:['ob', 'dass'], das:['das', 'dass'], denn:['denn', 'weil'], aber:['aber', 'obwohl'], deshalb:['deshalb', 'weil'] };
+const CJ_VI = { denn:1, aber:1, deshalb:0 };
+const CJ_RE = /\b(weil|dass|denn|wenn|obwohl|ob|aber|deshalb)\b/i, ASK_RE = /(?:^|\s)(weiß|wissen|wisst|frag|unsicher|ahnung|überleg)/i;   // no \b here: it doesn't count ß / ü as letters
+// looks like a conjugated verb: a verb ending (-e, -t, -n) or a short irregular form, and not a known adjective
+const isFiniteV = v => /^[a-zäöüß]+$/.test(v) && !NOT_VERB.has(v) && !ADJ_WORDS().has(v) && (/(e|t|n)$/.test(v) || FINITE_IRR.has(v));
 function checkW(w) {
-  if (!['weil', 'dass'].includes(w.c)) return 'conjunction';
-  if (!w.m || /[,.!?]/.test(w.m) || /\b(weil|dass|denn)\b/i.test(w.m)) return 'main clause';
+  if (!CJ_ALL.includes(w.c)) return 'conjunction';
+  if (!w.m || /[,.!?]/.test(w.m) || CJ_RE.test(w.m)) return 'main clause';
   const b = w.b; if (!Array.isArray(b) || b.length < 2 || b.length > 5) return 'clause blocks';
-  if (b.some(x => !x || /[,.!?;:]/.test(x) || /\b(weil|dass|denn)\b/i.test(x))) return 'clause blocks';
+  if (b.some(x => !x || /[,.!?;:]/.test(x) || CJ_RE.test(x))) return 'clause blocks';
   if (new Set(b.map(gLc)).size !== b.length) return 'repeated block';
-  // the last block must look like a conjugated verb: a verb ending (-e, -t, -n, -st) or a short irregular form, and not a known adjective
-  const v = b[b.length - 1];
-  if (!/^[a-zäöüß]+$/.test(v) || NOT_VERB.has(v) || ADJ_WORDS().has(v) || !(/(e|t|n)$/.test(v) || FINITE_IRR.has(v))) return 'verb not last';
+  const main = CJ_VI[w.c] !== undefined, vi = main ? CJ_VI[w.c] : b.length - 1;
+  if (main && b.length < 3) return 'clause blocks';
+  if (!isFiniteV(b[vi])) return 'verb in the wrong place';
+  // with a pronoun subject the verb must fit it (er arbeitet, not er arbeiten; ich bin)
+  const subj = gLc(w.c === 'deshalb' ? b[1] : b[0]);
+  if (VEND[subj] && !(VEND[subj].test(b[vi]) || FINITE_IRR.has(b[vi]))) return 'verb does not fit the subject';
+  if (w.c === 'das' && !/\bdas [A-ZÄÖÜ][a-zäöüß]+$/.test(w.m)) return 'relative clause needs "das + noun" before it';
+  if (w.c === 'ob' && !ASK_RE.test(w.m)) return 'ob needs wissen / fragen';
+  if ((w.c === 'wenn' || w.c === 'dass') && /\bfrag\w*/i.test(w.m)) return 'after fragen only ob fits';
+  if (w.c === 'wenn' && ASK_RE.test(w.m)) return 'wenn after wissen / fragen could be ob';
   return '';
 }
 function checkTrap(t) {
@@ -3511,6 +3857,17 @@ function checkV(x, strict) {
 const PURE_PL = /^(zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|viele|vielen|alle|allen|einige|mehrere|beide|\d+)$/;
 const PURE_SG = /^(ein|einen|einem|eines|der|das|dem|des|mein|dein|sein|unser|euer|kein)$/;
 const DAT_PL_PREV = /^(den|meinen|deinen|seinen|ihren|unseren|euren|diesen|vielen|allen|beiden|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|mit|von|aus|bei|nach|seit|zu|\d+|\w+en)$/;
+function checkM(x) {
+  const d = MODV[x.mv]; if (!d) return 'modal verb';
+  if (['a', 'f', 'wf', 'alt', 'm', 'inf', 't', 'nl', 'nm', 'nt'].some(k => typeof x[k] !== 'string' || !x[k].trim())) return 'missing field';
+  const ok = mPerson(x.a).map(i => d.f[i]); if (!ok.includes(x.f)) return 'form does not fit the subject';
+  if (ok.includes(x.wf) || x.wf === x.f) return 'wrong form is also right';
+  const am = altMv(x); if (!am || !mPerson(x.a).some(i => MODV[am].f[i] === x.alt)) return 'other modal';
+  if (!/^[a-zäöüß]+n$/.test(x.inf) || /[,.!?]/.test(x.m + x.nm)) return 'sentence parts';
+  const nm = x.nl.match(/, (weil|dass|wenn|obwohl|ob|damit) (\S+)$/); if (!nm) return 'Nebensatz';
+  if (!mPerson(nm[2]).some(i => d.f[i] === x.f)) return 'Nebensatz subject';
+  return '';
+}
 function checkN(x, strict) {
   if (!['der', 'die', 'das'].includes(x.art)) return 'article';
   if (![x.sg, x.pl, x.wr].every(w => /^[A-ZÄÖÜ][a-zäöüß]+$/.test(w || ''))) return 'noun form';
@@ -3541,26 +3898,28 @@ function regGen(x) {
   else if (x.gk === 'a') { x.ak = x.k; if (!ADJV[x.adj]) ADJV[x.adj] = x.adjInfo; if (!ANOUN[x.n]) ANOUN[x.n] = x.nounInfo; }
   else if (x.gk === 'v') x.tv = 1;
   else if (x.gk === 'n') x.pn = 1;
+  else if (x.gk === 'm') x.mo = 1;
 }
 // Lena's sentences you have played stay in your sentence lists for good (S.lib): memory boxes, stars, Daily review,
 // normal rounds and writing. The list is capped so the save never fills the browser's storage (about 5 MB):
 // when it is full, mastered sentences that are not starred make room first, oldest first.
-const LIB_MAX = 2000, DERIVED = ['gen', 'ak', 'pt', 'cs', 'tv', 'trap', 'pn'];
+const LIB_MAX = 2000, DERIVED = ['gen', 'ak', 'pt', 'cs', 'tv', 'trap', 'pn', 'mo'];
 function libPools(x) {
   if (x.gk === 'w') return [W];
   if (x.gk === 'p') return [P, x.mix ? PMIX : x.pt === 'fix' ? PFIX : PWECH];
   if (x.gk === 'a') return [A, { weak:AWEAK, mixed:AMIXED, strong:ASTRONG }[x.k]];
   if (x.gk === 'v') return [V, x.sep ? VSEP : VINS];
   if (x.gk === 'n') return [NPL];
+  if (x.gk === 'm') return [MSN];
   return [];   // traps are kept for Past rounds only
 }
 function poolAdd(x) { libPools(x).forEach(p => { if (p && !p.includes(x)) p.push(x); }); }
-const sentText = x => x.b ? fullW(x) : x.pn ? nounPlain(x, 'pf') : x.tv ? verbPlain(x, 'pr') : (x.q || '').replace('___', x.a);
+const sentText = x => x.b ? fullW(x) : x.mo ? modalPlain(x, 'kj') : x.pn ? nounPlain(x, 'pf') : x.tv ? verbPlain(x, 'pr') : (x.q || '').replace('___', x.a);
 function libAdd(items) {
   S.lib = S.lib || {}; let texts = null;
   for (const x of items) {
     if (!x.gen || S.lib[x.id]) continue;
-    texts = texts || new Set([...W, ...P, ...A, ...V, ...NPL].filter(y => y !== x).map(sentText));
+    texts = texts || new Set([...W, ...P, ...A, ...V, ...NPL, ...MSN].filter(y => y !== x).map(sentText));
     if (x.gk !== 't' && texts.has(sentText(x))) continue;   // the same sentence is already in your lists
     const c = { ts:Date.now() }; for (const [k, v] of Object.entries(x)) if (!DERIVED.includes(k)) c[k] = v;
     S.lib[x.id] = c; x.ts = c.ts; texts.add(sentText(x)); poolAdd(x);
@@ -3583,9 +3942,9 @@ let genSeq = 0;
 const gid = k => `g${k}_${Date.now().toString(36)}${(genSeq++).toString(36)}`;
 const gS = v => typeof v === 'string' ? v.trim() : '';
 const gEmoji = (e, d) => /^[^\p{L}\p{N}\s]{1,10}$/u.test(gS(e)) ? gS(e) : d;
-const GEN_TOPIC = l => l >= 17 ? 'pl' : l <= 3 || l === 10 ? 'wd' : l <= 6 || l === 11 ? 'prep' : l <= 9 || l === 12 ? 'adj' : 'tv';
+const GEN_TOPIC = l => l >= 21 ? 'mv' : l >= 17 ? 'pl' : l <= 3 || l === 10 ? 'wd' : l <= 6 || l === 11 ? 'prep' : l <= 9 || l === 12 ? 'adj' : 'tv';
 const GEN_ASK = {
-  1:{ s:11 }, 2:{ s:9 }, 3:{ s:8, t:6 }, 10:{ s:8, t:5 },
+  1:{ s:13, mix:'about 3 weil, 2 dass, and 1 each of wenn, obwohl, ob, das (relative clause), denn, aber, deshalb' }, 2:{ s:11, mix:'about 3 weil, 2 dass, and 1 each of wenn, obwohl, ob, das (relative clause), denn, aber, deshalb' }, 3:{ s:10, t:6, mix:'about 3 weil, 2 dass, and 1 each of wenn, obwohl, ob, das (relative clause), denn, aber, deshalb' }, 10:{ s:10, t:5, mix:'about 3 weil, 2 dass, and 1 each of wenn, obwohl, ob, das (relative clause), denn, aber, deshalb' },
   4:{ n:11, how:'Use ONLY prepositions with a fixed case: durch, für, gegen, ohne, um (always Akkusativ) or aus, bei, mit, nach, seit, von, zu, gegenüber (always Dativ). In about 3 sentences the gap is the preposition itself (then "wrong" is a preposition that takes the OTHER case); otherwise the gap is the article.' },
   5:{ n:11, how:'Use ONLY Wechselpräpositionen (an, auf, hinter, in, neben, über, unter, vor, zwischen): about half for a location (type "wo", Dativ, verbs like liegen, stehen, sitzen, hängen, sein) and half for a movement to a place (type "wohin", Akkusativ, verbs like legen, stellen, setzen, hängen, gehen, fahren). The gap is always the article.' },
   6:{ n:14, how:'Mix about 5 fixed-case prepositions and 6 Wechselpräpositionen (wo / wohin). In 3 of them the answer is a short form (zum, zur, im, ins, am, ans, vom, beim) that replaces preposition + article.' },
@@ -3594,6 +3953,10 @@ const GEN_ASK = {
   8:{ n:11, how:'Only type "mixed": the adjective comes after ein / eine / einen / einem / einer / kein / mein / dein / sein / ihr / unser in any form.' },
   9:{ n:14, how:'Mix 3 of type "weak" (after der/die/das), 4 "mixed" (after ein/kein/mein) and 6 "strong" (no article at all, e.g. "Ich trinke ___ Kaffee", "mit ___ Wasser").' },
   12:{ n:11, how:'Mix all three types: weak (after der/die/das), mixed (after ein/kein/mein) and strong (no article).' },
+  21:{ n:11, how:'Mix all six modal verbs and all persons (ich, du, er / sie, man, a name, wir, ihr, sie / Sie).' },
+  22:{ n:11, how:'Choose sentences where the English sentence (en) makes clear which modal verb is right, and other_modal gives a clearly different meaning (e.g. muss nicht ↔ darf nicht, kann ↔ will).' },
+  23:{ n:12, how:'Mix all six modal verbs and all persons.' },
+  24:{ n:11, how:'Mix all six modal verbs and all persons.' },
   17:{ n:11, how:'Mix the plural patterns: about 3 with +e, 2 with +er, 3 with +(e)n, 1–2 with +s and 2 with no ending.' },
   18:{ n:11, how:'Only nouns whose plural is different from the singular (NOT Lehrer, Zimmer, Fenster).' },
   19:{ n:12, how:'Mix all patterns. At least 5 must have a dative_sentence, so choose those nouns from the +e, +er and no-ending groups (plural not ending in -n or -s).' },
@@ -3604,24 +3967,31 @@ const GSTR = { type:'STRING' }, gObj = (props, extra = {}) => ({ type:'OBJECT', 
 const NART = { type:'STRING', enum:['der', 'die', 'das', 'plural'] };
 const GEN_SCHEMA = {
   wd:{ type:'OBJECT', properties:{
-    sentences:{ type:'ARRAY', items:gObj(['main', 'en', 'word', 'word_en', 'word_ta', 'mn', 'tmn'], { conj:{ type:'STRING', enum:['weil', 'dass'] }, clause:{ type:'ARRAY', items:GSTR }, punct:{ type:'STRING', enum:['.', '?'] } }) },
+    sentences:{ type:'ARRAY', items:gObj(['main', 'en', 'word', 'word_en', 'word_ta', 'mn', 'tmn'], { conj:{ type:'STRING', enum:CJ_ALL }, clause:{ type:'ARRAY', items:GSTR }, punct:{ type:'STRING', enum:['.', '?'] } }) },
     traps:{ type:'ARRAY', items:gObj(['sentence', 'answer', 'en'], { options:{ type:'ARRAY', items:GSTR } }) } }, required:['sentences', 'traps'] },
   prep:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['sentence', 'answer', 'wrong', 'prep', 'noun', 'noun_base', 'noun_en', 'noun_ta', 'en', 'emoji_who', 'emoji_thing'],
     { type:{ type:'STRING', enum:['akk', 'dat', 'wo', 'wohin'] }, noun_article:NART }) } }, required:['items'] },
   adj:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['sentence', 'answer', 'wrong', 'adjective', 'noun', 'noun_base', 'noun_en', 'noun_ta', 'adj_en', 'adj_ta', 'adj_mn', 'adj_tmn', 'en'],
     { type:{ type:'STRING', enum:['weak', 'mixed', 'strong'] }, gender:{ type:'STRING', enum:['m', 'f', 'n', 'pl'] }, case:{ type:'STRING', enum:['nom', 'akk', 'dat'] }, noun_article:NART }) } }, required:['items'] },
+  mv:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['subject', 'conjugated', 'wrong_form', 'other_modal', 'middle', 'infinitive', 'en', 'side_lead', 'side_middle', 'side_en', 'emoji', 'inf_en', 'inf_ta'],
+    { modal:{ type:'STRING', enum:['können', 'müssen', 'dürfen', 'wollen', 'sollen', 'möchten'] } }) } }, required:['items'] },
   pl:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['singular', 'plural', 'wrong_plural', 'singular_sentence', 'singular_en', 'plural_sentence', 'plural_en', 'dative_sentence', 'dative_en', 'emoji', 'en', 'ta', 'mn', 'tmn'],
     { article:{ type:'STRING', enum:['der', 'die', 'das'] } }) } }, required:['items'] },
   tv:{ type:'OBJECT', properties:{ items:{ type:'ARRAY', items:gObj(['infinitive', 'prefix', 'subject', 'present_verb', 'present_rest', 'present_en', 'aux', 'perfekt_middle', 'participle', 'perfekt_en',
     'side_lead', 'side_middle', 'side_en', 'emoji', 'en', 'ta', 'mn', 'tmn'], { separable:{ type:'BOOLEAN' } }) } }, required:['items'] }
 };
 const GEN_RULES = {
-  wd:a => `weil / dass sentences (write ${a.s}): "main" is the main clause WITHOUT comma or final punctuation (e.g. "Ich bleibe zu Hause"). "conj" is weil (gives a reason, answers Warum?) or dass (after glauben, hoffen, wissen, sagen, denken, finden, meinen or es ist gut / schön / wichtig / klar). Choose main clauses where ONLY the chosen conjunction makes sense (avoid "Ich bin froh / traurig / sauer / glücklich, …" where both work). About half weil, half dass.
-"clause" = the side clause after the conjunction, split into 3 or 4 blocks of 1–3 words: the subject first, then the middle, and the conjugated verb ALONE as the LAST block, e.g. ["ich", "keine Zeit", "habe"] or ["er", "in Berlin", "arbeiten", "möchte"]. Separable verbs stay one word at the end (anruft). No commas inside. "punct" is "?" only when the main clause is a question. "word" = the key vocabulary word of the sentence (nouns with der / die / das).
+  wd:a => `Hauptsatz / Nebensatz sentences (write ${a.s}, in this mix: ${a.mix}). "main" = the main clause WITHOUT comma or final punctuation (e.g. "Ich bleibe zu Hause"); "conj" = the connector; "clause" = what follows the connector, split into 3 or 4 blocks of 1–3 words.
+- Nebensatz connectors, the conjugated verb ALONE as the LAST block: weil (a reason), dass (after glauben, hoffen, wissen, sagen, denken, finden, meinen or es ist gut / wichtig / klar), wenn (a condition or time), obwohl (although: the opposite of what you expect), ob (a yes/no question; the main clause must contain wissen or fragen, e.g. "Ich weiß nicht", "Sie fragt", "Ich frage mich"), das (relative pronoun; the main clause must END with "das" + a neuter noun, e.g. "Das ist das Buch", "Ich kenne das Mädchen"). Blocks e.g. ["ich", "keine Zeit", "habe"], ["er", "in Berlin", "arbeiten", "möchte"]; separable verbs stay one word at the end (anruft).
+- denn and aber join two MAIN clauses, so the verb stays in 2nd place: blocks = [subject, conjugated verb, rest], e.g. ["ich", "habe", "Hunger"], ["wir", "gehen", "trotzdem raus"].
+- deshalb takes position 1 itself, so the verb comes right after it: blocks = [conjugated verb, subject, rest], e.g. ["bleibe", "ich", "zu Hause"].
+Choose main clauses where ONLY the chosen connector makes sense with that word order: avoid "Ich bin froh / traurig / sauer, …" (weil and dass would both work); never use wissen or fragen before wenn or dass questions (that needs ob); aber must really contrast. No commas inside the blocks. "punct" is "?" only when the main clause is a question. "word" = the key vocabulary word of the sentence (nouns with der / die / das).
 ${a.t ? `Traps (write ${a.t}): a sentence with ___ where "options" are exactly ["das", "dass"] (das = relative pronoun or article, dass = conjunction) or exactly ["weil", "denn"] (the word order after the gap decides: weil → verb at the end, denn → verb in 2nd place). About half of each kind.` : 'Traps: return an empty list.'}`,
   prep:a => `Preposition sentences (write ${a.n}): "sentence" contains ___ exactly once. "answer" = the word(s) for the gap; "wrong" = one wrong alternative of the same kind (wrong article, wrong short form or wrong preposition). "prep" = the preposition in lower case (mit, auf, gegenüber …). "type" = akk / dat for fixed-case prepositions, wo / wohin for Wechselpräpositionen. "noun" = the noun after the article exactly as written in the sentence, "noun_base" = its Nominativ form (singular, or plural if the sentence uses the plural), "noun_article" = der / die / das, or "plural". Use a definite article or an ein / kein / mein form; never a pronoun after the preposition. "emoji_who" = one emoji for the person or thing that is somewhere or moves, "emoji_thing" = one emoji for the place or the other thing.
 ${a.how}`,
   adj:a => `Adjective ending sentences (write ${a.n}): "sentence" contains ___ exactly once, directly in front of the noun. "answer" = the adjective with the right ending, "wrong" = the same adjective with a wrong ending. "adjective" = its base form (e.g. alt); only use adjectives where the ending is simply added to the base form (NOT teuer, dunkel, sauer, hoch, rosa, lila). "type" = weak (after der/die/das/dieser/jeder), mixed (after ein/kein/mein/dein/sein/ihr/unser) or strong (no article). "gender" m/f/n/pl and "case" nom/akk/dat of that noun phrase. "noun" as written in the sentence, "noun_base" its Nominativ form, "noun_article" der / die / das, or "plural".
+${a.how}`,
+  mv:a => `Modal verb sentences (write ${a.n}): a short main clause "subject + conjugated modal + middle + infinitive". "modal" = the modal verb (können, müssen, dürfen, wollen, sollen, möchten); "subject" = ich, du, er, sie, es, man, wir, ihr, Sie or a first name (no other nouns); "conjugated" = the modal for that subject (ich kann, er muss, wir möchten); "wrong_form" = a typical WRONG form a learner writes (er kannt, du muss, ich darfe); "other_modal" = a DIFFERENT modal verb, conjugated for the same subject, that would change the meaning (e.g. darf instead of muss); "middle" = the words between modal and infinitive (no punctuation); "infinitive" = the second verb at the end (one word); "en" = an English translation that makes the meaning of the modal clear. "side_lead" = a short main clause + comma + weil / dass / wenn + the subject in lower case (e.g. "Ich komme später, weil ich"); "side_middle" = the words before "infinitive + modal" at the end of that Nebensatz; "side_en" = its translation. "inf_en" / "inf_ta" = the meaning of the infinitive in English / Tamil. "emoji" = one emoji for the sentence.
 ${a.how}`,
   pl:a => `Singular / plural nouns (write ${a.n}, all different everyday nouns): "singular" and "plural" in the Nominativ, capitalised (e.g. Baum / Bäume); "article" = der / die / das of the singular; "wrong_plural" = one typical WRONG plural a learner might write (wrong ending or wrong umlaut, e.g. Baume or Bäumen). "singular_sentence" = a short sentence with ___ where ONLY the singular fits (use ein / mein / der / das and a singular verb); "plural_sentence" = a short sentence with ___ where ONLY the plural fits (use zwei, drei, viele, alle, keine or a plural verb); "dative_sentence" = a short sentence with ___ for the Dativ plural (after mit den, auf den, mit meinen, in vielen …), ONLY if the Dativ plural adds -n (the plural does not end in -n or -s), otherwise "". English translation for each sentence (singular_en, plural_en, dative_en). Only nouns with a regular plural (+e, +er, +(e)n, +s or no ending, with or without umlaut); avoid irregular ones (Museum, Thema, Firma, Visum, Kaktus). "en" / "ta" = the meaning of the noun, "mn" / "tmn" = memory tricks that help to remember the PLURAL. "emoji" = one emoji that shows the thing.
 ${a.how}`,
@@ -3629,7 +3999,7 @@ ${a.how}`,
 For each: "infinitive" (aufstehen), "prefix" (auf), "separable" true/false, "subject" (Ich, Du, Er, Sie, Wir, Anna, Der Zug …), "present_verb" = the conjugated verb for that subject as ONE word with its prefix (aufstehe, verstehe), "present_rest" = the rest of a Präsens main clause after the verb, WITHOUT the separable prefix and without punctuation (Ich stehe | jeden Morgen um 7 Uhr | auf → "jeden Morgen um 7 Uhr"), "present_en"; "aux" = the conjugated haben / sein for the subject, "perfekt_middle" = the words between aux and participle, "participle" = Partizip II, "perfekt_en". Separable verbs only: "side_lead" = a main clause + comma + weil / dass / wenn / bis + the SAME subject (e.g. "Ich bin müde, weil ich"), "side_middle" = the words before the verb at the end, "side_en". For inseparable verbs the three side_ fields are "". "emoji" = one emoji that shows the verb.`
 };
 function genExamples(tp) {
-  const pool = tp === 'pl' ? NPL.map(x => nounPlain(x, 'pf')) : tp === 'wd' ? W.map(fullW) : tp === 'prep' ? P.map(fillGap) : tp === 'adj' ? A.map(fillGap) : V.map(x => verbPlain(x, 'pr'));
+  const pool = tp === 'mv' ? MSN.map(x => modalPlain(x, 'kj')) : tp === 'pl' ? NPL.map(x => nounPlain(x, 'pf')) : tp === 'wd' ? W.map(fullW) : tp === 'prep' ? P.map(fillGap) : tp === 'adj' ? A.map(fillGap) : V.map(x => verbPlain(x, 'pr'));
   return shuffle(pool.slice()).slice(0, 8).join(' | ');
 }
 function genSystem(tp, ask) {
@@ -3644,11 +4014,11 @@ ${GEN_RULES[tp](ask)}`;
 }
 // turn Gemini's answer into game items; only sentences that pass the check are kept
 function genConvert(tp, d) {
-  const out = { w:[], t:[], p:[], a:[], v:[], n:[] }; let dropped = 0;
+  const out = { w:[], t:[], p:[], a:[], v:[], n:[], m:[] }; let dropped = 0;
   const keep = (list, x, why) => { if (why) dropped++; else { regGen(x); list.push(x); } };
   if (tp === 'wd') {
     for (const r of (d.sentences || [])) {
-      const x = { id:gid('w'), gk:'w', de:gS(r.word), en:gS(r.word_en), m:gS(r.main).replace(/[,.?!]+$/, ''), c:gS(r.conj), b:(r.clause || []).map(gS).filter(Boolean), p:r.punct === '?' ? '?' : undefined, t:gS(r.en), ta:gS(r.word_ta), mn:gS(r.mn), tmn:gS(r.tmn) };
+      const x = { id:gid('w'), gk:'w', de:gS(r.word), en:gS(r.word_en), m:gS(r.main).replace(/[,.?!]+$/, ''), c:gS(r.conj), o:CJ_PAIR[gS(r.conj)], vi:CJ_VI[gS(r.conj)], b:(r.clause || []).map(gS).filter(Boolean), p:r.punct === '?' ? '?' : undefined, t:gS(r.en), ta:gS(r.word_ta), mn:gS(r.mn), tmn:gS(r.tmn) };
       keep(out.w, x, checkW(x) || (!x.t && 'translation'));
     }
     for (const r of (d.traps || [])) {
@@ -3672,6 +4042,12 @@ function genConvert(tp, d) {
         adjInfo:[base, gS(r.adj_en), gS(r.adj_ta), gS(r.adj_mn), gS(r.adj_tmn)], nounInfo:[nde, gS(r.noun_en), gS(r.noun_ta)] };
       const gOk = { der:'m', die:'f', das:'n', plural:'pl' }[r.noun_article] === g || (r.noun_article === 'die' && g === 'f');
       keep(out.a, x, checkA(x, base) || (!gOk && 'gender'));
+    }
+  } else if (tp === 'mv') {
+    for (const r of (d.items || [])) {
+      const x = { id:gid('m'), gk:'m', mv:gS(r.modal), a:gS(r.subject), f:gS(r.conjugated), wf:gS(r.wrong_form), alt:gS(r.other_modal), m:gS(r.middle).replace(/[.!?]+$/, ''), inf:gS(r.infinitive), p:'.', t:gS(r.en),
+        nl:gS(r.side_lead), nm:gS(r.side_middle), nt:gS(r.side_en), e:gEmoji(r.emoji, '✨'), ie:gS(r.inf_en), ita:gS(r.inf_ta) };
+      keep(out.m, x, checkM(x));
     }
   } else if (tp === 'pl') {
     for (const r of (d.items || [])) {
@@ -3720,6 +4096,10 @@ function genBuild(l, it) {
   else if (l === 13 || l === 14) q = mixV(5, 3).map(x => verbQ(x, l === 13 ? 'pr' : 'pp'));
   else if (l === 15) q = [...vs.slice(0, 4).map(x => verbQ(x, 'ns')), ...sp([...vs.slice(4, 7), ...vi.slice(0, 3)]).map((x, i) => verbQ(x, i % 2 ? 'pp' : 'pr'))];
   else if (l === 16) q = mixV(5, 3).map(x => spotQ('v', x, x.sep ? ['pr', 'pp', 'ns'][Math.floor(Math.random() * 3)] : 'pp'));
+  const ms = sp(it.m || []);
+  if (l === 21 || l === 22) q = ms.slice(0, 8).map(x => modalQ(x, l === 21 ? 'kj' : 'bd'));
+  else if (l === 23) q = ms.slice(0, 10).map((x, i) => modalQ(x, i < 4 ? 'ns' : i % 2 ? 'kj' : 'bd'));
+  else if (l === 24) q = ms.slice(0, 8).map((x, i) => spotQ('m', x, i % 2 ? 'ns' : 'kj'));
   const ns = sp(it.n || []);
   if (l === 17) q = ns.slice(0, 8).map(x => nounQ(x, 'pf'));
   else if (l === 18) q = ns.filter(x => x.sg !== x.pl).slice(0, 8).map((x, i) => nounQ(x, i % 2 ? 'ss' : 'sp'));
@@ -3753,7 +4133,7 @@ const FREE_PROMPTS = {
   wetter:'Welches Wetter und welche Jahreszeit magst du – und warum?', lernen:'Warum lernst du Deutsch, und wie lernst du?',
   freunde:'Erzähl von einem guten Freund oder einer guten Freundin.', stadt:'Beschreib deine Stadt: Was gibt es dort?', frei:'Schreib über ein Thema, das dich interessiert.'
 };
-const FOCUS_TASK = { pl:'Use at least five nouns in the plural (e.g. zwei Kinder, viele Freunde, die Häuser) and one Dativ plural (e.g. mit meinen Freunden).', tv:'Use at least four separable verbs (e.g. aufstehen, einkaufen, anrufen) and at least one in the Perfekt (e.g. ich habe … eingekauft).', wd:'Use weil at least twice and dass at least once.', prep:'Use at least four prepositions (e.g. mit, für, in, auf, zu).', adj:'Use at least four adjectives in front of nouns (e.g. ein netter Kollege, die alte Wohnung).' };
+const FOCUS_TASK = { wd:'Use at least three different Nebensätze (weil, dass, wenn, obwohl, ob or a relative clause) and one sentence with denn or deshalb.', mv:'Use at least four different modal verbs (können, müssen, dürfen, wollen, sollen, möchten) and one in a weil / dass clause (…, weil ich arbeiten muss).', pl:'Use at least five nouns in the plural (e.g. zwei Kinder, viele Freunde, die Häuser) and one Dativ plural (e.g. mit meinen Freunden).', tv:'Use at least four separable verbs (e.g. aufstehen, einkaufen, anrufen) and at least one in the Perfekt (e.g. ich habe … eingekauft).', prep:'Use at least four prepositions (e.g. mit, für, in, auf, zu).', adj:'Use at least four adjectives in front of nouns (e.g. ein netter Kollege, die alte Wohnung).' };
 const freeTask = topic => { const t = CAFE_TOPICS.find(x => x[0] === topic) || CAFE_TOPICS[0];
   return { kind:'free', tp:t[0], lvl:S.cafeLevel || 'A2', title:`${t[1]} ${t[2]}`, situation:FREE_PROMPTS[t[0]], points:[FOCUS_TASK[topicKey()], 'Write 4–6 sentences.'], words:[40, 90], minutes:0 }; };
 // TELC practice tasks (exam style; not official exam material)
@@ -3953,7 +4333,7 @@ function writeProgHTML() {
     + (errs.length ? `<h3>Your typical writing mistakes</h3>${errs.map(([c, n]) => `<div class="wmis"><b>${ERR_INFO[c][0]}</b> × ${n}<div class="tr">${ERR_INFO[c][1]}</div>${taMn(ERR_INFO[c][2])}</div>`).join('')}` : '');
 }
 /* ---- past rounds ---- */
-const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 13:'Trennbare Verben · Level 1', 14:'Trennbare Verben · Perfekt', 15:'Trennbare Verben · Boss mix', 16:'Trennbare Verben · Spot the error', 17:'Singular / Plural · Level 1', 18:'Singular / Plural · Level 2', 19:'Singular / Plural · Boss mix', 20:'Singular / Plural · Spot the error', 10:'weil / dass · Spot the error', 11:'Präpositionen · Spot the error', 12:'Adjektive · Spot the error', 0:'Review / practice' };
+const LEVEL_NAME = { 1:'Nebensätze · Level 1', 2:'Nebensätze · Level 2', 3:'Nebensätze · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 13:'Trennbare Verben · Level 1', 14:'Trennbare Verben · Perfekt', 15:'Trennbare Verben · Boss mix', 16:'Trennbare Verben · Spot the error', 17:'Singular / Plural · Level 1', 18:'Singular / Plural · Level 2', 19:'Singular / Plural · Boss mix', 20:'Singular / Plural · Spot the error', 21:'Modalverben · Level 1', 22:'Modalverben · Level 2', 23:'Modalverben · Boss mix', 24:'Modalverben · Spot the error', 10:'Nebensätze · Spot the error', 11:'Präpositionen · Spot the error', 12:'Adjektive · Spot the error', 0:'Review / practice' };
 const when = t => new Date(t).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
 const gapQ = h => h.replace('___', '<span class="gap">?</span>');
 function histItem(e, k) {
@@ -3964,8 +4344,13 @@ function histItem(e, k) {
     if (sq.src === 'w') { const v = VOC[x.id] || ['', '']; mn = v[0]; tmn = TA_W[x.id]; extra = `<div class="w">${wordHTML(x)} — ${esc(x.en)} · <span class="ta">${esc(v[1])}</span></div>`; }
     else if (sq.src === 't') { mn = CONJ[x.a][2]; tmn = TA_C[x.a]; }
     else if (sq.src === 'v' || sq.src === 'n') { mn = x.mn; tmn = x.tmn; }
+    else if (sq.src === 'm') { mn = MODV[x.mv].mn; tmn = MODV[x.mv].tmn; }
     else if (sq.src === 'p') { mn = PV[x.pr][2]; tmn = TA_P[x.pr]; }
     else { const v = ADJV[x.adj] || []; mn = v[3] || ''; tmn = v[4]; }
+  } else if (e.y === 'm') {
+    const [mid, k] = String(e.i).split(':'), x = BYID[mid]; if (!x) return '';
+    qline = modalPrompt(x, k); sent = modalHTML(x, k); tr = modalTr(x, k); ex = MRULE[k]; ans = modalOpts(x, k).ans; pic = picSVG(x, k);
+    mn = MODV[x.mv].mn; tmn = MODV[x.mv].tmn; extra = `<div class="w">${modalWhy(x, k)}</div>`;
   } else if (e.y === 'n') {
     const [nid, k] = String(e.i).split(':'), x = BYID[nid]; if (!x) return '';
     qline = nounPrompt(x, k); sent = nounHTML(x, k); tr = nounTr(x, k); ex = NRULE[nRuleKey(x, k)]; ans = nounOpts(x, k).ans; pic = picSVG(x, k);
@@ -3990,7 +4375,7 @@ function histItem(e, k) {
   } else {
     const w = BYID[e.i]; if (!w) return '';
     qline = e.y === 'b' ? `${esc(w.m)}, <b class="cj ${w.c}">${w.c}</b> <span class="gap">…</span> (build the clause)` : `${esc(w.m)}, <span class="gap">?</span> ${esc(w.b.join(' '))}${w.p || '.'}`;
-    sent = sentHTML(w); tr = w.t; ans = w.c; ex = e.y === 'b' ? EX.order : (w.c === 'weil' ? EX.weil : EX_DASS_MAIN);
+    sent = sentHTML(w); tr = w.t; ans = w.c; ex = e.y === 'b' && cjSub(w.c) ? EX.order : exOf(w);
     const v = VOC[w.id] || ['', '']; mn = v[0]; tmn = TA_W[w.id];
     extra = `<div class="w">${wordHTML(w)} — ${esc(w.en)} · <span class="ta">${esc(v[1])}</span></div>`;
   }
@@ -3998,7 +4383,7 @@ function histItem(e, k) {
     : e.y === 'b'
     ? (e.o ? 'You built the clause correctly ✓' : 'Your mistakes: ' + (e.w || []).map(([got, exp]) => `<b>${esc(got)}</b> instead of <b>${esc(exp)}</b>`).join(', '))
     : e.o ? `You chose <b>${esc(e.c)}</b> ✓` : (e.c ? `You chose <b>${esc(e.c)}</b> ✗ — the answer is <b>${esc(ans)}</b>` : `You missed both gates — the answer is <b>${esc(ans)}</b>`);
-  const id = sq ? (sq.src === 't' ? null : sq.x.id) : e.y === 't' ? null : e.y === 'v' || e.y === 'n' ? String(e.i).split(':')[0] : e.i;
+  const id = sq ? (sq.src === 't' ? null : sq.x.id) : e.y === 't' ? null : e.y === 'v' || e.y === 'n' || e.y === 'm' ? String(e.i).split(':')[0] : e.i;
   return `<details class="${e.o ? 'ok' : 'bad'}" ${e.o ? '' : 'open'}><summary><span class="hm">${e.o ? '✓' : '✗'}</span>${k + 1}. ${qline}${e.r ? ' <span class="newtag again">↻ 2nd try</span>' : ''}</summary>
     <div class="hb"><p class="sent">${sent}</p><div class="tr">${esc(tr)}</div><div class="you">${you}</div>${extra}${pic}<div class="ex">${ex}</div>
     ${mn ? `<div class="mn">💡 ${esc(mn)}</div>` : ''}${taMn(tmn)}${id ? `<div style="text-align:right;margin-top:8px">${starBtn(id)}</div>` : ''}</div></details>`;
@@ -4071,6 +4456,7 @@ function practiseHist() {
   }
   const q = histOpen.it.filter(e => !e.r).map(e => {
     if (e.y === 's') return spotFromKey(e.i);
+    if (e.y === 'm') { const [mid, k] = String(e.i).split(':'); return BYID[mid] ? modalQ(BYID[mid], k) : null; }
     if (e.y === 'n') { const [nid, k] = String(e.i).split(':'); return BYID[nid] ? nounQ(BYID[nid], k) : null; }
     if (e.y === 'v') { const [vid, k] = String(e.i).split(':'); return BYID[vid] ? verbQ(BYID[vid], k) : null; }
     if (e.y === 't') { const t = trapOf(e.i); return t ? trapQ(t) : null; }
@@ -4084,8 +4470,8 @@ let wTab = 'star';
 function renderWords() {
   $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
   const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
-  const list = [...W.filter(has), ...P.filter(has), ...A.filter(has), ...V.filter(has), ...NPL.filter(has)];
-  $('#wList').innerHTML = list.length ? list.map(w => w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
+  const list = [...W.filter(has), ...P.filter(has), ...A.filter(has), ...V.filter(has), ...NPL.filter(has), ...MSN.filter(has)];
+  $('#wList').innerHTML = list.length ? list.map(w => w.mo ? modalItemHTML(w) : w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
       <div class="tr">${esc(w.en)}</div>
@@ -4101,17 +4487,18 @@ function renderProg() {
   $('#pStats').innerHTML = `
     <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>
     <div class="stat"><b>${S.rounds}</b><span>Rounds played</span></div>
-    <div class="stat"><b>${S.unlocked + S.unlockedP + (S.unlockedA || 1) + (S.unlockedT || 1) + (S.unlockedN || 1) + [10, 11, 12, 16, 20].filter(l => !isLocked(l)).length}/20</b><span>Levels unlocked</span></div>
+    <div class="stat"><b>${S.unlocked + S.unlockedP + (S.unlockedA || 1) + (S.unlockedT || 1) + (S.unlockedN || 1) + (S.unlockedM || 1) + [10, 11, 12, 16, 20, 24].filter(l => !isLocked(l)).length}/24</b><span>Levels unlocked</span></div>
     <div class="stat"><b>${seen}/${W.length}</b><span>Words met</span></div>
     <div class="stat"><b>${mastered}</b><span>Words mastered</span></div>
     <div class="stat"><b>${Object.keys(S.bm).length}</b><span>Starred</span></div>`;
   const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s.t ? pct(s) + '% of ' + s.t : 'not played yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
-  $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
+  $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('wenn, obwohl, ob, relative clauses, denn, aber, deshalb', st.cj2 || { c:0, t:0 }, 'var(--good)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
     + bar('Prepositions with a fixed case', st.pfix, 'var(--blue)') + bar('Wechselpräpositionen (wo/wohin)', st.pwech, 'var(--red)')
-    + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)') + bar('Plural forms', st.npf || { c:0, t:0 }, 'var(--blue)') + bar('Singular or plural?', st.nsp || { c:0, t:0 }, 'var(--yellow)') + bar('Dativ plural (-n)', st.ndn || { c:0, t:0 }, 'var(--red)')
+    + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)') + bar('Modal verbs: forms', st.mkj || { c:0, t:0 }, 'var(--blue)') + bar('Modal verbs: meaning', st.mbd || { c:0, t:0 }, 'var(--yellow)') + bar('Modal verbs in a Nebensatz', st.mns || { c:0, t:0 }, 'var(--red)')
+    + bar('Plural forms', st.npf || { c:0, t:0 }, 'var(--blue)') + bar('Singular or plural?', st.nsp || { c:0, t:0 }, 'var(--yellow)') + bar('Dativ plural (-n)', st.ndn || { c:0, t:0 }, 'var(--red)')
     + bar('Trennbare Verben: Präsens', st.vpr || { c:0, t:0 }, 'var(--blue)') + bar('Trennbare Verben: Perfekt', st.vpp || { c:0, t:0 }, 'var(--yellow)') + bar('Trennbare Verben: weil / dass clause', st.vns || { c:0, t:0 }, 'var(--red)')
     + bar('🔍 Spot the error', st.spot || { c:0, t:0 }, 'var(--good)')
-    + writeProgHTML() + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, Adjektive ${S.best[7] || 0} / ${S.best[8] || 0} / ${S.best[9] || 0}, Singular / Plural ${S.best[17] || 0} / ${S.best[18] || 0} / ${S.best[19] || 0}, Trennbare Verben ${S.best[13] || 0} / ${S.best[14] || 0} / ${S.best[15] || 0}, Spot the error ${S.best[10] || 0} / ${S.best[11] || 0} / ${S.best[12] || 0} / ${S.best[16] || 0} / ${S.best[20] || 0}, review ${S.best[0]}</div>`
+    + writeProgHTML() + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: Nebensätze ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, Adjektive ${S.best[7] || 0} / ${S.best[8] || 0} / ${S.best[9] || 0}, Modalverben ${S.best[21] || 0} / ${S.best[22] || 0} / ${S.best[23] || 0}, Singular / Plural ${S.best[17] || 0} / ${S.best[18] || 0} / ${S.best[19] || 0}, Trennbare Verben ${S.best[13] || 0} / ${S.best[14] || 0} / ${S.best[15] || 0}, Spot the error ${S.best[10] || 0} / ${S.best[11] || 0} / ${S.best[12] || 0} / ${S.best[16] || 0} / ${S.best[20] || 0} / ${S.best[24] || 0}, review ${S.best[0]}</div>`
     + `<div class="lbl" style="margin-top:6px">🎲 Sentences from Lena in your lists: <b>${Object.keys(S.lib || {}).length}</b> (up to ${LIB_MAX}; mastered ones make room first, starred ones always stay)</div>`;
   let tip;
   if (st.weil.t + st.dass.t < 6) tip = 'Play a few rounds and this space will tell you what to focus on.';
@@ -4270,7 +4657,7 @@ function mergeSaves(a, b) {
   for (const [k, v] of Object.entries(b.wstats || {})) if (!m.wstats[k] || v.t > m.wstats[k].t) m.wstats[k] = v;
   m.werr = Object.assign({}, a.werr || {});
   for (const [k, v] of Object.entries(b.werr || {})) m.werr[k] = Math.max(m.werr[k] || 0, v || 0);
-  m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1); m.unlockedA = Math.max(a.unlockedA || 1, b.unlockedA || 1); m.unlockedT = Math.max(a.unlockedT || 1, b.unlockedT || 1); m.unlockedN = Math.max(a.unlockedN || 1, b.unlockedN || 1);
+  m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1); m.unlockedA = Math.max(a.unlockedA || 1, b.unlockedA || 1); m.unlockedT = Math.max(a.unlockedT || 1, b.unlockedT || 1); m.unlockedN = Math.max(a.unlockedN || 1, b.unlockedN || 1); m.unlockedM = Math.max(a.unlockedM || 1, b.unlockedM || 1);
   m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
   if (b.streak && (b.streak.last || '') > (a.streak && a.streak.last || '') ) m.streak = b.streak;
   m.histDel = [...new Set([...(a.histDel || []), ...(b.histDel || [])])].slice(-300);
