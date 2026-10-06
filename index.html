@@ -34,6 +34,15 @@ p{line-height:1.5}
 .btn.red{background:var(--red);color:var(--white)}
 .btn.yellow{background:var(--yellow)}
 .btn.black{background:var(--black);color:var(--white)}
+.btn.green{background:var(--good);color:var(--white)}
+.btn .shape.mag{display:grid;place-items:center;font-size:18px;line-height:1}
+.spoterr{color:var(--red);text-decoration:line-through;text-decoration-thickness:2px}
+.hwrap{display:flex;gap:6px;align-items:stretch}
+.hwrap .hrow{flex:1;min-width:0}
+.hdel{flex:0 0 52px;border:2px solid var(--black);background:var(--white);font-size:19px;cursor:pointer;color:var(--black)}
+.hdel.sure,.hdelbtn.sure{background:var(--red);color:var(--white);font-size:15px;font-weight:700}
+.hdel.sure{flex-basis:88px}
+.cdiv{text-align:center;color:var(--grey);font-size:13px;margin:4px 0 8px}
 .btn.center{justify-content:center;text-align:center}
 .btn small{display:block;font-weight:400;font-size:14px;opacity:.85}
 .btn .shape{flex:0 0 34px;height:34px;background:var(--white);border:3px solid var(--black)}
@@ -336,6 +345,13 @@ p{line-height:1.5}
 .prompt{position:absolute;top:66px;left:50%;transform:translateX(-50%);width:min(94vw,780px);background:var(--white);border:3px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:12px 18px 14px}
 .prompt .meta{display:flex;justify-content:space-between;color:var(--grey);font-size:14px;margin-bottom:4px}
 #qText{font-size:clamp(19px,3.2vw,27px);font-weight:600;line-height:1.35}
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.lanes span{border:2px solid var(--black);padding:5px 6px;text-align:center;font-weight:700;font-size:clamp(14px,2.3vw,19px);background:var(--white);overflow-wrap:anywhere;line-height:1.2}
+.lanes span.on{background:var(--yellow)}
+.lanes span.x{color:var(--grey);font-weight:500}
+.lanepref{cursor:pointer}
+.lanepref small{display:block;font-weight:400;color:var(--grey);font-size:13px}
+.lanepref input{width:26px;height:26px;accent-color:var(--blue)}
 .gap{display:inline-block;min-width:64px;border-bottom:4px solid var(--black);text-align:center;color:var(--grey)}
 .slot{display:inline-block;min-width:54px;border-bottom:4px dashed var(--grey);margin:0 1px;padding:0 4px}
 .slot.fill{border-bottom:4px solid var(--good)}
@@ -386,16 +402,19 @@ p{line-height:1.5}
           <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">Is it weil or dass?</small></span></button>
           <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Put the verb at the end</small></span></button>
           <button class="btn black" data-level="3"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l3s">Faster, plus das/dass and weil/denn traps</small></span></button>
+          <button class="btn green" data-level="10"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l10s">One word is wrong. Run through it!</small></span></button>
         </div>
         <div class="levels" id="lvPrep" style="display:none">
           <button class="btn blue" data-level="4"><span class="shape"></span><span><b>Level 1: Akkusativ oder Dativ?</b><small id="l4s">mit, für, durch, aus, zu…</small></span></button>
           <button class="btn red" data-level="5"><span class="shape circle"></span><span><b>Level 2: Wo oder wohin?</b><small id="l5s">Wechselpräpositionen</small></span></button>
           <button class="btn black" data-level="6"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l6s">Faster, plus im/ins, am/an den, zum/zur</small></span></button>
+          <button class="btn green" data-level="11"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l11s">One word is wrong. Run through it!</small></span></button>
         </div>
         <div class="levels" id="lvAdj" style="display:none">
           <button class="btn blue" data-level="7"><span class="shape"></span><span><b>Level 1: Nach der / die / das</b><small id="l7s">der alte Mann · den alten Mann</small></span></button>
           <button class="btn red" data-level="8"><span class="shape circle"></span><span><b>Level 2: Nach ein / kein / mein</b><small id="l8s">ein alter Mann · ein neues Auto</small></span></button>
           <button class="btn black" data-level="9"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l9s">Faster, plus no article: kalter Kaffee</small></span></button>
+          <button class="btn green" data-level="12"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l12s">One word is wrong. Run through it!</small></span></button>
         </div>
         <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
         <div class="gapset">
@@ -404,6 +423,7 @@ p{line-height:1.5}
           <b id="gapVal" aria-live="polite"></b>
           <button id="gapUp" aria-label="More time between gates">+</button>
         </div>
+        <label class="gapset lanepref"><span class="l">Show the gate options early<small>in the question box, in lane order</small></span><input type="checkbox" id="lanePrev"></label>
         <div class="guide" id="guide"></div>
       </div>
       <div id="cafeBox" style="display:none">
@@ -586,7 +606,7 @@ p{line-height:1.5}
   <section id="hist" class="screen dim">
     <div class="panel">
       <h2>Past rounds</h2>
-      <p class="lead">Tap a round or a café chat to see every question or message, your answers and the explanations.</p>
+      <p class="lead">Tap a round or a café chat to see every question or message, your answers and the explanations. Tap 🗑 twice to delete one.</p>
       <div class="list" id="hList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="hBack">Back to menu</button></div>
     </div>
@@ -599,6 +619,10 @@ p{line-height:1.5}
       <div class="row2">
         <button class="btn blue center" id="hdPlay">Practise this round again</button>
         <button class="btn center" id="hdBack">Back to rounds</button>
+      </div>
+      <div class="row2">
+        <button class="btn center" id="hdNew" style="display:none">New chat on this topic</button>
+        <button class="btn center hdelbtn" id="hdDel">🗑 Delete</button>
       </div>
     </div>
   </section>
@@ -637,6 +661,7 @@ p{line-height:1.5}
     <div class="prompt">
       <div class="meta"><span id="qHint"></span><span id="qCount"></span></div>
       <div id="qText"></div>
+      <div id="qLanes" class="lanes" style="display:none" aria-hidden="true"></div>
     </div>
     <div id="toast" role="status"></div>
     <div class="ctrl">
@@ -915,9 +940,11 @@ const taMn = t => t ? `<div class="mn ta-mn">🪷 ${esc(t)}</div>` : '';
 const wasMissed = id => !!(S.srs[id] && S.srs[id].box === 0 && S.srs[id].seen > 0);
 const vcard = (big, sub, ta, mn, extra = '', tmn = '') => `<div class="vcard">${extra}<div class="big">${big}</div><div class="en">${sub}</div><div class="ta">தமிழ்: ${esc(ta)}</div>${mn ? `<div class="mn">💡 ${mn}</div>` : ''}${taMn(tmn)}</div>`;
 function briefingHTML(q, fresh) {
+  const spot = q.some(x => x.type === 'spot');
+  q = q.flatMap(x => x.type !== 'spot' ? [x] : x.src === 'w' ? [{ w:x.x }] : x.src === 't' ? [{ type:'trap', opts:x.x.o }] : [{ type:x.src === 'p' ? 'prep' : 'adj', p:x.x }]);
   const preps = q.filter(x => x.type === 'prep').map(x => x.p), words = q.filter(x => x.w).map(x => x.w), traps = q.filter(x => x.type === 'trap');
   const adjs = q.filter(x => x.type === 'adj').map(x => x.p);
-  let h = '';
+  let h = spot ? '<div class="tip">🔍 <b>Spot the error:</b> every sentence has exactly one wrong word. The three gates show three words from the sentence. Run through the gate with the <b>wrong</b> word. Use the strip under the sentence to see the gate words early.</div>' : '';
   if (adjs.length) {
     const kinds = ['weak', 'mixed', 'strong'].filter(k => adjs.some(x => x.k === k));
     h += `<div class="vgrid tips">${kinds.map(k => `<div class="vcard"><div class="big sm">${ADJ_TIPS[k][0]}</div><div class="mn">💡 ${ADJ_TIPS[k][1]}</div>${taMn(ADJ_TIPS[k][2])}</div>`).join('')}</div>`;
@@ -1083,7 +1110,7 @@ const Store = {
   }
 };
 const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
-const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural', wstats:{}, werr:{}, telcLvl:'B1' });
+const DEF = () => ({ v:1, srs:{}, bm:{}, intro:{}, stats:{weil:{c:0,t:0}, dass:{c:0,t:0}, trap:{c:0,t:0}, pfix:{c:0,t:0}, pwech:{c:0,t:0}, aweak:{c:0,t:0}, amixed:{c:0,t:0}, astrong:{c:0,t:0}, spot:{c:0,t:0}}, best:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,0:0}, unlocked:1, unlockedP:1, unlockedA:1, topic:'wd', streak:{n:0,last:''}, rounds:0, gap:GAP_DEF, history:[], cafeLevel:'A2', cafeVoice:'natural', wstats:{}, werr:{}, telcLvl:'B1', lanePreview:true });
 let S = DEF();
 try {
   const L = await Store.load();
@@ -1127,7 +1154,7 @@ function grade(id, ok) {
   else { r.box = 0; r.due = now; }
   S.srs[id] = r;
 }
-function stat(k, ok) { S.stats[k].t++; if (ok) S.stats[k].c++; }
+function stat(k, ok) { const s = S.stats[k] || (S.stats[k] = { c:0, t:0 }); s.t++; if (ok) s.c++; }
 function reviewWords() {
   const now = Date.now();
   const ids = new Set([...Object.keys(S.srs).filter(id => S.srs[id].due <= now), ...Object.keys(S.bm)]);
@@ -1342,17 +1369,29 @@ player.add(pBody, pHead, legL, legR); scene.add(player);
 
 // labels
 const texCache = new Map();
-function labelTex(text, bg, fg, border) {
-  const key = [text, bg, fg, border].join('|');
+// long labels ("morgen eine Prüfung") may wrap onto two lines; whichever layout gives the biggest letters wins
+function fitLabel(g, text, maxW, maxH, font) {
+  const layouts = [[text], ...[...text.matchAll(/ /g)].map(m => [text.slice(0, m.index), text.slice(m.index + 1)])];
+  let best = { size:0, lines:[text] };
+  for (const lines of layouts) {
+    let size = 150; g.font = font(size);
+    const fits = () => lines.every(l => g.measureText(l).width <= maxW) && lines.length * size * 1.05 <= maxH;
+    while (!fits() && size > 28) { size -= 4; g.font = font(size); }
+    if (size > best.size + (lines.length > 1 ? 8 : 0)) best = { size, lines };
+  }
+  return best;
+}
+function labelTex(text, bg, fg, border, tall) {
+  const key = [text, bg, fg, border, tall].join('|');
   if (texCache.has(key)) return texCache.get(key);
-  const cw = 512, ch = 256, cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+  const cw = 512, ch = tall ? 328 : 256, cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
   const g = cv.getContext('2d');
   g.fillStyle = bg; g.fillRect(0, 0, cw, ch);
   if (border) { g.strokeStyle = border; g.lineWidth = 18; g.strokeRect(9, 9, cw - 18, ch - 18); }
-  const font = s => `600 ${s}px Jost, Futura, "Century Gothic", Arial, sans-serif`;
-  let size = 128; g.font = font(size);
-  while (g.measureText(text).width > cw * 0.84 && size > 34) { size -= 6; g.font = font(size); }
-  g.fillStyle = fg; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, cw / 2, ch / 2 + 6);
+  const font = s => `700 ${s}px Jost, Futura, "Century Gothic", Arial, sans-serif`;
+  const { size, lines } = fitLabel(g, text, cw * 0.86, ch * (border ? 0.74 : 0.84), font);
+  g.font = font(size); g.fillStyle = fg; g.textAlign = 'center'; g.textBaseline = 'middle';
+  lines.forEach((l, i) => g.fillText(l, cw / 2, ch / 2 + 6 + (i - (lines.length - 1) / 2) * size * 1.02));
   const t = new THREE.CanvasTexture(cv);
   t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   texCache.set(key, t); return t;
@@ -1361,7 +1400,7 @@ const GATE = { weil:['#4F7CAC', '#FFFFFF', BLUE], dass:['#D9675B', '#FFFFFF', RE
 const GEO = {
   post: new THREE.BoxGeometry(0.22, 3.0, 0.22), beam: new THREE.BoxGeometry(2.15, 1.05, 0.3),
   sign: new THREE.PlaneGeometry(2.0, 0.95), portal: new THREE.PlaneGeometry(1.6, 2.5),
-  block: new THREE.BoxGeometry(1.95, 0.98, 0.5), barrier: new THREE.BoxGeometry(1.9, 1.1, 0.4)
+  block: new THREE.BoxGeometry(1.95, 1.25, 0.5), barrier: new THREE.BoxGeometry(1.9, 1.1, 0.4)
 };
 function makeGate(label, plain) {
   const [bg, fg, hex] = (!plain && GATE[label]) || ['#FFFFFF', '#2F3640', WHITE];
@@ -1381,7 +1420,7 @@ function makeBarrier() {
   const g = new THREE.Group(); g.add(m); return g;
 }
 function makeBlock(label) {
-  const side = lam(YELLOW), front = new THREE.MeshBasicMaterial({ map: labelTex(label, '#FFFFFF', '#2F3640', '#2F3640') });
+  const side = lam(YELLOW), front = new THREE.MeshBasicMaterial({ map: labelTex(label, '#FFFFFF', '#2F3640', '#2F3640', true) });
   const m = new THREE.Mesh(GEO.block, [side, side, side, side, front, side]);
   const g = new THREE.Group(); m.position.y = 1.0; g.add(m); g.userData.block = m; return g;
 }
@@ -1410,13 +1449,22 @@ window.addEventListener('resize', resize); resize();
 const SPAWN_DIST = 78, ROW_GAP = 26;
 // spawn distance scales with the time-between-gates setting, so faster levels (Level 3) keep their shorter gap
 const spawnZ = () => -SPAWN_DIST * S.gap / GAP_DEF, rowGap = () => ROW_GAP * S.gap / GAP_DEF;
-const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 7:12, 8:12, 9:15, 0:12 };
+const SPEEDS = { 1:13, 2:11.5, 3:16, 4:12, 5:12, 6:15, 7:12, 8:12, 9:15, 10:11.5, 11:11.5, 12:11.5, 0:12 };
 let G = { running:false, paused:false, rows:[], lane:1, clock:0, pending:null, shake:0 };
 
 function schedule(sec, fn) { G.pending = { at:G.clock + sec, fn }; }
+// options of the next gate / block row, in lane order, so you can decide before the gates are readable
+function renderLanes() {
+  const el = $('#qLanes'); if (!el) return;
+  const row = S.lanePreview !== false && G.running && G.rows.find(r => !r.resolved);
+  if (!row) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  const by = [0, 1, 2].map(l => row.items.find(it => it.lane === l));
+  el.innerHTML = by.map((it, l) => `<span class="${l === G.lane ? 'on' : ''}${it && it.barrier ? ' x' : ''}">${l === 0 ? '◀ ' : ''}${it ? (it.barrier ? '✕' : esc(it.label)) : ''}${l === 2 ? ' ▶' : ''}</span>`).join('');
+  el.style.display = '';
+}
 function clearRows() {
   for (const r of G.rows) { scene.remove(r.group); r.group.traverse(o => { if (o.material) [].concat(o.material).forEach(m => m.dispose()); }); }
-  G.rows = [];
+  G.rows = []; renderLanes();
 }
 function spawnRow(kind, items, z, step) {
   const grp = new THREE.Group(); grp.position.z = z;
@@ -1434,9 +1482,50 @@ const trapQ = t => ({ type:'trap', t, opts:t.o, ans:t.a });
 const prepQ = p => ({ type:'prep', p, opts:p.o, ans:p.a });
 const adjQ = x => ({ type:'adj', p:x, opts:x.o, ans:x.a });
 
-// levels 1-3 are weil/dass, 4-6 prepositions, 7-9 adjective endings (each topic unlocks on its own)
-const isLocked = l => l >= 7 ? l - 6 > (S.unlockedA || 1) : l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
-const LOCK_MSG = { 2:'Get 6 of 8 right in Level 1 to unlock Level 2.', 3:'Get 4 of 6 right in Level 2 to unlock Level 3.',
+/* ---- Spot the error: the sentence has exactly one wrong word; run through the gate showing that word.
+   src = w (weil/dass sentence), t (trap), p (preposition), a (adjective); v = c (wrong conjunction) or o (verb not at the end) ---- */
+const spotTok = s => s.replace(/[,.!?]/g, ' ').split(/\s+/).filter(t => t.length >= 2);
+function spotQ(src, x, v) {
+  let before, err, after, fix, skip;
+  if (src === 'w') {
+    const p = x.p || '.', verb = x.b[x.b.length - 1];
+    if (v === 'o') {   // "weil ich bin müde": dropping weil/dass or using denn would also fix it, so the conjunction is never offered
+      before = `${x.m}, ${x.c} ${x.b[0]} `; err = verb; after = ` ${x.b.slice(1, -1).join(' ')}${p}`; fix = x.c; skip = [x.c];
+    } else {
+      v = 'c'; before = `${x.m}, `; err = x.c === 'weil' ? 'dass' : 'weil'; after = ` ${x.b.join(' ')}${p}`; fix = x.c; skip = [];
+    }
+  } else {
+    [before, after] = x.q.split('___'); err = x.o.find(o => o !== x.a); fix = x.a; skip = [];
+    // with weil/denn, moving the verb would also fix the sentence, so words of that clause are never offered
+    if (src === 't' && x.o.includes('denn')) skip.push(...spotTok(after));
+  }
+  // the words right next to the mistake could sometimes be changed instead, so they are avoided too (unless the sentence is too short)
+  const lc = t => (t || '').toLowerCase(), seen = new Set();
+  const hard = new Set([...skip, ...spotTok(err)].map(lc)), soft = new Set([spotTok(before).pop(), spotTok(after)[0]].map(lc));
+  const toks = spotTok(before + ' ' + after).filter(t => !seen.has(lc(t)) && seen.add(lc(t)) && !hard.has(lc(t)));
+  let pool = toks.filter(t => !soft.has(lc(t)));
+  if (pool.length < 2) pool = toks;
+  return { type:'spot', src, v, x, before, err, after, fix, opts:[err, ...shuffle(pool).slice(0, 2)], ans:err };
+}
+function spotFromKey(k) {
+  const [src, id, v] = String(k).split(':'), x = src === 't' ? TRAPS[+id] : BYID[id];
+  return x ? spotQ(src, x, v || undefined) : null;
+}
+function spotQueue(tp) {
+  if (tp === 'wd') { const ws = pickWords(5, []); return shuffle([...ws.map((w, i) => spotQ('w', w, i % 2 ? 'o' : 'c')), ...shuffle(TRAPS.slice()).slice(0, 3).map(t => spotQ('t', t))]); }
+  return pickPrep(tp === 'prep' ? P : A, 8).map(x => spotQ(tp === 'prep' ? 'p' : 'a', x));
+}
+const spotLine = q => `${esc(q.before)}<s class="spoterr">${esc(q.err)}</s>${esc(q.after)}`;
+const spotRight = q => q.src === 'w' ? sentHTML(q.x) : q.src === 't' ? trapHTML(q.x) : q.src === 'p' ? prepHTML(q.x) : adjHTML(q.x);
+const spotFix = q => q.v === 'o' ? `<b>${esc(q.err)}</b> has to go to the end` : `<s class="spoterr">${esc(q.err)}</s> → <b>${esc(q.fix)}</b>`;
+const spotEx = q => q.src === 'w' ? (q.v === 'o' ? EX.order : q.x.c === 'weil' ? EX.weil : EX_DASS_MAIN) : q.src === 't' ? EX[q.x.ex] : q.src === 'p' ? EXP[q.x.k] : ADJ_RULE[q.x.k] + `<div class="w" style="margin-top:6px">${adjWhy(q.x)}</div>`;
+const spotPic = q => q.src === 'p' || q.src === 'a' ? picSVG(q.x) : '';
+
+// levels 1-3 are weil/dass, 4-6 prepositions, 7-9 adjective endings (each topic unlocks on its own);
+// 10-12 are each topic's "Spot the error" level, open together with that topic's Level 3
+const isLocked = l => l >= 10 ? [S.unlocked, S.unlockedP, S.unlockedA || 1][l - 10] < 3 : l >= 7 ? l - 6 > (S.unlockedA || 1) : l >= 4 ? l - 3 > S.unlockedP : l > S.unlocked;
+const LOCK_MSG = { 10:'Spot the error opens together with Level 3.', 11:'Spot the error opens together with Präpositionen Level 3.', 12:'Spot the error opens together with Adjektive Level 3.',
+  2:'Get 6 of 8 right in Level 1 to unlock Level 2.', 3:'Get 4 of 6 right in Level 2 to unlock Level 3.',
   5:'Get 6 of 8 right in Präpositionen Level 1 to unlock Level 2.', 6:'Get 6 of 8 right in Präpositionen Level 2 to unlock Level 3.',
   8:'Get 6 of 8 right in Adjektive Level 1 to unlock Level 2.', 9:'Get 6 of 8 right in Adjektive Level 2 to unlock Level 3.' };
 const RULES = {
@@ -1462,6 +1551,7 @@ function buildQueue(l, fresh) {
   if (l === 7) return pickPrep(AWEAK, 8).map(adjQ);
   if (l === 8) return pickPrep(AMIXED, 8).map(adjQ);
   if (l === 9) return shuffle([...pickPrep(AWEAK, 3), ...pickPrep(AMIXED, 3), ...pickPrep(ASTRONG, 4)]).map(adjQ);
+  if (l >= 10) return spotQueue(['wd', 'prep', 'adj'][l - 10]);
   return reviewWords().slice(0, 8).map((w, i) => w.ak ? adjQ(w) : w.pt ? prepQ(w) : (i % 2 ? buildQ(w) : gateQ(w)));
 }
 
@@ -1519,6 +1609,10 @@ function startQuestion(q) {
       const labels = [b, cands[0], cands[1]], lanes = shuffle([0, 1, 2]);
       spawnRow('block', labels.map((lab, i) => ({ lane:lanes[i], label:lab, correct:i === 0 })), spawnZ() - k * rowGap(), k);
     });
+  } else if (q.type === 'spot') {
+    // three plain gates, each showing one word of the sentence; only the wrong word is the way through
+    const lanes = shuffle([0, 1, 2]);
+    spawnRow('gate', q.opts.map((o, i) => ({ lane:lanes[i], label:o, correct:o === q.ans, plain:true })), spawnZ(), 0);
   } else {
     // article gates stay neutral white so the das/dass colour coding doesn't hint at an answer
     const lanes = shuffle([0, 1, 2]), plain = q.type === 'prep' || q.type === 'adj';
@@ -1528,12 +1622,15 @@ function startQuestion(q) {
       { lane:lanes[2], label:null, correct:false, barrier:true }
     ], spawnZ(), 0);
   }
-  renderPrompt();
+  renderPrompt(); renderLanes();
 }
 
 function renderPrompt() {
   const q = G.q; let html = '', hint = '';
-  if (q.type === 'gate') {
+  if (q.type === 'spot') {
+    html = esc(q.before + q.err + q.after);
+    hint = '🔍 One word is wrong. Run through the gate with that word';
+  } else if (q.type === 'gate') {
     const w = q.w; html = `${esc(w.m)}, <span class="gap">?</span> ${esc(w.b.join(' '))}${w.p || '.'}`;
     hint = 'Run through the right gate';
   } else if (q.type === 'trap') {
@@ -1568,6 +1665,7 @@ function resolveRow(row) {
   row.resolved = true;
   const q = G.q, hit = row.items.find(it => it.lane === G.lane);
   hit.mesh.visible = false;
+  setTimeout(renderLanes, 0);
   if (row.kind === 'gate') {
     q.chose = hit.barrier ? null : hit.label;
     if (hit.correct) { burst(hit.mesh, 0x3E8E63); finish(q, true); }
@@ -1587,18 +1685,20 @@ function loseLife() {
   const f = $('#flash'); f.style.opacity = .35; setTimeout(() => f.style.opacity = 0, 160);
 }
 
-const histKey = q => q.type === 'trap' ? TRAPS.indexOf(q.t) : (q.type === 'prep' || q.type === 'adj') ? q.p.id : q.w.id;
+const histKey = q => q.type === 'spot' ? [q.src, q.src === 't' ? TRAPS.indexOf(q.x) : q.x.id, q.v || ''].join(':') : q.type === 'trap' ? TRAPS.indexOf(q.t) : (q.type === 'prep' || q.type === 'adj') ? q.p.id : q.w.id;
 function finish(q, ok) {
   const first = !q.retry;
   G.log.push({ y:q.type[0], i:histKey(q), o:ok ? 1 : 0, c:q.chose, w:q.type === 'build' && q.wrong.length ? q.wrong : undefined, r:q.retry ? 1 : undefined });
   if (first) {
     G.answered++;
-    if (q.type === 'trap') stat('trap', ok);
+    if (q.type === 'spot') stat('spot', ok);
+    else if (q.type === 'trap') stat('trap', ok);
     else if (q.type === 'prep') stat('p' + q.p.pt, ok);
     else if (q.type === 'adj') stat('a' + q.p.k, ok);
     else stat(q.w.c, ok);
   }
-  if (q.type !== 'trap') grade(histKey(q), ok);
+  if (q.type === 'spot') { if (q.src !== 't') grade(q.x.id, ok); }
+  else if (q.type !== 'trap') grade(histKey(q), ok);
   if (ok) {
     G.streak++; const pts = 10 + Math.min(G.streak - 1, 5) * 2;
     G.score += pts; if (first) G.correct++;
@@ -1613,8 +1713,8 @@ function finish(q, ok) {
 
 let toastT = null;
 function toast(pts, q) {
-  const s = q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : q.type === 'adj' ? adjHTML(q.p) : sentHTML(q.w);
-  const el = $('#toast'); const pic = (q.type === 'prep' || q.type === 'adj') ? picSVG(q.p) : '';
+  const s = q.type === 'spot' ? `${spotFix(q)}<br>${spotRight(q)}` : q.type === 'trap' ? trapHTML(q.t) : q.type === 'prep' ? prepHTML(q.p) : q.type === 'adj' ? adjHTML(q.p) : sentHTML(q.w);
+  const el = $('#toast'); const pic = q.type === 'spot' ? spotPic(q) : (q.type === 'prep' || q.type === 'adj') ? picSVG(q.p) : '';
   el.innerHTML = `<div class="trow"><div><b class="ok">Richtig! +${pts}</b><div class="s">${s}</div></div>${pic}</div>`;
   el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), pic ? 3000 : 2200);
 }
@@ -1622,7 +1722,12 @@ function toast(pts, q) {
 function showWrong(q, chose, expect) {
   G.paused = true; $('#toast').classList.remove('show');
   let body;
-  if (q.type === 'trap') {
+  if (q.type === 'spot') {
+    const x = q.x;
+    body = `<p class="chose">${chose ? `<b>${esc(chose)}</b> is correct here. ` : ''}The mistake: ${spotFix(q)}</p>
+      <p class="sent">${spotLine(q)}</p><p class="sent">✓ ${spotRight(q)}</p><p class="tr">${esc(x.t)}</p>${spotPic(q)}<div class="ex">${spotEx(q)}</div>
+      ${q.src === 't' ? '' : `<div class="wrow"><span class="grow"></span>${starBtn(x.id)}</div>`}`;
+  } else if (q.type === 'trap') {
     const t = q.t;
     body = `<p class="chose">${chose ? `You ran through <b>${esc(chose)}</b>. The answer is <b class="cj ${t.a}">${t.a}</b>.` : `You missed both gates. The answer is <b class="cj ${t.a}">${t.a}</b>.`}</p>
       <p class="sent">${trapHTML(t)}</p><p class="tr">${esc(t.t)}</p><div class="ex">${EX[t.ex]}</div>`;
@@ -1680,7 +1785,9 @@ function endRound() {
     <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>`;
   $('#eUnlock').innerHTML = unlock ? `<div class="tip">${unlock}</div>` : '';
   $('#eListTitle').style.display = G.mistakes.length ? 'block' : 'none';
-  $('#eList').innerHTML = G.mistakes.map(q => q.type === 'trap'
+  $('#eList').innerHTML = G.mistakes.map(q => q.type === 'spot'
+    ? `<div class="item"><div><div class="s">${spotLine(q)}</div><div class="s">✓ ${spotRight(q)}</div><div class="tr">${esc(q.x.t)}</div></div>${q.src === 't' ? '' : starBtn(q.x.id)}</div>`
+    : q.type === 'trap'
     ? `<div class="item"><div><div class="s">${trapHTML(q.t)}</div><div class="tr">${esc(q.t.t)}</div></div></div>`
     : q.type === 'prep' ? prepItemHTML(q.p)
     : q.type === 'adj' ? adjItemHTML(q.p)
@@ -1698,7 +1805,7 @@ function renderMenu() {
   const n = currentStreak();
   $('#mStreak').textContent = n ? `${n}-day streak. Keep it going today.` : 'Play a round today to start a streak.';
   $('#dueBadge').textContent = reviewWords().length;
-  [2, 3, 5, 6, 8, 9].forEach(l => {
+  [2, 3, 5, 6, 8, 9, 10, 11, 12].forEach(l => {
     const b = $(`[data-level="${l}"]`), locked = isLocked(l);
     b.classList.toggle('locked', locked); b.setAttribute('aria-disabled', locked);
   });
@@ -1708,6 +1815,7 @@ function renderMenu() {
   $('#l6s').textContent = S.unlockedP >= 3 ? 'Faster, plus im/ins, am/an den, zum/zur' : 'Locked: get 6 of 8 in Level 2';
   $('#l8s').textContent = (S.unlockedA || 1) >= 2 ? 'ein alter Mann · ein neues Auto' : 'Locked: get 6 of 8 in Level 1';
   $('#l9s').textContent = (S.unlockedA || 1) >= 3 ? 'Faster, plus no article: kalter Kaffee' : 'Locked: get 6 of 8 in Level 2';
+  [10, 11, 12].forEach(l => { $('#l' + l + 's').textContent = isLocked(l) ? 'Locked: opens together with Level 3' : 'One word is wrong. Run through it!'; });
   $$('#topicTabs button').forEach(b => b.classList.toggle('on', b.dataset.topic === S.topic));
   const tp = topicKey();
   $('#lvWd').style.display = tp === 'wd' ? '' : 'none';
@@ -1722,6 +1830,7 @@ function renderMenu() {
   if (cafeMode === 'write') renderWriteBox();
   if (cafeMode === 'cafe') renderCafeBox();
   renderGap();
+  $('#lanePrev').checked = S.lanePreview !== false;
 }
 const topicKey = () => (S.topic === 'prep' || S.topic === 'adj') ? S.topic : 'wd';
 function setTopic(t) { S.topic = t; cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
@@ -2160,16 +2269,38 @@ async function saveKey() {
     const model = await pickModel(k);
     lsSet(AI_KEY, k); lsSet(AI_MODEL, model); C.model = null;
     $('#cKeyMsg').textContent = `Connected ✓ (using ${model}).`;
-    setTimeout(() => { showKeySetup(false); $('#cChat .b.sys').forEach(b => b.remove()); if (!C.hist.length) cafeGreet(); }, 700);
+    setTimeout(() => { showKeySetup(false); $('#cChat .b.sys').forEach(b => b.remove()); if (!C.started) cafeStart(); }, 700);
   } catch (e) { $('#cKeyMsg').textContent = (e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : AI_MSG[e.message] || 'Could not connect.') + (e.detail ? ` (Google says: ${e.detail})` : ''); }
 }
-function cafeGreet() { cafeTurn('[Start of the conversation. Greet me warmly, introduce yourself in one short sentence and ask your first question about the topic.]', null); }
-function openCafe(topicId, focus, lvl, write) {
+const CAFE_HELLO = '[Start of the conversation. Greet me warmly, introduce yourself in one short sentence and ask your first question about the topic.]';
+function cafeGreet() { cafeTurn(CAFE_HELLO, null); }
+// a continued chat starts with Lena welcoming the learner back and picking up where they stopped
+function cafeStart() {
+  C.started = true;
+  if (C.entry) cafeTurn('[We are continuing our earlier conversation (above) after a break. Welcome me back in one short sentence and ask a new question that naturally continues it. Do not repeat a question you already asked.]', null);
+  else cafeGreet();
+}
+// rebuild Gemini's chat memory from a saved chat (turns of the same speaker are joined, Gemini wants them alternating)
+function cafeHistFrom(msgs) {
+  const out = [{ role:'user', parts:[{ text:CAFE_HELLO }] }];
+  for (const x of msgs) {
+    const role = x.r === 'l' ? 'model' : 'user', last = out[out.length - 1];
+    if (last.role === role) last.parts[0].text += '\n' + x.de; else out.push({ role, parts:[{ text:x.de }] });
+  }
+  return out;
+}
+function openCafe(topicId, focus, lvl, write, resume) {
   const t = CAFE_TOPICS.find(x => x[0] === topicId); if (!t) return;
   if (lvl) S.cafeLevel = lvl;
   audioCtx(); ttsDown = false; voiceBtn();          // unlock audio while we still have the tap
   if (!modelCache && lsGet(AI_KEY)) rankModels(lsGet(AI_KEY)).catch(() => {});
-  Object.assign(C, { topic:topicId, focus:focus || topicKey(), hist:[], busy:false, msgs:[], entry:null, model:null, write:!!write });
+  Object.assign(C, { topic:topicId, focus:focus || topicKey(), hist:[], busy:false, msgs:[], entry:null, model:null, write:!!write, started:false });
+  if (resume && resume.m && resume.m.length) {   // continue a saved chat: same history entry, Lena remembers what was said
+    Object.assign(C, { entry:resume, msgs:resume.m, hist:cafeHistFrom(resume.m) });
+    const H = S.history || [], i = H.indexOf(resume);
+    if (i > 0) { H.splice(i, 1); H.unshift(resume); }
+    resume.u = Date.now(); save();
+  }
   $('#cTopic').textContent = `${C.write ? '✍️ ' : t[1] + ' '}${t[2]}`;
   $('#cFocus').textContent = `${C.write ? 'Writing chat · ' : ''}${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
   $('#cMic').style.display = C.write ? 'none' : '';
@@ -2178,12 +2309,12 @@ function openCafe(topicId, focus, lvl, write) {
   ['autocorrect', 'autocapitalize'].forEach(a => C.write ? $('#cText').setAttribute(a, 'off') : $('#cText').removeAttribute(a));
   $('#cText').spellcheck = !C.write;
   if (!$('#lena svg')) $('#lena').innerHTML = LENA_SVG;
-  chatEl().innerHTML = ''; cafeStatus('');
+  chatEl().innerHTML = C.entry ? cafeBubbles(C.msgs) + '<div class="cdiv">— continued —</div>' : ''; cafeStatus('');
   $('#cSlow').setAttribute('aria-pressed', C.slow);
-  show('cafe');
+  show('cafe'); chatEl().scrollTop = chatEl().scrollHeight;
   if (!SR && !C.write) addBubble('sys', 'Voice input needs Chrome (Android or computer). You can still type your answers.');
   if (!lsGet(AI_KEY)) { showKeySetup(true); addBubble('sys', 'Hallo! To talk with Lena, connect a free Gemini key once (steps above).'); }
-  else { showKeySetup(false); cafeGreet(); }
+  else { showKeySetup(false); cafeStart(); }
 }
 function closeCafe() { holding = false; if (recOn && rec) { try { rec.abort(); } catch (e) {} } micUI(false); stopVoice(); show('menu'); }
 function renderCafeBox() {
@@ -2801,12 +2932,19 @@ function writeProgHTML() {
     + (errs.length ? `<h3>Your typical writing mistakes</h3>${errs.map(([c, n]) => `<div class="wmis"><b>${ERR_INFO[c][0]}</b> × ${n}<div class="tr">${ERR_INFO[c][1]}</div>${taMn(ERR_INFO[c][2])}</div>`).join('')}` : '');
 }
 /* ---- past rounds ---- */
-const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 0:'Review / practice' };
+const LEVEL_NAME = { 1:'weil / dass · Level 1', 2:'weil / dass · Level 2', 3:'weil / dass · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 10:'weil / dass · Spot the error', 11:'Präpositionen · Spot the error', 12:'Adjektive · Spot the error', 0:'Review / practice' };
 const when = t => new Date(t).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
 const gapQ = h => h.replace('___', '<span class="gap">?</span>');
 function histItem(e, k) {
-  let qline, sent, tr, ex, ans, mn = '', tmn = '', pic = '', extra = '';
-  if (e.y === 't') {
+  let qline, sent, tr, ex, ans, mn = '', tmn = '', pic = '', extra = '', sq = null;
+  if (e.y === 's') {
+    sq = spotFromKey(e.i); if (!sq) return '';
+    const x = sq.x; qline = `🔍 ${spotLine(sq)}`; sent = spotRight(sq); tr = x.t; ex = spotEx(sq); pic = spotPic(sq);
+    if (sq.src === 'w') { const v = VOC[x.id] || ['', '']; mn = v[0]; tmn = TA_W[x.id]; extra = `<div class="w">${wordHTML(x)} — ${esc(x.en)} · <span class="ta">${esc(v[1])}</span></div>`; }
+    else if (sq.src === 't') { mn = CONJ[x.a][2]; tmn = TA_C[x.a]; }
+    else if (sq.src === 'p') { mn = PV[x.pr][2]; tmn = TA_P[x.pr]; }
+    else { const v = ADJV[x.adj] || []; mn = v[3] || ''; tmn = v[4]; }
+  } else if (e.y === 't') {
     const t = TRAPS[e.i]; if (!t) return '';
     qline = gapQ(esc(t.q)); sent = trapHTML(t); tr = t.t; ex = EX[t.ex]; ans = t.a; mn = CONJ[t.a][2]; tmn = TA_C[t.a];
   } else if (e.y === 'a') {
@@ -2826,10 +2964,11 @@ function histItem(e, k) {
     const v = VOC[w.id] || ['', '']; mn = v[0]; tmn = TA_W[w.id];
     extra = `<div class="w">${wordHTML(w)} — ${esc(w.en)} · <span class="ta">${esc(v[1])}</span></div>`;
   }
-  const you = e.y === 'b'
+  const you = sq ? (e.o ? `You found the mistake ✓ ${spotFix(sq)}` : `You ran through <b>${esc(e.c || '')}</b> ✗ (that word is fine). The mistake: ${spotFix(sq)}`)
+    : e.y === 'b'
     ? (e.o ? 'You built the clause correctly ✓' : 'Your mistakes: ' + (e.w || []).map(([got, exp]) => `<b>${esc(got)}</b> instead of <b>${esc(exp)}</b>`).join(', '))
     : e.o ? `You chose <b>${esc(e.c)}</b> ✓` : (e.c ? `You chose <b>${esc(e.c)}</b> ✗ — the answer is <b>${esc(ans)}</b>` : `You missed both gates — the answer is <b>${esc(ans)}</b>`);
-  const id = e.y === 't' ? null : e.i;
+  const id = sq ? (sq.src === 't' ? null : sq.x.id) : e.y === 't' ? null : e.i;
   return `<details class="${e.o ? 'ok' : 'bad'}" ${e.o ? '' : 'open'}><summary><span class="hm">${e.o ? '✓' : '✗'}</span>${k + 1}. ${qline}${e.r ? ' <span class="newtag again">↻ 2nd try</span>' : ''}</summary>
     <div class="hb"><p class="sent">${sent}</p><div class="tr">${esc(tr)}</div><div class="you">${you}</div>${extra}${pic}<div class="ex">${ex}</div>
     ${mn ? `<div class="mn">💡 ${esc(mn)}</div>` : ''}${taMn(tmn)}${id ? `<div style="text-align:right;margin-top:8px">${starBtn(id)}</div>` : ''}</div></details>`;
@@ -2838,21 +2977,38 @@ const cafeTopicOf = h => CAFE_TOPICS.find(x => x[0] === h.tp) || [h.tp, '💬', 
 const cafeCount = h => { const us = h.m.filter(x => x.r === 'u'); return [us.filter(x => x.ok).length, us.length]; };
 function cafeRow(h, i) {
   const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
-  return `<button class="hrow cafe" data-h="${i}"><b class="score">${ok}/${n}</b><b>${h.w ? '✍️ Writing chat' : '☕ Sprach-Café'}</b> · ${t[1]} ${esc(t[2])}<span>${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${n} sentence${n === 1 ? '' : 's'} ${h.w ? 'written' : 'spoken'} · ${when(h.t)}</span></button>`;
+  return `<button class="hrow cafe" data-h="${i}"><b class="score">${ok}/${n}</b><b>${h.w ? '✍️ Writing chat' : '☕ Sprach-Café'}</b> · ${t[1]} ${esc(t[2])}<span>${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${n} sentence${n === 1 ? '' : 's'} ${h.w ? 'written' : 'spoken'} · ${when(h.u || h.t)}</span></button>`;
 }
-function cafeChatHTML(h) {
-  return '<div class="chat hchat">' + h.m.map(x => x.r === 'l'
+const cafeChatHTML = h => '<div class="chat hchat">' + cafeBubbles(h.m) + '</div>';
+function cafeBubbles(m) {
+  return m.map(x => x.r === 'l'
     ? `<div class="b lena" data-de="${esc(x.de)}">${lenaInner(x.de, x.en, x.gn)}</div>`
-    : `<div class="b me" data-de="${esc(x.de)}"><div class="de">${esc(x.de)}</div>${feedbackHTML({ feedback_ok:!!x.ok, feedback_corrected:x.fix || '', feedback_explanation:x.why || '' })}</div>`).join('') + '</div>';
+    : `<div class="b me" data-de="${esc(x.de)}"><div class="de">${esc(x.de)}</div>${feedbackHTML({ feedback_ok:!!x.ok, feedback_corrected:x.fix || '', feedback_explanation:x.why || '' })}</div>`).join('');
 }
 function renderHist() {
   const H = S.history || [];
-  $('#hList').innerHTML = H.length ? H.map((h, i) => h.k === 'cafe' ? cafeRow(h, i) : h.k === 'write' ? writeRow(h, i) : `<button class="hrow" data-h="${i}"><b class="score">${h.c}/${h.a}</b><b>${h.q ? 'Unfinished round' : 'Round ' + h.n}</b> · ${LEVEL_NAME[h.l] || ''}<span>${h.sc} points · ${when(h.t)}</span></button>`).join('')
+  $('#hList').innerHTML = H.length ? H.map((h, i) => h.k === 'cafe' ? cafeRow(h, i) : h.k === 'write' ? writeRow(h, i) : `<button class="hrow" data-h="${i}"><b class="score">${h.c}/${h.a}</b><b>${h.q ? 'Unfinished round' : 'Round ' + h.n}</b> · ${LEVEL_NAME[h.l] || ''}<span>${h.sc} points · ${when(h.t)}</span></button>`)
+    .map((row, i) => `<div class="hwrap">${row}<button class="hdel" data-del="${i}" aria-label="Delete this round">🗑</button></div>`).join('')
     : '<div class="empty">No rounds yet. Play a round and it will show up here.</div>';
+}
+// deleting needs two taps on 🗑 (the second within 3 s); deleted rounds are remembered so an import can't bring them back
+function deleteHist(h) {
+  const i = (S.history || []).indexOf(h); if (i < 0) return;
+  S.history.splice(i, 1);
+  S.histDel = [...(S.histDel || []), h.t].slice(-300);
+  save();
+}
+function armDelete(b, label) {
+  if (b.classList.contains('sure')) return true;
+  b.classList.add('sure'); b.textContent = label;
+  clearTimeout(b._t); b._t = setTimeout(() => { b.classList.remove('sure'); b.textContent = b.dataset.idle || '🗑'; }, 3000);
+  return false;
 }
 let histOpen = null;
 function openHist(i) {
   const h = (S.history || [])[i]; if (!h) return; histOpen = h;
+  const del = $('#hdDel'); del.classList.remove('sure'); del.textContent = del.dataset.idle = h.k === 'cafe' ? '🗑 Delete this chat' : '🗑 Delete this round';
+  $('#hdNew').style.display = h.k === 'cafe' ? '' : 'none';
   if (h.k === 'write') {
     const ex = h.x === 'l1' || h.x === 'l2' || h.x === 'dik';
     $('#hdTitle').textContent = ex ? `✍️ ${WLV[h.x]}` : `✍️ ${h.task.title}`;
@@ -2865,7 +3021,7 @@ function openHist(i) {
     const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
     $('#hdTitle').textContent = `☕ ${t[2]}`;
     $('#hdSub').textContent = `Sprach-Café with Lena · ${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${ok} of ${n} sentences correct · ${when(h.t)}. Tap 🌐 for translations.`;
-    $('#hdList').innerHTML = cafeChatHTML(h); $('#hdPlay').textContent = 'Talk about this topic again';
+    $('#hdList').innerHTML = cafeChatHTML(h); $('#hdPlay').textContent = 'Continue this chat';
     show('histD'); $('#histD').scrollTop = 0; return;
   }
   $('#hdPlay').textContent = 'Practise this round again';
@@ -2876,7 +3032,7 @@ function openHist(i) {
 }
 // replay exactly the questions of a past round (as a practice round, so it never unlocks levels)
 function practiseHist() {
-  if (histOpen.k === 'cafe') { openCafe(histOpen.tp, histOpen.f, histOpen.lv, histOpen.w); return; }
+  if (histOpen.k === 'cafe') { openCafe(histOpen.tp, histOpen.f, histOpen.lv, histOpen.w, histOpen); return; }
   if (histOpen.k === 'write') {
     if (histOpen.x === 'free' || histOpen.x === 'telc') { openFree(histOpen.task); return; }
     const items = histOpen.it.filter(e => !e.r).map(e => writeItemFromKey(e.i)).filter(Boolean);
@@ -2884,6 +3040,7 @@ function practiseHist() {
     return;
   }
   const q = histOpen.it.filter(e => !e.r).map(e => {
+    if (e.y === 's') return spotFromKey(e.i);
     if (e.y === 't') return TRAPS[e.i] ? trapQ(TRAPS[e.i]) : null;
     const x = BYID[e.i]; if (!x) return null;
     return e.y === 'a' ? adjQ(x) : e.y === 'p' ? prepQ(x) : e.y === 'b' ? buildQ(x) : gateQ(x);
@@ -2912,15 +3069,15 @@ function renderProg() {
   $('#pStats').innerHTML = `
     <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>
     <div class="stat"><b>${S.rounds}</b><span>Rounds played</span></div>
-    <div class="stat"><b>${S.unlocked + S.unlockedP + (S.unlockedA || 1)}/9</b><span>Levels unlocked</span></div>
+    <div class="stat"><b>${S.unlocked + S.unlockedP + (S.unlockedA || 1) + [10, 11, 12].filter(l => !isLocked(l)).length}/12</b><span>Levels unlocked</span></div>
     <div class="stat"><b>${seen}/${W.length}</b><span>Words met</span></div>
     <div class="stat"><b>${mastered}</b><span>Words mastered</span></div>
     <div class="stat"><b>${Object.keys(S.bm).length}</b><span>Starred</span></div>`;
   const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s.t ? pct(s) + '% of ' + s.t : 'not played yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
   $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
     + bar('Prepositions with a fixed case', st.pfix, 'var(--blue)') + bar('Wechselpräpositionen (wo/wohin)', st.pwech, 'var(--red)')
-    + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)')
-    + writeProgHTML() + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, review ${S.best[0]}</div>`;
+    + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)') + bar('🔍 Spot the error', st.spot || { c:0, t:0 }, 'var(--good)')
+    + writeProgHTML() + `<div class="lbl" style="margin-top:14px;font-weight:600">Best scores: weil/dass ${S.best[1]} / ${S.best[2]} / ${S.best[3]}, Präpositionen ${S.best[4]} / ${S.best[5]} / ${S.best[6]}, Adjektive ${S.best[7] || 0} / ${S.best[8] || 0} / ${S.best[9] || 0}, Spot the error ${S.best[10] || 0} / ${S.best[11] || 0} / ${S.best[12] || 0}, review ${S.best[0]}</div>`;
   let tip;
   if (st.weil.t + st.dass.t < 6) tip = 'Play a few rounds and this space will tell you what to focus on.';
   else if (pct(st.weil) + 10 < pct(st.dass)) tip = 'weil is your weaker side. Remember: weil answers <i>why?</i> If the first half is a reason-free statement like <i>Ich bleibe zu Hause</i>, the second half is the reason.';
@@ -2930,7 +3087,7 @@ function renderProg() {
 }
 
 /* ================= input ================= */
-function move(d) { if (!G.running || G.paused) return; G.lane = Math.max(0, Math.min(2, G.lane + d)); }
+function move(d) { if (!G.running || G.paused) return; G.lane = Math.max(0, Math.min(2, G.lane + d)); renderLanes(); }
 function togglePause() {
   if (!G.running) return;
   if ($('#wrong').classList.contains('show')) return;
@@ -2971,6 +3128,7 @@ $('#wBack').addEventListener('click', () => show('menu'));
 $$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
 $$('#topicTabs button').forEach(b => b.addEventListener('click', () => setTopic(b.dataset.topic)));
 $('#gapDn').addEventListener('click', () => setGap(-1));
+$('#lanePrev').addEventListener('change', e => { S.lanePreview = e.target.checked; save(); });
 $('#gapUp').addEventListener('click', () => setGap(1));
 $$('#menu .btn.mode').forEach(b => b.addEventListener('click', () => { cafeMode = b.dataset.mode; $('#menuMsg').textContent = ''; renderMenu(); }));
 $('#cafeLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderCafeBox(); } });
@@ -3040,9 +3198,15 @@ document.addEventListener('pointerdown', e => {
 document.addEventListener('click', e => { const b = e.target.closest('[data-say]'); if (!b) return; e.preventDefault(); audioCtx(); C.slow = false; say(b.dataset.say); });
 $('#bHist').addEventListener('click', () => { renderHist(); show('hist'); $('#hist').scrollTop = 0; });
 $('#hBack').addEventListener('click', () => show('menu'));
-$('#hList').addEventListener('click', e => { const b = e.target.closest('[data-h]'); if (b) openHist(+b.dataset.h); });
+$('#hList').addEventListener('click', e => {
+  const d = e.target.closest('[data-del]');
+  if (d) { if (armDelete(d, 'Delete?')) { deleteHist(S.history[+d.dataset.del]); renderHist(); } return; }
+  const b = e.target.closest('[data-h]'); if (b) openHist(+b.dataset.h);
+});
 $('#hdBack').addEventListener('click', () => { renderHist(); show('hist'); });
 $('#hdPlay').addEventListener('click', practiseHist);
+$('#hdNew').addEventListener('click', () => openCafe(histOpen.tp, histOpen.f, histOpen.lv, histOpen.w));
+$('#hdDel').addEventListener('click', e => { if (!armDelete(e.currentTarget, 'Tap again to delete')) return; deleteHist(histOpen); histOpen = null; renderHist(); show('hist'); });
 $('#bProg').addEventListener('click', () => { renderProg(); show('prog'); });
 $('#pBack').addEventListener('click', () => show('menu'));
 /* ---- export / import ---- */
@@ -3073,9 +3237,15 @@ function mergeSaves(a, b) {
   m.unlocked = Math.max(a.unlocked || 1, b.unlocked || 1); m.unlockedP = Math.max(a.unlockedP || 1, b.unlockedP || 1); m.unlockedA = Math.max(a.unlockedA || 1, b.unlockedA || 1);
   m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
   if (b.streak && (b.streak.last || '') > (a.streak && a.streak.last || '') ) m.streak = b.streak;
-  const seenT = new Set(), hist = [];
-  for (const h of [...(a.history || []), ...(b.history || [])]) if (h && !seenT.has(h.t)) { seenT.add(h.t); hist.push(h); }
-  m.history = hist.sort((x, y) => y.t - x.t).slice(0, HIST_MAX);
+  m.histDel = [...new Set([...(a.histDel || []), ...(b.histDel || [])])].slice(-300);
+  // same entry on both devices: keep it once (a café chat continued on one device keeps its longer version)
+  const gone = new Set(m.histDel), byT = new Map();
+  for (const h of [...(a.history || []), ...(b.history || [])]) {
+    if (!h || gone.has(h.t)) continue;
+    const o = byT.get(h.t);
+    if (!o || (h.k === 'cafe' && o.k === 'cafe' && (h.m || []).length > (o.m || []).length)) byT.set(h.t, h);
+  }
+  m.history = [...byT.values()].sort((x, y) => (y.u || y.t) - (x.u || x.t)).slice(0, HIST_MAX);
   return m;
 }
 function importProgress(file) {
