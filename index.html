@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="theme-color" content="#E4ECEB">
+<script id="themeInit">try { var t = localStorage.getItem('dq-theme'); if (t === 'dark' || (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark'); } catch (e) {}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Deutsch Quest – a 3D German grammar runner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,6 +13,7 @@
 :root{
   --red:#D9675B; --blue:#4F7CAC; --yellow:#EDC765; --black:#2F3640; --white:#FFFFFF;
   --sky:#E4ECEB; --grey:#5B6670; --good:#3E8E63;
+  --shadow:#2F3640; --ink:#2F3640; --on:#FFFFFF;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:var(--sky);font-family:'Jost',"Futura","Century Gothic",system-ui,sans-serif;color:var(--black);-webkit-tap-highlight-color:transparent}
@@ -22,25 +25,25 @@ button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 .screen{position:absolute;inset:0;display:none;pointer-events:auto;overflow-y:auto;padding:20px;z-index:2}
 .screen.show{display:flex}
 .screen.dim{background:rgba(228,236,235,.62)}
-.panel{background:var(--white);border:3px solid var(--black);box-shadow:8px 8px 0 var(--black);padding:28px;max-width:620px;width:100%;margin:auto;user-select:none}
+.panel{background:var(--white);border:3px solid var(--black);box-shadow:8px 8px 0 var(--shadow);padding:28px;max-width:620px;width:100%;margin:auto;user-select:none}
 h2{font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-.01em;margin-bottom:6px}
 h3{font-size:19px;font-weight:600;margin:22px 0 10px}
 p{line-height:1.5}
 .lead{color:var(--grey);font-size:17px;margin-bottom:18px}
 
-.btn{font-weight:600;font-size:17px;border:3px solid var(--black);background:var(--white);padding:12px 16px;box-shadow:4px 4px 0 var(--black);cursor:pointer;transition:transform .07s,box-shadow .07s;display:flex;align-items:center;gap:14px;text-align:left;width:100%}
-.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--black)}
-.btn.blue{background:var(--blue);color:var(--white)}
-.btn.red{background:var(--red);color:var(--white)}
+.btn{font-weight:600;font-size:17px;border:3px solid var(--black);background:var(--white);padding:12px 16px;box-shadow:4px 4px 0 var(--shadow);cursor:pointer;transition:transform .07s,box-shadow .07s;display:flex;align-items:center;gap:14px;text-align:left;width:100%}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--shadow)}
+.btn.blue{background:var(--blue);color:var(--on)}
+.btn.red{background:var(--red);color:var(--on)}
 .btn.yellow{background:var(--yellow)}
-.btn.black{background:var(--black);color:var(--white)}
-.btn.green{background:var(--good);color:var(--white)}
+.btn.black{background:var(--ink);color:var(--on)}
+.btn.green{background:var(--good);color:var(--on)}
 .btn .shape.mag{display:grid;place-items:center;font-size:18px;line-height:1}
 .spoterr{color:var(--red);text-decoration:line-through;text-decoration-thickness:2px}
 .hwrap{display:flex;gap:6px;align-items:stretch}
 .hwrap .hrow{flex:1;min-width:0}
 .hdel{flex:0 0 52px;border:2px solid var(--black);background:var(--white);font-size:19px;cursor:pointer;color:var(--black)}
-.hdel.sure,.hdelbtn.sure{background:var(--red);color:var(--white);font-size:15px;font-weight:700}
+.hdel.sure,.hdelbtn.sure{background:var(--red);color:var(--on);font-size:15px;font-weight:700}
 .hdel.sure{flex-basis:88px}
 .cdiv{text-align:center;color:var(--grey);font-size:13px;margin:4px 0 8px}
 .btn.center{justify-content:center;text-align:center}
@@ -62,7 +65,7 @@ p{line-height:1.5}
 .geo{display:grid;grid-template-columns:repeat(2,38px);gap:8px;margin-bottom:8px}
 .geo i{display:block;width:38px;height:38px}
 .geo .a{background:var(--yellow);border-radius:50%}
-.geo .b{background:var(--black)}
+.geo .b{background:var(--ink)}
 .geo .c{background:var(--blue)}
 .geo .d2{width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-bottom:38px solid var(--red)}
 .menu .tag{font-size:17px;color:var(--grey);margin:14px 0 18px}
@@ -71,8 +74,8 @@ p{line-height:1.5}
 .menu .levels{display:grid;gap:12px}
 .menu .gapset{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600}
 .menu .gapset span.l{flex:1}
-.menu .gapset button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:22px;font-weight:800;cursor:pointer}
-.menu .gapset button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--black)}
+.menu .gapset button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:22px;font-weight:800;cursor:pointer}
+.menu .gapset button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
 .menu .gapset button:disabled{color:var(--grey);cursor:not-allowed}
 .menu .gapset b{min-width:56px;text-align:center}
 .menu .msg{min-height:22px;margin-top:12px;color:var(--red);font-weight:600}
@@ -86,8 +89,8 @@ p{line-height:1.5}
 .cj.plp{color:var(--blue)} .cj.pls{color:var(--red)}
 .cj.mvf{color:#A07A12} .cj.mvi{color:var(--blue)}
 .cj.wenn{color:var(--good)} .cj.obwohl,.cj.ob{color:#A07A12} .cj.aber,.cj.deshalb{color:var(--black);text-decoration:underline}
-#topicTabs button{font-size:.92em}
-#topicTabs button{padding:9px 4px;line-height:1.15}
+#topicTabs{display:grid;grid-template-columns:repeat(3,1fr);padding:0 3px 3px 0}
+#topicTabs button{font-size:.92em;padding:9px 4px;line-height:1.15;border:3px solid var(--black);margin:0 -3px -3px 0}
 .guide{margin-top:18px}
 .guide>h3{margin:0 0 2px}
 .guide details{border:2px solid var(--black);background:var(--white);margin-top:8px}
@@ -103,14 +106,15 @@ p{line-height:1.5}
 .gpair{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .gpair .pic{margin:6px 0}
 .gpair .s{font-size:15px}
+.gscroll{overflow-x:auto}
 .gtab{border-collapse:collapse;width:100%;margin:8px 0;font-size:15px}
 .gtab td,.gtab th{border:2px solid var(--black);padding:6px 8px;text-align:left;vertical-align:top}
 .gtab th{background:#EEF2F5}
 .cj.weil{color:var(--blue)} .cj.dass{color:var(--red)} .cj.das{color:#8A6D00} .cj.denn{color:var(--black);text-decoration:underline}
 .vb{border-bottom:4px solid var(--black)}
 .art{display:inline-block;font-weight:600;font-size:.82em;padding:0 6px;margin-right:4px;border:2px solid var(--black);line-height:1.35;vertical-align:1px}
-.art.der{background:var(--blue);color:var(--white)}
-.art.die{background:var(--red);color:var(--white)}
+.art.der{background:var(--blue);color:var(--on)}
+.art.die{background:var(--red);color:var(--on)}
 .art.das{background:var(--yellow)}
 .star{background:none;border:2px solid var(--black);width:36px;height:36px;font-size:19px;cursor:pointer;line-height:1;flex:0 0 36px;color:var(--grey)}
 .star.on{background:var(--yellow);color:var(--black)}
@@ -138,9 +142,9 @@ p{line-height:1.5}
 .wcard .mn{margin:0 0 8px}
 .mn.ta-mn{font-family:'Noto Sans Tamil','Nirmala UI','Latha',Jost,sans-serif;background:#EAF2EC;border-left-color:var(--good);margin-top:6px}
 .vgrid.tips{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-bottom:4px}
-.case{position:absolute;top:8px;right:8px;font-size:12px;font-weight:700;color:var(--white);padding:2px 6px}
+.case{position:absolute;top:8px;right:8px;font-size:12px;font-weight:700;color:var(--on);padding:2px 6px}
 .case.akk{background:var(--red)} .case.dat{background:var(--blue)} .case.wech{background:var(--grey)}
-.newtag.again{background:var(--red);color:var(--white)}
+.newtag.again{background:var(--red);color:var(--on)}
 .newtag{background:var(--yellow);color:var(--black);font-size:12px;font-weight:800;padding:2px 6px;vertical-align:4px}
 .nlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 14px;font-size:17px}
 .nlist .tr{font-size:15px}
@@ -165,27 +169,28 @@ p{line-height:1.5}
 .row2.modes{margin:10px 0 14px}
 .btn.mode{align-items:center}
 .btn.mode .mi{font-size:30px;line-height:1}
-.btn.mode.on{background:var(--black);color:var(--white)}
+.btn.mode.on{background:var(--ink);color:var(--on)}
 .cafe-lead{color:var(--grey);margin-bottom:10px}
 .lvlpick{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:600}
 .lvlpick button{border:2px solid var(--black);background:var(--white);padding:6px 14px;font-weight:700;cursor:pointer}
-.lvlpick button.on{background:var(--black);color:var(--white)}
+.lvlpick button.on{background:var(--ink);color:var(--on)}
 .topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.topics button{border:2px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);padding:10px;text-align:left;cursor:pointer;font-size:16px;font-weight:600}
+.topics button{border:2px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);padding:10px;text-align:left;cursor:pointer;font-size:16px;font-weight:600}
 .topics button .te{font-size:26px;display:block}
 .topics button small{display:block;font-weight:400;color:var(--grey);font-size:13.5px}
-.topics button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--black)}
+.topics button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
 
 /* café screen */
 #cafe{background:var(--sky);padding:0}
 #cafe.show{display:block}
 .cafe-wrap{max-width:760px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding:12px 14px 10px}
 .cafe-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.cafe-top button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:20px;cursor:pointer;flex:0 0 44px}
+.cafe-top button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:20px;cursor:pointer;flex:0 0 44px}
 .cafe-top button[aria-pressed="true"]{background:var(--yellow)}
 .cafe-top .ct{flex:1;line-height:1.2}
 .cafe-top .ct b{font-size:19px;display:block}
 .cafe-top .ct small{color:var(--grey)}
+@media (max-width:560px){.cafe-top{flex-wrap:wrap}.cafe-top .ct{order:9;flex-basis:100%}.cafe-top #cBack{margin-right:auto}}   /* narrow screens: buttons in one row, the topic below */
 .cafe-stage{display:flex;align-items:center;gap:14px;margin-bottom:8px}
 #lena{width:132px;height:146px;flex:0 0 132px}
 #lena svg{width:100%;height:100%;display:block}
@@ -208,8 +213,8 @@ p{line-height:1.5}
 .b.sys{align-self:center;max-width:94%;background:#FBF3DC;font-size:15px}
 .cafe-input{display:flex;gap:8px;align-items:center}
 .cafe-input input{flex:1;min-width:0;border:3px solid var(--black);padding:12px;font:inherit;font-size:17px;background:var(--white)}
-.cafe-input button{height:52px;min-width:52px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:22px;cursor:pointer}
-#cMic{background:var(--red);color:var(--white);min-width:74px;line-height:1;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.cafe-input button{height:52px;min-width:52px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+#cMic{background:var(--red);color:var(--on);min-width:74px;line-height:1;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 #cMic small{display:block;font-size:11px;font-weight:700;margin-top:2px;text-transform:uppercase}
 #cMic.rec{background:#B9544A}
 #cMic.rec{animation:recpulse 1s infinite}
@@ -239,7 +244,7 @@ p{line-height:1.5}
 .row2.modes{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .wpanel{max-width:760px}
 .wtop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.wtop>button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--black);font-size:20px;cursor:pointer;flex:0 0 44px}
+.wtop>button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:20px;cursor:pointer;flex:0 0 44px}
 .wtop .ct{flex:1;line-height:1.2}
 .wtop .ct b{font-size:19px;display:block}
 .wtop .ct small{color:var(--grey)}
@@ -272,7 +277,7 @@ p{line-height:1.5}
 .wdiff ins{color:var(--good);text-decoration:none;background:#E1F2E8;padding:0 3px;font-weight:700}
 .wdiff .dw{background:#FBF0C9;padding:0 3px;font-weight:700}
 .dlegend del{color:var(--red)} .dlegend ins{color:var(--good);text-decoration:none;font-weight:700} .dlegend .dw{background:#FBF0C9}
-.ecat{display:inline-block;background:var(--black);color:var(--white);font-size:12px;font-weight:700;padding:2px 7px;vertical-align:3px;margin-left:6px}
+.ecat{display:inline-block;background:var(--ink);color:var(--on);font-size:12px;font-weight:700;padding:2px 7px;vertical-align:3px;margin-left:6px}
 .wex{border:2px solid var(--black);background:var(--white);margin-top:8px}
 .wex summary{padding:8px 10px;font-weight:700;cursor:pointer}
 .wex>*:not(summary){margin-left:10px;margin-right:10px}
@@ -310,13 +315,13 @@ p{line-height:1.5}
 #toast .pic{flex:0 0 150px;width:150px;margin:0}
 .dots{display:inline-flex;gap:3px;vertical-align:middle;margin-left:6px}
 .dots i{width:9px;height:9px;border:1.5px solid var(--black);display:block}
-.dots i.f{background:var(--black)}
+.dots i.f{background:var(--ink)}
 .empty{border:2px dashed var(--grey);padding:18px;color:var(--grey);line-height:1.5}
 
 .tabs{display:flex;gap:0;margin:14px 0}
 .tabs button{flex:1;border:3px solid var(--black);background:var(--white);padding:9px;font-weight:600;cursor:pointer}
 .tabs button+button{border-left:0}
-.tabs button.on{background:var(--black);color:var(--white)}
+.tabs button.on{background:var(--ink);color:var(--on)}
 .backtop{display:block;margin:0 0 6px;font-size:15px;font-weight:700}
 .wfilter{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;font-weight:700}
 .wfilter select{flex:1;max-width:340px;border:2px solid var(--black);background:var(--white);padding:8px 10px;font:inherit;font-size:15px;font-weight:600;color:var(--black);cursor:pointer}
@@ -356,7 +361,7 @@ p{line-height:1.5}
 #scoreBox{margin-left:auto;background:var(--white);border:3px solid var(--black);padding:4px 12px;font-weight:800;font-size:20px;min-width:80px;text-align:right}
 #streakBox{background:var(--yellow);border:3px solid var(--black);padding:4px 10px;font-weight:600;display:none}
 #bPause{width:42px;height:42px;border:3px solid var(--black);background:var(--white);font-weight:800;cursor:pointer}
-.prompt{position:absolute;top:66px;left:50%;transform:translateX(-50%);width:min(94vw,780px);background:var(--white);border:3px solid var(--black);box-shadow:6px 6px 0 var(--black);padding:12px 18px 14px}
+.prompt{position:absolute;top:66px;left:50%;transform:translateX(-50%);width:min(94vw,780px);background:var(--white);border:3px solid var(--black);box-shadow:6px 6px 0 var(--shadow);padding:12px 18px 14px}
 .prompt .meta{display:flex;justify-content:space-between;color:var(--grey);font-size:14px;margin-bottom:4px}
 #qText{font-size:clamp(19px,3.2vw,27px);font-weight:600;line-height:1.35}
 .lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
@@ -370,24 +375,61 @@ p{line-height:1.5}
 .slot{display:inline-block;min-width:54px;border-bottom:4px dashed var(--grey);margin:0 1px;padding:0 4px}
 .slot.fill{border-bottom:4px solid var(--good)}
 .slot.bad{border-bottom:4px solid var(--red)}
-#toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:var(--white);border:3px solid var(--good);box-shadow:5px 5px 0 var(--black);padding:10px 16px;width:min(92vw,560px);display:none}
+#toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:var(--white);border:3px solid var(--good);box-shadow:5px 5px 0 var(--shadow);padding:10px 16px;width:min(92vw,560px);display:none}
 #toast.show{display:block}
 #toast b.ok{color:var(--good);font-size:19px}
 #toast .s{font-size:16px;margin-top:2px;line-height:1.4}
 .ctrl{position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:none}
-.ctrl button{pointer-events:auto;width:76px;height:76px;border:3px solid var(--black);background:var(--white);box-shadow:4px 4px 0 var(--black);font-size:28px;cursor:pointer;touch-action:manipulation}
-.ctrl button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--black)}
+.ctrl button{pointer-events:auto;width:76px;height:76px;border:3px solid var(--black);background:var(--white);box-shadow:4px 4px 0 var(--shadow);font-size:28px;cursor:pointer;touch-action:manipulation}
+.ctrl button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--shadow)}
 #flash{position:absolute;inset:0;background:var(--red);opacity:0;pointer-events:none;transition:opacity .35s}
 #loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;background:var(--sky);z-index:5}
 
 @media (max-width:560px){
-  .panel{padding:20px;box-shadow:6px 6px 0 var(--black)}
+  .panel{padding:20px;box-shadow:6px 6px 0 var(--shadow)}
   .stats{grid-template-columns:repeat(2,1fr)}
   .ctrl button{width:66px;height:66px}
   #toast{bottom:100px}
   .modal .sent{font-size:19px}
 }
 @media (prefers-reduced-motion:reduce){ .btn,.ctrl button{transition:none} }
+
+/* ---- dark theme (html.dark): dark surfaces, light text, soft shadows; the accent colours keep their grammar meaning ---- */
+html.dark{--black:#E3E8EC;--white:#1E252C;--sky:#12181D;--grey:#9DA9B3;--shadow:#05080B;--ink:#47535F;--on:#FFFFFF;--blue:#6390C4;--red:#DE7468;--good:#4CA375;color-scheme:dark}
+html.dark .screen.dim{background:rgba(10,14,18,.74)}
+html.dark .btn.locked,html.dark .btn.locked .shape{background:#2A3139}
+html.dark .cj.adj-mixed,html.dark .cj.vge,html.dark .cj.mvf,html.dark .cj.obwohl,html.dark .cj.ob,html.dark .wres.almost,html.dark .wcount.warn{color:#DDB850}
+html.dark .cj.das{color:#D6B24A}
+html.dark .btn.yellow,
+html.dark /* words & sentences */
+.kw,
+html.dark .art.das,
+html.dark .star.on,
+html.dark .newtag,
+html.dark .cafe-top button[aria-pressed="true"],
+html.dark .wtools .btn[aria-pressed="true"],
+html.dark .uml button:active,
+html.dark #streakBox,
+html.dark .lanes span.on{color:#2F3640}
+html.dark .pic,html.dark .gsvg{background:#F1F3F4;filter:brightness(.94)}
+html.dark .gtab th{background:#2A333C}
+html.dark .mn,html.dark .b.sys,html.dark .chips span{background:#3A3424}
+html.dark .mn.ta-mn{background:#21342A}
+html.dark .hlist .hb .ex,html.dark .b .trbox .gr,html.dark .wex .ex,html.dark .tip,html.dark .modal .ex{background:#26303A}
+html.dark .hrow.cafe,html.dark .wtask .wsit{background:#2E2A22}
+html.dark .hrow.write{background:#22303D}
+html.dark .b.me{background:#24344A}
+html.dark .wdiff{background:#192026}
+html.dark .wdiff del{background:#4A2724} html.dark .wdiff ins{background:#1F3A2B}
+html.dark .wdiff .dw,html.dark .dlegend .dw{background:#4A4023}
+html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dark .g.gC{background:#4A4023} html.dark .g.gD{background:#4A2724}
+.themebtn{margin-left:auto;flex:0 0 44px;width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.panel{position:relative}
+.themebtn.tcorner{position:absolute;top:12px;right:12px;width:40px;height:40px;flex:none;margin:0;font-size:19px;box-shadow:2px 2px 0 var(--shadow);z-index:1}
+.panel:has(> .tcorner) > h2,.panel:has(> .tcorner) > .backtop{padding-right:52px}
+.cafe-top .themebtn,.wtop .themebtn{margin-left:0;flex:0 0 44px}
+.themebtn.hudtheme{margin-left:0;flex:none;width:42px;height:42px;box-shadow:none;font-size:18px;pointer-events:auto}
+.themebtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
 </style>
 </head>
 <body>
@@ -403,7 +445,7 @@ p{line-height:1.5}
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
       <p class="tag">Run, build and speak German: plurals, separable and modal verbs, prepositions, Nebensätze and adjective endings, plus voice chats in the Sprach-Café.</p>
-      <div class="streakline"><span class="sq"></span><span id="mStreak"></span></div>
+      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button class="themebtn" id="themeBtn" type="button"></button></div>
       <div class="tabs" id="topicTabs"><button data-topic="pl" class="on">Singular / Plural</button><button data-topic="tv">Trennbare Verben</button><button data-topic="mv">Modalverben</button><button data-topic="prep">Präpositionen</button><button data-topic="wd">Nebensätze</button><button data-topic="adj">Adjektive</button></div>
       <p class="modeq" id="modeQ">Was möchtest du machen? <span>What would you like to do?</span></p>
       <div class="row2 modes">
@@ -494,6 +536,7 @@ p{line-height:1.5}
   <!-- INTRO -->
   <section id="intro" class="screen dim">
     <div class="panel">
+      <button class="themebtn tcorner" type="button"></button>
       <button class="linkbtn backtop" id="iBackTop">← Back</button>
       <h2 id="iTitle">Neue Wörter</h2>
       <p class="lead" id="iLead">Three new words for this round. You'll meet them in the sentences you run through.</p>
@@ -506,6 +549,7 @@ p{line-height:1.5}
   <!-- WRONG MODAL -->
   <section id="wrong" class="screen dim modal" role="dialog" aria-modal="true" aria-labelledby="wrongTitle">
     <div class="panel">
+      <button class="themebtn tcorner" type="button"></button>
       <h2 class="bad" id="wrongTitle">Nicht ganz!</h2>
       <div id="wrongBody"></div>
       <button class="btn blue center" id="wGo">Weiter</button>
@@ -515,6 +559,7 @@ p{line-height:1.5}
   <!-- PAUSE -->
   <section id="pause" class="screen dim">
     <div class="panel" style="max-width:420px">
+      <button class="themebtn tcorner" type="button"></button>
       <h2>Pause</h2>
       <p class="lead">Take a breath.</p>
       <div style="display:grid;gap:12px">
@@ -527,6 +572,7 @@ p{line-height:1.5}
   <!-- END -->
   <section id="end" class="screen dim">
     <div class="panel">
+      <button class="themebtn tcorner" type="button"></button>
       <h2 id="eTitle">Runde vorbei!</h2>
       <div class="stats" id="eStats"></div>
       <div id="eUnlock"></div>
@@ -542,6 +588,7 @@ p{line-height:1.5}
   <!-- WORDS -->
   <section id="words" class="screen dim">
     <div class="panel">
+      <button class="themebtn tcorner" type="button"></button>
       <h2>My words</h2>
       <p class="lead">The squares show how well you know each word. Five filled means mastered.</p>
       <div class="tabs"><button data-tab="star" class="on">Starred</button><button data-tab="all">All seen</button></div>
@@ -557,6 +604,7 @@ p{line-height:1.5}
       <div class="cafe-top">
         <button id="cBack" aria-label="Back to menu">←</button>
         <div class="ct"><b id="cTopic"></b><small id="cFocus"></small></div>
+        <button class="themebtn" type="button"></button>
         <button id="cVoice" aria-pressed="true" title="Natural voice (Gemini). Tap for the device voice.">🗣</button>
         <button id="cSlow" aria-pressed="false" title="Speak slowly">🐢</button>
         <button id="cKeyBtn" title="Gemini key">⚙</button>
@@ -595,6 +643,7 @@ p{line-height:1.5}
         <button id="wrBack" aria-label="Back to menu">←</button>
         <div class="ct"><b id="wrTitle"></b><small id="wrSub"></small></div>
         <span id="wrCount" class="wcountbig"></span>
+        <button class="themebtn" type="button"></button>
       </div>
       <div id="wrPrompt" class="wprompt"></div>
       <div class="wtools" id="wrTools" style="display:none">
@@ -618,6 +667,7 @@ p{line-height:1.5}
         <button id="wfBack" aria-label="Back to menu">←</button>
         <div class="ct"><b id="wfTitle"></b><small id="wfSub"></small></div>
         <span id="wfTimer" class="timer"></span>
+        <button class="themebtn" type="button"></button>
       </div>
       <div id="wfTask" class="wtask"></div>
       <div class="tabs" id="wfMode"><button data-wm="type" class="on">⌨️ Type</button><button data-wm="hand">✍️ By hand</button></div>
@@ -640,6 +690,7 @@ p{line-height:1.5}
   <!-- PAST ROUNDS -->
   <section id="hist" class="screen dim">
     <div class="panel">
+      <button class="themebtn tcorner" type="button"></button>
       <h2>Past rounds</h2>
       <p class="lead">Tap a round or a café chat to see every question or message, your answers and the explanations. Tap 🗑 twice to delete one.</p>
       <div class="list" id="hList"></div>
@@ -648,6 +699,7 @@ p{line-height:1.5}
   </section>
   <section id="histD" class="screen dim">
     <div class="panel">
+      <button class="themebtn tcorner" type="button"></button>
       <h2 id="hdTitle"></h2>
       <p class="lead" id="hdSub"></p>
       <div class="hlist" id="hdList"></div>
@@ -665,6 +717,7 @@ p{line-height:1.5}
   <!-- PROGRESS -->
   <section id="prog" class="screen dim">
     <div class="panel">
+      <button class="themebtn tcorner" type="button"></button>
       <h2>My progress</h2>
       <div class="stats" id="pStats"></div>
       <div id="pBars"></div>
@@ -691,6 +744,7 @@ p{line-height:1.5}
       <div id="lives" aria-label="Lives"></div>
       <div id="streakBox"></div>
       <div id="scoreBox">0</div>
+      <button class="themebtn hudtheme" type="button"></button>
       <button id="bPause" aria-label="Pause">II</button>
     </div>
     <div class="prompt">
@@ -1696,7 +1750,7 @@ const MTIPS = { // rule: [title, tip, Tamil tip]
   ns:['Nebensatz: modal last', 'After weil / dass / wenn the modal jumps to the very end: …, weil ich arbeiten <b>muss</b>.', 'weil / dass-க்குப் பிறகு modal வினை கடைசியில்: …, weil ich arbeiten muss.']
 };
 const modalTipsHTML = keys => `<div class="vgrid tips">${keys.map(k => `<div class="vcard"><div class="big sm">${MTIPS[k][0]}</div><div class="mn">💡 ${MTIPS[k][1]}</div>${taMn(MTIPS[k][2])}</div>`).join('')}</div>`;
-const modalCard = mv => { const d = MODV[mv]; return vcard(`${d.icon} ${esc(mv)}`, `${esc(d.en)} · ich ${d.f[0]}, du ${d.f[1]}, er ${d.f[2]}, wir ${d.f[3]}`, d.ta, esc(d.mn), `<span class="case dat">${esc(d.mean.split(' (')[0])}</span>`, d.tmn); };
+const modalCard = mv => { const d = MODV[mv]; return vcard(`${d.icon} ${esc(mv)}`, `${esc(d.en)} · ich ${d.f[0]}, du ${d.f[1]}, er ${d.f[2]}, wir ${d.f[3]}`, d.ta, esc(d.mn), `<span class="case dat">${({ 'können':'ability', 'müssen':'must', 'dürfen':'allowed', 'wollen':'own wish', 'sollen':'told to', 'möchten':'polite wish' })[mv] || ''}</span>`, d.tmn); };
 const modalWhy = (x, k) => `<b>${esc(x.mv)}</b> = ${esc(MODV[x.mv].en)}` + (k === 'kj' ? ` → ${esc(x.a)}: <b>${esc(x.f)}</b>` : k === 'ns' ? ' → in the Nebensatz the modal verb comes last' : ` (${esc(MODV[x.mv].mean)})` + (altMv(x) ? `, not ${esc(altMv(x))} (${esc(MODV[altMv(x)].en)})` : ''));
 const modalItemHTML = (x, k = 'kj') => `<div class="item"><div><div class="s">${modalHTML(x, k)}</div><div class="tr">${esc(modalTr(x, k))}</div><div class="w">${modalWhy(x, k)}</div>${picSVG(x, k)}</div>${starBtn(x.id)}</div>`;
 const BYID = Object.fromEntries([...W, ...P, ...A, ...V, ...NPL, ...MSN].map(w => [w.id, w]));
@@ -3417,7 +3471,7 @@ function modalSVG(x, k) {
       const cx = i < 3 ? 86 : 234, cy = 62 + (i % 3) * 36, on = me.includes(i) && d.f[i] === x.f;
       s += `<rect x="${cx - 70}" y="${cy - 15}" width="140" height="30" rx="5" fill="${on ? '#FFF6D8' : '#fff'}" stroke="${on ? '#A07A12' : dark}" stroke-width="${on ? 3 : 1.5}"/>`;
       if (on) s += pulseRect(cx - 68, cy - 13, 136, 26, '#EDC765');
-      s += txt(esc(p), cx - 34, cy, 12, grey, 700) + txt(esc(d.f[i]), cx + 30, cy, 16, i === 0 || i === 2 ? blue : dark, 800);
+      s += txt(esc(p), cx - 36, cy, 11, grey, 700) + txt(esc(d.f[i]), cx + 32, cy, 16, i === 0 || i === 2 ? blue : dark, 800);
     });
     cap = `${x.a} → ${x.f}` + (mPerson(x.a).some(i => i === 0 || i === 2) ? ' · ich = er: no ending' : '');
     label = `${x.mv} · Konjugation`;
@@ -3454,7 +3508,7 @@ GUIDE.mv = { name:'Modalverben', sections:() => [
     <table class="gtab"><tr><th></th><th>Modal verb</th><th>Meaning</th><th>Example</th></tr>${Object.keys(MODV).map(mv => { const d = MODV[mv], x = MSN.find(y => y.mv === mv && !y.gen);
       return `<tr><td>${d.icon}</td><td><b>${esc(mv)}</b></td><td>${esc(d.en)}<br><span class="tr">${esc(d.mean)}</span></td><td>${x ? modalHTML(x, 'kj') : ''}</td></tr>`; }).join('')}</table>`],
   ['2 · Conjugation: ich = er, no ending', `<p>${MRULE.kj}</p>${mPic('m_k1', 'kj')}
-    <table class="gtab"><tr><th></th>${Object.keys(MODV).map(mv => `<th>${esc(mv)}</th>`).join('')}</tr>${MPRON.map((p, i) => `<tr><td><b>${esc(p)}</b></td>${Object.keys(MODV).map(mv => `<td>${i === 0 || i === 2 ? `<b class="cj mvf">${MODV[mv].f[i]}</b>` : MODV[mv].f[i]}</td>`).join('')}</tr>`).join('')}</table>${taMn(MTIPS.kj[2])}`],
+    <div class="gscroll"><table class="gtab"><tr><th></th>${Object.keys(MODV).map(mv => `<th>${esc(mv)}</th>`).join('')}</tr>${MPRON.map((p, i) => `<tr><td><b>${esc(p)}</b></td>${Object.keys(MODV).map(mv => `<td>${i === 0 || i === 2 ? `<b class="cj mvf">${MODV[mv].f[i]}</b>` : MODV[mv].f[i]}</td>`).join('')}</tr>`).join('')}</table></div>${taMn(MTIPS.kj[2])}`],
   ['3 · Satzklammer: modal 2nd, infinitive at the end', `<p>${MRULE.sb}</p>${mPic('m_k2', 'sb')}${mEx([['m_m1', 'kj'], ['m_w3', 'kj'], ['m_d1', 'kj'], ['m_c1', 'kj']])}${taMn(MTIPS.sb[2])}`],
   ['4 · müssen nicht or dürfen nicht?', `<p>${MRULE.bd}</p>${mPic('m_m6', 'bd')}${mPic('m_d1', 'bd')}${taMn(MTIPS.bd[2])}`],
   ['5 · In a Nebensatz: the modal goes last', `<p>${MRULE.ns}</p>${mPic('m_m1', 'ns')}${mEx([['m_k1', 'ns'], ['m_w3', 'ns'], ['m_s2', 'ns']])}${taMn(MTIPS.ns[2])}`],
@@ -4577,6 +4631,20 @@ $('#pGo').addEventListener('click', togglePause);
 $('#pQuit').addEventListener('click', () => { if (G.log && G.log.length) { recordRound(true); save(); } G.running = false; G.pending = null; clearRows(); $('#hud').classList.remove('show'); show('menu'); });
 $('#eAgain').addEventListener('click', () => startLevel(lastLevel));
 $('#eMenu').addEventListener('click', () => show('menu'));
+// light / dark theme: saved per device (like the Gemini key), not in the progress file; until chosen it follows the device setting
+const THEME_KEY = 'dq-theme';
+function applyTheme(dark) {
+  document.documentElement.classList.toggle('dark', dark);
+  const label = dark ? 'Switch to light theme' : 'Switch to dark theme';
+  $$('.themebtn').forEach(b => { b.textContent = dark ? '☀️' : '🌙'; b.setAttribute('aria-label', label); b.title = label; });
+  const sky = dark ? 0x1A2228 : SKY;
+  scene.background.set(sky); scene.fog.color.set(sky);
+  ground.material.color.set(dark ? 0x2C3A34 : GROUND); stripeMat.color.set(dark ? 0x4A5A52 : LANE_LINE);
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#12181D' : '#E4ECEB';
+}
+applyTheme(document.documentElement.classList.contains('dark'));
+// one handler for every 🌙 / ☀️ button on every screen (menu, briefing, game, pause, café, writing, past rounds …)
+document.addEventListener('click', e => { const tb = e.target.closest('.themebtn'); if (!tb) return; tb.blur(); const d = !document.documentElement.classList.contains('dark'); lsSet(THEME_KEY, d ? 'dark' : 'light'); applyTheme(d); });
 $('#bWords').addEventListener('click', () => { wTopic = 'all'; renderWords(); show('words'); });   // always opens on All topics
 $('#wFilter').addEventListener('change', e => { wTopic = e.target.value; renderWords(); });
 $('#wBack').addEventListener('click', () => show('menu'));
