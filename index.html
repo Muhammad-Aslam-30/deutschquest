@@ -312,6 +312,7 @@ h2 .en2{font-size:.42em;margin-top:4px} h3 .en2{font-size:.7em}
 #askMic{touch-action:none;-webkit-touch-callout:none;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:17px;width:48px;flex:0 0 48px}
 #askMic small{font-size:10px;font-weight:700}
 #askMic.on{background:var(--red);color:#fff}
+#askMic.on small::before{content:'■ '}
 html.dark .askchat .am{background:#24344A}
 #wfPen[aria-pressed="true"],#wfErase[aria-pressed="true"]{background:var(--ink);color:var(--on)}
 #wfCanvas.erasing{cursor:cell}
@@ -325,6 +326,7 @@ html.dark .askchat .am{background:#24344A}
 #cMic{background:var(--red);color:var(--on);min-width:74px;line-height:1;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 #cMic small{display:block;font-size:11px;font-weight:700;margin-top:2px;text-transform:uppercase}
 #cMic.rec{background:#B9544A}
+#cMic.rec small::before{content:'■ '}
 #cMic.rec{animation:recpulse 1s infinite}
 @keyframes recpulse{50%{box-shadow:0 0 0 8px rgba(217,103,91,.35)}}
 .cstatus{min-height:20px;font-size:14px;color:var(--grey);margin-top:6px}
@@ -806,8 +808,8 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <div class="uml" id="cUml" data-target="cText" style="display:none"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
       <div class="cafe-input">
         <button id="cHelp" title="Hilfe: show me example answers">💡</button>
-        <button id="cMic" aria-label="Hold to talk">🎤<small>hold</small></button>
-        <input id="cText" type="text" autocomplete="off" placeholder="🎤 gedrückt halten und sprechen – oder hier schreiben …">
+        <button id="cMic" aria-label="Tap to talk, tap again to send">🎤<small>tippen</small></button>
+        <input id="cText" type="text" autocomplete="off" placeholder="🎤 tippen und sprechen – oder hier schreiben …">
         <button id="cSend" aria-label="Send">➤</button>
       </div>
       <div id="cStatus" class="cstatus" role="status"></div>
@@ -958,7 +960,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
 <div id="askBox" class="askbox" role="dialog" aria-label="Frag Lena" hidden>
   <div class="askhead"><b>💬 Frag Lena<small class="en2">Ask Lena about German</small></b><button id="askMin" type="button" aria-label="Minimise">–</button><button id="askEnd" type="button" aria-label="End and delete the chat">✕</button></div>
   <div id="askChat" class="askchat"></div>
-  <div class="askin"><button id="askMic" type="button" aria-label="Hold to speak">🎤<small>halten</small></button><input id="askText" type="text" autocomplete="off" placeholder="Frage … / Ask … / கேள் …"><button id="askSend" type="button" aria-label="Send">➤</button></div>
+  <div class="askin"><button id="askMic" type="button" aria-label="Tap to speak, tap again to send">🎤<small>tippen</small></button><input id="askText" type="text" autocomplete="off" placeholder="Frage … / Ask … / கேள் …"><button id="askSend" type="button" aria-label="Send">➤</button></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -3431,7 +3433,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-9';
+const APP_VERSION = 'v2026.10.07-10';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4626,6 +4628,11 @@ async function speechToBuffer(r) {
   const ctx = audioCtx(), rate = +(((part.inlineData.mimeType || '').match(/rate=(\d+)/) || [0, 24000])[1]);
   const bin = atob(part.inlineData.data), n = bin.length >> 1, buf = ctx.createBuffer(1, n, rate), ch = buf.getChannelData(0);
   for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; ch[i] = v / 32768; }
+  // the speech often stops on a loud sample: the jump to silence is the "glitch" at the end of a sentence.
+  // A 10 ms fade-in and a 40 ms fade-out (too short to hear) remove the click.
+  const fin = Math.min(n, Math.round(rate * 0.01)), fout = Math.min(n, Math.round(rate * 0.04));
+  for (let i = 0; i < fin; i++) ch[i] *= i / fin;
+  for (let i = 0; i < fout; i++) ch[n - 1 - i] *= i / fout;
   return buf;
 }
 function loadVoice() {
@@ -4694,10 +4701,10 @@ async function say(text) {
 
 // ---- voice in ----
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-// hold-to-talk: listen while the 🎤 button is held, send when it is released.
+// tap 🎤 to talk, tap again to send (it also sends by itself after 90 s).
 // Android's recogniser stops by itself after a short pause, so while the button is still held we simply restart it.
 let rec = null, recOn = false, holding = false, committed = '', sessionFinal = '', finishPending = false, finishTimer = null;
-function micUI(on) { $('#cMic').classList.toggle('rec', on); }
+function micUI(on) { const m = $('#cMic'); m.classList.toggle('rec', on); m.querySelector('small').textContent = on ? 'senden' : 'tippen'; m.setAttribute('aria-label', on ? 'Tap to send' : 'Tap to talk, tap again to send'); }
 // Chrome on Android repeats the whole phrase in every result ("ich" → "ich mag" → "ich mag Kaffee"), sometimes again after
 // a restart, and sometimes inside one result ("ich ich ich ich"). Android tablets pretend to be desktops, so instead of
 // detecting Android every device listens one phrase at a time (the reliable mode), and every piece of text is cleaned.
@@ -4753,7 +4760,7 @@ function recStart() {
 function finishRec() {
   if (!finishPending) return; finishPending = false; clearTimeout(finishTimer); micUI(false);
   const t = collapseRepeats($('#cText').value);
-  if (t) cafeSend(t); else cafeStatus('I didn’t hear anything. Hold 🎤 while you speak, then let go.', true);
+  if (t) cafeSend(t); else cafeStatus('Ich habe nichts gehört. Tippen Sie auf 🎤, sprechen Sie und tippen Sie dann noch einmal. / I didn’t hear anything: tap 🎤, speak, then tap again.', true);
 }
 function micDown(e) {
   if (e && e.preventDefault) e.preventDefault();
@@ -4762,12 +4769,14 @@ function micDown(e) {
   if (C.busy) { cafeStatus('Lena is still answering…'); return; }
   audioCtx(); stopVoice();
   holding = true; finishPending = true; committed = ''; $('#cText').value = ''; micUI(true);
-  cafeStatus('Ich höre zu… keep holding while you speak, let go to send.');
+  cafeStatus('🎤 Ich höre zu … zum Senden noch einmal tippen. / Listening … tap 🎤 again to send.');
+  clearTimeout(micT); micT = setTimeout(micUp, 90000);   // safety: never listen forever
   try { recStart(); } catch (err) { holding = false; finishPending = false; micUI(false); cafeStatus('Could not start the microphone.', true); }
 }
+let micT = null;
 function micUp() {
   if (!holding) return;
-  holding = false; cafeStatus('');
+  clearTimeout(micT); holding = false; cafeStatus('');
   try { if (rec && recOn) rec.stop(); else finishRec(); } catch (e) { finishRec(); }
   finishTimer = setTimeout(() => { if (recOn && rec) { try { rec.abort(); } catch (e) {} } finishRec(); }, 2500);   // safety net if the recogniser never reports back
 }
@@ -4891,7 +4900,7 @@ function openCafe(topicId, focus, lvl, write, resume) {
   $('#cFocus').textContent = `${C.write ? 'Writing chat · ' : ''}${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
   $('#cMic').style.display = C.write ? 'none' : '';
   $('#cUml').style.display = C.write ? '' : 'none';
-  $('#cText').placeholder = C.write ? 'Schreiben Sie auf Deutsch … Lena prüft auch die Rechtschreibung.' : '🎤 gedrückt halten und sprechen – oder hier schreiben …';
+  $('#cText').placeholder = C.write ? 'Schreiben Sie auf Deutsch … Lena prüft auch die Rechtschreibung.' : '🎤 tippen und sprechen – oder hier schreiben …';
   ['autocorrect', 'autocapitalize'].forEach(a => C.write ? $('#cText').setAttribute(a, 'off') : $('#cText').removeAttribute(a));
   $('#cText').spellcheck = !C.write;
   if (!$('#lena svg')) $('#lena').innerHTML = LENA_SVG;
@@ -7381,7 +7390,7 @@ const cwItemHTML = w => `<div class="item"><div>
 const ASK = { msgs:[], busy:false, rec:null };
 const askMd = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^[-•] (.*)$/gm, '• $1').replace(/\n/g, '<br>');
 function askRender() {
-  $('#askChat').innerHTML = `<div class="anote">Dieser Chat wird nicht gespeichert: ✕ löscht ihn.<small class="en2">This chat is not saved: ✕ (or reloading) deletes it. Ask in Deutsch, English or தமிழ் – type, or hold 🎤 and speak.</small></div>`
+  $('#askChat').innerHTML = `<div class="anote">Dieser Chat wird nicht gespeichert: ✕ löscht ihn.<small class="en2">This chat is not saved: ✕ (or reloading) deletes it. Ask in Deutsch, English or தமிழ் – type, or tap 🎤, speak and tap again.</small></div>`
     + ASK.msgs.map(m => `<div class="${m.r === 'u' ? 'am' : 'al'}">${m.r === 'u' ? esc(m.t) : askMd(m.t)}</div>`).join('')
     + (ASK.busy ? '<div class="al typing"><i></i><i></i><i></i></div>' : '');
   const c = $('#askChat'); c.scrollTop = c.scrollHeight;
@@ -7417,7 +7426,7 @@ async function askSend(text, wav) {
   } catch (e) { if (wav) mine.t = '🎤'; ASK.msgs.push({ r:'l', t:(AI_MSG[e.message] || 'Das hat nicht geklappt. Bitte noch einmal. / That did not work, please try again.') }); }
   ASK.busy = false; askRender();
 }
-// 🎤: hold to speak, let go to send (like the Sprach-Café; it sends by itself after 60 s). The sound is recorded as a small WAV (16 kHz, mono)
+// 🎤: tap to speak, tap again to send (like the Sprach-Café; it sends by itself after 90 s). The sound is recorded as a small WAV (16 kHz, mono)
 // and Gemini listens to it, so German, English and Tamil all work without choosing a language.
 async function askMic() {
   if (ASK.rec || ASK.starting || ASK.busy) return;
@@ -7430,9 +7439,9 @@ async function askMic() {
   const src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), chunks = [];
   proc.onaudioprocess = e => chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
   src.connect(proc); proc.connect(ctx.destination);
-  ASK.rec = { stream, src, proc, chunks, rate:ctx.sampleRate, t:setTimeout(() => askStopRec(true), 60000) }; ASK.starting = false;
-  const b = $('#askMic'); b.classList.add('on');
-  $('#askText').placeholder = '🎤 Ich höre zu … loslassen = senden / Listening … let go to send';
+  ASK.rec = { stream, src, proc, chunks, rate:ctx.sampleRate, t:setTimeout(() => askStopRec(true), 90000) }; ASK.starting = false;
+  const b = $('#askMic'); b.classList.add('on'); b.querySelector('small').textContent = 'senden';
+  $('#askText').placeholder = '🎤 Ich höre zu … noch einmal tippen = senden / Listening … tap again to send';
   if (!ASK.held) askStopRec(true);   // let go while the microphone was still starting
 }
 function askMicUp() { ASK.held = false; if (ASK.rec) askStopRec(true); }
@@ -7440,7 +7449,7 @@ function askStopRec(send) {
   const rc = ASK.rec; if (!rc) return; ASK.rec = null; clearTimeout(rc.t);
   try { rc.proc.disconnect(); rc.src.disconnect(); } catch (e) {}
   rc.stream.getTracks().forEach(t => t.stop());
-  $('#askMic').classList.remove('on');
+  $('#askMic').classList.remove('on'); $('#askMic small').textContent = 'tippen';
   $('#askText').placeholder = 'Frage … / Ask … / கேள் …';
   if (!send) return;
   const n = rc.chunks.reduce((k, c) => k + c.length, 0);
@@ -7463,13 +7472,10 @@ $('#askMin').addEventListener('click', () => { askStopRec(false); $('#askBox').h
 $('#askEnd').addEventListener('click', () => { askStopRec(false); ASK.msgs = []; ASK.busy = false; $('#askBox').hidden = true; askVis(); });
 $('#askSend').addEventListener('click', () => askSend($('#askText').value));
 $('#askText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); askSend($('#askText').value); } });
-// hold 🎤 to speak; letting go (or sliding off) sends the question
+// tap 🎤 to speak, tap again to send the question
 const askMicBtn = $('#askMic');
-askMicBtn.addEventListener('pointerdown', e => { if (e.button > 0) return; e.preventDefault(); try { askMicBtn.setPointerCapture(e.pointerId); } catch (x) {} askMic(); });
-['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => askMicBtn.addEventListener(t, askMicUp));
+askMicBtn.addEventListener('click', e => { e.preventDefault(); if (ASK.rec || ASK.starting) askMicUp(); else askMic(); });
 askMicBtn.addEventListener('contextmenu', e => e.preventDefault());
-askMicBtn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); askMic(); } });
-askMicBtn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); askMicUp(); } });
 
 /* ================= My words: pick a topic with level tabs + topic tiles ================= */
 let wLevel = 'all';
@@ -7628,11 +7634,9 @@ $('#cKeySave').addEventListener('click', saveKey);
 $('#cKey').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
 $('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); modelCache = null; C.model = null; $('#cKeyMsg').textContent = 'Key removed from this device.'; });
 const mic = $('#cMic');
-mic.addEventListener('pointerdown', e => { if (e.button > 0) return; try { mic.setPointerCapture(e.pointerId); } catch (x) {} micDown(e); });
-mic.addEventListener('pointerup', micUp); mic.addEventListener('pointercancel', micUp); mic.addEventListener('lostpointercapture', micUp);
+// one tap starts listening, the next tap sends
+mic.addEventListener('click', e => { e.preventDefault(); if (holding) micUp(); else micDown(e); });
 mic.addEventListener('contextmenu', e => e.preventDefault());
-mic.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); micDown(e); } });
-mic.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); micUp(); } });
 $('#cVoice').addEventListener('click', () => { S.cafeVoice = (S.cafeVoice || 'natural') === 'natural' ? 'device' : 'natural'; ttsDown = false; save(); voiceBtn(); cafeStatus(S.cafeVoice === 'natural' ? 'Natural voice on.' : 'Device voice on (faster, more robotic).'); });
 $('#cSend').addEventListener('click', () => { audioCtx(); cafeSend($('#cText').value); });
 $('#cText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); audioCtx(); cafeSend($('#cText').value); } });
