@@ -4285,9 +4285,10 @@ async function gfetch(url, opt, ms = 15000) {
   finally { clearTimeout(timer); }
 }
 async function apiError(r) {
-  let msg = ''; try { const d = await r.json(); msg = (d.error && d.error.message) || ''; } catch (e) {}
+  let msg = '', det = ''; try { const d = await r.json(); msg = (d.error && d.error.message) || ''; det = JSON.stringify((d.error && d.error.details) || ''); } catch (e) {}
   const keyish = r.status === 401 || r.status === 403 || /api key|API_KEY|permission/i.test(msg);
-  return new AIError(r.status === 429 ? 'limit' : keyish ? 'key' : r.status >= 500 ? 'busy' : 'api', `${r.status}${msg ? ': ' + msg : ''}`);
+  // 429 = a free-tier limit: Google says which one (per minute, or used up for the whole day)
+  return new AIError(r.status === 429 ? (/PerDay/i.test(det + msg) ? 'limitday' : 'limit') : keyish ? 'key' : r.status >= 500 ? 'busy' : 'api', `${r.status}${msg ? ': ' + msg : ''}`);
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let modelCache = null;
@@ -4617,6 +4618,7 @@ const AI_MSG = {
   nokey:'Add your Gemini key first (⚙).',
   key:'Gemini did not accept the key. Open ⚙ and paste it again from AI Studio.',
   limit:'Lena needs a short break: the free Gemini limit was reached on every model. Try again in a minute.',
+  limitday:'Your Gemini key has used up today’s free requests on every model. Lena is back after the daily reset (midnight US Pacific time, about 9:00 in Germany).',
   busy:'Gemini is very busy right now and didn’t answer in time. Wait a moment, then tap Try again.',
   timeout:'Gemini didn’t answer in time. Wait a moment, then tap Try again.',
   blocked:'The request never reached Google. Check the internet connection. On a work laptop or with an ad/privacy blocker, Google AI may be blocked — try your tablet or another network.',
@@ -4659,7 +4661,7 @@ async function saveKey() {
   $('#cKeyMsg').textContent = 'Testing the key…';
   try {
     const model = await pickModel(k);
-    lsSet(AI_KEY, k); lsSet(AI_MODEL, model); C.model = null;
+    lsSet(AI_KEY, k); lsSet(AI_MODEL, model); C.model = null; cwSoon(2000);
     $('#cKeyMsg').textContent = `Connected ✓ (using ${model}).`;
     setTimeout(() => { showKeySetup(false); $('#cChat .b.sys').forEach(b => b.remove()); if (!C.started) cafeStart(); }, 700);
   } catch (e) { $('#cKeyMsg').textContent = (e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : AI_MSG[e.message] || 'Could not connect.') + (e.detail ? ` (Google says: ${e.detail})` : ''); }
@@ -7052,21 +7054,57 @@ function showSelPop() {
 }
 document.addEventListener('selectionchange', () => { clearTimeout(selT); selT = setTimeout(showSelPop, 250); });
 selPop.addEventListener('pointerdown', e => e.preventDefault());   // keep the selection while tapping the button
-selPop.addEventListener('click', async e => {
+selPop.addEventListener('click', e => {
   if (!e.target.closest('[data-selsave]') || !selState || selState.busy) return;
-  const st = selState, b = e.target.closest('[data-selsave]'), r = b.getBoundingClientRect();
-  const finish = html => { selPop.innerHTML = `<span>${html}</span>`; st.busy = false; st.done = true; placeSelPop(r); const s = window.getSelection(); if (s) s.removeAllRanges(); setTimeout(() => { if (selState === st) hideSelPop(); }, 3500); };
-  if (!lsGet(AI_KEY)) { finish('Dafür braucht Lena den Gemini-Schlüssel (⚙ im Sprach-Café).<small class="en2">Saving a word needs the Gemini key (⚙ in the Sprach-Café).</small>'); return; }
-  st.busy = true; b.disabled = true; b.innerHTML = '… Lena schlägt nach<small class="en2">looking it up</small>';
-  try {
-    const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:15000, budget:25000, temperature:0.2,
-      parts:[{ text:`The learner selected "${st.text}" in this German text: "${st.sent}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this text. "ta" = the meaning in Tamil script. "emoji" = ONE emoji that pictures the meaning. "ex_en" = an English translation of the German text.` }] });
-    const w = { de:gS(d.de) || st.text, en:gS(d.en), ta:gS(d.ta), e:gEmoji(d.emoji, '📘') };
-    const id = saveCafeWord(w, st.sent, st.en || gS(d.ex_en), st.tp), had = id && S.bm[id];
-    if (id && !had) toggleStar(id); else save();
-    finish(`${had ? '★ Schon gespeichert' : '★ Gespeichert'}: <b>${esc(w.de)}</b> · ${esc(w.en)}<small class="en2">${had ? 'Already in' : 'Saved to'} My words › ${esc(wordPlace(cwTopic(S.cw[id])))}</small>`);
-  } catch (err) { finish(`${esc(AI_MSG[err.message] || 'Das hat nicht geklappt. Bitte noch einmal.')}`); }
+  const st = selState, r = e.target.closest('[data-selsave]').getBoundingClientRect();
+  const id = cwId(st.text); if (id === 'cw_') return;
+  const had = S.cw && S.cw[id] && S.bm[id];
+  if (!S.cw || !S.cw[id]) { saveCafeWord({ de:st.text, e:'⏳' }, st.sent, st.en, st.tp); Object.assign(S.cw[id], { p:1, q:st.text }); }
+  if (!S.bm[id]) toggleStar(id); else save();
+  selPop.innerHTML = `<span>${had ? '★ Schon gespeichert' : '★ Gespeichert'}: <b>${esc(st.text)}</b><small class="en2">${had ? 'Already in' : 'Saved to'} My words › ${esc(wordPlace(cwTopic(S.cw[id])))}${S.cw[id].p ? ' · Lena adds the meaning and picture in the background' : ''}</small></span>`;
+  st.done = true; placeSelPop(r);
+  const sel = window.getSelection(); if (sel) sel.removeAllRanges();
+  setTimeout(() => { if (selState === st) hideSelPop(); }, 2200);
+  cwSoon(600);
 });
+/* ---- background look-up: saved words waiting for their meaning (p:1) are filled in one by one.
+   No key, offline or Gemini busy: they simply wait and are tried again later (a little longer each time). ---- */
+let cwBusy = false, cwT = null, cwWait = 30000;
+function cwSoon(ms) { clearTimeout(cwT); cwT = setTimeout(cwFill, ms); }
+async function cwFill() {
+  if (cwBusy) return;
+  const next = cwList().find(w => w.p); if (!next) { cwWait = 30000; return; }
+  if (!lsGet(AI_KEY) || !navigator.onLine) return;   // tried again when a key is added, the device is online again, or the app starts
+  cwBusy = true;
+  const id = next.id, text = next.q || next.de, sent = next.ex || text;
+  try {
+    const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:20000, budget:30000, temperature:0.2,
+      parts:[{ text:`The learner selected "${text}" in this German text: "${sent}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this text. "ta" = the meaning in Tamil script. "emoji" = ONE emoji that pictures the meaning. "ex_en" = an English translation of the German text.` }] });
+    const w = (S.cw || {})[id];   // the progress may have been replaced by a sync meanwhile: look the word up again
+    if (w && w.p) cwResolve(w, { de:gS(d.de) || text, en:gS(d.en), ta:gS(d.ta), e:gEmoji(d.emoji, '📘'), exen:w.exen || gS(d.ex_en) });
+    cwWait = 30000; cwBusy = false; cwSoon(1500);    // the next waiting word
+  } catch (err) {
+    cwBusy = false; cwWait = Math.min(cwWait * 2, 15 * 60000); cwSoon(cwWait);
+  }
+}
+// the dictionary form can be another word than the one selected (gehe → gehen): then the entry moves, keeping its star and memory box
+function cwResolve(w, fill) {
+  const nid = cwId(fill.de);
+  delete w.p; delete w.q;
+  if (nid === w.id || nid === 'cw_') Object.assign(w, fill);
+  else {
+    const o = S.cw[nid];
+    if (o) { if (!o.e || o.e === '⏳') o.e = fill.e; if (!o.en) Object.assign(o, fill); }
+    else S.cw[nid] = Object.assign({}, w, fill, { id:nid });
+    if (S.bm[w.id]) { S.bm[nid] = S.bm[nid] || S.bm[w.id]; delete S.bm[w.id]; }
+    if (S.srs[w.id]) { if (!S.srs[nid]) S.srs[nid] = S.srs[w.id]; delete S.srs[w.id]; }
+    delete S.cw[w.id];
+  }
+  save();
+  if (($('.screen.show') || {}).id === 'words') renderWords();
+}
+window.addEventListener('online', () => cwSoon(3000));
+setTimeout(() => cwSoon(0), 6000);   // words left waiting from last time
 document.addEventListener('pointerdown', e => { if (!selPop.hidden && !selPop.contains(e.target) && selState && !selState.busy) hideSelPop(); }, true);
 document.addEventListener('scroll', () => { if (selState && !selState.busy && !selState.done) { const i = selInfo(); if (i) placeSelPop(i.rect); else hideSelPop(); } }, true);
 const cwList = () => Object.values(S.cw || {});
@@ -7088,7 +7126,7 @@ function cwSVG(w) {
 }
 const cwItemHTML = w => `<div class="item"><div>
     <div style="font-size:19px;font-weight:600">${wordHTML({ de:w.de })} ${dotsHTML(w.id)} <button class="linkbtn" data-say="${esc(w.de.replace(/,.*$/, ''))}">🔊</button></div>
-    <div class="tr">${esc(w.en)}${w.ta ? ` · <span class="ta">${esc(w.ta)}</span>` : ''}</div>
+    <div class="tr">${w.p ? '⏳ Lena ergänzt die Bedeutung bald · meaning coming soon' : esc(w.en)}${w.ta ? ` · <span class="ta">${esc(w.ta)}</span>` : ''}</div>
     ${w.ex ? `<div class="s" style="margin-top:6px">“${esc(w.ex)}”</div>${w.exen ? `<div class="tr">${esc(w.exen)}</div>` : ''}` : ''}${picSVG(w)}
   </div>${starBtn(w.id)}</div>`;
 
@@ -7216,7 +7254,7 @@ $('#wTiles').addEventListener('click', e => { const b = e.target.closest('[data-
 let FC = null;
 function cardFaces(x) {
   const big = h => `<div class="fbig">${h}</div>`, tr = t => t ? `<div class="tr">${esc(t)}</div>` : '';
-  if (x.cw) return { f:big(wordHTML({ de:x.de })), say:x.de.replace(/,.*$/, ''), b:`${big(wordHTML({ de:x.de }))}<div class="fmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">${esc(x.ta)}</div>` : ''}${x.ex ? `<div class="s">“${esc(x.ex)}”</div>${tr(x.exen)}` : ''}${picSVG(x)}` };
+  if (x.cw) return { f:big(wordHTML({ de:x.de })), say:x.de.replace(/,.*$/, ''), b:`${big(wordHTML({ de:x.de }))}<div class="fmean">${x.p ? '⏳ Bedeutung kommt bald · meaning coming soon' : esc(x.en)}</div>${x.ta ? `<div class="ta">${esc(x.ta)}</div>` : ''}${x.ex ? `<div class="s">“${esc(x.ex)}”</div>${tr(x.exen)}` : ''}${picSVG(x)}` };
   if (x.xt === 'wz') { const [de, en] = (x.w || x.a).split(' = '); return { f:`<div class="femo">${x.e}</div>${big(wordHTML({ de }))}`, say:de.replace(/,.*$/, ''), b:`${big(wordHTML({ de }))}<div class="fmean">${esc(en || '')}</div><div class="s">${xHTML(x)}</div>${tr(x.t)}` }; }
   if (x.xt) return { f:`<div class="femo">${x.e}</div><div class="fsent">${xPrompt(x)}</div><div class="tr">${bi(xHint(x))}</div>`, say:xPlain(x), b:`<div class="fsent">${xHTML(x)}</div>${tr(x.t)}<div class="w">${esc(x.why || '')}</div>${picSVG(x)}` };
   if (x.pn) return { f:`<div class="femo">${x.e}</div>${big(wordHTML({ de:`${x.art} ${x.sg}` }))}<div class="tr">Plural?</div>`, say:`${x.art} ${x.sg}`, b:`${big(`die ${esc(x.pl)}`)}<div class="fmean">${esc(x.en)}</div><div class="w">${nounWhy(x, 'pf')}</div>${picSVG(x, 'pf')}` };
@@ -7445,6 +7483,7 @@ function mergeSaves(a, b) {
   for (const [k, v] of Object.entries(a.ux || {})) m.ux[k] = Math.max(m.ux[k] || 1, v || 1);
   m.pass = Object.assign({}, b.pass || {}, a.pass || {});
   m.cw = Object.assign({}, b.cw || {}, a.cw || {});   // Lena's words from both devices
+  for (const [id, w] of Object.entries(b.cw || {})) if (m.cw[id] && m.cw[id].p && !w.p) m.cw[id] = w;   // the looked-up version wins
   m.ex = Object.assign({}, b.ex || {});
   for (const [k, v] of Object.entries(a.ex || {})) { const o = m.ex[k]; if (!o || (v.n || 0) >= (o.n || 0)) m.ex[k] = Object.assign({}, v, { b:Math.max(v.b || 0, (o || {}).b || 0) }); }
   m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
