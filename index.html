@@ -591,7 +591,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 28 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
+      <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 29 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button></div>
       <div class="tcards" id="topicCards"></div>
@@ -976,6 +976,7 @@ Object.assign(EN2, { 'Welche Endung passt zur Person?':'Which ending fits the pe
   'Gleichzeitig, aktiv → Partizip I (-end)':'Happening now, active → Partizip I (-end)', 'Fertig oder passiv → Partizip II':'Finished or passive → Partizip II', 'Adjektiv als Nomen: Welche Endung?':'Adjective as a noun: which ending?',
   'dies- / welch- / jed-: Welche Endung?':'this / which / every: which ending?', 'Vergangenheit: hätte oder wäre + Partizip II?':'Past: hätte or wäre + Partizip II?', 'Wie? → indem · neues Subjekt → ohne dass':'How? → indem · a new subject → ohne dass', 'Grund, statt, innerhalb oder außerhalb?':'A reason, instead of, within or outside?' });
 Object.assign(EN2, { 'Regelmäßig: ge…t':'Regular: ge…t', 'Unregelmäßig: ge…en':'Irregular: ge…en', 'Gemischt: Vokalwechsel + t':'Mixed: vowel change + t', 'Kein ge-: -ieren, be-, ver-, er- …':'No ge-: -ieren, be-, ver-, er- …', 'Trennbar: ge in der Mitte':'Separable: ge in the middle' });
+Object.assign(EN2, { 'Regelmäßig: -te / ge…t':'Regular: -te / ge…t', 'Unregelmäßig: Welches Präteritum?':'Irregular: which Präteritum?', 'Unregelmäßig: Welches Partizip II?':'Irregular: which Partizip II?', 'Gemischt: neuer Vokal + -te / -t':'Mixed: new vowel + -te / -t', 'Perfekt mit haben oder sein?':'Perfekt with haben or sein?' });
 const bi = (de, en) => { if (!de) return ''; de = String(de); if (de.includes('class="en2"')) return de; en = en || EN2[de]; return en ? `${de}<small class="en2">${en}</small>` : de; };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -2131,7 +2132,16 @@ const XT = [
       tr:['Separable: ge in the middle', 'Separable verbs put ge between the prefix and the verb: aufstehen → aufgestanden, einkaufen → eingekauft, anrufen → angerufen, mitbringen → mitgebracht.', 'பிரியும் வினை: ge நடுவில்: aufgestanden, eingekauft.'] },
     hint:{ rg:'Regelmäßig: ge…t', ir:'Unregelmäßig: ge…en', mx:'Gemischt: Vokalwechsel + t', ng:'Kein ge-: -ieren, be-, ver-, er- …', tr:'Trennbar: ge in der Mitte' },
     lv:[{ t:'ge…t oder ge…en?', s:'gespielt · gegessen · gebracht', k:['rg', 'ir', 'mx'] }, { t:'Ohne ge- & trennbar', s:'studiert · besucht · aufgestanden', k:['ng', 'tr'] }],
-    err:'perfekt' }
+    err:'perfekt' },
+  { tp:'sf', name:'Regelmäßig & unregelmäßig', short:'3 Formen', icon:'🔁', cefr:'A2', base:133,
+    kinds:{ rg:['Regular: one rule', 'Regular verbs never change their vowel: stem + te in the Präteritum, ge + stem + t in the Partizip II: kaufen – kaufte – gekauft. Stems on -t / -d add an e: arbeiten – arbeitete – gearbeitet. Never invent an irregular form for them.', 'சாதாரண வினை: -te, ge…t: kaufen – kaufte – gekauft.'],
+      pr:['Irregular: the Präteritum', 'Irregular verbs change their vowel in the Präteritum and have no -te: schreiben – schrieb, trinken – trank, gehen – ging, sein – war. Learn them in their sound groups (ei → ie, i → a, e → a …).', 'ஒழுங்கற்ற வினை: Präteritum-இல் உயிர் மாறும், -te இல்லை: schrieb, trank, ging.'],
+      pp:['Irregular: the Partizip II', 'The Partizip II of irregular verbs ends in -en, often with a third vowel: trinken – trank – getrunken, sprechen – sprach – gesprochen, schreiben – schrieb – geschrieben.', 'ஒழுங்கற்ற Partizip II: ge…en: getrunken, gesprochen.'],
+      mx:['Mixed verbs', 'A few verbs change the vowel AND take -te / -t: bringen – brachte – gebracht, denken – dachte – gedacht, wissen – wusste – gewusst, kennen – kannte – gekannt, nennen – nannte – genannt, rennen – rannte – gerannt.', 'கலப்பு: உயிர் மாறும் + -te / -t: brachte, gebracht.'],
+      hs:['Perfekt: hat or ist?', 'Lists show the Perfekt with its helper: ist for movement from A to B and change of state (ist gegangen, ist gefahren, ist geworden) and for sein and bleiben; hat for everything else (hat gegessen, hat geschrieben).', 'இடமாற்றம் / நிலைமாற்றம் → ist; மற்றவை → hat.'] },
+    hint:{ rg:'Regelmäßig: -te / ge…t', pr:'Unregelmäßig: Welches Präteritum?', pp:'Unregelmäßig: Welches Partizip II?', mx:'Gemischt: neuer Vokal + -te / -t', hs:'Perfekt mit haben oder sein?' },
+    lv:[{ t:'Regelmäßig oder unregelmäßig?', s:'kaufen – kaufte · schreiben – schrieb', k:['rg', 'pr'] }, { t:'Die drei Formen', s:'trinken – trank – getrunken · ist gegangen', k:['pp', 'mx', 'hs'] }],
+    err:'verbform' }
 ];
 // kind colours: 1st kind blue, 2nd red, 3rd gold, 4th green, 5th grey-blue
 const XCOL = ['#4F7CAC', '#D9675B', '#A07A12', '#3E8E63', '#5B6F86'];
@@ -2867,6 +2877,57 @@ const XR = { // [id, kind, sentence, answer, wrong, English, emoji, why, key wor
     ['t6', 'tr', 'Ich habe mein Zimmer ___.', 'aufgeräumt', 'geaufräumt', 'I tidied my room.', '🧹', 'auf + ge + räumt.', 'aufräumen = to tidy up'],
     ['t7', 'tr', 'Wir haben gestern Abend ___.', 'ferngesehen', 'gefernsehen', 'We watched TV last night.', '📺', 'fern + ge + sehen.', 'fernsehen = to watch TV'],
     ['t8', 'tr', 'Hast du die Tür ___?', 'zugemacht', 'gezumacht', 'Did you close the door?', '🚪', 'zu + ge + macht.', 'zumachen = to close']
+  ],
+  sf:[
+    ['g1', 'rg', 'kaufen – ___ – gekauft', 'kaufte', 'kief', 'buy – bought – bought', '🛒', 'kaufen is regular: kauf + te.', 'kaufen = to buy'],
+    ['g2', 'rg', 'spielen – spielte – ___', 'gespielt', 'gespielen', 'play – played – played', '⚽', 'Regular: ge + spiel + t.', 'spielen = to play'],
+    ['g3', 'rg', 'arbeiten – ___ – gearbeitet', 'arbeitete', 'arbeitte', 'work – worked – worked', '💼', 'Stem on -t: arbeit + ete.', 'arbeiten = to work'],
+    ['g4', 'rg', 'wohnen – wohnte – ___', 'gewohnt', 'gewohnen', 'live – lived – lived', '🏠', 'Regular: ge + wohn + t.', 'wohnen = to live'],
+    ['g5', 'rg', 'machen – ___ – gemacht', 'machte', 'miech', 'make – made – made', '🛠️', 'machen is regular: mach + te.', 'machen = to make, to do'],
+    ['g6', 'rg', 'lernen – lernte – ___', 'gelernt', 'gelornen', 'learn – learned – learned', '📚', 'Regular: ge + lern + t.', 'lernen = to learn'],
+    ['g7', 'rg', 'warten – ___ – gewartet', 'wartete', 'wartte', 'wait – waited – waited', '⏳', 'Stem on -t: wart + ete.', 'warten = to wait'],
+    ['g8', 'rg', 'kochen – kochte – ___', 'gekocht', 'gekochen', 'cook – cooked – cooked', '🍳', 'Regular: ge + koch + t.', 'kochen = to cook'],
+    ['g9', 'rg', 'fragen – ___ – gefragt', 'fragte', 'frieg', 'ask – asked – asked', '❓', 'fragen is regular: frag + te.', 'fragen = to ask'],
+    ['g10', 'rg', 'sagen – sagte – ___', 'gesagt', 'gesagen', 'say – said – said', '💬', 'Regular: ge + sag + t.', 'sagen = to say'],
+    ['p1', 'pr', 'schreiben – ___ – geschrieben', 'schrieb', 'schreibte', 'write – wrote – written', '✍️', 'ei → ie: schrieb, no -te.', 'schreiben = to write'],
+    ['p2', 'pr', 'trinken – ___ – getrunken', 'trank', 'trinkte', 'drink – drank – drunk', '🥤', 'i → a → u: trank.', 'trinken = to drink'],
+    ['p3', 'pr', 'gehen – ___ – gegangen', 'ging', 'gehte', 'go – went – gone', '🚶', 'gehen is very irregular: ging.', 'gehen = to go'],
+    ['p4', 'pr', 'kommen – ___ – gekommen', 'kam', 'kommte', 'come – came – come', '🏃', 'kommen → kam.', 'kommen = to come'],
+    ['p5', 'pr', 'sehen – ___ – gesehen', 'sah', 'sehte', 'see – saw – seen', '👀', 'e → a → e: sah.', 'sehen = to see'],
+    ['p6', 'pr', 'sprechen – ___ – gesprochen', 'sprach', 'sprechte', 'speak – spoke – spoken', '🗣️', 'e → a → o: sprach.', 'sprechen = to speak'],
+    ['p7', 'pr', 'fahren – ___ – gefahren', 'fuhr', 'fahrte', 'drive – drove – driven', '🚗', 'a → u → a: fuhr.', 'fahren = to drive, to go'],
+    ['p8', 'pr', 'essen – ___ – gegessen', 'aß', 'esste', 'eat – ate – eaten', '🍽️', 'essen → aß (with ß).', 'essen = to eat'],
+    ['p9', 'pr', 'finden – ___ – gefunden', 'fand', 'findete', 'find – found – found', '🔎', 'i → a → u: fand.', 'finden = to find'],
+    ['p10', 'pr', 'schlafen – ___ – geschlafen', 'schlief', 'schlafte', 'sleep – slept – slept', '😴', 'a → ie → a: schlief.', 'schlafen = to sleep'],
+    ['p11', 'pr', 'sein – ___ – gewesen', 'war', 'seinte', 'be – was – been', '🙂', 'sein → war.', 'sein = to be'],
+    ['p12', 'pr', 'nehmen – ___ – genommen', 'nahm', 'nehmte', 'take – took – taken', '✋', 'nehmen → nahm.', 'nehmen = to take'],
+    ['q1', 'pp', 'trinken – trank – ___', 'getrunken', 'getrankt', 'drink – drank – drunk', '🥤', 'i → a → u: getrunken.', 'trinken = to drink'],
+    ['q2', 'pp', 'schreiben – schrieb – ___', 'geschrieben', 'geschreibt', 'write – wrote – written', '✍️', 'ei → ie → ie: geschrieben.', 'schreiben = to write'],
+    ['q3', 'pp', 'sprechen – sprach – ___', 'gesprochen', 'gesprachen', 'speak – spoke – spoken', '🗣️', 'e → a → o: gesprochen.', 'sprechen = to speak'],
+    ['q4', 'pp', 'helfen – half – ___', 'geholfen', 'gehelft', 'help – helped – helped', '🤝', 'e → a → o: geholfen.', 'helfen = to help'],
+    ['q5', 'pp', 'bleiben – blieb – ___', 'geblieben', 'gebleibt', 'stay – stayed – stayed', '🏡', 'ei → ie → ie: geblieben.', 'bleiben = to stay'],
+    ['q6', 'pp', 'gehen – ging – ___', 'gegangen', 'gegeht', 'go – went – gone', '🚶', 'gehen → gegangen.', 'gehen = to go'],
+    ['q7', 'pp', 'sein – war – ___', 'gewesen', 'geseint', 'be – was – been', '🙂', 'sein → gewesen.', 'sein = to be'],
+    ['q8', 'pp', 'nehmen – nahm – ___', 'genommen', 'genahmen', 'take – took – taken', '✋', 'nehmen → genommen.', 'nehmen = to take'],
+    ['q9', 'pp', 'treffen – traf – ___', 'getroffen', 'getraffen', 'meet – met – met', '🤝', 'e → a → o: getroffen.', 'treffen = to meet'],
+    ['q10', 'pp', 'singen – sang – ___', 'gesungen', 'gesangen', 'sing – sang – sung', '🎤', 'i → a → u: gesungen.', 'singen = to sing'],
+    ['m1', 'mx', 'bringen – ___ – gebracht', 'brachte', 'brang', 'bring – brought – brought', '🎁', 'Mixed: new vowel + te: brachte.', 'bringen = to bring'],
+    ['m2', 'mx', 'denken – ___ – gedacht', 'dachte', 'dank', 'think – thought – thought', '💭', 'Mixed: dachte.', 'denken = to think'],
+    ['m3', 'mx', 'wissen – ___ – gewusst', 'wusste', 'wisste', 'know – knew – known', '🧠', 'Mixed: wusste (i → u).', 'wissen = to know'],
+    ['m4', 'mx', 'kennen – kannte – ___', 'gekannt', 'gekennt', 'know – knew – known', '🤝', 'Mixed: gekannt (e → a).', 'kennen = to know (a person)'],
+    ['m5', 'mx', 'rennen – ___ – gerannt', 'rannte', 'rennte', 'run – ran – run', '🏃', 'Mixed: rannte.', 'rennen = to run'],
+    ['m6', 'mx', 'nennen – nannte – ___', 'genannt', 'genennt', 'name – named – named', '🏷️', 'Mixed: genannt.', 'nennen = to name, to call'],
+    ['m7', 'mx', 'bringen – brachte – ___', 'gebracht', 'gebringt', 'bring – brought – brought', '🎁', 'Mixed: gebracht.', 'bringen = to bring'],
+    ['m8', 'mx', 'denken – dachte – ___', 'gedacht', 'gedachen', 'think – thought – thought', '💭', 'Mixed: gedacht, with -t.', 'denken = to think'],
+    ['h1', 'hs', 'gehen – ging – ___ gegangen', 'ist', 'hat', 'go – went – (has) gone', '🚶', 'Movement from A to B → ist gegangen.', 'gehen = to go'],
+    ['h2', 'hs', 'essen – aß – ___ gegessen', 'hat', 'ist', 'eat – ate – (has) eaten', '🍽️', 'No movement, no change → hat gegessen.', 'essen = to eat'],
+    ['h3', 'hs', 'fahren – fuhr – ___ gefahren', 'ist', 'hat', 'drive – drove – (has) driven', '🚗', 'Movement → ist gefahren.', 'fahren = to drive, to go'],
+    ['h4', 'hs', 'bleiben – blieb – ___ geblieben', 'ist', 'hat', 'stay – stayed – (has) stayed', '🏡', 'bleiben always takes sein.', 'bleiben = to stay'],
+    ['h5', 'hs', 'schreiben – schrieb – ___ geschrieben', 'hat', 'ist', 'write – wrote – (has) written', '✍️', 'No movement → hat geschrieben.', 'schreiben = to write'],
+    ['h6', 'hs', 'werden – wurde – ___ geworden', 'ist', 'hat', 'become – became – (has) become', '🌱', 'A change of state → ist geworden.', 'werden = to become'],
+    ['h7', 'hs', 'schlafen – schlief – ___ geschlafen', 'hat', 'ist', 'sleep – slept – (has) slept', '😴', 'No change of place → hat geschlafen.', 'schlafen = to sleep'],
+    ['h8', 'hs', 'kommen – kam – ___ gekommen', 'ist', 'hat', 'come – came – (has) come', '🏃', 'Movement → ist gekommen.', 'kommen = to come'],
+    ['h9', 'hs', 'sein – war – ___ gewesen', 'ist', 'hat', 'be – was – (has) been', '🙂', 'sein takes sein: ist gewesen.', 'sein = to be']
   ]
 };
 // extra kinds for older topics: they join an existing level, so level numbers and saved progress stay the same
@@ -3317,7 +3378,7 @@ const PLAN = [
   ['Woche 2 · A1: Zahlen, Uhrzeit und Fälle', [['lv', 77], ['lv', 78], ['lv', 29], ['lv', 30], ['wz', 'restaurant'], ['role', 'r_rest'], ['ex', 'hoer', 1]]],
   ['Woche 3 · A1: Plural und trennbare Verben', [['lv', 17], ['lv', 18], ['lv', 13], ['lv', 14], ['wz', 'wohnen'], ['wz', 'einkaufen'], ['role', 'r_bahn']]],
   ['Woche 4 · A1–A2: Modalverben und Perfekt', [['lv', 21], ['lv', 22], ['lv', 33], ['lv', 129], ['lv', 34], ['wz', 'termine'], ['role', 'r_termin'], ['cafe', 3]]],
-  ['Woche 5 · A2: Präteritum, Reflexiv, Präpositionen', [['lv', 45], ['lv', 37], ['lv', 4], ['lv', 5], ['wz', 'stadt'], ['role', 'r_weg'], ['ex', 'hoer', 2]]],
+  ['Woche 5 · A2: Präteritum, Reflexiv, Präpositionen', [['lv', 45], ['lv', 133], ['lv', 37], ['lv', 4], ['lv', 5], ['wz', 'stadt'], ['role', 'r_weg'], ['ex', 'hoer', 2]]],
   ['Woche 6 · A2: Nebensätze und Relativsätze', [['lv', 1], ['lv', 2], ['lv', 81], ['lv', 82], ['wz', 'gesundheit'], ['role', 'r_arzt'], ['ex', 'les', 1]]],
   ['Woche 7 · A2: Temporalsätze und indirekte Fragen', [['lv', 85], ['lv', 86], ['lv', 89], ['lv', 90], ['wz', 'arbeit'], ['ex', 'sb1', 1], ['sp', 'sp1']]],
   ['Woche 8 · A2–B1: Adjektive und Vergleiche', [['lv', 7], ['lv', 8], ['lv', 41], ['lv', 42], ['wz', 'freizeit'], ['role', 'r_wohnung'], ['telc', 1]]],
@@ -3329,7 +3390,7 @@ const PLAN = [
 
 // [topic, tab]; the order inside a tab is the teaching order
 const TOPICS = [['ps', 'A1'], ['sb', 'A1'], ['zd', 'A1'], ['ar', 'A1'], ['pl', 'A1'], ['tv', 'A1'], ['mv', 'A1'], ['pf', 'A1'], ['p2', 'A1'],
-  ['prep', 'A2'], ['rv', 'A2'], ['ks', 'A2'], ['pt', 'A2'], ['wd', 'A2'], ['rs', 'A2'], ['ts', 'A2'], ['adj', 'A2'], ['iq', 'A2'],
+  ['prep', 'A2'], ['rv', 'A2'], ['ks', 'A2'], ['pt', 'A2'], ['sf', 'A2'], ['wd', 'A2'], ['rs', 'A2'], ['ts', 'A2'], ['adj', 'A2'], ['iq', 'A2'],
   ['k2', 'B1'], ['vp', 'B1'], ['zu', 'B1'], ['pa', 'B1'], ['ls', 'B1'], ['nd', 'B1'], ['zk', 'B1'], ['fg', 'B1'], ['nv', 'B1'], ['pz', 'B1']];
 const OLD_T = {
   pl:{ name:'Singular / Plural', icon:'🍎', cefr:'A1', lv:[17, 18, 19, 20], u:() => S.unlockedN || 1, pool:() => NPL },
@@ -3349,7 +3410,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-5';
+const APP_VERSION = 'v2026.10.07-6';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -6717,6 +6778,19 @@ GUIDE.pz = { name:'Partizipien & Adjektive als Nomen', sections:() => [
   ['4 · Adjectives as nouns', `<p>${XBY.pz.kinds.an[1]}</p>${gtab(['', 'der / die / das …', 'ein / eine …', 'no article'], [['masc.', 'der Deutsche', 'ein Deutscher', 'Deutscher'], ['fem.', 'die Deutsche', 'eine Deutsche', 'Deutsche'], ['plural', 'die Deutschen', '–', 'Deutsche']])}<p>Same pattern: der / die Angestellte, Bekannte, Erwachsene, Jugendliche, Verwandte, Kranke. And with etwas / nichts: <b>etwas Neues, nichts Besonderes</b>.</p>${xPic('pz_n1')}${xEx(['pz_n2', 'pz_n4', 'pz_n5', 'pz_n9'])}${taMn(XBY.pz.kinds.an[2])}`],
   ['💡 Memory tricks', xTipsHTML(XPOOL.pz)]
 ] };
+const SF_VERBS = [["beginnen","beginnt","begann","hat begonnen","begin"],["bitten","bittet","bat","hat gebeten","ask (for)"],["bleiben","bleibt","blieb","ist geblieben","stay"],["bringen","bringt","brachte","hat gebracht","bring"],["denken","denkt","dachte","hat gedacht","think"],["dürfen","darf","durfte","hat gedurft","be allowed to"],["einladen","lädt ein","lud ein","hat eingeladen","invite"],["empfehlen","empfiehlt","empfahl","hat empfohlen","recommend"],["essen","isst","aß","hat gegessen","eat"],["fahren","fährt","fuhr","ist gefahren","drive, go"],["fallen","fällt","fiel","ist gefallen","fall"],["finden","findet","fand","hat gefunden","find"],["fliegen","fliegt","flog","ist geflogen","fly"],["geben","gibt","gab","hat gegeben","give"],["gefallen","gefällt","gefiel","hat gefallen","please"],["gehen","geht","ging","ist gegangen","go"],["gewinnen","gewinnt","gewann","hat gewonnen","win"],["haben","hat","hatte","hat gehabt","have"],["halten","hält","hielt","hat gehalten","hold, stop"],["heißen","heißt","hieß","hat geheißen","be called"],["helfen","hilft","half","hat geholfen","help"],["kennen","kennt","kannte","hat gekannt","know (a person)"],["kommen","kommt","kam","ist gekommen","come"],["können","kann","konnte","hat gekonnt","can"],["lassen","lässt","ließ","hat gelassen","let, leave"],["laufen","läuft","lief","ist gelaufen","run, walk"],["leihen","leiht","lieh","hat geliehen","lend"],["lesen","liest","las","hat gelesen","read"],["liegen","liegt","lag","hat gelegen","lie (be lying)"],["müssen","muss","musste","hat gemusst","must"],["nehmen","nimmt","nahm","hat genommen","take"],["nennen","nennt","nannte","hat genannt","name"],["rennen","rennt","rannte","ist gerannt","run"],["rufen","ruft","rief","hat gerufen","call"],["scheinen","scheint","schien","hat geschienen","shine, seem"],["schlafen","schläft","schlief","hat geschlafen","sleep"],["schließen","schließt","schloss","hat geschlossen","close"],["schneiden","schneidet","schnitt","hat geschnitten","cut"],["schreiben","schreibt","schrieb","hat geschrieben","write"],["schwimmen","schwimmt","schwamm","ist geschwommen","swim"],["sehen","sieht","sah","hat gesehen","see"],["sein","ist","war","ist gewesen","be"],["singen","singt","sang","hat gesungen","sing"],["sitzen","sitzt","saß","hat gesessen","sit"],["sprechen","spricht","sprach","hat gesprochen","speak"],["stehen","steht","stand","hat gestanden","stand"],["steigen","steigt","stieg","ist gestiegen","climb, rise"],["sterben","stirbt","starb","ist gestorben","die"],["tragen","trägt","trug","hat getragen","carry, wear"],["treffen","trifft","traf","hat getroffen","meet"],["trinken","trinkt","trank","hat getrunken","drink"],["tun","tut","tat","hat getan","do"],["vergessen","vergisst","vergaß","hat vergessen","forget"],["verlieren","verliert","verlor","hat verloren","lose"],["verstehen","versteht","verstand","hat verstanden","understand"],["waschen","wäscht","wusch","hat gewaschen","wash"],["werden","wird","wurde","ist geworden","become"],["werfen","wirft","warf","hat geworfen","throw"],["wissen","weiß","wusste","hat gewusst","know (a fact)"],["ziehen","zieht","zog","hat / ist gezogen","pull / move"]];   // [infinitive, er-form, Präteritum, Perfekt, English]: the irregular verbs for A1–B1
+GUIDE.sf = { name:'Regelmäßig & unregelmäßig', sections:() => [
+  ['1 · Three forms per verb', `<p>Every verb has three main forms (<i>Stammformen</i>): the <b>Infinitiv</b> (Präsens, Futur, after modal verbs), the <b>Präteritum</b> (stories, texts) and the <b>Partizip II</b> (Perfekt, Passiv). Learn them as one block, like English <i>go – went – gone</i>.</p>
+    ${buildWordSVG([[[{ t:'schr' }, { t:'ei', c:XC_B, wt:800, fly:'l' }, { t:'ben' }], '1 · Infinitiv: Ich schreibe …'], [[{ t:'schr' }, { t:'ie', c:XC_R, wt:800, fly:'l' }, { t:'b' }], '2 · Präteritum: Ich schrieb …'], [[{ t:'ge', c:XC_GD, wt:800, fly:'l' }, { t:'schr' }, { t:'ie', c:XC_R, wt:800, fly:'l' }, { t:'ben', c:XC_GD, wt:800, fly:'r' }], '3 · Partizip II: Ich habe … geschrieben']], 'schreiben – schrieb – geschrieben')}`],
+  ['2 · Regular verbs: one rule', `<p>${XBY.sf.kinds.rg[1]}</p>${gtab(['Infinitiv', 'Präteritum', 'Partizip II'], [['spielen', 'spielte', 'gespielt'], ['kaufen', 'kaufte', 'gekauft'], ['wohnen', 'wohnte', 'gewohnt'], ['arbeiten', 'arbeitete', 'gearbeitet'], ['studieren', 'studierte', 'studiert']])}${xPic('sf_g1')}${xEx(['sf_g2', 'sf_g3', 'sf_g5', 'sf_g9'])}${taMn(XBY.sf.kinds.rg[2])}`],
+  ['3 · Irregular verbs: sound groups', `<p>${XBY.sf.kinds.pr[1]} Most irregular verbs follow a few vowel patterns, so learn them in groups:</p>
+    ${decisionSVG('Which sound group?', [['ei → ie → ie', 'schreiben, schrieb, geschrieben', XC_B], ['i → a → u', 'trinken, trank, getrunken', XC_R], ['e → a → o', 'sprechen, sprach, gesprochen', XC_GD], ['e → a → e', 'sehen, sah, gesehen', XC_GR], ['a → ie → a', 'schlafen, schlief, geschlafen', XC_B]])}
+    ${gtab(['Pattern', 'Verbs'], [['ei → ie → ie', 'bleiben, schreiben, steigen, scheinen'], ['i → a → u', 'trinken, finden, singen, beginnen (begonnen)'], ['e → a → o', 'sprechen, helfen, nehmen, treffen, empfehlen'], ['e → a → e', 'sehen, lesen, geben, essen (aß)'], ['a → ie → a', 'schlafen, fallen, lassen, halten, laufen'], ['a → u → a', 'fahren, tragen, waschen, einladen'], ['ie → o → o', 'fliegen, verlieren, schließen, ziehen'], ['one of a kind', 'gehen – ging – gegangen, kommen – kam – gekommen, sein – war – gewesen, stehen – stand – gestanden, tun – tat – getan']], 9)}${xPic('sf_p2')}${xEx(['sf_p1', 'sf_p3', 'sf_p8', 'sf_q3'])}${taMn(XBY.sf.kinds.pr[2])}`],
+  ['4 · Mixed verbs', `<p>${XBY.sf.kinds.mx[1]}</p>${buildWordSVG([[[{ t:'br' }, { t:'a', c:XC_R, wt:800, fly:'l' }, { t:'ch' }, { t:'te', c:XC_B, wt:800, fly:'r' }], 'bringen → brachte: new vowel + te'], [[{ t:'w' }, { t:'u', c:XC_R, wt:800, fly:'l' }, { t:'ss' }, { t:'te', c:XC_B, wt:800, fly:'r' }], 'wissen → wusste']], '')}${gtab(['Infinitiv', 'Präteritum', 'Partizip II'], [['bringen', 'brachte', 'gebracht'], ['denken', 'dachte', 'gedacht'], ['wissen', 'wusste', 'gewusst'], ['kennen', 'kannte', 'gekannt'], ['nennen', 'nannte', 'genannt'], ['rennen', 'rannte', 'gerannt']])}${xPic('sf_m1')}${xEx(['sf_m2', 'sf_m3', 'sf_m4'])}`],
+  ['5 · Perfekt: hat or ist?', `<p>${XBY.sf.kinds.hs[1]}</p>${decisionSVG('What does the verb describe?', [['movement from A to B', 'ist gegangen, ist gefahren', XC_R], ['a change of state', 'ist geworden, ist eingeschlafen', XC_R], ['sein, bleiben', 'ist gewesen, ist geblieben', XC_R], ['everything else', 'hat gegessen, hat geschrieben', XC_B]])}${xPic('sf_h1')}${xEx(['sf_h2', 'sf_h4', 'sf_h6'])}`],
+  ['6 · The big list: 60 irregular verbs', `<p>The irregular verbs you need for A1–B1 and the telc exam. The 2nd column is the er-form of the Präsens, because many change there too (fährt, spricht).</p>${gtab(['Infinitiv', 'er / sie', 'Präteritum', 'Perfekt', 'English'], SF_VERBS.map(v => [v[0], v[1], v[2], v[3], `<span class="tr">${v[4]}</span>`]))}`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.sf)]
+] };
 GUIDE.p2 = { name:'Partizip II', sections:() => [
   ['1 · Which ending? Four questions', `<p>The Partizip II is the second part of the Perfekt (<i>ich habe … <b>gespielt</b></i>) and of the Passiv. Ask these questions in this order:</p>${decisionSVG('Look at the verb …', [['-ieren, or be-, ver-, er-, ent- …', 'no ge-: studiert, besucht', XC_R], ['separable: auf-, ein-, an-, mit- …', 'ge in the middle: aufgestanden', XC_GD], ['regular', 'ge … t: gespielt', XC_B], ['irregular', 'ge … en: gegessen', XC_GR]])}`],
   ['2 · Regular: ge…t', `<p>${XBY.p2.kinds.rg[1]}</p>${buildWordSVG([[[{ t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'spiel' }, { t:'t', c:XC_B, wt:800, fly:'r' }], 'spielen → gespielt'], [[{ t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'arbeit' }, { t:'et', c:XC_B, wt:800, fly:'r' }], 'arbeiten → gearbeitet (stem on -t)']], '')}${xPic('p2_r1')}${xEx(['p2_r3', 'p2_r4', 'p2_r6', 'p2_r8'])}${taMn(XBY.p2.kinds.rg[2])}`],
@@ -6761,7 +6835,8 @@ Object.assign(CAFE_FOCUS, {
   nd:{ name:'n-Deklination', prompt:'Grammar focus (B1): the n-Deklination: der Kollege → den / dem Kollegen, der Student, der Kunde, der Nachbar, der Polizist, der Junge, der Mensch, der Herr → Herrn, der Name → den Namen, des Namens. Talk about people at work, neighbours, customers and students: "Wie ist dein Nachbar?", "Hast du schon mal einem Touristen geholfen?", "Mit welchem Kollegen arbeitest du gern?". Use these nouns yourself in the Akkusativ and Dativ. In feedback, correct a missing -n (dem Kollege → dem Kollegen) or an extra -n in the Nominativ.' },
   ls:{ name:'lassen & Zustandspassiv', prompt:'Grammar focus (B1): lassen + infinitive (Ich lasse mein Auto reparieren; Ich lasse mir die Haare schneiden; Perfekt: habe … reparieren lassen), sich lassen (Das lässt sich machen) and the Zustandspassiv with sein + Partizip II (Das Geschäft ist geschlossen; Die Tür ist schon geöffnet) vs. werden + Partizip II for a process. Talk about services, repairs, the household and opening times: "Was machst du selbst und was lässt du machen?", "Wann lässt du dir die Haare schneiden?", "Ist bei euch sonntags alles geschlossen?". In feedback, correct the lassen forms, zu after lassen, and ist / wird.' },
   pz:{ name:'Partizipien & Adjektive als Nomen', prompt:'Grammar focus (B1): Partizip I and II as adjectives (das schlafende Kind, kochendes Wasser, die geschlossene Tür, gebrauchte Autos) and adjectives as nouns (der Deutsche / ein Deutscher, die Angestellte, die Erwachsenen, mein Bekannter, etwas Neues, nichts Besonderes). Talk about people and things around the learner and use these forms yourself: "Gibt es etwas Neues bei dir?", "Was machen Jugendliche in deinem Land in der Freizeit?", "Kaufst du lieber neue oder gebrauchte Sachen?". In feedback, correct the endings and the participle form.' },
-  p2:{ name:'Partizip II', prompt:'Grammar focus (A1–A2): the Partizip II in the Perfekt: regular ge…t (gespielt, gearbeitet), irregular ge…en (gegessen, geschrieben, gefahren, gegangen), mixed verbs (gebracht, gedacht, gewusst, gekannt), no ge- for -ieren verbs and be- / ver- / er- verbs (studiert, besucht, verstanden, erklärt) and ge in the middle of separable verbs (aufgestanden, eingekauft, angerufen). Ask many questions about the past: "Was hast du gestern gegessen?", "Wen hast du am Wochenende besucht?", "Wann bist du heute aufgestanden?", "Was hast du zuletzt gekauft?", "Hast du schon mal etwas Wichtiges vergessen?". In feedback, correct wrong participles and say which rule applies.' }
+  p2:{ name:'Partizip II', prompt:'Grammar focus (A1–A2): the Partizip II in the Perfekt: regular ge…t (gespielt, gearbeitet), irregular ge…en (gegessen, geschrieben, gefahren, gegangen), mixed verbs (gebracht, gedacht, gewusst, gekannt), no ge- for -ieren verbs and be- / ver- / er- verbs (studiert, besucht, verstanden, erklärt) and ge in the middle of separable verbs (aufgestanden, eingekauft, angerufen). Ask many questions about the past: "Was hast du gestern gegessen?", "Wen hast du am Wochenende besucht?", "Wann bist du heute aufgestanden?", "Was hast du zuletzt gekauft?", "Hast du schon mal etwas Wichtiges vergessen?". In feedback, correct wrong participles and say which rule applies.' },
+  sf:{ name:'Regelmäßig & unregelmäßig', prompt:'Grammar focus (A2): the three forms of verbs, regular (kaufen – kaufte – gekauft) and irregular (gehen – ging – gegangen, schreiben – schrieb – geschrieben, trinken – trank – getrunken), mixed (bringen – brachte – gebracht) and Perfekt with hat / ist. Ask the learner to tell stories about the past, both in the Perfekt (spoken) and sometimes in the Präteritum ("Erzähl mal: Was ist gestern passiert?", "Wie war dein letzter Urlaub?", "Was hast du als Kind gern gemacht?"). Use many irregular verbs yourself. In feedback, correct wrong verb forms (gehte → ging, geschreibt → geschrieben) and hat / ist.' }
 });
 
 /* ---- 🎲 Lena writes new sentences for these topics; each one passes an offline check ---- */
@@ -6787,7 +6862,8 @@ const XGEN = {
   nd:'ns = an n-noun (Kollege, Student, Kunde, Nachbar, Polizist, Junge …) as the SUBJECT in the Nominativ singular, answer = without -n, wrong = with -(e)n; ak = the same kind of noun in the Akkusativ or Dativ singular, answer = with -(e)n, wrong = without; sp = Herr / Herrn / Herren, Name / Namen / Namens, Gedanke, Buchstabe in the right form, wrong = the wrong form.',
   ls:'la = a form of lassen (lasse, lässt, ließ) or the infinitive after lassen, wrong = a wrong person form, lassten, gelassen where an infinitive follows, or zu + infinitive; sl = sich lassen + infinitive (Das lässt sich machen), the gap is lässt / lassen / sich / the infinitive, wrong = a wrong form or the participle; zp = ist / sind vs. wird / werden with a clear signal (schon, seit = state → sein; gerade, im Moment = process → werden), or the Partizip II after ist, wrong = the other one or the infinitive.',
   pz:'p1 = a Partizip I with an adjective ending (das schlafende Kind) for something happening now, wrong = the Partizip II with the same ending; p2 = a Partizip II with an adjective ending (das gestohlene Fahrrad), wrong = the Partizip I; an = an adjective used as a noun with the right ending and a capital letter (der Deutsche, ein Deutscher, die Angestellte, etwas Neues), wrong = a wrong ending.',
-  p2:'the gap is always the Partizip II in a Perfekt sentence. rg = a regular participle (gespielt, gearbeitet), wrong = a typical wrong form (gespielen, gearbeitt); ir = an irregular participle on -en (gegessen, geschrieben, getrunken), wrong = a regular-looking wrong form (geesst, geschreibt, getrinkt); mx = a mixed participle (gebracht, gedacht, gewusst, gekannt, genannt, gerannt), wrong = gebringt, gewisst, gekennt …; ng = a participle without ge- (studiert, besucht, verstanden, erklärt, vergessen), wrong = the same with ge- (gestudiert, gebesucht); tr = a separable participle with ge in the middle (aufgestanden, eingekauft, angerufen), wrong = ge at the front (geaufstanden, geeinkauft).'
+  p2:'the gap is always the Partizip II in a Perfekt sentence. rg = a regular participle (gespielt, gearbeitet), wrong = a typical wrong form (gespielen, gearbeitt); ir = an irregular participle on -en (gegessen, geschrieben, getrunken), wrong = a regular-looking wrong form (geesst, geschreibt, getrinkt); mx = a mixed participle (gebracht, gedacht, gewusst, gekannt, genannt, gerannt), wrong = gebringt, gewisst, gekennt …; ng = a participle without ge- (studiert, besucht, verstanden, erklärt, vergessen), wrong = the same with ge- (gestudiert, gebesucht); tr = a separable participle with ge in the middle (aufgestanden, eingekauft, angerufen), wrong = ge at the front (geaufstanden, geeinkauft).',
+  sf:'each "sentence" is a verb row "infinitive – Präteritum – Partizip II" (no full stop) with ONE form replaced by ___; for hs the row is like "gehen – ging – ___ gegangen". rg = a regular verb, wrong = a made-up irregular form (kief, gesagen); pr = the Präteritum of an irregular verb, wrong = a made-up regular form (schreibte, gehte); pp = the Partizip II of an irregular verb, wrong = a wrong form (getrinkt, gesprachen); mx = a mixed verb (brachte, dachte, wusste, kannte, gebracht), wrong = brang, wisste, gekennt …; hs = ist or hat, wrong = the other. "en" = the three English forms, like "write – wrote – written".'
 };
 // closed word classes for the offline check (the answer and the wrong word must both come from them)
 const XSET = {
@@ -6807,7 +6883,7 @@ function xCheckOne(x) {
   if (!a || !w || a === w || a.toLowerCase() === w.toLowerCase()) return 'options';
   if (a.split(' ').length > 3 || w.split(' ').length > 3) return 'too long';
   if (xPlain(x).split(/\s+/).length > 16) return 'sentence too long';
-  if (!/[.!?]$/.test(x.q.trim())) return 'punctuation';
+  if (x.xt !== 'sf' && !/[.!?]$/.test(x.q.trim())) return 'punctuation';   // verb rows (sf) have no full stop
   if (!x.t) return 'translation';
   const both = re => re.test(a) && re.test(w), k = x.k;
   switch (x.xt) {
@@ -6837,6 +6913,7 @@ function xCheckOne(x) {
     }
     case 'nd': return a.slice(0, 4).toLowerCase() === w.slice(0, 4).toLowerCase() ? '' : 'n-noun';
     case 'ls': return k === 'zp' && !both(/^(ist|sind|bin|bist|seid|war|waren|wird|werden|wurde|wurden|wirst|werde)$/i) && /^(ist|sind|wird|werden|war|wurde)$/i.test(a) ? 'sein / werden' : '';
+    case 'sf': return k === 'hs' ? (both(/^(ist|hat)$/i) ? '' : 'hat / ist') : (/\s/.test(a) || !/ – /.test(x.q) ? 'verb row' : '');
     case 'p2': return !/\s/.test(a) && /(t|en)$/.test(a) && /(t|en)$/.test(w) ? '' : 'participle';
     case 'fg': return k === 'wt' ? (both(/^(wegen|trotz|während)$/i) || both(XSET.ar) ? '' : 'wegen / trotz / während') : k === 'fu' ? (XSET.werden.test(a) || !/^ge/.test(a) ? '' : 'Futur') : '';
   }
