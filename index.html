@@ -293,6 +293,8 @@ h2 .en2{font-size:.42em;margin-top:4px} h3 .en2{font-size:.7em}
 .askin{display:flex;gap:6px;padding:8px;border-top:2px solid var(--black)}
 .askin input{flex:1;min-width:0;border:2px solid var(--black);background:var(--white);color:var(--black);padding:8px;font:inherit;font-size:15.5px}
 .askin button{width:40px;flex:0 0 40px;border:2px solid var(--black);background:var(--white);color:var(--black);font-weight:800;cursor:pointer}
+#askMic{touch-action:none;-webkit-touch-callout:none;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:17px;width:48px;flex:0 0 48px}
+#askMic small{font-size:10px;font-weight:700}
 #askMic.on{background:var(--red);color:#fff}
 html.dark .askchat .am{background:#24344A}
 #wfPen[aria-pressed="true"],#wfErase[aria-pressed="true"]{background:var(--ink);color:var(--on)}
@@ -575,7 +577,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag">German from A1 to B1: 18 grammar topics to run, write and speak, telc B1 exam practice and an 8-week plan.</p>
+      <p class="tag">German from A1 to B1: 27 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button class="themebtn" id="themeBtn" type="button"></button></div>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button></div>
       <div class="tcards" id="topicCards"></div>
@@ -639,6 +641,8 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <p class="cafe-lead">Wählen Sie Ihr Niveau und ein Thema. Lena spricht mit Ihnen und übt dabei: <b id="cafeFocusName">weil / dass</b>.<small class="en2">Pick your level and a topic. Lena chats with you and practises this grammar.</small></p>
         <div class="lvlpick" id="cafeLvl"><span>Niveau:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
         <div class="topics" id="cafeTopics"></div>
+        <h3>Rollenspiele<small class="en2">Role-plays: everyday situations – Lena plays the waiter, the doctor, the office …</small></h3>
+        <div class="topics" id="cafeRoles"></div>
       </div>
       <div id="writeBox" style="display:none">
         <p class="cafe-lead">Schreibtraining: <b id="wrFocusName">weil / dass</b> – von einzelnen Wörtern bis zu Briefen im telc-Stil.<small class="en2">Writing practice: from single words to telc-style letters.</small></p>
@@ -927,7 +931,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
 <div id="askBox" class="askbox" role="dialog" aria-label="Frag Lena" hidden>
   <div class="askhead"><b>💬 Frag Lena<small class="en2">Ask Lena about German</small></b><button id="askMin" type="button" aria-label="Minimise">–</button><button id="askEnd" type="button" aria-label="End and delete the chat">✕</button></div>
   <div id="askChat" class="askchat"></div>
-  <div class="askin"><button id="askMic" type="button" aria-label="Speak">🎤</button><input id="askText" type="text" autocomplete="off" placeholder="Frage … / Ask … / கேள் …"><button id="askSend" type="button" aria-label="Send">➤</button></div>
+  <div class="askin"><button id="askMic" type="button" aria-label="Hold to speak">🎤<small>halten</small></button><input id="askText" type="text" autocomplete="off" placeholder="Frage … / Ask … / கேள் …"><button id="askSend" type="button" aria-label="Send">➤</button></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -944,6 +948,16 @@ Object.assign(EN2, { 'Gesperrt: 6 von 8 richtig in Level 1':'Locked: get 6 of 8 
   'Schneller, plus ohne Artikel: kalter Kaffee':'Faster, plus no article: kalter Kaffee', 'Schneller, plus weil / dass: …, weil ich aufstehe':'Faster, plus weil / dass: …, weil ich aufstehe', 'Schneller, plus Dativ Plural: mit den Kindern':'Faster, plus Dativ plural: mit den Kindern',
   'muss nicht oder darf nicht?':'muss nicht or darf nicht?', 'Schneller, plus Nebensatz: …, weil ich arbeiten muss':'Faster, plus Nebensatz: …, weil ich arbeiten muss' });
 Object.assign(EN2, {"Präsens: Wird die Vorsilbe abgetrennt?":"Präsens: does the prefix split off?","Perfekt: Wo steht ge-, oder gibt es kein ge-?":"Perfekt: where does ge- go, or is there no ge-?","Nebensatz: Verb am Ende, in einem Wort":"Side clause: the verb at the end, in one piece","Welcher Plural ist richtig?":"Which plural is right?","Singular oder Plural? Achten Sie auf die Signalwörter.":"Singular or plural? Look at the clue words.","Dativ Plural: Braucht das Nomen ein -n?":"Dativ plural: does the noun need an extra -n?","Welche Form des Modalverbs ist richtig?":"Which form of the modal verb is right?","Welches Modalverb passt zur Bedeutung?":"Which modal verb fits the meaning?","Nebensatz: Welches Wort steht am Ende?":"Nebensatz: which word comes last?","Position 1 ist besetzt: Wo steht das Verb?":"Position 1 is taken: where does the verb go?","Fragewort + Verb + Subjekt – oder das Verb zuerst?":"Question word + verb + subject, or the verb first?","Nomen mit ein / ohne Artikel → kein, alles andere → nicht":"A noun with ein / no article → kein, everything else → nicht","Negative Frage + ja → doch":"A negative question + yes → doch","Wer macht es (Nominativ) – oder wen / was (Akkusativ)?":"Who does it (Nominativ), or whom / what (Akkusativ)?","Pronomen im Akkusativ: mich, dich, ihn …":"Akkusativ pronoun: mich, dich, ihn …","Wem? → Dativ: dem / der / den":"To whom? → Dativ: dem / der / den","Pronomen im Dativ: mir, dir, ihm …":"Dativ pronoun: mir, dir, ihm …","Welche Endung braucht der Possessivartikel?":"Which ending does the possessive need?","Bewegung oder Veränderung → sein, alles andere → haben":"Movement or change → sein, everything else → haben","Welches Partizip II ist richtig?":"Which participle is right?","Welches Reflexivpronomen passt zum Subjekt?":"Which reflexive pronoun fits the subject?","Gibt es noch ein Objekt? → mir / dir":"Is there another object? → mir / dir","Welche Komparativform ist richtig?":"Which comparative form is right?","Ungleich → als · gleich → wie":"Different → als · the same → wie","Welche Superlativform ist richtig?":"Which superlative form is right?","Präteritum von sein / haben / werden":"Past of sein / haben / werden","Präteritum des Modalverbs":"Past of the modal verb","Welche Präteritumform ist richtig?":"Which past form is right?","Höfliche Bitte: Welche Form passt zur Person?":"Polite request: which form fits the person?","Ratschlag: Welche Form ist richtig?":"Advice: which form is right?","Wunsch: würde + Infinitiv – oder wäre / hätte?":"Wish: würde + infinitive, or wäre / hätte?","Nicht real, nur vorgestellt → Konjunktiv II":"Not real, only imagined → Konjunktiv II","Welche Präposition gehört zu diesem Verb?":"Which preposition belongs to this verb?","Welchen Kasus braucht die Präposition?":"Which case does the preposition need?","Sache → da- / wo- · Person → auf wen?":"Thing → da- / wo- · person → auf wen?","zu + Infinitiv – oder nur der Infinitiv?":"zu + infinitive, or just the infinitive?","Gleiche Person → um … zu · neues Subjekt → damit":"Same person → um … zu · new subject → damit","ohne … zu oder statt … zu?":"without doing or instead of doing?","Welche Form von werden passt zum Subjekt?":"Which form of werden fits the subject?","werden + welches Partizip II?":"werden + which Partizip II?","Passiv im Präteritum: wurde oder wurden?":"Passiv in the past: wurde or wurden?","Was ist das Subjekt: die Person oder die Sache?":"What is the subject: the person or the thing?","entweder … oder – oder weder … noch?":"either … or, or neither … nor?","sowohl … als auch – oder nicht nur … sondern auch?":"both … and, or not only … but also?","je … desto: Welches Wort, und wo steht das Verb?":"je … desto: which word, and where is the verb?","zwar … aber":"admittedly … but","Futur: werden + Infinitiv":"Futur: werden + infinitive","Wessen? → Genitiv":"Whose? → Genitiv","Grund, Gegensatz oder gleiche Zeit?":"A reason, a contrast or the same time?","Welches Wort passt?":"Which word fits?","Was passt?":"Which one fits?","🔍 Ein Wort ist falsch. Laufen Sie durch das Tor mit diesem Wort.":"🔍 One word is wrong. Run through the gate with that word.","Laufen Sie durch das richtige Tor.":"Run through the right gate.","Vorsicht: eine typische Falle!":"Careful: a classic trap!","Welche Präposition passt zu diesem Kasus?":"Which preposition fits this case?","Wo? → Dativ · Wohin? → Akkusativ":"Where? → Dativ · Where to? → Akkusativ","Nach der/die/das: -e oder -en?":"After der/die/das: -e or -en?","Nach ein/kein/mein: Braucht das Adjektiv -er / -es?":"After ein/kein/mein: does the adjective need -er / -es?","Kein Artikel: Das Adjektiv zeigt den Kasus.":"No article: the adjective shows the case.","Tippen Sie auf ★, um ein Wort zu merken. Gemerkte Wörter kommen in der täglichen Wiederholung wieder.":"Tap ★ to bookmark a word. Starred words come back in your daily review. Tip: long-press any word to save it.","Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.":"Listen and write the whole sentence. Tap 🔊 to hear it again.","Schreiben Sie das Ende des Nebensatzes: Infinitiv + Modalverb.":"Type the end of the Nebensatz: infinitive + modal verb.","Schreiben Sie die richtige Form des Modalverbs.":"Type the right form of the modal verb.","Schreiben Sie den ganzen Satz: das Modalverb auf Position 2, der Infinitiv am Ende.":"Write the whole sentence: the modal verb in position 2, the infinitive at the end.","Schreiben Sie den Plural mit Artikel.":"Write the plural with its article.","Schreiben Sie den Dativ Plural: Braucht das Nomen ein -n?":"Type the Dativ plural: does the noun need an extra -n?","Schreiben Sie die Pluralform.":"Type the plural form.","Schreiben Sie das Partizip II: Wo steht ge-?":"Type the Partizip II: where does ge- go?","Schreiben Sie das Verb: am Ende des Nebensatzes, in einem Wort?":"Type the verb: at the end of the side clause, in one piece?","Schreiben Sie den ganzen Satz im Präsens. Wird die Vorsilbe abgetrennt?":"Write the whole sentence in the Präsens. Does the prefix split off?","Ergänzen Sie das fehlende Wort: das, dass, weil oder denn?":"Type the missing word: das, dass, weil or denn?","Schreiben Sie den Rest des Satzes mit diesen Wörtern. Wo steht das Verb?":"Write the rest of the sentence with these words. Where does the verb go?","Schreiben Sie das Adjektiv mit der richtigen Endung.":"Type the adjective with the right ending.","Ergänzen Sie die fehlende Präposition.":"Type the missing preposition.","Ergänzen Sie das fehlende Wort (Artikel oder Kurzform).":"Type the missing word (article or short form).","Schreiben Sie Artikel + Adjektiv + Nomen mit den richtigen Endungen.":"Write article + adjective + noun with the right endings.","Schreiben Sie die Präposition mit dem richtigen Artikel und dem Nomen.":"Write the preposition with the right article and the noun.","Schreiben Sie den ganzen Satz auf Deutsch mit diesen Wörtern.":"Write the whole German sentence with these words.","Im Diktat hören Sie die Sätze nur. Lesen Sie die Wörter jetzt.":"In the Diktat you only hear the sentences, so read the words now.","Zweite Runde: die Karten, die Sie noch nicht wussten":"Second round: the cards you didn’t know yet","Denken Sie an die Antwort und drehen Sie dann die Karte um.":"Think of the answer, then turn the card.","Lücke ergänzen":"Type the gap","Satz bauen":"Build the sentence","Freies Schreiben":"Free writing","Gesperrt: öffnet zusammen mit Level 3":"Locked: opens together with Level 3","Ein Wort ist falsch. Finden Sie es!":"One word is wrong. Find it!","Schneller, alles gemischt":"Faster, everything mixed","noch nicht geübt":"not tried yet"});
+Object.assign(EN2, { 'Welche Endung passt zur Person?':'Which ending fits the person?', 'sein oder haben – welche Form?':'sein or haben: which form?', 'du / er: Ändert sich der Vokal?':'du / er: does the vowel change?', 'Imperativ: du, ihr oder Sie?':'Imperative: du, ihr or Sie?',
+  'Welche Zahl ist richtig?':'Which number is right?', 'Wie spät ist es?':'What time is it?', 'Datum: am …ten, im …?':'Date: am …ten, im …?',
+  'Wer macht es? → der, die, das':'Who does it? → der, die, das', 'Wen oder was? → den, die, das':'Whom or what? → den, die, das', 'Wem? Oder mit Präposition? → dem, der, denen':'To whom? Or with a preposition? → dem, der, denen', 'alles, etwas, nichts → was · Ort → wo':'alles, etwas, nichts → was · a place → wo',
+  'Einmal in der Vergangenheit → als · oft → wenn':'Once in the past → als · often → wenn', 'Gleichzeitig, vorher, bis oder seit?':'At the same time, before, until or since?', 'Was passiert zuerst?':'What happens first?', 'Plusquamperfekt: hatte oder war?':'Plusquamperfekt: hatte or war?',
+  'Fragewort oder ob?':'Question word or ob?', 'Indirekte Frage: Wo steht das Verb?':'Indirect question: where does the verb go?', 'jemand, niemand, etwas oder nichts?':'somebody, nobody, something or nothing?', 'einer, keiner oder welche?':'one, none or some?',
+  'Welches Verb gehört zu diesem Nomen?':'Which verb belongs to this noun?', 'Welche Präposition gehört zum Ausdruck?':'Which preposition belongs to the phrase?',
+  'Nominativ: mit oder ohne -n?':'Nominativ: with or without -n?', 'Akkusativ / Dativ: n-Deklination → -(e)n':'Akkusativ / Dativ: an n-noun gets -(e)n', 'Herr, Name …: Welche Form?':'Herr, Name …: which form?',
+  'lassen: Welche Form?':'lassen: which form?', 'sich lassen = man kann …':'sich lassen = it can be …', 'Vorgang (werden) oder Zustand (sein)?':'Process (werden) or state (sein)?',
+  'Gleichzeitig, aktiv → Partizip I (-end)':'Happening now, active → Partizip I (-end)', 'Fertig oder passiv → Partizip II':'Finished or passive → Partizip II', 'Adjektiv als Nomen: Welche Endung?':'Adjective as a noun: which ending?',
+  'dies- / welch- / jed-: Welche Endung?':'this / which / every: which ending?', 'Vergangenheit: hätte oder wäre + Partizip II?':'Past: hätte or wäre + Partizip II?', 'Wie? → indem · neues Subjekt → ohne dass':'How? → indem · a new subject → ohne dass', 'Grund, statt, innerhalb oder außerhalb?':'A reason, instead of, within or outside?' });
 const bi = (de, en) => { if (!de) return ''; de = String(de); if (de.includes('class="en2"')) return de; en = en || EN2[de]; return en ? `${de}<small class="en2">${en}</small>` : de; };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -2024,7 +2038,73 @@ const XT = [
       wt:['wegen, trotz, während', 'wegen = because of, trotz = despite, während = during. In written German all three take the Genitiv (wegen des Regens).', 'wegen = காரணமாக, trotz = இருந்தும், während = போது.'] },
     hint:{ fu:'Futur: werden + Infinitiv', ge:'Wessen? → Genitiv', wt:'Grund, Gegensatz oder gleiche Zeit?' },
     lv:[{ t:'Futur I', s:'Ich werde dich anrufen', k:['fu'] }, { t:'Der Genitiv', s:'das Auto des Vaters · wegen des Regens', k:['ge', 'wt'] }],
-    err:'case' }
+    err:'case' },
+  { tp:'ps', name:'Präsens & Imperativ', short:'Präsens', icon:'🏃', cefr:'A1', base:73,
+    kinds:{ ve:['Regular endings', 'Stem + ending: ich lern-e, du lern-st, er / sie / es lern-t, wir lern-en, ihr lern-t, sie / Sie lern-en. Stems on -t / -d add an e: du arbeitest, er findet.', 'வேர் + முடிவு: ich -e, du -st, er -t, wir -en, ihr -t, sie -en.'],
+      sh:['sein and haben', 'The two most important verbs are irregular: ich bin, du bist, er ist, wir sind, ihr seid, sie sind · ich habe, du hast, er hat, wir haben, ihr habt, sie haben.', 'sein: bin, bist, ist, sind, seid; haben: habe, hast, hat, haben, habt.'],
+      vw:['Vowel change: e → i, a → ä', 'Some verbs change their vowel, but ONLY for du and er / sie / es: sprechen → du sprichst, er spricht; sehen → er sieht; fahren → du fährst, er fährt; schlafen → er schläft. ich and wir stay normal.', 'du, er-க்கு மட்டும் உயிர் மாறும்: sprechen → spricht, fahren → fährt.'],
+      im:['The imperative', 'Commands: du → the stem, without du and -st (Komm! Sprich langsam! Fahr vorsichtig! – e → i stays, a → ä goes); ihr → the ihr-form without ihr (Kommt!); Sie → verb first + Sie (Kommen Sie bitte!). sein: Sei! Seid! Seien Sie!', 'கட்டளை: du → Komm!, ihr → Kommt!, Sie → Kommen Sie!'] },
+    hint:{ ve:'Welche Endung passt zur Person?', sh:'sein oder haben – welche Form?', vw:'du / er: Ändert sich der Vokal?', im:'Imperativ: du, ihr oder Sie?' },
+    lv:[{ t:'Verben im Präsens', s:'ich lerne · du bist · er hat', k:['ve', 'sh'] }, { t:'Vokalwechsel & Imperativ', s:'du sprichst · er fährt · Komm!', k:['vw', 'im'] }],
+    err:'verbform' },
+  { tp:'zd', name:'Zahlen, Uhrzeit, Datum', short:'Zahlen & Zeit', icon:'🕒', cefr:'A1', base:77,
+    kinds:{ zl:['Numbers', 'From 21 on, the ones come first: einundzwanzig (1 + 20), achtundvierzig. Tens end in -zig (zwanzig, vierzig), but dreißig has ß, and sechzig, siebzig drop letters (also sechzehn, siebzehn). 100 = hundert, 1000 = tausend.', '21 முதல் ஒன்று முதலில்: einundzwanzig (1 + 20). 30 = dreißig.'],
+      uh:['Telling the time', 'Everyday: Viertel nach (x:15), halb = half TO the next hour (halb acht = 7:30!), Viertel vor (x:45), zehn nach, fünf vor. Official (trains, radio): 19:30 = neunzehn Uhr dreißig. um = at (a time), von … bis = from … to.', 'halb acht = 7:30 (அடுத்த மணிக்கு அரை மணி முன்). Viertel nach = :15, Viertel vor = :45.'],
+      dt:['Dates and ordinals', 'Ordinals: up to 19 add -te (der zweite, der vierte; special: erste, dritte, siebte, achte), from 20 add -ste (der zwanzigste). Heute ist der 3. Mai (dritte), but am 3. Mai (am dritten). am Montag, im Mai, im Sommer.', 'தேதி: der dritte Mai, am dritten Mai. நாள் → am, மாதம் / பருவம் → im.'] },
+    hint:{ zl:'Welche Zahl ist richtig?', uh:'Wie spät ist es?', dt:'Datum: am …ten, im …?' },
+    lv:[{ t:'Zahlen & Preise', s:'einundzwanzig · dreißig · 2,50 €', k:['zl'] }, { t:'Uhrzeit & Datum', s:'halb acht · am dritten Mai', k:['uh', 'dt'] }],
+    err:'vocab' },
+  { tp:'rs', name:'Relativsätze', short:'Relativsätze', icon:'🪢', cefr:'A2', base:81,
+    kinds:{ rn:['Nominativ: der, die, das', 'The relative pronoun takes its gender from the noun it explains, and its case from its job in the relative clause. Subject → Nominativ: der Mann, der …; die Frau, die …; das Kind, das …; plural die. The verb goes to the end.', 'பெயர்ச்சொல்லின் பாலினம்; relative வாக்கியத்தில் எழுவாய் → der / die / das. வினை கடைசியில்.'],
+      ra:['Akkusativ: den', 'If the pronoun is the object in the relative clause → Akkusativ. Only the masculine changes: der Film, den ich sehe. die, das and plural die stay the same.', 'செயப்படுபொருள் → Akkusativ: masculine மட்டும் den.'],
+      rd:['Dativ and prepositions', 'Dativ: dem (masc. / neut.), der (fem.), denen (plural!): die Freunde, denen ich helfe. With a preposition, the preposition comes first: die Stadt, in der ich wohne; der Kollege, mit dem ich arbeite.', 'Dativ: dem, der, denen (பன்மை!). முன்னிடைச்சொல் முதலில்: in der, mit dem.'],
+      rw:['was, wo, wer', 'After alles, etwas, nichts, das Beste and after a whole sentence: was (Alles, was du sagst …). After a place: wo (die Stadt, wo ich wohne). wer = whoever (Wer Hunger hat, …).', 'alles / etwas / nichts → was; இடம் → wo; wer = யார் …'] },
+    hint:{ rn:'Wer macht es? → der, die, das', ra:'Wen oder was? → den, die, das', rd:'Wem? Oder mit Präposition? → dem, der, denen', rw:'alles, etwas, nichts → was · Ort → wo' },
+    lv:[{ t:'der, die, das, den', s:'der Mann, der … · der Film, den …', k:['rn', 'ra'] }, { t:'dem, denen, was, wo', s:'mit dem · denen · alles, was …', k:['rd', 'rw'] }],
+    err:'case' },
+  { tp:'ts', name:'Temporalsätze & Plusquamperfekt', short:'Temporalsätze', icon:'⏳', cefr:'A2', base:85,
+    kinds:{ aw:['als or wenn?', 'als = ONE event or period in the past (Als ich Kind war, …; Als ich gestern kam, …). wenn = now or in the future, or something that happened MANY times (immer wenn, jedes Mal wenn). Both send the verb to the end.', 'கடந்தகாலத்தில் ஒருமுறை → als; பலமுறை / இப்போது / எதிர்காலம் → wenn.'],
+      wb:['während, bevor, bis, seit', 'während = while (at the same time), bevor = before, bis = until, seit(dem) = since (from then until now, usually with the Präsens). The verb goes to the end.', 'während = போது, bevor = முன், bis = வரை, seit = முதல் (இன்று வரை).'],
+      ns:['nachdem, sobald', 'nachdem = after (first this, then that). The earlier action is one tense further back: Nachdem ich gegessen habe, gehe ich. Nachdem ich gegessen hatte, ging ich. sobald = as soon as.', 'nachdem = பிறகு (முதலில் இது, பிறகு அது); sobald = உடனே.'],
+      pq:['Plusquamperfekt', 'The past before the past: hatte / war (Präteritum) + Partizip II. haben or sein follow the Perfekt rules: ich hatte gegessen, sie war gegangen.', 'கடந்தகாலத்துக்கு முன்: hatte / war + Partizip II.'] },
+    hint:{ aw:'Einmal in der Vergangenheit → als · oft → wenn', wb:'Gleichzeitig, vorher, bis oder seit?', ns:'Was passiert zuerst?', pq:'Plusquamperfekt: hatte oder war?' },
+    lv:[{ t:'als, wenn, während, bevor', s:'Als ich Kind war … · bevor ich gehe', k:['aw', 'wb'] }, { t:'nachdem & Plusquamperfekt', s:'Nachdem ich gegessen hatte …', k:['ns', 'pq'] }],
+    err:'conj' },
+  { tp:'iq', name:'Indirekte Fragen & Pronomen', short:'Indirekte Fragen', icon:'❓', cefr:'A2', base:89,
+    kinds:{ wq:['wo, wann, ob …', 'After Können Sie mir sagen, …? / Wissen Sie, …? / Ich weiß nicht, … the question word stays (wo, wann, wie viel, warum …). A yes / no question becomes ob.', 'Können Sie mir sagen …? → கேள்விச்சொல் அப்படியே; ஆம்/இல்லை கேள்வி → ob.'],
+      vl:['Verb at the end', 'An indirect question is a Nebensatz: the conjugated verb goes to the end. Wann fährt der Zug? → Wissen Sie, wann der Zug fährt?', 'மறைமுக கேள்வி = Nebensatz: வினைச்சொல் கடைசியில்.'],
+      ip:['jemand, niemand, etwas, nichts, man', 'jemand = somebody, niemand = nobody, etwas = something, nichts = nothing, alles = everything, man = one / people (verb like er: man kann). Akkusativ: jemanden, niemanden.', 'jemand = யாரோ, niemand = யாரும் இல்லை, etwas = ஏதோ, nichts = ஒன்றும் இல்லை, man = பொதுவாக மக்கள்.'],
+      ei:['einer, keiner, welche', 'Instead of repeating the noun: Hast du einen Stift? – Ja, ich habe einen. / Nein, ich habe keinen. Neuter: eins / keins. Plural or no article: Brauchst du Eier? – Ja, ich brauche welche.', 'பெயர்ச்சொல்லை மீண்டும் சொல்லாமல்: einen / keinen / eins / welche.'] },
+    hint:{ wq:'Fragewort oder ob?', vl:'Indirekte Frage: Wo steht das Verb?', ip:'jemand, niemand, etwas oder nichts?', ei:'einer, keiner oder welche?' },
+    lv:[{ t:'Indirekte Fragen', s:'Wissen Sie, wann der Zug fährt?', k:['wq', 'vl'] }, { t:'jemand, nichts, einer', s:'niemand · etwas · Ich habe keinen.', k:['ip', 'ei'] }],
+    err:'wordorder' },
+  { tp:'nv', name:'Nomen-Verb-Verbindungen', short:'Nomen + Verb', icon:'🔩', cefr:'B1', base:93,
+    kinds:{ vb:['Which verb?', 'In these fixed phrases the noun carries the meaning and the verb is fixed: eine Entscheidung treffen, eine Frage stellen, einen Antrag stellen, Rücksicht nehmen, Bescheid sagen, eine Rolle spielen, sich Sorgen machen. Learn them as one block.', 'பெயர்ச்சொல் + நிலையான வினை: eine Entscheidung treffen, eine Frage stellen.'],
+      pp:['Which preposition?', 'Many come with a preposition: zur Verfügung stehen, in Frage kommen, zum Ausdruck bringen, in Kontakt treten, zu Ende gehen, in Anspruch nehmen, zur Kenntnis nehmen. They make letters sound like B1.', 'முன்னிடைச்சொல்லுடன்: zur Verfügung stehen, in Frage kommen.'] },
+    hint:{ vb:'Welches Verb gehört zu diesem Nomen?', pp:'Welche Präposition gehört zum Ausdruck?' },
+    lv:[{ t:'Welches Verb?', s:'eine Entscheidung treffen · eine Frage stellen', k:['vb'] }, { t:'Mit Präposition', s:'zur Verfügung stehen · in Frage kommen', k:['pp'] }],
+    err:'vocab' },
+  { tp:'nd', name:'n-Deklination', short:'n-Deklination', icon:'🎩', cefr:'B1', base:97,
+    kinds:{ ns:['Nominativ: no -n', 'Some masculine nouns (n-nouns) get -(e)n in ALL forms except the Nominativ singular: der Kollege, but den / dem / des Kollegen. Subject, singular → no -n: Der Kollege ist nett.', 'Nominativ ஒருமையில் மட்டும் -n இல்லை: der Kollege.'],
+      ak:['Akkusativ, Dativ: + (e)n', 'Which nouns? Masculine nouns on -e for people and animals (der Junge, der Kunde, der Löwe), on -ent, -ant, -ist (der Student, der Praktikant, der Polizist), and der Herr, der Mensch, der Nachbar. Akkusativ and Dativ: den / dem Kollegen.', 'யார்? -e-ல் முடியும் ஆண் மனிதர் / விலங்கு, -ent, -ant, -ist, Herr, Mensch, Nachbar → den / dem …n.'],
+      sp:['Herr, Name & Co.', 'der Herr → den / dem Herrn (only -n), plural die Herren. der Name, der Gedanke, der Buchstabe: -n, and the Genitiv adds -ns (des Namens). In letters: Sehr geehrter Herr Meier, but an Herrn Meier.', 'Herr → Herrn; Name → Namen, des Namens.'] },
+    hint:{ ns:'Nominativ: mit oder ohne -n?', ak:'Akkusativ / Dativ: n-Deklination → -(e)n', sp:'Herr, Name …: Welche Form?' },
+    lv:[{ t:'Wer bekommt -n?', s:'der Kollege · den Kollegen', k:['ns', 'ak'] }, { t:'Herr, Name & Co.', s:'Herrn Meier · des Namens', k:['sp'] }],
+    err:'case' },
+  { tp:'ls', name:'lassen & Zustandspassiv', short:'lassen', icon:'🔧', cefr:'B1', base:121,
+    kinds:{ la:['lassen: have it done', 'lassen + infinitive at the end = someone else does it for you: Ich lasse mein Auto reparieren. Forms: ich lasse, du lässt, er lässt, wir lassen; Präteritum ließ; Perfekt: hat … reparieren lassen. Also = to let / to leave: Lass mich schlafen!', 'lassen + infinitive = வேறொருவர் செய்கிறார்: Ich lasse mein Auto reparieren.'],
+      sl:['sich lassen = can be done', 'sich lassen + infinitive = it is possible: Das Fenster lässt sich nicht öffnen (= kann nicht geöffnet werden). Das lässt sich machen = that can be done.', 'sich lassen = செய்ய முடியும்: Das lässt sich machen.'],
+      zp:['Zustandspassiv: sein + Partizip II', 'werden + Partizip II = the process (Die Tür wird gerade geöffnet = someone is opening it). sein + Partizip II = the result, the state (Die Tür ist geöffnet = it is open now). Signs use it: geöffnet, geschlossen, reserviert.', 'werden = நடக்கும் செயல்; sein + Partizip II = முடிந்த நிலை (Die Tür ist geöffnet).'] },
+    hint:{ la:'lassen: Welche Form?', sl:'sich lassen = man kann …', zp:'Vorgang (werden) oder Zustand (sein)?' },
+    lv:[{ t:'lassen & sich lassen', s:'Ich lasse mein Auto reparieren', k:['la', 'sl'] }, { t:'Zustandspassiv', s:'Die Tür ist geöffnet', k:['zp'] }],
+    err:'passive' },
+  { tp:'pz', name:'Partizipien & Adjektive als Nomen', short:'Partizipien', icon:'🪄', cefr:'B1', base:125,
+    kinds:{ p1:['Partizip I: -end', 'Partizip I = infinitive + d: lachen → lachend. As an adjective it means "doing it right now" (active): das lachende Kind = the child who is laughing. It takes normal adjective endings.', 'Partizip I = infinitive + d: das lachende Kind (சிரிக்கும் குழந்தை).'],
+      p2:['Partizip II as adjective', 'Partizip II as an adjective = finished or done to it (passive): die geschlossene Tür (= the door that has been closed), das gestohlene Fahrrad. Normal adjective endings.', 'Partizip II = முடிந்தது / செய்யப்பட்டது: die geschlossene Tür.'],
+      an:['Adjectives as nouns', 'An adjective or participle can become a noun (capital letter!) and keeps the adjective endings: der Deutsche, ein Deutscher, die Angestellte, die Erwachsenen, mein Bekannter. Also: etwas Neues, nichts Besonderes, das Beste.', 'பெயரடை → பெயர்ச்சொல் (பெரிய எழுத்து), பெயரடை முடிவுகளுடன்: der Deutsche, ein Deutscher.'] },
+    hint:{ p1:'Gleichzeitig, aktiv → Partizip I (-end)', p2:'Fertig oder passiv → Partizip II', an:'Adjektiv als Nomen: Welche Endung?' },
+    lv:[{ t:'lachend oder gelacht?', s:'das schlafende Kind · die geschlossene Tür', k:['p1', 'p2'] }, { t:'Adjektive als Nomen', s:'der Deutsche · ein Deutscher · etwas Neues', k:['an'] }],
+    err:'ending' }
 ];
 // kind colours: 1st kind blue, 2nd red, 3rd gold, 4th green, 5th grey-blue
 const XCOL = ['#4F7CAC', '#D9675B', '#A07A12', '#3E8E63', '#5B6F86'];
@@ -2426,8 +2506,341 @@ const XR = { // [id, kind, sentence, answer, wrong, English, emoji, why, key wor
     ['w6', 'wt', 'Während ___ Urlaubs habe ich viel gelesen.', 'des', 'dem', 'During the holiday I read a lot.', '📚', 'während + Genitiv: des Urlaubs.', 'der Urlaub = holiday'],
     ['w7', 'wt', '___ seiner Krankheit kann er nicht arbeiten.', 'Wegen', 'Trotz', 'Because of his illness he can’t work.', '🤒', 'wegen = because of.', 'die Krankheit = illness'],
     ['w8', 'wt', 'Trotz ___ schlechten Wetters war der Ausflug schön.', 'des', 'dem', 'Despite the bad weather the trip was nice.', '⛅', 'trotz + Genitiv: des Wetters.', 'das Wetter = weather']
+  ],
+  ps:[
+    ['e1', 've', 'Ich ___ jeden Tag Deutsch.', 'lerne', 'lernst', 'I learn German every day.', '📚', 'ich → -e: ich lerne.', 'lernen = to learn'],
+    ['e2', 've', 'Wo ___ du?', 'wohnst', 'wohnt', 'Where do you live?', '🏠', 'du → -st: du wohnst.', 'wohnen = to live'],
+    ['e3', 've', 'Mein Bruder ___ in einer Bank.', 'arbeitet', 'arbeit', 'My brother works in a bank.', '🏦', 'Stem on -t: er arbeit-e-t (an extra e).', 'arbeiten = to work'],
+    ['e4', 've', 'Wir ___ heute Abend Pizza.', 'kochen', 'kocht', 'We are cooking pizza tonight.', '🍕', 'wir → -en: wir kochen.', 'kochen = to cook'],
+    ['e5', 've', '___ ihr auch Fußball?', 'Spielt', 'Spielen', 'Do you (all) play football too?', '⚽', 'ihr → -t: ihr spielt.', 'spielen = to play'],
+    ['e6', 've', 'Frau Weber, ___ Sie Kaffee oder Tee?', 'trinken', 'trinkt', 'Ms Weber, do you drink coffee or tea?', '☕', 'Sie (formal) → -en, like wir.', 'trinken = to drink'],
+    ['e7', 've', 'Das Kind ___ ein Bild.', 'malt', 'malst', 'The child is painting a picture.', '🎨', 'das Kind = es → -t.', 'malen = to paint'],
+    ['e8', 've', 'Du ___ sehr gut Englisch.', 'verstehst', 'versteht', 'You understand English very well.', '👂', 'du → -st.', 'verstehen = to understand'],
+    ['e9', 've', 'Wie ___ du das?', 'findest', 'findst', 'What do you think of that?', '🤔', 'Stem on -d: du find-e-st.', 'finden = to find, to think'],
+    ['e10', 've', 'Meine Eltern ___ in Hamburg.', 'leben', 'lebt', 'My parents live in Hamburg.', '👪', 'meine Eltern = sie (plural) → -en.', 'die Eltern = parents'],
+    ['s1', 'sh', 'Ich ___ müde.', 'bin', 'ist', 'I am tired.', '😴', 'sein: ich bin.', 'müde = tired'],
+    ['s2', 'sh', '___ du Hunger?', 'Hast', 'Hat', 'Are you hungry?', '🍽️', 'haben: du hast.', 'der Hunger = hunger'],
+    ['s3', 'sh', 'Wir ___ aus Indien.', 'sind', 'seid', 'We are from India.', '🇮🇳', 'sein: wir sind.', 'aus = from'],
+    ['s4', 'sh', 'Er ___ zwei Kinder.', 'hat', 'habt', 'He has two children.', '👶', 'haben: er hat.', 'das Kind, die Kinder = child'],
+    ['s5', 'sh', '___ ihr heute zu Hause?', 'Seid', 'Sind', 'Are you (all) at home today?', '🏠', 'sein: ihr seid.', 'zu Hause = at home'],
+    ['s6', 'sh', 'Du ___ sehr nett.', 'bist', 'bin', 'You are very nice.', '😊', 'sein: du bist.', 'nett = nice'],
+    ['s7', 'sh', 'Habt ihr ein Auto? – Nein, wir ___ nur Fahrräder.', 'haben', 'habt', 'Do you have a car? – No, we only have bikes.', '🚲', 'haben: wir haben.', 'das Fahrrad = bike'],
+    ['s8', 'sh', 'Das ___ mein Freund Ali.', 'ist', 'hat', 'This is my friend Ali.', '🤝', '"Das ist …" introduces someone: sein.', 'der Freund = friend'],
+    ['s9', 'sh', 'Sie ___ heute keine Zeit, Herr Klein?', 'haben', 'sind', 'You have no time today, Mr Klein?', '⌛', 'Zeit haben = to have time: Sie haben.', 'die Zeit = time'],
+    ['w1', 'vw', 'Er ___ drei Sprachen.', 'spricht', 'sprecht', 'He speaks three languages.', '🗣️', 'sprechen: e → i for er: er spricht.', 'sprechen = to speak'],
+    ['w2', 'vw', '___ du morgen nach Köln?', 'Fährst', 'Fahrst', 'Are you going to Cologne tomorrow?', '🚆', 'fahren: a → ä for du: du fährst.', 'fahren = to go, to drive'],
+    ['w3', 'vw', 'Das Baby ___ noch.', 'schläft', 'schlaft', 'The baby is still sleeping.', '👶', 'schlafen: a → ä for er / sie / es.', 'schlafen = to sleep'],
+    ['w4', 'vw', 'Was ___ du im Fernsehen?', 'siehst', 'sehst', 'What are you watching on TV?', '📺', 'sehen: e → ie for du.', 'sehen = to see, to watch'],
+    ['w5', 'vw', 'Sie ___ jeden Abend ein Buch.', 'liest', 'lest', 'She reads a book every evening.', '📖', 'lesen: e → ie: sie liest.', 'lesen = to read'],
+    ['w6', 'vw', 'Ich ___ dir morgen das Geld.', 'gebe', 'gibe', 'I’ll give you the money tomorrow.', '💶', 'ich never changes the vowel: ich gebe (but du gibst).', 'geben = to give'],
+    ['w7', 'vw', 'Mein Vater ___ gern Fleisch.', 'isst', 'esst', 'My father likes eating meat.', '🥩', 'essen: e → i: er isst.', 'essen = to eat'],
+    ['w8', 'vw', 'Wir ___ morgen mit dem Bus.', 'fahren', 'fähren', 'We are going by bus tomorrow.', '🚌', 'wir never changes: wir fahren.', 'der Bus = bus'],
+    ['w9', 'vw', '___ du mir bitte?', 'Hilfst', 'Helfst', 'Will you help me, please?', '🆘', 'helfen: e → i for du: du hilfst.', 'helfen = to help'],
+    ['w10', 'vw', 'Der Zug ___ um 8 Uhr ab.', 'fährt', 'fahrt', 'The train leaves at 8 o’clock.', '🚉', 'abfahren: a → ä: der Zug fährt … ab.', 'abfahren = to depart'],
+    ['w11', 'vw', 'Er ___ eine neue Wohnung.', 'nimmt', 'nehmt', 'He is taking a new flat.', '🔑', 'nehmen is special: du nimmst, er nimmt.', 'nehmen = to take'],
+    ['i1', 'im', 'Tom, ___ bitte das Fenster zu!', 'mach', 'machst', 'Tom, please close the window!', '🪟', 'du-imperative: the stem only, no -st, no du.', 'zumachen = to close'],
+    ['i2', 'im', 'Kinder, ___ jetzt ins Bett!', 'geht', 'gehen', 'Children, go to bed now!', '🛏️', 'ihr-imperative: ihr geht → Geht!', 'das Bett = bed'],
+    ['i3', 'im', '___ Sie bitte Platz, Frau Schulz!', 'Nehmen', 'Nimm', 'Please take a seat, Ms Schulz!', '🪑', 'Sie-imperative: verb first + Sie.', 'Platz nehmen = to take a seat'],
+    ['i4', 'im', '___ bitte langsam, ich verstehe dich nicht!', 'Sprich', 'Sprech', 'Speak slowly, please, I don’t understand you!', '🐢', 'e → i stays in the du-imperative: sprich!', 'langsam = slowly'],
+    ['i5', 'im', '___ vorsichtig, die Straße ist glatt!', 'Fahr', 'Fähr', 'Drive carefully, the road is slippery!', '🚗', 'a → ä does NOT go into the imperative: fahr!', 'vorsichtig = careful'],
+    ['i6', 'im', '___ nicht traurig, alles wird gut!', 'Sei', 'Bist', 'Don’t be sad, everything will be fine!', '🤗', 'sein: the du-imperative is Sei!', 'traurig = sad'],
+    ['i7', 'im', 'Bitte ___ Sie mich morgen an!', 'rufen', 'ruf', 'Please call me tomorrow!', '📞', 'Sie-imperative: rufen Sie … an.', 'anrufen = to call'],
+    ['i8', 'im', '___ mal, das ist mein neues Handy!', 'Schau', 'Schaust', 'Look, this is my new phone!', '📱', 'du-imperative: schau!', 'schauen = to look'],
+    ['i9', 'im', 'Leute, ___ leise, das Baby schläft!', 'seid', 'sind', 'Guys, be quiet, the baby is sleeping!', '🤫', 'sein: the ihr-imperative is Seid!', 'leise = quiet'],
+    ['i10', 'im', '___ mir bitte das Salz!', 'Gib', 'Gibst', 'Pass me the salt, please!', '🧂', 'geben: e → i stays: gib!', 'das Salz = salt'],
+    ['i11', 'im', 'Lies den Text und ___ die Fragen!', 'beantworte', 'beantwortest', 'Read the text and answer the questions!', '📝', 'Verbs on -t add an e in the du-imperative: beantworte!', 'beantworten = to answer']
+  ],
+  zd:[
+    ['z1', 'zl', 'Das Ticket kostet 21 Euro: ___ Euro.', 'einundzwanzig', 'zwanzigeins', 'The ticket costs 21 euros.', '🎫', 'From 21 on: the one first, then und + twenty.', 'kosten = to cost'],
+    ['z2', 'zl', 'Ich bin 35 Jahre alt: ___.', 'fünfunddreißig', 'dreißigfünf', 'I am 35 years old.', '🎂', '5 + und + 30: fünfunddreißig.', 'das Jahr = year'],
+    ['z3', 'zl', 'Meine Hausnummer ist 30: ___.', 'dreißig', 'dreizig', 'My house number is 30.', '🏠', '30 is dreißig, with ß, not -zig.', 'die Hausnummer = house number'],
+    ['z4', 'zl', 'Ich nehme den Bus 17, also Linie ___.', 'siebzehn', 'siebenzehn', 'I take bus number 17.', '🚌', 'sieben loses -en: siebzehn, siebzig.', 'die Linie = (bus) line'],
+    ['z5', 'zl', 'Das Brot kostet 2,50 €: zwei Euro ___.', 'fünfzig', 'fünfzehn', 'The bread costs 2.50 euros.', '🍞', ',50 = fünfzig (50), not fünfzehn (15).', 'das Brot = bread'],
+    ['z6', 'zl', 'Wir sind 16 Personen: ___ Personen.', 'sechzehn', 'sechszehn', 'We are 16 people.', '👥', 'sechs loses its s: sechzehn, sechzig.', 'die Person = person'],
+    ['z7', 'zl', 'Die Wohnung hat 68 Quadratmeter: ___.', 'achtundsechzig', 'sechzigacht', 'The flat has 68 square metres.', '📐', '8 + und + 60: achtundsechzig.', 'der Quadratmeter = square metre'],
+    ['z8', 'zl', 'Die Telefonnummer beginnt mit 0, also mit ___.', 'null', 'nul', 'The phone number starts with 0.', '📞', '0 = null.', 'die Telefonnummer = phone number'],
+    ['z9', 'zl', 'Das Fahrrad kostet 300 Euro: ___ Euro.', 'dreihundert', 'dreihunderte', 'The bike costs 300 euros.', '🚲', 'hundert never gets an ending: dreihundert.', 'das Fahrrad = bike'],
+    ['u1', 'uh', 'Es ist 7:30 Uhr. Es ist halb ___.', 'acht', 'sieben', 'It’s 7:30. It’s half past seven.', '⏰', 'halb acht = half TO eight = 7:30.', 'halb = half'],
+    ['u2', 'uh', 'Es ist 9:15 Uhr. Es ist Viertel ___ neun.', 'nach', 'vor', 'It’s 9:15. It’s a quarter past nine.', '🕘', ':15 = Viertel nach.', 'das Viertel = quarter'],
+    ['u3', 'uh', 'Es ist 10:45 Uhr. Es ist Viertel ___ elf.', 'vor', 'nach', 'It’s 10:45. It’s a quarter to eleven.', '🕥', ':45 = Viertel vor the next hour.', 'vor = before, to'],
+    ['u4', 'uh', 'Es ist 4:30 Uhr. Es ist ___ fünf.', 'halb', 'Viertel', 'It’s 4:30. It’s half past four.', '🕟', '4:30 = halb fünf.', 'halb = half'],
+    ['u5', 'uh', 'Der Kurs beginnt ___ 18 Uhr.', 'um', 'am', 'The course starts at 6 pm.', '📚', 'A clock time: um.', 'beginnen = to begin'],
+    ['u6', 'uh', 'Die Bank ist ___ 9 bis 16 Uhr geöffnet.', 'von', 'um', 'The bank is open from 9 to 4.', '🏦', 'von … bis = from … to.', 'geöffnet = open'],
+    ['u7', 'uh', 'Es ist 6:10 Uhr. Es ist zehn ___ sechs.', 'nach', 'vor', 'It’s 6:10. It’s ten past six.', '🕕', ':10 = zehn nach.', 'nach = after, past'],
+    ['u8', 'uh', 'Der Zug fährt um 19:30 Uhr ab, also um neunzehn Uhr ___.', 'dreißig', 'halb', 'The train leaves at 19:30.', '🚆', 'Official time: the hours, Uhr, then the minutes.', 'abfahren = to depart'],
+    ['u9', 'uh', 'Es ist 2:55 Uhr. Es ist fünf ___ drei.', 'vor', 'nach', 'It’s 2:55. It’s five to three.', '🕒', ':55 = fünf vor the next hour.', 'spät = late'],
+    ['d1', 'dt', 'Heute ist der ___ Mai.', 'dritte', 'dreite', 'Today is the 3rd of May.', '📅', 'The ordinal of 3 is special: der dritte.', 'der Mai = May'],
+    ['d2', 'dt', 'Mein Geburtstag ist am ___ Juni.', 'ersten', 'einsten', 'My birthday is on the 1st of June.', '🎂', '1. = erste; after am: am ersten.', 'der Geburtstag = birthday'],
+    ['d3', 'dt', 'Wir fliegen am ___ August.', 'zwanzigsten', 'zwanzigten', 'We are flying on the 20th of August.', '✈️', 'From 20 on: -ste(n): am zwanzigsten.', 'fliegen = to fly'],
+    ['d4', 'dt', 'Der Termin ist ___ Montag.', 'am', 'im', 'The appointment is on Monday.', '🗓️', 'Days of the week: am.', 'der Termin = appointment'],
+    ['d5', 'dt', '___ Dezember ist es oft kalt.', 'Im', 'Am', 'It is often cold in December.', '❄️', 'Months and seasons: im.', 'der Dezember = December'],
+    ['d6', 'dt', 'Ich wohne im ___ Stock.', 'vierten', 'vierteten', 'I live on the fourth floor.', '🏢', '4. = vierte; im vierten Stock.', 'der Stock = floor'],
+    ['d7', 'dt', 'Heute ist der ___ Oktober.', 'achte', 'achtte', 'Today is the 8th of October.', '🍂', '8. = der achte, with only one t.', 'der Oktober = October'],
+    ['d8', 'dt', 'Das Konzert ist am ___ März.', 'zwölften', 'zwölfsten', 'The concert is on the 12th of March.', '🎵', 'Up to 19: -te(n): am zwölften.', 'das Konzert = concert'],
+    ['d9', 'dt', '___ Sommer fahren wir ans Meer.', 'Im', 'Am', 'In summer we go to the seaside.', '🏖️', 'Seasons: im Sommer.', 'der Sommer = summer']
+  ],
+  rs:[
+    ['n1', 'rn', 'Das ist der Mann, ___ neben uns wohnt.', 'der', 'den', 'That’s the man who lives next to us.', '🏠', 'der Mann is the subject of "wohnt" → der.', 'neben = next to'],
+    ['n2', 'rn', 'Ich habe eine Freundin, ___ in Wien lebt.', 'die', 'der', 'I have a friend who lives in Vienna.', '🇦🇹', 'die Freundin, subject → die.', 'leben = to live'],
+    ['n3', 'rn', 'Das Kind, ___ dort spielt, ist mein Sohn.', 'das', 'der', 'The child who is playing there is my son.', '🧒', 'das Kind, subject → das.', 'spielen = to play'],
+    ['n4', 'rn', 'Die Leute, ___ hier arbeiten, sind sehr nett.', 'die', 'denen', 'The people who work here are very nice.', '👥', 'Plural, subject → die.', 'die Leute = people'],
+    ['n5', 'rn', 'Wo ist der Bus, ___ zum Bahnhof fährt?', 'der', 'den', 'Where is the bus that goes to the station?', '🚌', 'der Bus does the driving → der.', 'der Bahnhof = station'],
+    ['n6', 'rn', 'Ich suche eine Wohnung, ___ nicht so teuer ist.', 'die', 'das', 'I’m looking for a flat that isn’t so expensive.', '🔑', 'die Wohnung → die.', 'die Wohnung = flat'],
+    ['n7', 'rn', 'Das ist ein Buch, ___ allen gefällt.', 'das', 'dem', 'That’s a book that everyone likes.', '📘', 'das Buch is the subject of gefällt → das.', 'gefallen = to please'],
+    ['n8', 'rn', 'Der Arzt, ___ mir geholfen hat, war sehr freundlich.', 'der', 'dem', 'The doctor who helped me was very friendly.', '🩺', 'der Arzt is the one who helped → der (Nominativ).', 'helfen = to help'],
+    ['a1', 'ra', 'Der Film, ___ ich gestern gesehen habe, war super.', 'den', 'der', 'The film I saw yesterday was great.', '🎬', 'ich sehe den Film → Akkusativ: den.', 'der Film = film'],
+    ['a2', 'ra', 'Das ist der Kollege, ___ ich jeden Tag treffe.', 'den', 'der', 'That’s the colleague I meet every day.', '🤝', 'ich treffe den Kollegen → den.', 'treffen = to meet'],
+    ['a3', 'ra', 'Die Jacke, ___ du trägst, ist schön.', 'die', 'der', 'The jacket you are wearing is nice.', '🧥', 'die Jacke: Akkusativ feminine stays die.', 'tragen = to wear'],
+    ['a4', 'ra', 'Wie heißt der Lehrer, ___ du so magst?', 'den', 'der', 'What’s the name of the teacher you like so much?', '🧑‍🏫', 'du magst den Lehrer → den.', 'mögen = to like'],
+    ['a5', 'ra', 'Das Auto, ___ wir gekauft haben, ist rot.', 'das', 'den', 'The car we bought is red.', '🚗', 'das Auto: Akkusativ neuter stays das.', 'kaufen = to buy'],
+    ['a6', 'ra', 'Hast du den Brief, ___ ich dir geschickt habe?', 'den', 'der', 'Have you got the letter I sent you?', '✉️', 'ich schicke den Brief → den.', 'schicken = to send'],
+    ['a7', 'ra', 'Die Schuhe, ___ ich online bestellt habe, sind zu klein.', 'die', 'denen', 'The shoes I ordered online are too small.', '👟', 'Plural Akkusativ → die.', 'bestellen = to order'],
+    ['a8', 'ra', 'Der Kuchen, ___ meine Oma backt, ist der beste.', 'den', 'der', 'The cake my grandma bakes is the best.', '🍰', 'meine Oma backt den Kuchen → den (Oma is the subject).', 'backen = to bake'],
+    ['d1', 'rd', 'Das ist die Frau, ___ ich geholfen habe.', 'der', 'die', 'That’s the woman I helped.', '🤝', 'helfen + Dativ: die Frau → der.', 'helfen = to help'],
+    ['d2', 'rd', 'Die Freunde, ___ ich vertraue, sind wichtig für mich.', 'denen', 'den', 'The friends I trust are important to me.', '💛', 'vertrauen + Dativ, plural → denen.', 'vertrauen = to trust'],
+    ['d3', 'rd', 'Der Kollege, mit ___ ich arbeite, kommt aus Spanien.', 'dem', 'den', 'The colleague I work with is from Spain.', '🇪🇸', 'mit + Dativ, masculine → dem.', 'der Kollege = colleague'],
+    ['d4', 'rd', 'Die Stadt, in ___ ich wohne, ist klein.', 'der', 'die', 'The town I live in is small.', '🏘️', 'in (Wo?) + Dativ, feminine → der.', 'die Stadt = town'],
+    ['d5', 'rd', 'Das ist das Kind, ___ ich ein Buch geschenkt habe.', 'dem', 'das', 'That’s the child I gave a book to.', '🎁', 'schenken: to whom? → Dativ: dem.', 'schenken = to give (a present)'],
+    ['d6', 'rd', 'Die Kinder, mit ___ mein Sohn spielt, sind laut.', 'denen', 'den', 'The children my son plays with are loud.', '🧒', 'mit + Dativ plural → denen.', 'laut = loud'],
+    ['d7', 'rd', 'Der Freund, ___ ich gratuliert habe, hat heute Geburtstag.', 'dem', 'den', 'The friend I congratulated has his birthday today.', '🎂', 'gratulieren + Dativ → dem.', 'gratulieren = to congratulate'],
+    ['d8', 'rd', 'Das Hotel, in ___ wir waren, war sehr sauber.', 'dem', 'das', 'The hotel we stayed in was very clean.', '🏨', 'in (Wo?) + Dativ, neuter → dem.', 'sauber = clean'],
+    ['d9', 'rd', 'Die Firma, für ___ ich arbeite, ist groß.', 'die', 'der', 'The company I work for is big.', '🏢', 'für always takes the Akkusativ → die.', 'die Firma = company'],
+    ['w1', 'rw', 'Alles, ___ du sagst, ist richtig.', 'was', 'das', 'Everything you say is right.', '✅', 'After alles → was.', 'alles = everything'],
+    ['w2', 'rw', 'Es gibt nichts, ___ ich lieber esse als Pizza.', 'was', 'das', 'There’s nothing I’d rather eat than pizza.', '🍕', 'After nichts → was.', 'nichts = nothing'],
+    ['w3', 'rw', 'Das ist die Stadt, ___ ich geboren bin.', 'wo', 'was', 'That’s the town where I was born.', '🏙️', 'After a place → wo (or: in der).', 'geboren = born'],
+    ['w4', 'rw', '___ Hunger hat, kann gern mitessen.', 'Wer', 'Der', 'Whoever is hungry is welcome to eat with us.', '🍲', 'Nobody specific, "whoever" → wer.', 'mitessen = to eat with someone'],
+    ['w5', 'rw', 'Das Beste, ___ ich je gesehen habe, war das Meer.', 'was', 'das', 'The best thing I have ever seen was the sea.', '🌊', 'After a superlative noun (das Beste) → was.', 'das Meer = sea'],
+    ['w6', 'rw', 'Er hat die Prüfung bestanden, ___ mich sehr freut.', 'was', 'das', 'He passed the exam, which makes me very happy.', '🎓', 'It refers to the whole sentence → was.', 'bestehen = to pass'],
+    ['w7', 'rw', 'Gibt es etwas, ___ ich für dich tun kann?', 'was', 'das', 'Is there anything I can do for you?', '🙋', 'After etwas → was.', 'etwas = something'],
+    ['w8', 'rw', 'Ich mag das Café, ___ wir uns kennengelernt haben.', 'wo', 'was', 'I like the café where we met.', '☕', 'A place → wo.', 'sich kennenlernen = to meet (for the first time)']
+  ],
+  ts:[
+    ['a1', 'aw', '___ ich ein Kind war, wohnte ich in Chennai.', 'Als', 'Wenn', 'When I was a child, I lived in Chennai.', '🧒', 'One period in the past → als.', 'das Kind = child'],
+    ['a2', 'aw', '___ ich Zeit habe, rufe ich dich an.', 'Wenn', 'Als', 'When I have time, I’ll call you.', '📞', 'Now or in the future → wenn.', 'anrufen = to call'],
+    ['a3', 'aw', 'Immer ___ es regnet, bleibe ich zu Hause.', 'wenn', 'als', 'Whenever it rains, I stay at home.', '🌧️', 'Many times (immer) → wenn.', 'regnen = to rain'],
+    ['a4', 'aw', '___ ich gestern nach Hause kam, war niemand da.', 'Als', 'Wenn', 'When I came home yesterday, nobody was there.', '🏠', 'One event in the past (gestern) → als.', 'niemand = nobody'],
+    ['a5', 'aw', 'Jedes Mal, ___ ich sie besuchte, kochte sie für mich.', 'wenn', 'als', 'Every time I visited her, she cooked for me.', '🍲', 'Many times in the past (jedes Mal) → wenn.', 'besuchen = to visit'],
+    ['a6', 'aw', '___ wir in Berlin ankamen, war es schon dunkel.', 'Als', 'Wenn', 'When we arrived in Berlin, it was already dark.', '🌃', 'One arrival in the past → als.', 'ankommen = to arrive'],
+    ['a7', 'aw', '___ du morgen kommst, bring bitte Brot mit.', 'Wenn', 'Als', 'When you come tomorrow, please bring bread.', '🍞', 'The future (morgen) → wenn.', 'mitbringen = to bring along'],
+    ['a8', 'aw', '___ ich 18 wurde, habe ich den Führerschein gemacht.', 'Als', 'Wenn', 'When I turned 18, I got my driving licence.', '🚗', 'Once in the past → als.', 'der Führerschein = driving licence'],
+    ['a9', 'aw', 'Früher war ich immer nervös, ___ ich Deutsch sprechen musste.', 'wenn', 'als', 'I used to be nervous whenever I had to speak German.', '😰', 'immer = many times → wenn.', 'nervös = nervous'],
+    ['a10', 'aw', 'Ich war sehr glücklich, ___ ich die Prüfung bestanden habe.', 'als', 'wenn', 'I was very happy when I passed the exam.', '🎓', 'One event in the past → als.', 'glücklich = happy'],
+    ['b1', 'wb', '___ ich koche, höre ich nebenbei Musik.', 'Während', 'Bevor', 'While I’m cooking, I listen to music.', '🎧', 'At the same time (nebenbei) → während.', 'kochen = to cook'],
+    ['b2', 'wb', 'Wasch dir die Hände, ___ du isst!', 'bevor', 'während', 'Wash your hands before you eat!', '🧼', 'First wash, then eat → bevor.', 'die Hand, die Hände = hand'],
+    ['b3', 'wb', 'Ich warte hier, ___ du zurückkommst.', 'bis', 'seit', 'I’ll wait here until you come back.', '⏳', 'Up to that moment → bis.', 'zurückkommen = to come back'],
+    ['b4', 'wb', '___ ich in Deutschland lebe, spreche ich mehr Deutsch.', 'Seit', 'Bis', 'Since I’ve been living in Germany, I speak more German.', '🇩🇪', 'From then until now → seit (with the Präsens!).', 'leben = to live'],
+    ['b5', 'wb', '___ ich auf den Bus warte, lese ich gleichzeitig die Zeitung.', 'Während', 'Bevor', 'While I wait for the bus, I read the newspaper at the same time.', '📰', 'gleichzeitig = at the same time → während.', 'gleichzeitig = at the same time'],
+    ['b6', 'wb', 'Ruf mich an, ___ du losfährst!', 'bevor', 'seit', 'Call me before you set off!', '📱', 'First call, then leave → bevor.', 'losfahren = to set off'],
+    ['b7', 'wb', 'Wir bleiben im Café, ___ der Regen aufhört.', 'bis', 'während', 'We’ll stay in the café until the rain stops.', '☔', 'Up to that moment → bis.', 'aufhören = to stop'],
+    ['b8', 'wb', '___ er den neuen Job hat, ist er viel zufriedener.', 'Seit', 'Bevor', 'Since he got the new job, he has been much happier.', '💼', 'From then until now → seit.', 'zufrieden = satisfied'],
+    ['b9', 'wb', '___ ich schlafen gehe, putze ich mir die Zähne.', 'Bevor', 'Bis', 'Before I go to bed, I brush my teeth.', '🪥', 'First the teeth, then bed → bevor.', 'die Zähne putzen = to brush one’s teeth'],
+    ['n1', 'ns', '___ ich gegessen habe, gehe ich spazieren.', 'Nachdem', 'Bevor', 'After I have eaten, I go for a walk.', '🚶', 'First eat (Perfekt), then walk → nachdem.', 'spazieren gehen = to go for a walk'],
+    ['n2', 'ns', 'Nachdem er die Prüfung bestanden ___, feierte er mit Freunden.', 'hatte', 'hat', 'After he had passed the exam, he celebrated with friends.', '🎉', 'Main clause in the Präteritum → nachdem + Plusquamperfekt: hatte bestanden.', 'feiern = to celebrate'],
+    ['n3', 'ns', '___ ich zu Hause bin, schreibe ich dir.', 'Sobald', 'Nachdem', 'As soon as I’m home, I’ll write to you.', '✉️', 'As soon as → sobald (nachdem needs a finished action).', 'zu Hause = at home'],
+    ['n4', 'ns', 'Nachdem wir angekommen ___, haben wir zuerst Kaffee getrunken.', 'waren', 'haben', 'After we had arrived, we first drank coffee.', '☕', 'ankommen takes sein, one tense back: waren angekommen.', 'ankommen = to arrive'],
+    ['n5', 'ns', 'Nachdem sie den Film gesehen ___, ging sie ins Bett.', 'hatte', 'hat', 'After she had seen the film, she went to bed.', '🎬', 'Main clause in the Präteritum (ging) → hatte gesehen.', 'ins Bett gehen = to go to bed'],
+    ['n6', 'ns', '___ der Arzt kommt, sagen wir Ihnen Bescheid.', 'Sobald', 'Nachdem', 'As soon as the doctor comes, we’ll let you know.', '🩺', 'As soon as → sobald.', 'Bescheid sagen = to let someone know'],
+    ['n7', 'ns', 'Nachdem ich die Wohnung geputzt hatte, ___ ich müde.', 'war', 'bin', 'After I had cleaned the flat, I was tired.', '🧹', 'Plusquamperfekt first, then the main clause in the past: war.', 'putzen = to clean'],
+    ['n8', 'ns', 'Erst nachdem ich lange gewartet hatte, ___ der Bus.', 'kam', 'kommt', 'Only after I had waited a long time did the bus come.', '🚌', 'Plusquamperfekt in the nachdem-clause → Präteritum in the main clause.', 'warten = to wait'],
+    ['p1', 'pq', 'Als ich ankam, ___ der Zug schon abgefahren.', 'war', 'hatte', 'When I arrived, the train had already left.', '🚉', 'abfahren = movement → sein: war abgefahren.', 'abfahren = to depart'],
+    ['p2', 'pq', 'Ich ___ meinen Schlüssel vergessen, deshalb konnte ich nicht rein.', 'hatte', 'war', 'I had forgotten my key, so I couldn’t get in.', '🔑', 'vergessen takes haben: hatte vergessen.', 'vergessen = to forget'],
+    ['p3', 'pq', 'Wir ___ vorher noch nie in Italien gewesen.', 'waren', 'hatten', 'We had never been to Italy before.', '🇮🇹', 'sein takes sein: waren gewesen.', 'vorher = before'],
+    ['p4', 'pq', 'Sie hatte schon ___, als ich anrief.', 'gegessen', 'essen', 'She had already eaten when I called.', '🍽️', 'Plusquamperfekt: hatte + Partizip II.', 'essen = to eat'],
+    ['p5', 'pq', 'Nachdem es aufgehört ___ zu regnen, gingen wir raus.', 'hatte', 'war', 'After it had stopped raining, we went out.', '🌦️', 'aufhören takes haben: hatte aufgehört.', 'aufhören = to stop'],
+    ['p6', 'pq', 'Er ___ schon eingeschlafen, als der Film anfing.', 'war', 'hatte', 'He had already fallen asleep when the film started.', '😴', 'einschlafen = change of state → sein: war eingeschlafen.', 'einschlafen = to fall asleep'],
+    ['p7', 'pq', 'Ich hatte die E-Mail schon ___, als du anriefst.', 'geschrieben', 'geschreibt', 'I had already written the e-mail when you called.', '📧', 'Irregular participle: geschrieben.', 'schreiben = to write'],
+    ['p8', 'pq', 'Die Gäste ___ schon gegangen, als wir kamen.', 'waren', 'hatten', 'The guests had already left when we came.', '🚪', 'gehen = movement → waren gegangen.', 'der Gast, die Gäste = guest'],
+    ['p9', 'pq', 'Weil ich schlecht geschlafen ___, war ich müde.', 'hatte', 'war', 'Because I had slept badly, I was tired.', '🥱', 'schlafen takes haben: hatte geschlafen.', 'schlafen = to sleep']
+  ],
+  iq:[
+    ['q1', 'wq', 'Können Sie mir sagen, ___ der Bahnhof ist?', 'wo', 'ob', 'Can you tell me where the station is?', '🚉', 'Wo ist …? → the question word wo stays.', 'der Bahnhof = station'],
+    ['q2', 'wq', 'Ich weiß nicht, ___ er heute kommt.', 'ob', 'wenn', 'I don’t know whether he is coming today.', '🤷', 'Kommt er heute? (yes / no) → ob.', 'wissen = to know'],
+    ['q3', 'wq', 'Wissen Sie, ___ das Ticket kostet?', 'wie viel', 'wie', 'Do you know how much the ticket costs?', '🎫', 'Wie viel kostet …? → wie viel stays.', 'kosten = to cost'],
+    ['q4', 'wq', 'Darf ich fragen, ___ Sie Deutsch lernen?', 'warum', 'was', 'May I ask why you are learning German?', '🤔', 'You ask for a reason → warum.', 'fragen = to ask'],
+    ['q5', 'wq', 'Weißt du, ___ der Kurs anfängt?', 'wann', 'wenn', 'Do you know when the course starts?', '📅', 'A question about time → wann (wenn is not a question word).', 'anfangen = to begin'],
+    ['q6', 'wq', 'Ich möchte wissen, ___ ich hier parken darf.', 'ob', 'wenn', 'I’d like to know whether I may park here.', '🅿️', 'Darf ich hier parken? (yes / no) → ob.', 'parken = to park'],
+    ['q7', 'wq', 'Kannst du mir sagen, ___ dieser Schlüssel gehört?', 'wem', 'wen', 'Can you tell me who this key belongs to?', '🔑', 'gehören + Dativ → wem.', 'gehören = to belong to'],
+    ['q8', 'wq', 'Wissen Sie, ___ Bus zum Flughafen fährt?', 'welcher', 'welchen', 'Do you know which bus goes to the airport?', '✈️', 'The bus is the subject → welcher (Nominativ).', 'der Flughafen = airport'],
+    ['v1', 'vl', 'Wissen Sie, wann ___?', 'der Zug fährt', 'fährt der Zug', 'Do you know when the train leaves?', '🚆', 'Indirect question = Nebensatz → verb at the end.', 'der Zug = train'],
+    ['v2', 'vl', 'Können Sie mir sagen, wo ___?', 'die Post ist', 'ist die Post', 'Can you tell me where the post office is?', '📮', 'Verb at the end: wo die Post ist.', 'die Post = post office'],
+    ['v3', 'vl', 'Ich weiß nicht, ob ___.', 'er Zeit hat', 'hat er Zeit', 'I don’t know whether he has time.', '⌛', 'After ob: verb at the end.', 'die Zeit = time'],
+    ['v4', 'vl', 'Weißt du, wie ___?', 'die Lehrerin heißt', 'heißt die Lehrerin', 'Do you know what the teacher is called?', '🧑‍🏫', 'The verb heißt goes to the end.', 'heißen = to be called'],
+    ['v5', 'vl', 'Sag mir bitte, wann ___.', 'du kommst', 'kommst du', 'Please tell me when you are coming.', '🕒', 'Indirect question → du kommst (verb last).', 'kommen = to come'],
+    ['v6', 'vl', 'Ich möchte wissen, was ___.', 'das kostet', 'kostet das', 'I’d like to know what that costs.', '💶', 'was das kostet: verb at the end.', 'kosten = to cost'],
+    ['v7', 'vl', 'Können Sie mir sagen, ob der Arzt heute ___?', 'da ist', 'ist da', 'Can you tell me whether the doctor is in today?', '🩺', 'After ob, the conjugated verb ist comes last.', 'der Arzt = doctor'],
+    ['v8', 'vl', 'Weißt du, warum Anna ___?', 'traurig ist', 'ist traurig', 'Do you know why Anna is sad?', '😢', 'warum … traurig ist: verb at the end.', 'traurig = sad'],
+    ['i1', 'ip', 'Ist ___ zu Hause? Ich höre nichts.', 'jemand', 'etwas', 'Is anybody at home? I can’t hear anything.', '🏠', 'A person → jemand.', 'zu Hause = at home'],
+    ['i2', 'ip', 'Ich habe Hunger, aber im Kühlschrank ist ___.', 'nichts', 'niemand', 'I’m hungry, but there’s nothing in the fridge.', '🧊', 'A thing, zero → nichts.', 'der Kühlschrank = fridge'],
+    ['i3', 'ip', 'Am Sonntag ist ___ im Büro. Alle sind zu Hause.', 'niemand', 'nichts', 'On Sunday nobody is in the office. Everyone is at home.', '🏢', 'No person → niemand.', 'das Büro = office'],
+    ['i4', 'ip', 'Möchtest du ___ trinken?', 'etwas', 'jemand', 'Would you like something to drink?', '🥤', 'A thing → etwas.', 'trinken = to drink'],
+    ['i5', 'ip', 'In Deutschland ___ man im Restaurant Trinkgeld.', 'gibt', 'geben', 'In Germany people give a tip in restaurants.', '💶', 'man works like er / sie / es: man gibt.', 'das Trinkgeld = tip'],
+    ['i6', 'ip', 'Hast du ___ gesehen? Die Tür war offen.', 'jemanden', 'jemand', 'Did you see anybody? The door was open.', '🚪', 'sehen + Akkusativ → jemanden.', 'die Tür = door'],
+    ['i7', 'ip', 'Ich habe ___ verstanden. Es war perfekt!', 'alles', 'nichts', 'I understood everything. It was perfect!', '💯', '"Es war perfekt" → everything: alles.', 'verstehen = to understand'],
+    ['i8', 'ip', 'Hier darf ___ nicht rauchen.', 'man', 'niemand', 'You are not allowed to smoke here.', '🚭', 'A general rule → man (niemand + nicht = a double negative).', 'rauchen = to smoke'],
+    ['e1', 'ei', 'Hast du einen Stift? – Ja, ich habe ___.', 'einen', 'eins', 'Do you have a pen? – Yes, I have one.', '🖊️', 'der Stift, Akkusativ → einen.', 'der Stift = pen'],
+    ['e2', 'ei', 'Brauchst du ein Taxi? – Nein, ich brauche ___.', 'keins', 'keinen', 'Do you need a taxi? – No, I don’t need one.', '🚕', 'das Taxi → keins (neuter).', 'das Taxi = taxi'],
+    ['e3', 'ei', 'Haben wir noch Eier? – Ja, im Kühlschrank sind noch ___.', 'welche', 'eins', 'Do we still have eggs? – Yes, there are some in the fridge.', '🥚', 'Plural → welche.', 'das Ei, die Eier = egg'],
+    ['e4', 'ei', 'Gibt es hier eine Apotheke? – Ja, dort ist ___.', 'eine', 'einen', 'Is there a pharmacy here? – Yes, there’s one over there.', '💊', 'die Apotheke, Nominativ → eine.', 'die Apotheke = pharmacy'],
+    ['e5', 'ei', 'Hast du ein Fahrrad? – Ja, ich habe ___.', 'eins', 'einen', 'Do you have a bike? – Yes, I have one.', '🚲', 'das Fahrrad → eins.', 'das Fahrrad = bike'],
+    ['e6', 'ei', 'Ich suche einen Parkplatz, aber hier ist ___.', 'keiner', 'keinen', 'I’m looking for a parking space, but there isn’t one here.', '🅿️', 'der Parkplatz, Nominativ (ist) → keiner.', 'der Parkplatz = parking space'],
+    ['e7', 'ei', 'Möchtest du Kekse? Ich habe ___ gebacken.', 'welche', 'eins', 'Would you like biscuits? I baked some.', '🍪', 'Plural → welche.', 'der Keks, die Kekse = biscuit'],
+    ['e8', 'ei', 'Hast du eine Idee? – Nein, ich habe ___.', 'keine', 'keinen', 'Do you have an idea? – No, I don’t.', '💡', 'die Idee → keine.', 'die Idee = idea']
+  ],
+  nv:[
+    ['v1', 'vb', 'Wir müssen bald eine Entscheidung ___.', 'treffen', 'machen', 'We have to make a decision soon.', '⚖️', 'eine Entscheidung treffen = to decide.', 'die Entscheidung = decision'],
+    ['v2', 'vb', 'Darf ich Ihnen eine Frage ___?', 'stellen', 'fragen', 'May I ask you a question?', '🙋', 'eine Frage stellen = to ask a question.', 'die Frage = question'],
+    ['v3', 'vb', 'Bitte ___ Sie Rücksicht auf die Nachbarn.', 'nehmen', 'geben', 'Please be considerate of the neighbours.', '🤫', 'Rücksicht nehmen auf = to be considerate of.', 'die Rücksicht = consideration'],
+    ['v4', 'vb', 'Ich habe beim Amt einen Antrag ___.', 'gestellt', 'getroffen', 'I submitted an application at the office.', '📝', 'einen Antrag stellen = to apply.', 'der Antrag = application'],
+    ['v5', 'vb', 'Kannst du mir bitte Bescheid ___, wenn du ankommst?', 'sagen', 'sprechen', 'Can you let me know when you arrive?', '📲', 'Bescheid sagen / geben = to let someone know.', 'Bescheid sagen = to let know'],
+    ['v6', 'vb', 'Geld ___ für mich keine große Rolle.', 'spielt', 'macht', 'Money doesn’t play a big role for me.', '💰', 'eine Rolle spielen = to matter.', 'die Rolle = role'],
+    ['v7', 'vb', 'Ich möchte einen Termin beim Arzt ___.', 'vereinbaren', 'treffen', 'I’d like to make an appointment with the doctor.', '🩺', 'einen Termin vereinbaren = to make an appointment.', 'der Termin = appointment'],
+    ['v8', 'vb', 'Der Chef hat mir einen guten Rat ___.', 'gegeben', 'gesagt', 'The boss gave me good advice.', '💡', 'einen Rat geben = to give advice.', 'der Rat = advice'],
+    ['v9', 'vb', 'Wir müssen jetzt leider Abschied ___.', 'nehmen', 'geben', 'Unfortunately we have to say goodbye now.', '👋', 'Abschied nehmen = to say goodbye.', 'der Abschied = farewell'],
+    ['v10', 'vb', 'Hast du die Prüfung schon ___?', 'abgelegt', 'gestellt', 'Have you taken the exam yet?', '🎓', 'eine Prüfung ablegen = to take an exam.', 'die Prüfung = exam'],
+    ['v11', 'vb', 'Ich ___ mir große Sorgen um meine Mutter.', 'mache', 'habe', 'I’m very worried about my mother.', '😟', 'sich Sorgen machen um = to worry about.', 'die Sorge = worry'],
+    ['v12', 'vb', 'Er hat endlich die Verantwortung für seinen Fehler ___.', 'übernommen', 'genommen', 'He finally took responsibility for his mistake.', '🙇', 'die Verantwortung übernehmen = to take responsibility.', 'die Verantwortung = responsibility'],
+    ['p1', 'pp', 'Das Zimmer steht Ihnen ab sofort ___ Verfügung.', 'zur', 'in', 'The room is available to you from now on.', '🛏️', 'zur Verfügung stehen = to be available.', 'die Verfügung = disposal'],
+    ['p2', 'pp', 'Dieser Job kommt für mich nicht ___ Frage.', 'in', 'zur', 'This job is out of the question for me.', '🙅', 'in Frage kommen = to be an option.', 'die Frage = question'],
+    ['p3', 'pp', 'Der Kurs geht nächste Woche ___ Ende.', 'zu', 'am', 'The course ends next week.', '🏁', 'zu Ende gehen = to come to an end.', 'das Ende = end'],
+    ['p4', 'pp', 'Bitte treten Sie mit uns ___ Kontakt.', 'in', 'zu', 'Please get in touch with us.', '📧', 'in Kontakt treten = to get in touch.', 'der Kontakt = contact'],
+    ['p5', 'pp', 'Mit diesem Brief möchte ich meinen Dank ___ Ausdruck bringen.', 'zum', 'in', 'With this letter I would like to express my thanks.', '🙏', 'zum Ausdruck bringen = to express.', 'der Ausdruck = expression'],
+    ['p6', 'pp', 'Ich möchte das Angebot gern ___ Anspruch nehmen.', 'in', 'zum', 'I would like to take up the offer.', '🎁', 'in Anspruch nehmen = to make use of.', 'der Anspruch = claim'],
+    ['p7', 'pp', 'Das Problem steht ___ Zusammenhang mit dem Wetter.', 'im', 'zum', 'The problem is connected with the weather.', '⛈️', 'im Zusammenhang stehen mit = to be connected with.', 'der Zusammenhang = connection'],
+    ['p8', 'pp', 'Die neue Regel tritt im Januar ___ Kraft.', 'in', 'zur', 'The new rule comes into force in January.', '📜', 'in Kraft treten = to come into force.', 'die Kraft = force'],
+    ['p9', 'pp', 'Wir bleiben ___ Verbindung, ja?', 'in', 'zur', 'We’ll stay in touch, OK?', '🤝', 'in Verbindung bleiben = to stay in touch.', 'die Verbindung = connection'],
+    ['p10', 'pp', 'Ich nehme Ihre Kritik ___ Kenntnis.', 'zur', 'in', 'I take note of your criticism.', '📝', 'zur Kenntnis nehmen = to take note of.', 'die Kenntnis = knowledge'],
+    ['p11', 'pp', 'Das Thema kommt morgen in der Sitzung ___ Sprache.', 'zur', 'in', 'The topic will be raised in the meeting tomorrow.', '🗣️', 'zur Sprache kommen = to be raised, discussed.', 'die Sitzung = meeting']
+  ],
+  nd:[
+    ['n1', 'ns', 'Der ___ von meiner Frau ist sehr nett.', 'Kollege', 'Kollegen', 'My wife’s colleague is very nice.', '👔', 'Subject, Nominativ singular → no -n.', 'der Kollege = colleague'],
+    ['n2', 'ns', 'Ein ___ hat mich nach dem Weg gefragt.', 'Tourist', 'Touristen', 'A tourist asked me the way.', '🗺️', 'Who asked? → Nominativ: ein Tourist.', 'der Tourist = tourist'],
+    ['n3', 'ns', 'Mein ___ spielt jeden Abend Klavier.', 'Nachbar', 'Nachbarn', 'My neighbour plays the piano every evening.', '🎹', 'Subject → Nominativ, no -n.', 'der Nachbar = neighbour'],
+    ['n4', 'ns', 'Der ___ hat heute keine Zeit.', 'Student', 'Studenten', 'The student has no time today.', '🧑‍🎓', 'Nominativ singular → der Student.', 'der Student = student'],
+    ['n5', 'ns', 'Der ___ fragt nach dem Preis.', 'Kunde', 'Kunden', 'The customer asks about the price.', '🛍️', 'Nominativ → der Kunde.', 'der Kunde = customer'],
+    ['n6', 'ns', 'Ein ___ hat mir sehr geholfen.', 'Polizist', 'Polizisten', 'A police officer helped me a lot.', '👮', 'Nominativ → ein Polizist.', 'der Polizist = police officer'],
+    ['n7', 'ns', 'Der kleine ___ weint.', 'Junge', 'Jungen', 'The little boy is crying.', '😢', 'Nominativ singular → der Junge.', 'der Junge = boy'],
+    ['n8', 'ns', 'Unser ___ arbeitet seit Montag hier.', 'Praktikant', 'Praktikanten', 'Our intern has been working here since Monday.', '🧑‍💻', 'Subject → Nominativ, no -n.', 'der Praktikant = intern'],
+    ['a1', 'ak', 'Ich frage den ___.', 'Kollegen', 'Kollege', 'I’m asking the colleague.', '🙋', 'fragen + Akkusativ → den Kollegen.', 'der Kollege = colleague'],
+    ['a2', 'ak', 'Kennst du meinen ___?', 'Nachbarn', 'Nachbar', 'Do you know my neighbour?', '🏘️', 'Akkusativ → meinen Nachbarn.', 'der Nachbar = neighbour'],
+    ['a3', 'ak', 'Die Verkäuferin hilft dem ___.', 'Kunden', 'Kunde', 'The shop assistant helps the customer.', '🛒', 'helfen + Dativ → dem Kunden.', 'der Kunde = customer'],
+    ['a4', 'ak', 'Wir haben im Zoo einen ___ gesehen.', 'Löwen', 'Löwe', 'We saw a lion at the zoo.', '🦁', 'Akkusativ → einen Löwen.', 'der Löwe = lion'],
+    ['a5', 'ak', 'Ich spreche gleich mit dem ___.', 'Präsidenten', 'Präsident', 'I’ll speak to the president in a moment.', '🎙️', 'mit + Dativ → dem Präsidenten.', 'der Präsident = president'],
+    ['a6', 'ak', 'Der Arzt untersucht den ___.', 'Patienten', 'Patient', 'The doctor examines the patient.', '🩺', 'Akkusativ → den Patienten.', 'der Patient = patient'],
+    ['a7', 'ak', 'Hast du dem ___ den Weg erklärt?', 'Touristen', 'Tourist', 'Did you explain the way to the tourist?', '🗺️', 'Dativ → dem Touristen.', 'erklären = to explain'],
+    ['a8', 'ak', 'Das Buch gehört dem ___.', 'Studenten', 'Student', 'The book belongs to the student.', '📘', 'gehören + Dativ → dem Studenten.', 'gehören = to belong to'],
+    ['a9', 'ak', 'Wir rufen sofort einen ___.', 'Polizisten', 'Polizist', 'We’ll call a police officer right away.', '👮', 'Akkusativ → einen Polizisten.', 'rufen = to call'],
+    ['a10', 'ak', 'Sie hat den kleinen ___ abgeholt.', 'Jungen', 'Junge', 'She picked up the little boy.', '🧒', 'Akkusativ → den Jungen.', 'abholen = to pick up'],
+    ['s1', 'sp', 'Ich habe einen Brief an ___ Meier geschrieben.', 'Herrn', 'Herr', 'I wrote a letter to Mr Meier.', '✉️', 'an + Akkusativ: der Herr → Herrn.', 'der Herr = Mr, gentleman'],
+    ['s2', 'sp', 'Wie ist Ihr ___?', 'Name', 'Namen', 'What is your name?', '📛', 'Nominativ → der Name, no -n.', 'der Name = name'],
+    ['s3', 'sp', 'Ich kenne seinen ___ nicht.', 'Namen', 'Name', 'I don’t know his name.', '🤷', 'Akkusativ → den Namen.', 'der Name = name'],
+    ['s4', 'sp', 'Die Bedeutung des ___ ist mir nicht klar.', 'Namens', 'Namen', 'The meaning of the name isn’t clear to me.', '❓', 'Genitiv: des Namens (-ns).', 'die Bedeutung = meaning'],
+    ['s5', 'sp', 'Sehr geehrter ___ Schmidt, vielen Dank für Ihre E-Mail.', 'Herr', 'Herrn', 'Dear Mr Schmidt, thank you for your e-mail.', '📨', 'The greeting is Nominativ → Herr.', 'sehr geehrt = dear (formal)'],
+    ['s6', 'sp', 'Ich habe mit ___ Wagner telefoniert.', 'Herrn', 'Herr', 'I spoke to Mr Wagner on the phone.', '📞', 'mit + Dativ → Herrn.', 'telefonieren = to phone'],
+    ['s7', 'sp', 'Meine Damen und ___, herzlich willkommen!', 'Herren', 'Herrn', 'Ladies and gentlemen, welcome!', '🎤', 'Plural → die Herren (-en).', 'die Herren = gentlemen'],
+    ['s8', 'sp', 'Mir ist ein guter ___ gekommen.', 'Gedanke', 'Gedanken', 'A good thought has occurred to me.', '💭', 'Nominativ → der Gedanke.', 'der Gedanke = thought'],
+    ['s9', 'sp', 'Ich habe einen ___ vergessen: Ist es „ie“ oder „ei“?', 'Buchstaben', 'Buchstabe', 'I forgot a letter: is it "ie" or "ei"?', '🔤', 'Akkusativ → einen Buchstaben.', 'der Buchstabe = letter (of the alphabet)']
+  ],
+  ls:[
+    ['l1', 'la', 'Ich ___ mir morgen die Haare schneiden.', 'lasse', 'lässt', 'I’m having my hair cut tomorrow.', '💇', 'ich → lasse (+ infinitive at the end).', 'die Haare schneiden = to cut hair'],
+    ['l2', 'la', 'Er ___ sein Auto in der Werkstatt reparieren.', 'lässt', 'lasst', 'He is having his car repaired at the garage.', '🚗', 'er → lässt (a → ä).', 'die Werkstatt = garage'],
+    ['l3', 'la', 'Wir lassen das Essen ___.', 'liefern', 'geliefert', 'We are having the food delivered.', '🛵', 'lassen + INFINITIVE: liefern.', 'liefern = to deliver'],
+    ['l4', 'la', '___ mich bitte in Ruhe!', 'Lass', 'Lässt', 'Leave me alone, please!', '🙉', 'Imperative (du): Lass!', 'die Ruhe = peace, quiet'],
+    ['l5', 'la', 'Früher ___ meine Eltern mich nie allein reisen.', 'ließen', 'lassten', 'My parents never used to let me travel alone.', '🧳', 'Präteritum of lassen: ließ, ließen.', 'reisen = to travel'],
+    ['l6', 'la', 'Ich habe meinen Pass verlängern ___.', 'lassen', 'gelassen', 'I have had my passport renewed.', '🛂', 'Perfekt with a second verb: hat … verlängern lassen (not gelassen).', 'verlängern = to renew'],
+    ['l7', 'la', 'Wo hast du deinen Schlüssel ___?', 'gelassen', 'lassen', 'Where did you leave your key?', '🔑', 'No second verb → the normal participle: gelassen (= left).', 'lassen = to leave'],
+    ['l8', 'la', '___ du dein Fahrrad reparieren oder machst du es selbst?', 'Lässt', 'Lasst', 'Are you having your bike repaired or are you doing it yourself?', '🚲', 'du → lässt.', 'selbst = oneself'],
+    ['l9', 'la', 'Die Lehrerin lässt die Kinder heute früher nach Hause ___.', 'gehen', 'zu gehen', 'The teacher is letting the children go home earlier today.', '🏠', 'lassen + infinitive WITHOUT zu.', 'früher = earlier'],
+    ['s1', 'sl', 'Das Fenster ___ sich nicht öffnen.', 'lässt', 'lassen', 'The window can’t be opened.', '🪟', 'das Fenster = es → lässt sich.', 'öffnen = to open'],
+    ['s2', 'sl', 'Das Problem lässt sich leicht ___.', 'lösen', 'gelöst', 'The problem can be solved easily.', '🧩', 'sich lassen + infinitive.', 'lösen = to solve'],
+    ['s3', 'sl', 'Kein Problem, das lässt ___ machen.', 'sich', 'es', 'No problem, that can be done.', '👍', 'sich lassen: the reflexive sich is needed.', 'machen = to do'],
+    ['s4', 'sl', 'Diese Flecken ___ sich nicht entfernen.', 'lassen', 'lässt', 'These stains can’t be removed.', '🧽', 'Plural (die Flecken) → lassen sich.', 'der Fleck = stain'],
+    ['s5', 'sl', 'Der Text lässt sich gut ___.', 'übersetzen', 'übersetzt', 'The text is easy to translate.', '🌐', 'sich lassen + infinitive.', 'übersetzen = to translate'],
+    ['s6', 'sl', 'Lässt ___ der Termin verschieben?', 'sich', 'ihn', 'Can the appointment be postponed?', '📅', 'sich lassen: … lässt sich verschieben.', 'verschieben = to postpone'],
+    ['s7', 'sl', 'Die Tür ___ sich nur mit einem Code öffnen.', 'lässt', 'lasst', 'The door can only be opened with a code.', '🔐', 'die Tür = sie → lässt sich.', 'der Code = code'],
+    ['s8', 'sl', 'Das lässt sich leider nicht ___.', 'ändern', 'geändert', 'Unfortunately that can’t be changed.', '🤷', 'sich lassen + infinitive.', 'ändern = to change'],
+    ['z1', 'zp', 'Schau mal, das Fenster ___ schon geöffnet. Wer hat es aufgemacht?', 'ist', 'wird', 'Look, the window is already open. Who opened it?', '🪟', 'A result (already open) → sein + Partizip II.', 'öffnen = to open'],
+    ['z2', 'zp', 'Die Straße ___ gerade repariert, deshalb gibt es Stau.', 'wird', 'ist', 'The road is being repaired right now, so there’s a traffic jam.', '🚧', 'A process happening right now → werden + Partizip II.', 'reparieren = to repair'],
+    ['z3', 'zp', 'Der Tisch ist schon ___. Wir können sofort essen.', 'gedeckt', 'decken', 'The table is already laid. We can eat right away.', '🍽️', 'sein + PARTIZIP II.', 'den Tisch decken = to lay the table'],
+    ['z4', 'zp', 'Keine Sorge, die Rechnung ___ schon seit Montag bezahlt.', 'ist', 'wird', 'Don’t worry, the bill has been paid since Monday.', '🧾', 'A state since Monday → ist bezahlt.', 'die Rechnung = bill'],
+    ['z5', 'zp', 'Dieser Platz ist leider ___.', 'reserviert', 'reservieren', 'Unfortunately this seat is reserved.', '🪑', 'sein + Partizip II: reserviert (no ge- with -ieren).', 'reservieren = to reserve'],
+    ['z6', 'zp', 'Die Briefe ___ alle geschrieben. Jetzt bringe ich sie zur Post.', 'sind', 'werden', 'The letters are all written. Now I’m taking them to the post office.', '✉️', 'A finished result → sind geschrieben.', 'der Brief = letter'],
+    ['z7', 'zp', 'Im Moment ___ das Auto gewaschen. Warte bitte noch zehn Minuten.', 'wird', 'ist', 'The car is being washed at the moment. Please wait ten more minutes.', '🚿', 'Im Moment, still happening → wird.', 'waschen = to wash'],
+    ['z8', 'zp', 'Die Tür war ___, deshalb konnte ich nicht rein.', 'abgeschlossen', 'abschließen', 'The door was locked, so I couldn’t get in.', '🔒', 'A state in the past: war + Partizip II.', 'abschließen = to lock'],
+    ['z9', 'zp', 'Das Formular ist schon ___. Sie müssen nur noch unterschreiben.', 'ausgefüllt', 'ausfüllen', 'The form is already filled in. You only have to sign.', '📋', 'sein + Partizip II: ausgefüllt.', 'ausfüllen = to fill in']
+  ],
+  pz:[
+    ['a1', 'p1', 'Sei leise, du weckst das ___ Baby!', 'schlafende', 'geschlafene', 'Be quiet, you’ll wake the sleeping baby!', '👶', 'The baby is sleeping right now → Partizip I.', 'schlafen = to sleep'],
+    ['a2', 'p1', 'Der ___ Hund an der Tür macht mir Angst.', 'bellende', 'gebellte', 'The barking dog at the door scares me.', '🐕', 'The dog is barking now → bellend + -e.', 'bellen = to bark'],
+    ['a3', 'p1', 'Aus einem ___ Zug darf man nicht aussteigen.', 'fahrenden', 'gefahrenen', 'You mustn’t get off a moving train.', '🚆', 'The train is moving → Partizip I: fahrend.', 'aussteigen = to get off'],
+    ['a4', 'p1', 'Das ___ Mädchen heißt Mia.', 'lachende', 'gelachte', 'The laughing girl is called Mia.', '😄', 'She is laughing → lachend.', 'lachen = to laugh'],
+    ['a5', 'p1', 'Wir suchen eine ___ Lösung.', 'passende', 'gepasste', 'We are looking for a suitable solution.', '🧩', 'passend = suitable (Partizip I).', 'passen = to fit, to suit'],
+    ['a6', 'p1', 'Er sprach mit ___ Stimme.', 'zitternder', 'gezitterter', 'He spoke with a trembling voice.', '🎤', 'Trembling while speaking → zitternd + -er (Dativ, no article).', 'zittern = to tremble'],
+    ['a7', 'p1', 'Im ___ Monat habe ich Urlaub.', 'kommenden', 'gekommenen', 'I have holiday next month.', '🏝️', 'kommend = coming, next (Partizip I).', 'der Monat = month'],
+    ['a8', 'p1', 'Vorsicht vor ___ Kindern!', 'spielenden', 'gespielten', 'Watch out for children playing!', '⚠️', 'The children are playing → spielend + -en (Dativ plural).', 'spielen = to play'],
+    ['b1', 'p2', 'Die Polizei hat das ___ Fahrrad gefunden.', 'gestohlene', 'stehlende', 'The police found the stolen bike.', '🚲', 'Someone stole it (passive, finished) → Partizip II.', 'stehlen = to steal'],
+    ['b2', 'p2', 'Vor der ___ Tür warten viele Leute.', 'geschlossenen', 'schließenden', 'Many people are waiting in front of the closed door.', '🚪', 'The door has been closed → Partizip II.', 'schließen = to close'],
+    ['b3', 'p2', 'Ich esse gern ___ Eier zum Frühstück.', 'gekochte', 'kochende', 'I like eating boiled eggs for breakfast.', '🥚', 'The eggs have been cooked → Partizip II.', 'kochen = to cook, to boil'],
+    ['b4', 'p2', 'Das ist ein gut ___ Plan.', 'durchdachter', 'durchdenkender', 'That’s a well thought-out plan.', '🗺️', 'The thinking is finished → Partizip II.', 'durchdenken = to think through'],
+    ['b5', 'p2', 'Bitte schicken Sie das ___ Formular zurück.', 'ausgefüllte', 'ausfüllende', 'Please send back the completed form.', '📋', 'The form has been filled in → Partizip II.', 'ausfüllen = to fill in'],
+    ['b6', 'p2', 'Die ___ Waren können Sie innerhalb von 14 Tagen zurückgeben.', 'gekauften', 'kaufenden', 'You can return the goods you bought within 14 days.', '🛍️', 'The goods have been bought → Partizip II.', 'die Ware = goods'],
+    ['b7', 'p2', 'Er hat ein ___ Auto gekauft.', 'gebrauchtes', 'brauchendes', 'He bought a used car.', '🚗', 'gebraucht = used (Partizip II).', 'gebraucht = used, second-hand'],
+    ['b8', 'p2', 'Die Stadt ist bekannt für ihre schön ___ Altstadt.', 'renovierte', 'renovierende', 'The town is known for its beautifully renovated old town.', '🏰', 'It has been renovated → Partizip II.', 'renovieren = to renovate'],
+    ['n1', 'an', 'Mein Mann ist ___.', 'Deutscher', 'Deutsche', 'My husband is German.', '🇩🇪', 'No article, masculine → Deutscher (like ein Deutscher).', 'der Deutsche / ein Deutscher = German (person)'],
+    ['n2', 'an', 'Die ___ hat mir das Formular gegeben.', 'Angestellte', 'Angestellter', 'The (female) employee gave me the form.', '🏢', 'After die → -e: die Angestellte.', 'der / die Angestellte = employee'],
+    ['n3', 'an', 'Kinder bezahlen die Hälfte, ___ den vollen Preis.', 'Erwachsene', 'Erwachsener', 'Children pay half, adults the full price.', '🎟️', 'Plural, no article → Erwachsene.', 'der / die Erwachsene = adult'],
+    ['n4', 'an', 'Gestern habe ich einen ___ von dir getroffen.', 'Bekannten', 'Bekannter', 'Yesterday I met an acquaintance of yours.', '🤝', 'Akkusativ masculine: einen Bekannten.', 'der / die Bekannte = acquaintance'],
+    ['n5', 'an', 'Gibt es etwas ___?', 'Neues', 'Neue', 'Is there anything new?', '🆕', 'etwas + adjective as a noun → -es and a capital letter: etwas Neues.', 'neu = new'],
+    ['n6', 'an', 'Am Wochenende habe ich nichts ___ gemacht.', 'Besonderes', 'Besondere', 'I didn’t do anything special at the weekend.', '✨', 'nichts + adjective as a noun → -es: nichts Besonderes.', 'besonders = special'],
+    ['n7', 'an', 'Der ___ wurde sofort ins Krankenhaus gebracht.', 'Verletzte', 'Verletzten', 'The injured man was taken to hospital immediately.', '🚑', 'Nominativ after der → -e.', 'der / die Verletzte = injured person'],
+    ['n8', 'an', 'Ich habe mit den ___ gesprochen.', 'Jugendlichen', 'Jugendliche', 'I spoke with the young people.', '🧑‍🤝‍🧑', 'Dativ plural → -en.', 'der / die Jugendliche = young person'],
+    ['n9', 'an', 'Das ___ an diesem Job ist das Team.', 'Beste', 'Besten', 'The best thing about this job is the team.', '🏆', 'das + adjective as a noun → -e: das Beste.', 'gut, besser, am besten = good']
   ]
 };
+// extra kinds for older topics: they join an existing level, so level numbers and saved progress stay the same
+// [topic, kind, [title, rule, Tamil tip], hint, level index, extra subtitle, sentences]
+[
+  ['sb', 'dw', ['dieser, welcher, jeder', 'dieser (this), welcher (which?) and jeder (every) take the endings of der / die / das: dieser Mann, diese Frau, dieses Kind; Akkusativ diesen, Dativ diesem. Welcher Bus? – Dieser!', 'dies- / welch- / jed- → der / die / das முடிவுகள்: diesen, welchem.'], 'dies- / welch- / jed-: Welche Endung?', 0, ' · Welcher Bus?', [
+    ['w1', 'dw', '___ Bus fährt zum Bahnhof?', 'Welcher', 'Welchen', 'Which bus goes to the station?', '🚌', 'der Bus is the subject → welcher.', 'der Bus = bus'],
+    ['w2', 'dw', 'Ich nehme ___ Pullover hier.', 'diesen', 'dieser', 'I’ll take this jumper here.', '🧶', 'Akkusativ masculine → diesen.', 'der Pullover = jumper'],
+    ['w3', 'dw', 'In ___ Haus wohnst du?', 'welchem', 'welches', 'Which house do you live in?', '🏠', 'in (Wo?) + Dativ → welchem.', 'das Haus = house'],
+    ['w4', 'dw', '___ Kind bekommt ein Geschenk.', 'Jedes', 'Jeder', 'Every child gets a present.', '🎁', 'das Kind → jedes.', 'das Geschenk = present'],
+    ['w5', 'dw', '___ Jacke gefällt dir besser?', 'Welche', 'Welcher', 'Which jacket do you like better?', '🧥', 'die Jacke, Nominativ → welche.', 'die Jacke = jacket'],
+    ['w6', 'dw', 'Ich gehe ___ Woche zum Sport.', 'jede', 'jeden', 'I go to sport every week.', '🏋️', 'die Woche, Akkusativ → jede.', 'die Woche = week'],
+    ['w7', 'dw', 'Mit ___ Zug fährst du?', 'welchem', 'welchen', 'Which train are you taking?', '🚆', 'mit + Dativ → welchem.', 'der Zug = train'],
+    ['w8', 'dw', '___ Film ist wirklich spannend.', 'Dieser', 'Diesen', 'This film is really exciting.', '🎬', 'Subject, masculine → dieser.', 'spannend = exciting']]],
+  ['k2', 'vg', ['Past: hätte / wäre + Partizip II', 'Unreal in the PAST (regret): hätte / wäre + Partizip II. Wenn ich mehr gelernt hätte, hätte ich die Prüfung bestanden. Ich wäre gern mitgekommen. haben or sein as in the Perfekt.', 'கடந்தகால கற்பனை: hätte / wäre + Partizip II.'], 'Vergangenheit: hätte oder wäre + Partizip II?', 1, ' · hätte gewusst', [
+    ['g1', 'vg', 'Wenn ich das gewusst ___, wäre ich gekommen.', 'hätte', 'wäre', 'If I had known that, I would have come.', '🤦', 'wissen takes haben → hätte gewusst.', 'wissen = to know'],
+    ['g2', 'vg', 'Ich ___ gern mitgefahren, aber ich war krank.', 'wäre', 'hätte', 'I would have liked to come along, but I was ill.', '🤒', 'mitfahren = movement → wäre mitgefahren.', 'mitfahren = to come along'],
+    ['g3', 'vg', 'Ohne deine Hilfe ___ ich das nicht geschafft.', 'hätte', 'wäre', 'Without your help I wouldn’t have managed it.', '🙏', 'schaffen takes haben → hätte geschafft.', 'schaffen = to manage'],
+    ['g4', 'vg', 'Wenn wir früher losgefahren ___, hätten wir den Zug bekommen.', 'wären', 'hätten', 'If we had set off earlier, we would have caught the train.', '🚆', 'losfahren = movement → wären losgefahren.', 'losfahren = to set off'],
+    ['g5', 'vg', 'Hättest du mir doch die Wahrheit ___!', 'gesagt', 'sagen', 'If only you had told me the truth!', '🗣️', 'hätte + Partizip II.', 'die Wahrheit = truth'],
+    ['g6', 'vg', 'An deiner Stelle ___ ich zum Arzt gegangen.', 'wäre', 'hätte', 'In your place I would have gone to the doctor.', '🩺', 'gehen = movement → wäre gegangen.', 'an deiner Stelle = in your place'],
+    ['g7', 'vg', 'Fast ___ ich den Bus verpasst.', 'hätte', 'wäre', 'I almost missed the bus.', '🚌', 'verpassen takes haben → hätte verpasst.', 'verpassen = to miss'],
+    ['g8', 'vg', 'Wenn es nicht geregnet hätte, ___ wir gegrillt.', 'hätten', 'wären', 'If it hadn’t rained, we would have had a barbecue.', '🍖', 'grillen takes haben → hätten gegrillt.', 'grillen = to barbecue']]],
+  ['zu', 'id', ['indem, ohne dass, brauchen … zu', 'indem = by (doing): Man lernt, indem man übt (verb at the end). ohne dass / anstatt dass + Nebensatz when the subject changes (Er ging, ohne dass ich es merkte). nicht / nur brauchen + zu = don’t have to / only need to.', 'indem = …செய்வதன் மூலம்; ohne dass / anstatt dass (வேறு எழுவாய்); nicht brauchen zu = தேவையில்லை.'], 'Wie? → indem · neues Subjekt → ohne dass', 1, ' · indem', [
+    ['i1', 'id', 'Man lernt eine Sprache am besten, ___ man viel spricht.', 'indem', 'damit', 'You learn a language best by speaking a lot.', '🗣️', 'How? → indem (by doing).', 'die Sprache = language'],
+    ['i2', 'id', 'Er ist gegangen, ___ ich es gemerkt habe.', 'ohne dass', 'ohne zu', 'He left without me noticing.', '🚶', 'A new subject (ich) → ohne dass + Nebensatz.', 'merken = to notice'],
+    ['i3', 'id', 'Du brauchst morgen nicht ___.', 'zu kommen', 'kommen', 'You don’t have to come tomorrow.', '🏠', 'nicht brauchen + zu + infinitive = don’t have to.', 'brauchen = to need'],
+    ['i4', 'id', 'Sie spart Geld, ___ sie mit dem Fahrrad fährt.', 'indem', 'ohne dass', 'She saves money by cycling.', '🚲', 'How does she save? → indem.', 'sparen = to save'],
+    ['i5', 'id', '___ er mir hilft, sitzt er nur vor dem Fernseher.', 'Anstatt dass', 'Indem', 'Instead of helping me, he just sits in front of the TV.', '📺', 'instead of → anstatt dass.', 'der Fernseher = TV'],
+    ['i6', 'id', 'Sie brauchen das Formular nur ___.', 'zu unterschreiben', 'unterschreiben', 'You only need to sign the form.', '✍️', 'nur brauchen + zu = only need to.', 'unterschreiben = to sign'],
+    ['i7', 'id', 'Wir haben das Problem gelöst, ___ wir den Chef gefragt haben.', 'indem', 'damit', 'We solved the problem by asking the boss.', '💡', 'How? → indem.', 'lösen = to solve'],
+    ['i8', 'id', 'Die Kinder spielten draußen, ___ es jemand bemerkte.', 'ohne dass', 'indem', 'The children played outside without anyone noticing.', '🧒', 'Without + a new subject (jemand) → ohne dass.', 'bemerken = to notice']]],
+  ['fg', 'gp', ['aufgrund, statt, innerhalb', 'More Genitiv prepositions for letters and texts: aufgrund (= because of, formal), (an)statt (= instead of), anstelle (= in place of), innerhalb / außerhalb (= within, inside / outside).', 'aufgrund = காரணமாக, statt = பதிலாக, innerhalb = உள்ளே / க்குள், außerhalb = வெளியே.'], 'Grund, statt, innerhalb oder außerhalb?', 1, ' · innerhalb einer Woche', [
+    ['p1', 'gp', '___ des Streiks fallen viele Züge aus.', 'Aufgrund', 'Anstatt', 'Because of the strike many trains are cancelled.', '🚆', 'A reason (formal) → aufgrund.', 'der Streik = strike'],
+    ['p2', 'gp', 'Bitte antworten Sie ___ einer Woche.', 'innerhalb', 'außerhalb', 'Please reply within a week.', '📅', 'within → innerhalb.', 'die Woche = week'],
+    ['p3', 'gp', '___ eines Briefes schicke ich Ihnen eine E-Mail.', 'Statt', 'Aufgrund', 'Instead of a letter I’m sending you an e-mail.', '📧', 'instead of → statt.', 'der Brief = letter'],
+    ['p4', 'gp', 'Wir wohnen ___ der Stadt, auf dem Land.', 'außerhalb', 'innerhalb', 'We live outside the town, in the countryside.', '🌾', 'outside → außerhalb.', 'das Land = countryside'],
+    ['p5', 'gp', 'Aufgrund ___ Wetters wurde das Konzert abgesagt.', 'des schlechten', 'dem schlechten', 'Because of the bad weather the concert was cancelled.', '⛈️', 'aufgrund + Genitiv: des schlechten Wetters.', 'absagen = to cancel'],
+    ['p6', 'gp', '___ des Chefs hat seine Kollegin die Rede gehalten.', 'Anstelle', 'Aufgrund', 'In place of the boss, his colleague gave the speech.', '🎤', 'in place of → anstelle.', 'die Rede = speech'],
+    ['p7', 'gp', 'Innerhalb ___ Jahres hat er Deutsch gelernt.', 'eines', 'einem', 'He learned German within a year.', '🗓️', 'innerhalb + Genitiv: eines Jahres.', 'das Jahr = year'],
+    ['p8', 'gp', 'Im Haus ist Rauchen verboten, nur ___ des Gebäudes ist es erlaubt.', 'außerhalb', 'innerhalb', 'Smoking is forbidden in the house; it’s only allowed outside the building.', '🚭', 'outside → außerhalb.', 'das Gebäude = building']]]
+].forEach(([tp, k, def, h, li, sub, rows]) => {
+  const d = XT.find(t => t.tp === tp);
+  d.kinds[k] = def; d.hint[k] = h; d.lv[li].k.push(k); d.lv[li].s += sub;
+  if (d.boss) d.boss.push(k);
+  XR[tp].push(...rows);
+});
 const XBY = {};      // topic key → its definition
 const XPOOL = {};    // topic key → its sentences (Lena's 🎲 sentences join here too)
 XT.forEach((d, ti) => {
@@ -2442,7 +2855,8 @@ XT.forEach((d, ti) => {
 /* ================= telc B1 vocabulary themes (played in the runner, kept in the memory boxes) =================
    [id, sentence with ___, answer, wrong, English, emoji, word with article / plural = meaning]; levels 101, 102 … */
 const WZT = [['arbeit', 'Arbeit & Beruf', '💼'], ['wohnen', 'Wohnen', '🏠'], ['gesundheit', 'Gesundheit', '🩺'], ['behoerden', 'Behörden & Ämter', '🏛️'], ['reisen', 'Reisen & Verkehr', '🚆'],
-  ['einkaufen', 'Einkaufen & Service', '🛒'], ['freizeit', 'Freizeit & Kultur', '🎭'], ['familie', 'Familie & Beziehungen', '👪'], ['bildung', 'Schule & Ausbildung', '🎓'], ['medien', 'Medien & Umwelt', '♻️']];
+  ['einkaufen', 'Einkaufen & Service', '🛒'], ['freizeit', 'Freizeit & Kultur', '🎭'], ['familie', 'Familie & Beziehungen', '👪'], ['bildung', 'Schule & Ausbildung', '🎓'], ['medien', 'Medien & Umwelt', '♻️'],
+  ['restaurant', 'Restaurant & Café', '🍽️'], ['termine', 'Termine & Telefon', '📞'], ['stadt', 'Stadt & Weg', '🗺️']];   // levels 101 … 113 (keep 111–120 for themes)
 const WZR = {
   arbeit:[
     ['a1', 'Ich schicke meine ___ an die Firma.', 'Bewerbung', 'Pause', 'I’m sending my application to the company.', '📨', 'die Bewerbung, -en = application'],
@@ -2583,6 +2997,48 @@ const WZR = {
     ['u10', 'Im Internet muss man mit seinen persönlichen ___ vorsichtig sein.', 'Daten', 'Flaschen', 'On the internet you have to be careful with your personal data.', '🔒', 'die Daten (pl.) = data'],
     ['u11', 'Plastiktüten sind schlecht für die Umwelt, deshalb nehme ich eine ___ mit.', 'Stofftasche', 'Plastikflasche', 'Plastic bags are bad for the environment, so I take a cloth bag.', '👜', 'die Stofftasche, -n = cloth bag'],
     ['u12', 'Mein Laptop ist zu langsam, ich muss ein ___ machen.', 'Update', 'Pfand', 'My laptop is too slow; I have to do an update.', '💻', 'das Update, -s = update']
+  ],
+  restaurant:[
+    ['rt1', 'Haben Sie einen ___ für zwei Personen frei?', 'Tisch', 'Teller', 'Do you have a table for two free?', '🍽️', 'der Tisch, -e = table'],
+    ['rt2', 'Könnte ich bitte die ___ haben? Ich möchte bestellen.', 'Speisekarte', 'Rechnung', 'Could I have the menu, please? I’d like to order.', '📋', 'die Speisekarte, -n = menu'],
+    ['rt3', 'Als ___ nehme ich eine Tomatensuppe, danach den Fisch.', 'Vorspeise', 'Nachspeise', 'As a starter I’ll have the tomato soup, then the fish.', '🍅', 'die Vorspeise, -n = starter'],
+    ['rt4', 'Zum ___ gibt es Schokoladeneis.', 'Nachtisch', 'Getränk', 'For dessert there’s chocolate ice cream.', '🍨', 'der Nachtisch, -e = dessert'],
+    ['rt5', 'Die ___, bitte! – Zusammen oder getrennt?', 'Rechnung', 'Speisekarte', 'The bill, please! – Together or separately?', '🧾', 'die Rechnung, -en = bill'],
+    ['rt6', 'Das Essen war super, ich gebe fünf Euro ___.', 'Trinkgeld', 'Rechnung', 'The food was great, I’ll give a five-euro tip.', '💶', 'das Trinkgeld = tip'],
+    ['rt7', 'Der Kellner bringt uns die ___: zwei Cola und ein Wasser.', 'Getränke', 'Gerichte', 'The waiter brings us the drinks: two colas and a water.', '🥤', 'das Getränk, -e = drink'],
+    ['rt8', 'Das ___ des Tages ist heute Fisch mit Reis.', 'Gericht', 'Getränk', 'Today’s dish of the day is fish with rice.', '🐟', 'das Gericht, -e = dish'],
+    ['rt9', 'Ich bin ___. Gibt es auch Gerichte ohne Fleisch?', 'Vegetarier', 'Kellner', 'I’m a vegetarian. Are there dishes without meat?', '🥗', 'der Vegetarier, - = vegetarian'],
+    ['rt10', 'Entschuldigung, die Suppe ist leider ganz ___.', 'kalt', 'satt', 'Excuse me, the soup is completely cold, unfortunately.', '🥣', 'kalt = cold'],
+    ['rt11', 'Möchten Sie ___ oder getrennt zahlen?', 'zusammen', 'zufrieden', 'Would you like to pay together or separately?', '💳', 'zusammen = together'],
+    ['rt12', 'Ich habe für 19 Uhr einen Tisch ___.', 'reserviert', 'gegessen', 'I’ve reserved a table for 7 pm.', '📅', 'reservieren = to reserve']
+  ],
+  termine:[
+    ['tm1', 'Ich möchte gern einen ___ beim Zahnarzt machen.', 'Termin', 'Zettel', 'I’d like to make an appointment at the dentist.', '🦷', 'der Termin, -e = appointment'],
+    ['tm2', 'Leider muss ich den Termin ___. Ich bin krank.', 'absagen', 'ansagen', 'Unfortunately I have to cancel the appointment. I’m ill.', '🤒', 'absagen = to cancel'],
+    ['tm3', 'Können wir den Termin auf Freitag ___?', 'verschieben', 'verlieren', 'Can we move the appointment to Friday?', '📆', 'verschieben = to postpone, to move'],
+    ['tm4', 'Hier ist der ___ von Familie Berger. Bitte sprechen Sie nach dem Ton.', 'Anrufbeantworter', 'Briefkasten', 'This is the Berger family’s answering machine. Please speak after the tone.', '📠', 'der Anrufbeantworter, - = answering machine'],
+    ['tm5', 'Könnten Sie Ihren Namen bitte ___?', 'buchstabieren', 'beschreiben', 'Could you spell your name, please?', '🔤', 'buchstabieren = to spell'],
+    ['tm6', 'Unter welcher ___ kann ich Sie erreichen?', 'Nummer', 'Zahl', 'At which number can I reach you?', '☎️', 'die Telefonnummer, -n = phone number'],
+    ['tm7', 'Frau Klein ist gerade nicht da. Kann ich ihr etwas ___?', 'ausrichten', 'aufrichten', 'Ms Klein isn’t here at the moment. Can I give her a message?', '📝', 'ausrichten = to pass on (a message)'],
+    ['tm8', 'Sie sind leider falsch ___. Hier ist nicht die Firma Becker.', 'verbunden', 'gebunden', 'Sorry, you have the wrong number. This isn’t the Becker company.', '📞', 'falsch verbunden = wrong number'],
+    ['tm9', 'Am Dienstag habe ich leider keine ___. Geht auch Mittwoch?', 'Zeit', 'Uhr', 'Unfortunately I don’t have time on Tuesday. Is Wednesday OK too?', '⌛', 'die Zeit = time'],
+    ['tm10', 'Ich bin gerade im Bus. Ich rufe Sie später ___.', 'zurück', 'wieder', 'I’m on the bus right now. I’ll call you back later.', '🔁', 'zurückrufen = to call back'],
+    ['tm11', 'Bitte bringen Sie zum Termin Ihre ___ mit.', 'Versichertenkarte', 'Visitenkarte', 'Please bring your health insurance card to the appointment.', '💳', 'die Versichertenkarte, -n = health insurance card'],
+    ['tm12', 'Der Termin passt mir gut. Ich ___ ihn hiermit.', 'bestätige', 'bestelle', 'The appointment suits me. I hereby confirm it.', '✅', 'bestätigen = to confirm']
+  ],
+  stadt:[
+    ['st1', 'Gehen Sie hier ___ und dann die zweite Straße links.', 'geradeaus', 'gegenüber', 'Go straight ahead here and then take the second street on the left.', '⬆️', 'geradeaus = straight ahead'],
+    ['st2', 'Bei Rot müssen Sie an der ___ warten.', 'Ampel', 'Apotheke', 'When it’s red you have to wait at the traffic lights.', '🚦', 'die Ampel, -n = traffic light'],
+    ['st3', 'Die Apotheke ist direkt ___ der Bank, auf der anderen Straßenseite.', 'gegenüber', 'neben', 'The pharmacy is right opposite the bank, on the other side of the street.', '💊', 'gegenüber = opposite'],
+    ['st4', 'Die nächste ___ ist „Rathaus“. Dort steigen wir aus.', 'Haltestelle', 'Ampel', 'The next stop is “Rathaus”. We get off there.', '🚏', 'die Haltestelle, -n = (bus / tram) stop'],
+    ['st5', 'Ich habe mich ___. Wo ist denn hier der Bahnhof?', 'verlaufen', 'verkauft', 'I’m lost. Where is the station around here?', '😵', 'sich verlaufen = to get lost'],
+    ['st6', 'Fahren Sie über die ___ auf die andere Seite des Flusses.', 'Brücke', 'Haltestelle', 'Drive over the bridge to the other side of the river.', '🌉', 'die Brücke, -n = bridge'],
+    ['st7', 'In der ___ gibt es viele Geschäfte und Cafés.', 'Innenstadt', 'Kreuzung', 'In the city centre there are lots of shops and cafés.', '🏙️', 'die Innenstadt, -¨e = city centre'],
+    ['st8', 'Die Bank ist an der ___, wo sich die zwei Straßen treffen.', 'Kreuzung', 'Brücke', 'The bank is at the crossroads where the two streets meet.', '✖️', 'die Kreuzung, -en = crossroads'],
+    ['st9', 'Wie komme ich zum ___? Ich muss mich dort anmelden.', 'Rathaus', 'Krankenhaus', 'How do I get to the town hall? I have to register there.', '🏛️', 'das Rathaus, -¨er = town hall'],
+    ['st10', 'Ist das weit? – Nein, das sind nur fünf Minuten zu ___.', 'Fuß', 'Bein', 'Is it far? – No, it’s only five minutes on foot.', '🚶', 'zu Fuß = on foot'],
+    ['st11', 'Biegen Sie an der Kreuzung nach ___ ab.', 'links', 'geradeaus', 'Turn left at the crossroads.', '⬅️', 'links = left'],
+    ['st12', 'Mit der ___ U3 sind Sie in zehn Minuten am Bahnhof.', 'Linie', 'Straße', 'With line U3 you’ll be at the station in ten minutes.', '🚇', 'die Linie, -n = (bus / train) line']
   ]
 };
 const WZ = [];
@@ -2780,23 +3236,28 @@ const SPR = [
       ['sp3_ausflug', '🚌', 'Teil 3: Kursausflug planen', 'Planning together', 'telc B1 oral exam, part 3 (Gemeinsam etwas planen). Task: plan a day trip with the German course. Points: where to go, when, how to travel, costs, what to take along. Make suggestions, react, sometimes disagree politely, and agree on each point.'],
       ['sp3_umzug', '📦', 'Teil 3: Einem Freund beim Umzug helfen', 'Planning together', 'telc B1 oral exam, part 3 (Gemeinsam etwas planen). Task: a friend is moving to a new flat; plan how you help. Points: when, who helps, a car or van, food for the helpers, what has to be prepared. Make suggestions, react, and agree on each point.']] }
 ];
-// the study plan: 8 weeks from A1 to the B1 exam; every step checks itself off
-// steps: ['lv', level] · ['wz', theme] · ['ex', module, how many tasks in total] · ['cafe', chats in total] · ['telc', TELC texts in total] · ['sp', part]
+// the study plan: 12 weeks from A1 to the B1 exam, every week like a textbook chapter
+// (grammar + a word theme + a role-play or skill); every step checks itself off
+// steps: ['lv', level] · ['wz', theme] · ['ex', module, how many tasks in total] · ['cafe', chats in total] · ['role', café role-play] · ['telc', TELC texts in total] · ['sp', part]
 const PLAN = [
-  ['Woche 1 · A1: Sätze bauen', [['lv', 25], ['lv', 26], ['lv', 29], ['wz', 'familie'], ['cafe', 1]]],
-  ['Woche 2 · A1: Fälle und Plural', [['lv', 30], ['lv', 31], ['lv', 17], ['lv', 18], ['lv', 13], ['wz', 'wohnen']]],
-  ['Woche 3 · A1–A2: Verben und Perfekt', [['lv', 21], ['lv', 22], ['lv', 33], ['lv', 34], ['lv', 14], ['wz', 'arbeit'], ['cafe', 2]]],
-  ['Woche 4 · A2: Präpositionen und Nebensätze', [['lv', 4], ['lv', 5], ['lv', 1], ['lv', 2], ['lv', 37], ['ex', 'hoer', 2], ['wz', 'gesundheit']]],
-  ['Woche 5 · A2: Vergleiche, Vergangenheit, Adjektive', [['lv', 41], ['lv', 45], ['lv', 7], ['lv', 8], ['ex', 'les', 1], ['ex', 'sb1', 1], ['wz', 'einkaufen']]],
-  ['Woche 6 · B1: Konjunktiv II und Verben mit Präpositionen', [['lv', 49], ['lv', 50], ['lv', 53], ['lv', 54], ['lv', 57], ['sp', 'sp1'], ['telc', 1], ['wz', 'behoerden']]],
-  ['Woche 7 · B1: Passiv, Konnektoren, Genitiv', [['lv', 61], ['lv', 65], ['lv', 69], ['lv', 70], ['ex', 'sb2', 1], ['sp', 'sp3'], ['ex', 'hoer', 5], ['wz', 'reisen']]],
-  ['Woche 8 · Modelltest telc B1', [['ex', 'sb1', 3], ['ex', 'les', 3], ['ex', 'hoer', 8], ['telc', 2], ['sp', 'sp2'], ['wz', 'bildung'], ['wz', 'medien']]]
+  ['Woche 1 · A1: Verben und Satzbau', [['lv', 73], ['lv', 74], ['lv', 25], ['lv', 26], ['wz', 'familie'], ['cafe', 1]]],
+  ['Woche 2 · A1: Zahlen, Uhrzeit und Fälle', [['lv', 77], ['lv', 78], ['lv', 29], ['lv', 30], ['wz', 'restaurant'], ['role', 'r_rest'], ['ex', 'hoer', 1]]],
+  ['Woche 3 · A1: Plural und trennbare Verben', [['lv', 17], ['lv', 18], ['lv', 13], ['lv', 14], ['wz', 'wohnen'], ['wz', 'einkaufen'], ['role', 'r_bahn']]],
+  ['Woche 4 · A1–A2: Modalverben und Perfekt', [['lv', 21], ['lv', 22], ['lv', 33], ['lv', 34], ['wz', 'termine'], ['role', 'r_termin'], ['cafe', 3]]],
+  ['Woche 5 · A2: Präteritum, Reflexiv, Präpositionen', [['lv', 45], ['lv', 37], ['lv', 4], ['lv', 5], ['wz', 'stadt'], ['role', 'r_weg'], ['ex', 'hoer', 2]]],
+  ['Woche 6 · A2: Nebensätze und Relativsätze', [['lv', 1], ['lv', 2], ['lv', 81], ['lv', 82], ['wz', 'gesundheit'], ['role', 'r_arzt'], ['ex', 'les', 1]]],
+  ['Woche 7 · A2: Temporalsätze und indirekte Fragen', [['lv', 85], ['lv', 86], ['lv', 89], ['lv', 90], ['wz', 'arbeit'], ['ex', 'sb1', 1], ['sp', 'sp1']]],
+  ['Woche 8 · A2–B1: Adjektive und Vergleiche', [['lv', 7], ['lv', 8], ['lv', 41], ['lv', 42], ['wz', 'freizeit'], ['role', 'r_wohnung'], ['telc', 1]]],
+  ['Woche 9 · B1: Konjunktiv II und Verben mit Präpositionen', [['lv', 49], ['lv', 50], ['lv', 53], ['lv', 54], ['wz', 'behoerden'], ['role', 'r_amt'], ['ex', 'les', 2]]],
+  ['Woche 10 · B1: zu-Infinitiv, Passiv, lassen', [['lv', 57], ['lv', 58], ['lv', 61], ['lv', 62], ['lv', 121], ['lv', 122], ['wz', 'reisen'], ['ex', 'sb2', 1], ['sp', 'sp3']]],
+  ['Woche 11 · B1: n-Deklination, Konnektoren, Genitiv, Nomen-Verb', [['lv', 97], ['lv', 65], ['lv', 69], ['lv', 70], ['lv', 93], ['lv', 94], ['lv', 125], ['wz', 'bildung'], ['ex', 'hoer', 5], ['telc', 2]]],
+  ['Woche 12 · Modelltest telc B1', [['ex', 'sb1', 3], ['ex', 'les', 3], ['ex', 'hoer', 8], ['telc', 3], ['sp', 'sp2'], ['role', 'r_laden'], ['wz', 'medien']]]
 ];
 
 // [topic, tab]; the order inside a tab is the teaching order
-const TOPICS = [['sb', 'A1'], ['ar', 'A1'], ['pl', 'A1'], ['tv', 'A1'], ['mv', 'A1'], ['pf', 'A1'],
-  ['prep', 'A2'], ['rv', 'A2'], ['ks', 'A2'], ['pt', 'A2'], ['wd', 'A2'], ['adj', 'A2'],
-  ['k2', 'B1'], ['vp', 'B1'], ['zu', 'B1'], ['pa', 'B1'], ['zk', 'B1'], ['fg', 'B1']];
+const TOPICS = [['ps', 'A1'], ['sb', 'A1'], ['zd', 'A1'], ['ar', 'A1'], ['pl', 'A1'], ['tv', 'A1'], ['mv', 'A1'], ['pf', 'A1'],
+  ['prep', 'A2'], ['rv', 'A2'], ['ks', 'A2'], ['pt', 'A2'], ['wd', 'A2'], ['rs', 'A2'], ['ts', 'A2'], ['adj', 'A2'], ['iq', 'A2'],
+  ['k2', 'B1'], ['vp', 'B1'], ['zu', 'B1'], ['pa', 'B1'], ['ls', 'B1'], ['nd', 'B1'], ['zk', 'B1'], ['fg', 'B1'], ['nv', 'B1'], ['pz', 'B1']];
 const OLD_T = {
   pl:{ name:'Singular / Plural', icon:'🍎', cefr:'A1', lv:[17, 18, 19, 20], u:() => S.unlockedN || 1, pool:() => NPL },
   tv:{ name:'Trennbare Verben', icon:'✂️', cefr:'A1–A2', lv:[13, 14, 15, 16], u:() => S.unlockedT || 1, pool:() => V },
@@ -3756,7 +4217,18 @@ const CAFE_FOCUS = {
 };
 // the oral exam role-plays are café topics too: [id, emoji, German, English, extra instructions for Lena]
 const EXAM_TALKS = SPR.flatMap(p => p.talks);
-const cafeTopic = id => CAFE_TOPICS.find(x => x[0] === id) || EXAM_TALKS.find(x => x[0] === id);
+// role-plays for everyday situations (A1–B1): [id, emoji, German, English, the situation for Lena]
+const CAFE_ROLES = [
+  ['r_rest', '🍽️', 'Im Restaurant', 'Ordering in a restaurant', 'Role-play: Lena is the waitress in a restaurant, the learner is the guest. Greet them, offer a table, tell them 4–5 dishes and drinks with prices (invent a small menu), take the order, react to special wishes (ohne Fleisch, scharf?), later bring the bill and ask "Zusammen oder getrennt?". Typical phrases: Was darf es sein? Ich hätte gern … Die Rechnung, bitte. Stay in your role.'],
+  ['r_bahn', '🚆', 'Am Bahnhof: Fahrkarte kaufen', 'Buying a train ticket', 'Role-play: Lena works at the ticket counter of the Deutsche Bahn. The learner wants a ticket. Ask: wohin, wann, einfach oder hin und zurück, erste oder zweite Klasse, BahnCard? Give departure times, the platform (Gleis), changes (umsteigen in …) and the price. Stay in your role.'],
+  ['r_termin', '📞', 'Einen Termin vereinbaren', 'Making an appointment by phone', 'Role-play: a phone call. Lena works at a doctor’s practice or a hairdresser (choose one and say it at the start). The learner wants an appointment. Offer days and times, say once that a time is not possible, ask for the name (ask them to spell it) and a phone number, and confirm the appointment (am …, um … Uhr).'],
+  ['r_weg', '🗺️', 'Nach dem Weg fragen', 'Asking for directions', 'Role-play: the learner is new in a German town and asks Lena, a passer-by, the way to the station, a pharmacy or the town hall. Give directions with geradeaus, links, rechts, an der Ampel, die zweite Straße, gegenüber, neben, über die Brücke. Ask the learner to repeat the way back to you, and correct it kindly.'],
+  ['r_arzt', '🩺', 'Beim Arzt', 'At the doctor’s', 'Role-play: Lena is the receptionist and then the doctor in a medical practice. Ask for the insurance card (Versichertenkarte), then: Was fehlt Ihnen? Seit wann? Haben Sie Fieber? Give simple advice, a prescription (Rezept) and, if needed, a sick note (Krankmeldung). Stay in your role.'],
+  ['r_wohnung', '🔑', 'Wohnungsbesichtigung', 'Viewing a flat', 'Role-play: Lena is the landlady showing a flat; the learner is interested in renting it. Answer questions about the rent (Kaltmiete, Nebenkosten, Kaution), size, rooms, floor and when it is free; ask the learner about their job, pets and smoking. Stay in your role.'],
+  ['r_amt', '🏛️', 'Auf dem Bürgeramt', 'At the citizens’ office', 'Role-play: Lena works at the Bürgeramt. The learner wants to register their new address (Anmeldung). Ask for documents (Pass, Wohnungsgeberbestätigung), go through the form (Name, Geburtsdatum, alte und neue Adresse, Familienstand) and explain what happens next. Use polite, official language (Sie).'],
+  ['r_laden', '🛍️', 'Im Geschäft: Reklamation', 'Returning an item in a shop', 'Role-play: Lena is a shop assistant. The learner bought something that is broken or does not fit and wants to exchange it or get the money back. Ask for the receipt (Kassenbon) and what the problem is; offer a repair, an exchange or a voucher (Gutschein) before agreeing to give the money back. Be friendly but follow the shop rules.']
+];
+const cafeTopic = id => CAFE_TOPICS.find(x => x[0] === id) || CAFE_ROLES.find(x => x[0] === id) || EXAM_TALKS.find(x => x[0] === id);
 CAFE_FOCUS.exam = { name:'telc B1 Sprechen', prompt:'This is practice for the oral telc B1 exam (level B1). Act like a friendly exam partner, not a teacher: keep your own turns short (2–3 sentences) so the learner speaks more than you, and use the typical phrases of the exam (Wie wäre es, wenn …? Was hältst du davon? Meiner Meinung nach …). In the feedback, besides mistakes, say when an answer is too short for B1 and show a longer, connected answer (weil, dass, deshalb, zum Beispiel).' };
 const LENA_SVG = `<svg class="lena-svg" viewBox="0 0 200 222" xmlns="http://www.w3.org/2000/svg">
   <circle cx="100" cy="112" r="98" fill="#F3E6D3"/>
@@ -4222,6 +4694,7 @@ function renderCafeBox() {
   $('#cafeFocusName').textContent = CAFE_FOCUS[topicKey()].name;
   $$('#cafeLvl button').forEach(b => b.classList.toggle('on', b.dataset.lvl === (S.cafeLevel || 'A2')));
   if (!$('#cafeTopics').children.length) $('#cafeTopics').innerHTML = CAFE_TOPICS.map(([id, e, de, en]) => `<button data-cafe="${id}"><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small></button>`).join('');
+  if (!$('#cafeRoles').children.length) $('#cafeRoles').innerHTML = CAFE_ROLES.map(([id, e, de, en]) => `<button data-cafe="${id}"><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small></button>`).join('');
 }
 
 /* ================= animated grammar pictures for adjectives + rules pages ================= */
@@ -6019,6 +6492,110 @@ GUIDE.fg = { name:'Futur & Genitiv', sections:() => [
   ['💡 Memory tricks', xTipsHTML(XPOOL.fg)]
 ] };
 
+/* ---- rules pages for the topics added later (Präsens … Partizipien) ---- */
+// clocks: [hour, minute, words, colour, 'nach' | 'vor' | 'halb']; the coloured slice shows the minutes the words talk about
+function clocksSVG(rows, caption) {
+  let s = '';
+  const pt = (cx, cy, r, a) => `${(cx + Math.sin(a) * r).toFixed(1)} ${(cy - Math.cos(a) * r).toFixed(1)}`;
+  rows.forEach(([h, m, label, col, mode], i) => {
+    const cx = 60 + i * 120, cy = 62, r = 44, am = m * Math.PI / 30, ah = ((h % 12) + m / 60) * Math.PI / 6;
+    const [a0, a1] = mode === 'vor' || mode === 'halb' ? [am, 2 * Math.PI] : [0, am];
+    s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="#2F3640" stroke-width="3"/>`;
+    s += appear(`<path d="M${cx} ${cy} L${pt(cx, cy, r - 3, a0)} A${r - 3} ${r - 3} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${pt(cx, cy, r - 3, a1)} Z" fill="${col}" opacity="0.28"/>`, 0.1 + i * 0.22);
+    for (let k = 0; k < 12; k++) s += `<path d="M${pt(cx, cy, r - 7, k * Math.PI / 6)} L${pt(cx, cy, r - 2, k * Math.PI / 6)}" stroke="#2F3640" stroke-width="2"/>`;
+    s += `<path d="M${cx} ${cy} L${pt(cx, cy, r * 0.5, ah)}" stroke="#2F3640" stroke-width="5" stroke-linecap="round"/><path d="M${cx} ${cy} L${pt(cx, cy, r * 0.8, am)}" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="4" fill="#2F3640"/>`;
+    s += txt(`${h}:${String(m).padStart(2, '0')}`, cx, 122, 13, '#5B6670', 700) + appear(txt(esc(label), cx, 144, textW(label, 14) > 112 ? 11.5 : 14, col, 800), 0.15 + i * 0.22);
+  });
+  if (caption) s += txt(esc(caption), 180, 172, 12.5, '#2F3640', 600);
+  return `<svg class="gsvg" viewBox="0 0 360 ${caption ? 186 : 160}" role="img">${s}</svg>`;
+}
+// lassen: I do it myself, or I let someone else do it
+function lassenSVG() {
+  let s = txt('Ich repariere mein Auto. → I do it myself', 180, 18, 12.5, '#4F7CAC', 700) + em('🧑', 70, 58, 36) + arrowSVG(100, 58, 206, 58, '#4F7CAC', 8) + em('🚗', 244, 58, 36);
+  s += txt('Ich lasse mein Auto reparieren. → someone else does it', 180, 108, 12.5, '#D9675B', 700) + em('🧑', 44, 150, 32) + arrowSVG(68, 150, 128, 150, '#D9675B', 6)
+    + appear(em('👨‍🔧', 160, 150, 38) + arrowSVG(190, 150, 256, 150, '#D9675B', 6) + em('🚗', 290, 150, 36), 0.3);
+  s += txt('lassen + Infinitiv am Ende', 180, 194, 13, '#2F3640', 600);
+  return `<svg class="gsvg" viewBox="0 0 360 208" role="img">${s}</svg>`;
+}
+const gtab = (head, rows, bold = 1) => `<table class="gtab">${head ? `<tr>${head.map(h => `<th>${h}</th>`).join('')}</tr>` : ''}${rows.map(r => `<tr>${r.map((c, i) => `<td>${i >= bold ? `<b>${c}</b>` : c}</td>`).join('')}</tr>`).join('')}</table>`;
+GUIDE.ps = { name:'Präsens & Imperativ', sections:() => [
+  ['1 · The endings', `<p>${XBY.ps.kinds.ve[1]}</p>${buildWordSVG([[[{ t:'lern' }, { t:'e', c:XC_B, wt:800, fly:'r' }], 'ich lerne'], [[{ t:'lern' }, { t:'st', c:XC_R, wt:800, fly:'r' }], 'du lernst'], [[{ t:'arbeit' }, { t:'e', c:XC_GD, wt:800, fly:'l' }, { t:'t', c:XC_B, wt:800, fly:'r' }], 'er arbeitet: stem on -t → an extra e']], '')}
+    ${gtab(['', 'lernen', 'arbeiten', 'sein', 'haben'], [['ich', 'lerne', 'arbeite', 'bin', 'habe'], ['du', 'lernst', 'arbeitest', 'bist', 'hast'], ['er / sie / es', 'lernt', 'arbeitet', 'ist', 'hat'], ['wir', 'lernen', 'arbeiten', 'sind', 'haben'], ['ihr', 'lernt', 'arbeitet', 'seid', 'habt'], ['sie / Sie', 'lernen', 'arbeiten', 'sind', 'haben']])}${xPic('ps_e3')}${xEx(['ps_e1', 'ps_e2', 'ps_e5', 'ps_s5', 'ps_s4'])}`],
+  ['2 · Vowel change: only du and er / sie / es', `<p>${XBY.ps.kinds.vw[1]}</p>${buildWordSVG([[[{ t:'spr' }, { t:'i', c:XC_R, wt:800, fly:'l' }, { t:'cht' }], 'sprechen → er spricht (e → i)'], [[{ t:'s' }, { t:'ie', c:XC_R, wt:800, fly:'l' }, { t:'ht' }], 'sehen → er sieht (e → ie)'], [[{ t:'f' }, { t:'ä', c:XC_GD, wt:800, fly:'l' }, { t:'hrt' }], 'fahren → er fährt (a → ä)']], 'ich and wir never change: ich spreche, wir fahren')}
+    ${gtab(['Infinitiv', 'du', 'er / sie / es'], [['sprechen', 'sprichst', 'spricht'], ['essen', 'isst', 'isst'], ['geben', 'gibst', 'gibt'], ['helfen', 'hilfst', 'hilft'], ['nehmen', 'nimmst', 'nimmt'], ['sehen', 'siehst', 'sieht'], ['lesen', 'liest', 'liest'], ['fahren', 'fährst', 'fährt'], ['schlafen', 'schläfst', 'schläft'], ['tragen', 'trägst', 'trägt'], ['laufen', 'läufst', 'läuft']])}${xPic('ps_w2')}${xEx(['ps_w1', 'ps_w3', 'ps_w6', 'ps_w8', 'ps_w11'])}${taMn(XBY.ps.kinds.vw[2])}`],
+  ['3 · The imperative', `<p>${XBY.ps.kinds.im[1]}</p>${decisionSVG('Who are you talking to?', [['one friend (du)', 'Komm! Sprich! Fahr!', XC_B], ['several friends (ihr)', 'Kommt! Sprecht!', XC_R], ['formal (Sie)', 'Kommen Sie bitte!', XC_GD]])}
+    ${gtab(['', 'kommen', 'sprechen', 'fahren', 'sein'], [['du', 'Komm!', 'Sprich!', 'Fahr!', 'Sei!'], ['ihr', 'Kommt!', 'Sprecht!', 'Fahrt!', 'Seid!'], ['Sie', 'Kommen Sie!', 'Sprechen Sie!', 'Fahren Sie!', 'Seien Sie!']])}${xPic('ps_i4')}${xEx(['ps_i1', 'ps_i3', 'ps_i5', 'ps_i6'])}<p>📝 You see the imperative in every exam instruction: <i>Lesen Sie den Text. Kreuzen Sie an. Schreiben Sie …</i></p>`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.ps)]
+] };
+GUIDE.zd = { name:'Zahlen, Uhrzeit, Datum', sections:() => [
+  ['1 · Numbers: the ones come first', `<p>${XBY.zd.kinds.zl[1]}</p>${buildWordSVG([[[{ t:'ein', c:XC_R, wt:800, fly:'l' }, { t:'und', c:XC_GD }, { t:'zwanzig', c:XC_B, wt:800, fly:'r' }], '21 = one-and-twenty'], [[{ t:'acht', c:XC_R, wt:800, fly:'l' }, { t:'und', c:XC_GD }, { t:'vierzig', c:XC_B, wt:800, fly:'r' }], '48 = eight-and-forty']], 'Like reading 21 from right to left')}
+    ${gtab(null, [['13 dreizehn', '16 <b>sechzehn</b>', '17 <b>siebzehn</b>', '20 zwanzig'], ['30 <b>dreißig</b>', '40 vierzig', '60 <b>sechzig</b>', '70 <b>siebzig</b>'], ['100 hundert', '101 hunderteins', '1000 tausend', '2,50 € zwei Euro fünfzig']], 9)}${xPic('zd_z1')}${xEx(['zd_z2', 'zd_z5', 'zd_z6', 'zd_z9'])}<p>🎧 In Hören, prices, times and phone numbers are often the answer: listen for the <b>first</b> number after <i>und</i>.</p>`],
+  ['2 · Telling the time', `<p>${XBY.zd.kinds.uh[1]}</p>${clocksSVG([[7, 15, 'Viertel nach sieben', XC_B, 'nach'], [7, 30, 'halb acht', XC_R, 'halb'], [7, 45, 'Viertel vor acht', XC_GD, 'vor']], 'halb acht = half way TO eight, not half past eight!')}
+    ${gtab(['Uhr', 'everyday', 'official'], [['7:05', 'fünf nach sieben', 'sieben Uhr fünf'], ['7:20', 'zwanzig nach sieben', 'sieben Uhr zwanzig'], ['7:30', 'halb acht', 'sieben Uhr dreißig'], ['19:45', 'Viertel vor acht', 'neunzehn Uhr fünfundvierzig']])}${xPic('zd_u1')}${xEx(['zd_u2', 'zd_u3', 'zd_u5', 'zd_u6'])}${taMn(XBY.zd.kinds.uh[2])}`],
+  ['3 · Dates: der dritte, am dritten', `<p>${XBY.zd.kinds.dt[1]}</p>${decisionSVG('When is it?', [['a clock time', 'um 8 Uhr', XC_B], ['a day or a date', 'am Montag · am 3. Mai', XC_R], ['a month or a season', 'im Mai · im Sommer', XC_GD], ['a year', '2026 · im Jahr 2026', XC_GR]])}
+    ${gtab(['', 'Heute ist der …', 'am …'], [['1.', 'erste', 'ersten'], ['2.', 'zweite', 'zweiten'], ['3.', 'dritte', 'dritten'], ['7.', 'siebte', 'siebten'], ['8.', 'achte', 'achten'], ['19.', 'neunzehnte', 'neunzehnten'], ['20.', 'zwanzigste', 'zwanzigsten'], ['31.', 'einunddreißigste', 'einunddreißigsten']])}${xPic('zd_d1')}${xEx(['zd_d2', 'zd_d3', 'zd_d4', 'zd_d5'])}`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.zd)]
+] };
+GUIDE.rs = { name:'Relativsätze', sections:() => [
+  ['1 · Gender from the noun, case from the clause', `<p>A relative clause explains a noun: <i>der Mann, <b>der</b> neben uns wohnt</i>. Two questions decide the pronoun: <b>which gender</b> is the noun (der / die / das / plural)? And <b>which job</b> does the pronoun have in its own clause (subject → Nominativ, object → Akkusativ, to whom → Dativ)? The verb goes to the <b>end</b>.</p>
+    ${tableSVG(['masc.', 'fem.', 'neut.', 'plural'], ['Nom.', 'Akk.', 'Dat.'], [[['der'], ['die'], ['das'], ['die']], [['den'], ['die'], ['das'], ['die']], [['dem'], ['der'], ['dem'], ['denen']]], [[1, 0], [2, 3]], XC_R, 'like the articles – but Dativ plural: denen')}`],
+  ['2 · Nominativ or Akkusativ?', `<p>${XBY.rs.kinds.rn[1]}</p><p>${XBY.rs.kinds.ra[1]}</p>${decisionSVG('What does the pronoun do in its clause?', [['it does the action (subject)', 'der Film, der läuft', XC_B], ['something is done to it (object)', 'der Film, den ich sehe', XC_R]])}${xPic('rs_a1')}${xEx(['rs_n1', 'rs_n4', 'rs_a2', 'rs_a5', 'rs_a8'])}${taMn(XBY.rs.kinds.ra[2])}`],
+  ['3 · Dativ and prepositions', `<p>${XBY.rs.kinds.rd[1]}</p>${xPic('rs_d3')}${xEx(['rs_d1', 'rs_d2', 'rs_d4', 'rs_d6', 'rs_d9'])}<p>✍️ In the telc letter: <i>die Wohnung, <b>in der</b> ich wohne · der Kurs, <b>an dem</b> ich teilnehme</i>.</p>`],
+  ['4 · was, wo, wer', `<p>${XBY.rs.kinds.rw[1]}</p>${decisionSVG('What comes before the relative clause?', [['alles, etwas, nichts, das Beste', 'was', XC_B], ['a whole sentence', '…, was mich freut', XC_B], ['a place', 'wo', XC_R], ['nobody specific (whoever)', 'Wer …, (der) …', XC_GD]])}${xPic('rs_w1')}${xEx(['rs_w3', 'rs_w4', 'rs_w6', 'rs_w7'])}`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.rs)]
+] };
+GUIDE.ts = { name:'Temporalsätze & Plusquamperfekt', sections:() => [
+  ['1 · als or wenn?', `<p>${XBY.ts.kinds.aw[1]}</p>${decisionSVG('When does it happen?', [['once, in the past', 'als', XC_B], ['many times (immer, jedes Mal)', 'wenn', XC_R], ['now or in the future', 'wenn', XC_R]])}${xPic('ts_a1')}${xEx(['ts_a2', 'ts_a3', 'ts_a4', 'ts_a5', 'ts_a10'])}${taMn(XBY.ts.kinds.aw[2])}`],
+  ['2 · während, bevor, bis, seit', `<p>${XBY.ts.kinds.wb[1]}</p>${timeSVG([[70, 'bevor', 'first this …', XC_B], [180, 'während', 'at the same time', XC_GR], [290, 'bis', '… until then', XC_R]], 'seit = from a point in the past until now')}${xPic('ts_b2')}${xEx(['ts_b1', 'ts_b3', 'ts_b4', 'ts_b9'])}`],
+  ['3 · nachdem: one tense back', `<p>${XBY.ts.kinds.ns[1]}</p>${timeSVG([[70, '1st', 'hatte gegessen', XC_B], [180, '2nd', 'ging spazieren', XC_R], [290, 'jetzt', 'heute', XC_GR]], 'Nachdem ich gegessen hatte, ging ich spazieren.')}
+    ${gtab(['main clause', 'nachdem-clause'], [['Präsens: … gehe ich spazieren.', 'Perfekt: Nachdem ich gegessen habe, …'], ['Präteritum / Perfekt: … ging ich spazieren.', 'Plusquamperfekt: Nachdem ich gegessen hatte, …']])}${xPic('ts_n2')}${xEx(['ts_n1', 'ts_n3', 'ts_n5', 'ts_n7'])}`],
+  ['4 · The Plusquamperfekt', `<p>${XBY.ts.kinds.pq[1]}</p>${gtab(['', 'haben', 'sein'], [['ich', 'hatte gegessen', 'war gegangen'], ['du', 'hattest gegessen', 'warst gegangen'], ['er / sie / es', 'hatte gegessen', 'war gegangen'], ['wir', 'hatten gegessen', 'waren gegangen'], ['ihr', 'hattet gegessen', 'wart gegangen'], ['sie / Sie', 'hatten gegessen', 'waren gegangen']])}${xPic('ts_p1')}${xEx(['ts_p2', 'ts_p3', 'ts_p6', 'ts_p8'])}<p>📖 You meet it in reading texts and stories; in your own speaking the Perfekt is usually enough.</p>`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.ts)]
+] };
+GUIDE.iq = { name:'Indirekte Fragen & Pronomen', sections:() => [
+  ['1 · Polite questions: Können Sie mir sagen, …?', `<p>${XBY.iq.kinds.wq[1]}</p>${decisionSVG('What kind of question is it?', [['a W-question (wo, wann, wie viel …)', 'keep the W-word', XC_B], ['a yes / no question', 'ob', XC_R]])}
+    ${gtab(['direct', 'indirect (polite)'], [['Wo ist die Post?', 'Können Sie mir sagen, wo die Post <b>ist</b>?'], ['Wann fährt der Zug?', 'Wissen Sie, wann der Zug <b>fährt</b>?'], ['Hast du Zeit?', 'Ich weiß nicht, ob du Zeit <b>hast</b>.']], 9)}${xPic('iq_q1')}${xEx(['iq_q2', 'iq_q3', 'iq_q5', 'iq_q6'])}${taMn(XBY.iq.kinds.wq[2])}`],
+  ['2 · The verb goes to the end', `<p>${XBY.iq.kinds.vl[1]}</p>${xPic('iq_v1')}${xEx(['iq_v2', 'iq_v3', 'iq_v6', 'iq_v7'])}<p>✍️ Very useful in the telc letter: <i>Könnten Sie mir bitte mitteilen, <b>wann</b> der Kurs <b>beginnt</b> und <b>ob</b> es noch freie Plätze <b>gibt</b>?</i></p>`],
+  ['3 · jemand, niemand, etwas, nichts, man', `<p>${XBY.iq.kinds.ip[1]}</p>${decisionSVG('A person or a thing?', [['a person: some / no', 'jemand · niemand', XC_B], ['a thing: some / no / all', 'etwas · nichts · alles', XC_R], ['people in general', 'man (+ verb like er)', XC_GD]])}${xPic('iq_i3')}${xEx(['iq_i1', 'iq_i2', 'iq_i4', 'iq_i6'])}`],
+  ['4 · einer, keiner, welche', `<p>${XBY.iq.kinds.ei[1]}</p>${tableSVG(['masc.', 'fem.', 'neut.', 'plural'], ['Nom.', 'Akk.'], [[['einer'], ['eine'], ['eins'], ['welche']], [['einen'], ['eine'], ['eins'], ['welche']]], [[1, 0], [0, 2]], XC_R, 'no: keiner · keine · keins · keine')}${xPic('iq_e2')}${xEx(['iq_e1', 'iq_e3', 'iq_e5', 'iq_e6'])}`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.iq)]
+] };
+GUIDE.nv = { name:'Nomen-Verb-Verbindungen', sections:() => [
+  ['1 · Noun + verb = one block', `<p>${XBY.nv.kinds.vb[1]}</p>${decisionSVG('Which verb goes with the noun?', [['eine Entscheidung', 'treffen', XC_B], ['eine Frage · einen Antrag', 'stellen', XC_R], ['Rücksicht · Abschied', 'nehmen', XC_GD], ['Bescheid', 'sagen / geben', XC_GR]])}
+    ${gtab(['phrase', 'meaning', 'simple verb'], [['eine Entscheidung treffen', 'to make a decision', 'sich entscheiden'], ['eine Frage stellen', 'to ask a question', 'fragen'], ['einen Antrag stellen', 'to apply', 'beantragen'], ['Bescheid sagen / geben', 'to let someone know', 'informieren'], ['Rücksicht nehmen auf', 'to be considerate of', '–'], ['eine Rolle spielen', 'to matter', 'wichtig sein'], ['sich Sorgen machen um', 'to worry about', 'sich sorgen'], ['einen Termin vereinbaren', 'to make an appointment', '–'], ['die Verantwortung übernehmen', 'to take responsibility', '–'], ['eine Prüfung ablegen', 'to take an exam', '–']], 0)}${xPic('nv_v1')}${xEx(['nv_v2', 'nv_v3', 'nv_v5', 'nv_v11'])}`],
+  ['2 · With a preposition', `<p>${XBY.nv.kinds.pp[1]}</p>${gtab(['phrase', 'meaning'], [['zur Verfügung stehen', 'to be available'], ['in Frage kommen', 'to be an option'], ['zu Ende gehen', 'to come to an end'], ['in Kontakt treten / bleiben', 'to get / stay in touch'], ['zum Ausdruck bringen', 'to express'], ['in Anspruch nehmen', 'to make use of'], ['zur Kenntnis nehmen', 'to take note of'], ['zur Sprache kommen', 'to be raised'], ['in Kraft treten', 'to come into force'], ['im Zusammenhang stehen mit', 'to be connected with']], 0)}${xPic('nv_p1')}${xEx(['nv_p2', 'nv_p4', 'nv_p5', 'nv_p6'])}<p>✍️ They make a formal telc letter sound like B1: <i>Ich stehe Ihnen gern für Fragen <b>zur Verfügung</b>. Bitte <b>geben</b> Sie mir <b>Bescheid</b>.</i> In Sprachbausteine Teil 2 the missing word is often the noun or the verb of such a phrase.</p>`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.nv)]
+] };
+GUIDE.nd = { name:'n-Deklination', sections:() => [
+  ['1 · Which nouns?', `<p>${XBY.nd.kinds.ak[1]}</p>${decisionSVG('A masculine noun that …', [['ends in -e (person / animal)', 'der Kollege, der Löwe', XC_B], ['ends in -ent, -ant, -ist', 'der Student, der Polizist', XC_R], ['is on the short list', 'der Herr, der Mensch, der Nachbar', XC_GD]])}${taMn(XBY.nd.kinds.ak[2])}`],
+  ['2 · -(e)n everywhere except the Nominativ singular', `<p>${XBY.nd.kinds.ns[1]}</p>${tableSVG(['Singular', 'Plural'], ['Nom.', 'Akk.', 'Dat.', 'Gen.'], [[['der', 'Kollege'], ['die', 'Kollegen']], [['den', 'Kollegen'], ['die', 'Kollegen']], [['dem', 'Kollegen'], ['den', 'Kollegen']], [['des', 'Kollegen'], ['der', 'Kollegen']]], [[1, 0], [2, 0], [3, 0]], XC_R, 'only der Kollege has no -n')}${xPic('nd_a1')}${xEx(['nd_n1', 'nd_n4', 'nd_a3', 'nd_a4', 'nd_a6'])}`],
+  ['3 · Herr, Name & Co.', `<p>${XBY.nd.kinds.sp[1]}</p>${gtab(['', 'der Herr', 'der Name'], [['Nominativ', 'der Herr', 'der Name'], ['Akkusativ', 'den Herrn', 'den Namen'], ['Dativ', 'dem Herrn', 'dem Namen'], ['Genitiv', 'des Herrn', 'des Namens'], ['Plural', 'die Herren', 'die Namen']])}${xPic('nd_s1')}${xEx(['nd_s3', 'nd_s4', 'nd_s5', 'nd_s6'])}<p>✍️ Letter: <i>Sehr geehrter <b>Herr</b> Wagner</i> (Nominativ), but on the envelope and in the text: <i>an <b>Herrn</b> Wagner</i>.</p>`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.nd)]
+] };
+GUIDE.ls = { name:'lassen & Zustandspassiv', sections:() => [
+  ['1 · lassen: someone else does it', `<p>${XBY.ls.kinds.la[1]}</p>${lassenSVG()}${gtab(['', 'Präsens', 'Präteritum'], [['ich', 'lasse', 'ließ'], ['du', 'lässt', 'ließt'], ['er / sie / es', 'lässt', 'ließ'], ['wir', 'lassen', 'ließen'], ['ihr', 'lasst', 'ließt'], ['sie / Sie', 'lassen', 'ließen']])}${xPic('ls_l2')}${xEx(['ls_l1', 'ls_l3', 'ls_l6', 'ls_l7'])}<p>⚠️ Perfekt with a second verb: <i>Ich habe mein Auto reparieren <b>lassen</b></i> (not gelassen).</p>`],
+  ['2 · sich lassen = it can be done', `<p>${XBY.ls.kinds.sl[1]}</p>${gtab(['sich lassen', '= Passiv with können'], [['Das Fenster lässt sich nicht öffnen.', 'Das Fenster kann nicht geöffnet werden.'], ['Das Problem lässt sich lösen.', 'Das Problem kann gelöst werden.'], ['Das lässt sich machen.', 'Das kann gemacht werden.']], 9)}${xPic('ls_s1')}${xEx(['ls_s2', 'ls_s3', 'ls_s4', 'ls_s6'])}`],
+  ['3 · Zustandspassiv: the result', `<p>${XBY.ls.kinds.zp[1]}</p>${decisionSVG('Process or result?', [['it is happening (gerade, im Moment)', 'wird geöffnet', XC_B], ['it is done, the state (schon, seit)', 'ist geöffnet', XC_R]])}${xPic('ls_z1')}${xEx(['ls_z2', 'ls_z4', 'ls_z5', 'ls_z7'])}<p>🪧 On signs and in notices (Lesen!): <i>Montags geschlossen · Reserviert · Rauchen ist verboten</i>.</p>${taMn(XBY.ls.kinds.zp[2])}`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.ls)]
+] };
+GUIDE.pz = { name:'Partizipien & Adjektive als Nomen', sections:() => [
+  ['1 · Partizip I or Partizip II?', `${decisionSVG('What about the noun?', [['it is doing it right now (active)', 'Partizip I: das schlafende Kind', XC_B], ['it was done to it / it is finished', 'Partizip II: die geschlossene Tür', XC_R]])}
+    ${buildWordSVG([[[{ t:'lachen' }, { t:'d', c:XC_B, wt:800, fly:'r' }, { t:'e', c:XC_GD, wt:800, fly:'r' }], 'lachen + d + ending → das lachende Kind'], [[{ t:'ge', c:XC_R, wt:800, fly:'l' }, { t:'schlossen' }, { t:'e', c:XC_GD, wt:800, fly:'r' }], 'Partizip II + ending → die geschlossene Tür']], 'both take normal adjective endings')}`],
+  ['2 · Partizip I: -end', `<p>${XBY.pz.kinds.p1[1]}</p>${xPic('pz_a1')}${xEx(['pz_a2', 'pz_a4', 'pz_a7', 'pz_a8'])}`],
+  ['3 · Partizip II as an adjective', `<p>${XBY.pz.kinds.p2[1]}</p>${xPic('pz_b1')}${xEx(['pz_b2', 'pz_b3', 'pz_b5', 'pz_b7'])}<p>📖 Reading texts and notices are full of them: <i>die gekauften Waren, das ausgefüllte Formular, der angegebene Preis</i>.</p>`],
+  ['4 · Adjectives as nouns', `<p>${XBY.pz.kinds.an[1]}</p>${gtab(['', 'der / die / das …', 'ein / eine …', 'no article'], [['masc.', 'der Deutsche', 'ein Deutscher', 'Deutscher'], ['fem.', 'die Deutsche', 'eine Deutsche', 'Deutsche'], ['plural', 'die Deutschen', '–', 'Deutsche']])}<p>Same pattern: der / die Angestellte, Bekannte, Erwachsene, Jugendliche, Verwandte, Kranke. And with etwas / nichts: <b>etwas Neues, nichts Besonderes</b>.</p>${xPic('pz_n1')}${xEx(['pz_n2', 'pz_n4', 'pz_n5', 'pz_n9'])}${taMn(XBY.pz.kinds.an[2])}`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.pz)]
+] };
+// the extra kinds of older topics get their own section, just before the memory tricks
+[['sb', 'dw', 'dieser, welcher, jeder', () => `${tableSVG(['masc.', 'fem.', 'neut.', 'plural'], ['Nom.', 'Akk.', 'Dat.'], [[['dieser'], ['diese'], ['dieses'], ['diese']], [['diesen'], ['diese'], ['dieses'], ['diese']], [['diesem'], ['dieser'], ['diesem'], ['diesen']]], [[1, 0], [2, 0]], XC_R, 'welch- and jed- work the same way')}${xPic('sb_w1')}${xEx(['sb_w2', 'sb_w3', 'sb_w4', 'sb_w7'])}`],
+ ['k2', 'vg', 'Konjunktiv II in the past', () => `${dreamSVG('Ich habe nicht gelernt.', ['Wenn ich gelernt hätte,', 'hätte ich bestanden!'], '😞', '🎓')}${decisionSVG('Perfekt with haben or sein?', [['haben (lernen, wissen …)', 'hätte + Partizip II', XC_B], ['sein (gehen, fahren, kommen …)', 'wäre + Partizip II', XC_R]])}${xPic('k2_g1')}${xEx(['k2_g2', 'k2_g3', 'k2_g4', 'k2_g6'])}`],
+ ['zu', 'id', 'indem, ohne dass, brauchen … zu', () => `${decisionSVG('What do you want to say?', [['how? by doing …', 'indem + verb at the end', XC_B], ['without / instead of + new subject', 'ohne dass · anstatt dass', XC_R], ['don’t have to / only need to', 'nicht / nur brauchen + zu', XC_GD]])}${xPic('zu_i1')}${xEx(['zu_i2', 'zu_i3', 'zu_i4', 'zu_i6'])}`],
+ ['fg', 'gp', 'aufgrund, statt, innerhalb', () => `${decisionSVG('What does the sentence say?', [['a reason (formal)', 'aufgrund', XC_B], ['instead of / in place of', '(an)statt · anstelle', XC_R], ['within / inside', 'innerhalb', XC_GD], ['outside', 'außerhalb', XC_GR]])}${xPic('fg_p1')}${xEx(['fg_p2', 'fg_p3', 'fg_p5', 'fg_p7'])}<p>✍️ Typical for formal letters: <i>Aufgrund einer Krankheit kann ich leider nicht kommen. Bitte antworten Sie innerhalb einer Woche.</i></p>`]
+].forEach(([tp, k, title, body]) => {
+  const g = GUIDE[tp], old = g.sections;
+  g.sections = () => { const s = old(); s.splice(s.length - 1, 0, [`${s.length} · ${title}`, `<p>${XBY[tp].kinds[k][1]}</p>${body()}${taMn(XBY[tp].kinds[k][2])}`]); return s; };
+});
+
 /* ---- the Sprach-Café knows the new topics too ---- */
 Object.assign(CAFE_FOCUS, {
   sb:{ name:'Satzbau & Negation', prompt:'Grammar focus: word order and negation (A1). The conjugated verb is in position 2 (Heute gehe ich ins Kino; Am Wochenende besuche ich meine Oma); W-questions: question word + verb + subject; yes/no questions start with the verb; kein for nouns with ein or without article (kein Auto, keine Zeit), nicht for everything else; doch as a yes-answer to a negative question. Often start your own sentences with a time or place (Heute …, Am Abend …) and ask negative questions sometimes (Hast du keinen Hunger?). Ask simple questions about daily life. In the feedback, correct verb position, nicht/kein and ja/doch.' },
@@ -6032,23 +6609,41 @@ Object.assign(CAFE_FOCUS, {
   zu:{ name:'zu-Infinitiv, um … zu, damit', prompt:'Grammar focus: infinitive with zu (Ich habe keine Lust, … zu …; Es ist wichtig, … zu …; Ich versuche, … zu …; separable: aufzustehen), no zu after modal verbs, and purpose with um … zu (same subject) vs. damit (new subject, verb at the end). Ask: "Warum lernst du Deutsch?" (um … zu), "Was hast du heute keine Lust zu machen?", "Was ist für dich wichtig?", "Was machst du, damit du gut schläfst?". In feedback, correct missing or extra zu and um / damit.' },
   pa:{ name:'Passiv', prompt:'Grammar focus: the Passiv: werden + Partizip II (Hier wird Deutsch gesprochen; Das Haus wurde 1900 gebaut), von + Dativ for the person, and the difference to the Aktiv. Talk about how things are done and made: festivals and food in the learner’s home country ("Was wird bei euch an Feiertagen gegessen?", "Wie wird bei euch Geburtstag gefeiert?"), city history, recycling, work processes. Use the Passiv yourself often. In feedback, correct werden forms and participles.' },
   zk:{ name:'Zweiteilige Konnektoren', prompt:'Grammar focus: two-part connectors: entweder … oder, weder … noch, sowohl … als auch, nicht nur … sondern auch, zwar … aber, je … desto (je + verb at the end, desto + comparative + verb + subject). Ask questions that invite them: "Was machst du am Wochenende: Sport oder Kino?", "Was ist an deiner Stadt gut und was nicht?", "Je mehr du Deutsch sprichst, …?". Use the connectors yourself. In feedback, correct the pairs and the word order after je / desto.' },
-  fg:{ name:'Futur & Genitiv', prompt:'Grammar focus: Futur I (werden + infinitive at the end: Ich werde nächstes Jahr …) for plans and predictions, and the Genitiv (des Vaters, der Mutter, meines Bruders) including wegen, trotz, während + Genitiv. Ask about plans and the future ("Was wirst du in fünf Jahren machen?", "Wie wird das Wetter morgen?") and about reasons ("Warum bist du zu spät? – Wegen des …"). In feedback, correct werden forms and Genitiv articles / endings.' }
+  fg:{ name:'Futur & Genitiv', prompt:'Grammar focus: Futur I (werden + infinitive at the end: Ich werde nächstes Jahr …) for plans and predictions, and the Genitiv (des Vaters, der Mutter, meines Bruders) including wegen, trotz, während + Genitiv, and also aufgrund, statt, innerhalb, außerhalb. Ask about plans and the future ("Was wirst du in fünf Jahren machen?", "Wie wird das Wetter morgen?") and about reasons ("Warum bist du zu spät? – Wegen des …"). In feedback, correct werden forms and Genitiv articles / endings.' },
+  ps:{ name:'Präsens & Imperativ', prompt:'Grammar focus (A1): the Präsens with the right endings (ich lerne, du lernst, er lernt …), sein and haben, verbs with a vowel change for du and er (sprechen → du sprichst, er spricht; fahren → du fährst; essen → er isst; nehmen → du nimmst) and the imperative (Komm! Sprich langsam! Kommt! Kommen Sie bitte!). Ask simple questions about daily life that make the learner use different persons, also about family and friends ("Was macht deine Schwester?", "Was isst dein Vater gern?", "Sprichst du Englisch?"). Sometimes ask the learner for a tip or an instruction (imperative): "Ich bin müde. Was soll ich machen?". In feedback, correct the verb endings, the vowel change and the imperative.' },
+  zd:{ name:'Zahlen, Uhrzeit, Datum', prompt:'Grammar focus (A1): numbers, prices, clock times and dates. Use them often and ask for them: "Wann stehst du auf?", "Um wie viel Uhr beginnt deine Arbeit?", "Wann hast du Geburtstag?", "Wie viel kostet bei euch ein Kaffee?", "Was machst du am Wochenende / im Sommer?". Use everyday times (Viertel nach, halb acht = 7:30, Viertel vor) and dates (am dritten Mai), and practise um / am / im. Write numbers as words in reply_de where it helps. In feedback, correct number words, halb, ordinals and um / am / im.' },
+  rs:{ name:'Relativsätze', prompt:'Grammar focus (A2–B1): relative clauses with der / die / das / den / dem / denen, with prepositions (die Stadt, in der …; der Kollege, mit dem …) and was / wo (alles, was …; die Stadt, wo …); the verb goes to the end. Ask questions that invite relative clauses: "Was für ein Mensch ist dein bester Freund?" (ein Mensch, der …), "Beschreib mal die Stadt, in der du wohnst.", "Welchen Film siehst du immer wieder?" (ein Film, den …), "Gibt es etwas, was du gern lernen möchtest?". Use relative clauses yourself. In feedback, correct the relative pronoun (gender + case) and the verb position.' },
+  ts:{ name:'Temporalsätze', prompt:'Grammar focus (A2–B1): temporal clauses: als (one event in the past) vs. wenn (repeated, present or future), während, bevor, bis, seit(dem), sobald, and nachdem with the Plusquamperfekt when the main clause is in the past (Nachdem ich gegessen hatte, ging ich …). Ask about the learner’s life story and routines: "Was hast du gemacht, als du nach Deutschland gekommen bist?", "Was machst du, bevor du zur Arbeit gehst?", "Was machst du immer, wenn du traurig bist?", "Seit wann lernst du Deutsch?". In feedback, correct als / wenn, the connectors, the verb at the end and the Plusquamperfekt.' },
+  iq:{ name:'Indirekte Fragen & Pronomen', prompt:'Grammar focus (A2–B1): indirect questions (Können Sie mir sagen, wo …? Wissen Sie, wann …? Ich weiß nicht, ob …) with the verb at the end, and indefinite pronouns (jemand, niemand, etwas, nichts, alles, man; einer / keiner / eins / welche). Play situations where polite questions are needed (an information desk, a new colleague, a neighbour) and ask questions like "Weißt du, wann …?", "Kannst du mir sagen, ob …?". In feedback, correct ob / the question word, the verb position and the pronouns.' },
+  nv:{ name:'Nomen-Verb-Verbindungen', prompt:'Grammar focus (B1): noun-verb phrases: eine Entscheidung treffen, eine Frage stellen, einen Antrag stellen, Bescheid sagen / geben, Rücksicht nehmen auf, eine Rolle spielen, sich Sorgen machen um, einen Termin vereinbaren, zur Verfügung stehen, in Frage kommen, zu Ende gehen, in Kontakt bleiben, zum Ausdruck bringen. Talk about decisions, work, offices and plans and use these phrases yourself: "Welche wichtige Entscheidung hast du zuletzt getroffen?", "Worüber machst du dir Sorgen?", "Was spielt für dich bei einer Wohnung eine große Rolle?". In feedback, correct the verb or the preposition of the phrase.' },
+  nd:{ name:'n-Deklination', prompt:'Grammar focus (B1): the n-Deklination: der Kollege → den / dem Kollegen, der Student, der Kunde, der Nachbar, der Polizist, der Junge, der Mensch, der Herr → Herrn, der Name → den Namen, des Namens. Talk about people at work, neighbours, customers and students: "Wie ist dein Nachbar?", "Hast du schon mal einem Touristen geholfen?", "Mit welchem Kollegen arbeitest du gern?". Use these nouns yourself in the Akkusativ and Dativ. In feedback, correct a missing -n (dem Kollege → dem Kollegen) or an extra -n in the Nominativ.' },
+  ls:{ name:'lassen & Zustandspassiv', prompt:'Grammar focus (B1): lassen + infinitive (Ich lasse mein Auto reparieren; Ich lasse mir die Haare schneiden; Perfekt: habe … reparieren lassen), sich lassen (Das lässt sich machen) and the Zustandspassiv with sein + Partizip II (Das Geschäft ist geschlossen; Die Tür ist schon geöffnet) vs. werden + Partizip II for a process. Talk about services, repairs, the household and opening times: "Was machst du selbst und was lässt du machen?", "Wann lässt du dir die Haare schneiden?", "Ist bei euch sonntags alles geschlossen?". In feedback, correct the lassen forms, zu after lassen, and ist / wird.' },
+  pz:{ name:'Partizipien & Adjektive als Nomen', prompt:'Grammar focus (B1): Partizip I and II as adjectives (das schlafende Kind, kochendes Wasser, die geschlossene Tür, gebrauchte Autos) and adjectives as nouns (der Deutsche / ein Deutscher, die Angestellte, die Erwachsenen, mein Bekannter, etwas Neues, nichts Besonderes). Talk about people and things around the learner and use these forms yourself: "Gibt es etwas Neues bei dir?", "Was machen Jugendliche in deinem Land in der Freizeit?", "Kaufst du lieber neue oder gebrauchte Sachen?". In feedback, correct the endings and the participle form.' }
 });
 
 /* ---- 🎲 Lena writes new sentences for these topics; each one passes an offline check ---- */
 const XGEN = {
-  sb:'v2 = a main clause that starts with a time / place / object, answer = "verb subject" (e.g. "gehe ich"), wrong = the same two words in the order "subject verb"; fr = a W-question or yes/no question, answer = "verb subject" (yes/no questions start with the gap), wrong = "subject verb"; ng = answer is nicht or a form of kein, wrong = the other one; do = "question? – ___, …" with answer Ja / Nein / Doch, wrong = a wrong one of these.',
+  sb:'v2 = a main clause that starts with a time / place / object, answer = "verb subject" (e.g. "gehe ich"), wrong = the same two words in the order "subject verb"; fr = a W-question or yes/no question, answer = "verb subject" (yes/no questions start with the gap), wrong = "subject verb"; ng = answer is nicht or a form of kein, wrong = the other one; do = "question? – ___, …" with answer Ja / Nein / Doch, wrong = a wrong one of these; dw = dieser / welcher / jeder with the right ending, wrong = a wrong ending.',
   ar:'na = the gap is a Nominativ or Akkusativ article (der/den, ein/einen; Akkusativ masculine is the interesting case); pa = Akkusativ personal pronoun (mich, dich, ihn, uns, euch), wrong = the Dativ form; da = Dativ article after a Dativ verb or "to whom" (dem, der, den, einem, einer, meinem …), wrong = the Akkusativ / Nominativ form; pd = Dativ pronoun (mir, dir, ihm, ihr, uns, Ihnen), wrong = the Akkusativ form; po = possessive article with the right ending (meinen, seinem, ihre …), wrong = a wrong ending or sein / ihr mixed up.',
   pf:'hs = the gap is the conjugated haben or sein in a Perfekt sentence, wrong = the other auxiliary for the same person (avoid verbs that can take both, like fahren with an object or schwimmen); pp = the gap is the Partizip II, wrong = a typical WRONG participle (gespielen, gestudiert, geverpasst, geanrufen).',
   rv:'ra = reflexive pronoun in the Akkusativ (mich, dich, sich, uns, euch) with a reflexive verb and NO other object, wrong = the Dativ form or a wrong person; rd = reflexive pronoun in the Dativ (mir, dir) because the sentence has another object (die Hände, eine Jacke), wrong = mich / dich.',
   ks:'ko = the gap is a comparative (größer, besser, lieber, mehr …) followed by als or a context, wrong = a wrong form (mehr groß, guter, gerner); al = the gap is als or wie, wrong = the other; su = the gap is a superlative form (am besten → only "besten" in the gap after "am"; or "größte" after der/die/das), wrong = a wrong ending or form.',
   pt:'sh = Präteritum of sein / haben / werden (war, hatte, wurde …) with a clear past time word, wrong = the present form or a wrong person; mo = Präteritum of a modal verb (konnte, musste, durfte, wollte, sollte), wrong = the present form or kannte; st = Präteritum of a regular or irregular verb, wrong = a NON-EXISTENT form (gehte, kommte, schreibte) or a wrong person.',
-  k2:'hf = polite request with könnten / würden / hätte / dürfte, wrong = the same verb for a wrong person; rt = advice with sollte / könnte / würde / wäre, wrong = a wrong person form or werde; wu = wish: würde + infinitive (gap = the infinitive, wrong = the participle) OR wäre / hätte (wrong = würde); wf = unreal wenn-sentence, gap = the Konjunktiv II form, wrong = the indicative (bin, habe, kann, werde).',
+  k2:'hf = polite request with könnten / würden / hätte / dürfte, wrong = the same verb for a wrong person; rt = advice with sollte / könnte / würde / wäre, wrong = a wrong person form or werde; wu = wish: würde + infinitive (gap = the infinitive, wrong = the participle) OR wäre / hätte (wrong = würde); wf = unreal wenn-sentence, gap = the Konjunktiv II form, wrong = the indicative (bin, habe, kann, werde); vg = Konjunktiv II in the past: hätte / wäre (+ Partizip II), wrong = the other auxiliary.',
   vp:'pr = the gap is the preposition that belongs to the verb (warten auf, denken an …), wrong = a preposition that does NOT fit (für instead of auf), never one that is also correct; ca = the gap is the article after the preposition, wrong = the other case; da = the gap is a da- / wo-word (darauf, worauf, woran) or "Auf wen" / "Mit wem" for people, wrong = a wrong compound.',
-  zu:'zi = the gap is "zu + infinitive" or a separable verb with zu (aufzustehen), or after a modal verb just the infinitive; wrong = the opposite (with / without zu, "zu aufstehen"); ud = the gap is um or damit, wrong = the other (um only with an infinitive + zu and no new subject); ow = ohne or statt, wrong = um or damit.',
+  zu:'zi = the gap is "zu + infinitive" or a separable verb with zu (aufzustehen), or after a modal verb just the infinitive; wrong = the opposite (with / without zu, "zu aufstehen"); ud = the gap is um or damit, wrong = the other (um only with an infinitive + zu and no new subject); ow = ohne or statt, wrong = um or damit; id = indem / ohne dass / anstatt dass, or "zu + infinitive" after nicht / nur brauchen, wrong = damit / ohne zu / the infinitive without zu.',
   pa:'wd = the gap is wird / werden / werde / wirst in a Passiv sentence, wrong = a wrong person; pp = the gap is the Partizip II, wrong = the infinitive or a wrong participle; pr = wurde / wurden with a past time, wrong = the other number or wird; ak = the gap decides Aktiv or Passiv (hat / wurde / wird / repariert …), wrong = the other voice.',
   zk:'eo = entweder / oder / weder / noch, wrong = the wrong partner; sa = sowohl / als auch / nicht nur / sondern / auch, wrong = the wrong partner; jd = je / desto, or "comparative + verb + subject" after desto (wrong = subject before verb), or the conjugated verb at the end after je; za = zwar / aber, wrong = sondern / oder.',
-  fg:'fu = the gap is a form of werden (wird, werden, wirst …) or the infinitive at the end, wrong = a wrong person or the participle; ge = Genitiv article (des, der, meines, meiner) or a Genitiv noun with -s (Vaters, Monats), wrong = the Dativ form or the noun without -s; wt = wegen / trotz / während, wrong = one with the wrong meaning.'
+  fg:'fu = the gap is a form of werden (wird, werden, wirst …) or the infinitive at the end, wrong = a wrong person or the participle; ge = Genitiv article (des, der, meines, meiner) or a Genitiv noun with -s (Vaters, Monats), wrong = the Dativ form or the noun without -s; wt = wegen / trotz / während, wrong = one with the wrong meaning; gp = aufgrund / statt / anstelle / innerhalb / außerhalb (or the Genitiv article after them), wrong = one with the wrong meaning or the Dativ article.',
+  ps:'ve = a regular Präsens ending, the gap is the conjugated verb, wrong = the form for another person; sh = a form of sein or haben, wrong = a wrong person or the other verb; vw = a verb with a vowel change (sprechen → spricht, fahren → fährt) for du / er, or ich / wir without the change, wrong = the form with the wrong vowel; im = an imperative (du: Komm! Sprich!, ihr: Kommt!, Sie: Kommen Sie!), wrong = the indicative form (kommst) or a wrong vowel (Fähr!).',
+  zd:'zl = a number written as a word (einundzwanzig, dreißig, siebzehn); the sentence also shows the number in digits; wrong = a typical spelling or order mistake (zwanzigeins, dreizig); uh = time words (halb, Viertel, nach, vor, um, von) with the clock time in digits in the sentence, wrong = the wrong one (halb acht = 7:30!); dt = an ordinal (dritte, ersten, zwanzigsten) or am / im with days, dates, months, seasons, wrong = a wrong form or am / im mixed up.',
+  rs:'rn = a relative pronoun in the Nominativ (der, die, das, die), wrong = den / dem / a wrong gender; ra = a relative pronoun in the Akkusativ (den, die, das), wrong = der / dem; rd = a Dativ relative pronoun (dem, der, denen), also after a preposition that stays outside the gap (mit ___ → dem), wrong = den / die; rw = was (after alles, etwas, nichts, das Beste, a whole sentence), wo (after a place) or Wer (whoever), wrong = das / der.',
+  ts:'aw = als or wenn, wrong = the other (als = one event in the past, wenn = repeated or now / future); wb = während / bevor / bis / seit, wrong = one with a clearly wrong meaning (make the context clear with words like gleichzeitig, zuerst, schon); ns = nachdem / sobald, or the auxiliary after nachdem (hatte / war / habe), wrong = the wrong connector or tense; pq = hatte / war in a Plusquamperfekt, or the Partizip II, wrong = the other auxiliary or a wrong participle.',
+  iq:'wq = the question word or ob in an indirect question (Können Sie mir sagen, wo …?), wrong = wenn / a wrong question word; vl = the end of an indirect question with the verb last, answer = 2–3 words "… verb", wrong = the SAME words with the verb first; ip = jemand / niemand / etwas / nichts / alles / man (or jemanden), wrong = one with the wrong meaning; ei = einer / eine / eins / einen / keiner / keins / welche used as a pronoun, wrong = a wrong gender or case form.',
+  nv:'vb = the verb of a fixed noun-verb phrase (eine Entscheidung treffen, eine Frage stellen, Rücksicht nehmen, Bescheid sagen, eine Rolle spielen …), wrong = a verb that does NOT go with this noun (machen, geben, sagen); pp = the preposition (with its article) of a fixed phrase (zur Verfügung, in Frage, zum Ausdruck, in Kontakt, zu Ende …), wrong = a wrong preposition.',
+  nd:'ns = an n-noun (Kollege, Student, Kunde, Nachbar, Polizist, Junge …) as the SUBJECT in the Nominativ singular, answer = without -n, wrong = with -(e)n; ak = the same kind of noun in the Akkusativ or Dativ singular, answer = with -(e)n, wrong = without; sp = Herr / Herrn / Herren, Name / Namen / Namens, Gedanke, Buchstabe in the right form, wrong = the wrong form.',
+  ls:'la = a form of lassen (lasse, lässt, ließ) or the infinitive after lassen, wrong = a wrong person form, lassten, gelassen where an infinitive follows, or zu + infinitive; sl = sich lassen + infinitive (Das lässt sich machen), the gap is lässt / lassen / sich / the infinitive, wrong = a wrong form or the participle; zp = ist / sind vs. wird / werden with a clear signal (schon, seit = state → sein; gerade, im Moment = process → werden), or the Partizip II after ist, wrong = the other one or the infinitive.',
+  pz:'p1 = a Partizip I with an adjective ending (das schlafende Kind) for something happening now, wrong = the Partizip II with the same ending; p2 = a Partizip II with an adjective ending (das gestohlene Fahrrad), wrong = the Partizip I; an = an adjective used as a noun with the right ending and a capital letter (der Deutsche, ein Deutscher, die Angestellte, etwas Neues), wrong = a wrong ending.'
 };
 // closed word classes for the offline check (the answer and the wrong word must both come from them)
 const XSET = {
@@ -6075,6 +6670,7 @@ function xCheckOne(x) {
     case 'sb':
       if (k === 'v2' || k === 'fr') { const norm = t => t.toLowerCase().split(' ').sort().join(' '); return a.includes(' ') && norm(a) === norm(w) ? '' : 'word order pair'; }
       if (k === 'ng') return both(/^(nicht|kein|keine|keinen|keinem|keiner|keines)$/i) ? '' : 'nicht / kein';
+      if (k === 'dw') return both(/^(dies|welch|jed)(er|e|es|en|em)$/i) ? '' : 'dies- / welch-';
       return both(/^(ja|nein|doch)$/i) ? '' : 'ja / nein / doch';
     case 'ar': return both(XSET.ar) ? '' : 'article / pronoun';
     case 'pf': return k === 'hs' ? (both(XSET.aux) && /^(bin|bist|ist|sind|seid)$/i.test(a) !== /^(bin|bist|ist|sind|seid)$/i.test(w) ? '' : 'haben / sein') : (/(t|en)$/.test(a) && !/\s/.test(a) ? '' : 'participle');
@@ -6083,9 +6679,20 @@ function xCheckOne(x) {
     case 'pt': return /\s/.test(a) ? 'one word' : '';
     case 'k2': return k === 'wu' && /^gew+(t|en)$/.test(a) && !/^(gehen|geben)$/.test(a) ? 'infinitive' : '';
     case 'vp': return k === 'pr' ? (both(XSET.prep) ? '' : 'preposition') : k === 'ca' ? (both(XSET.ar) ? '' : 'article') : (both(XSET.vpda) ? '' : 'da- / wo-word');
-    case 'zu': return k === 'zi' ? '' : (both(/^(um|damit|ohne|statt|anstatt)$/i) || /^zu [a-zäöüß]+$/.test(a) ? '' : 'um / damit');
+    case 'zu': return k === 'zi' || k === 'id' ? '' : (both(/^(um|damit|ohne|statt|anstatt)$/i) || /^zu [a-zäöüß]+$/.test(a) ? '' : 'um / damit');
     case 'pa': return k === 'wd' ? (both(XSET.werden) ? '' : 'werden') : k === 'pr' ? (both(XSET.wurde) ? '' : 'wurde') : '';
     case 'zk': return both(XSET.zk) || k === 'jd' ? '' : 'connector';
+    case 'ps': return k !== 'im' && /\s/.test(a) ? 'one word' : '';
+    case 'rs': return both(k === 'rw' ? /^(was|wo|wer|wen|wem|das|der|die|den|dem)$/i : /^(der|die|das|den|dem|denen|deren|dessen)$/i) ? '' : 'relative pronoun';
+    case 'ts': return k === 'aw' ? (both(/^(als|wenn)$/i) ? '' : 'als / wenn') : k === 'wb' ? (both(/^(während|bevor|bis|seit|seitdem|nachdem|sobald|als|wenn)$/i) ? '' : 'connector') : '';
+    case 'iq': {
+      if (k === 'vl') { const norm = t => t.toLowerCase().split(' ').sort().join(' '); return a.includes(' ') && norm(a) === norm(w) ? '' : 'word order pair'; }
+      if (k === 'wq') return both(/^(wo|wann|wie|was|wer|wen|wem|warum|wohin|woher|ob|wenn|wie viel|wie lange|wie oft|welche[nmrs]?)$/i) ? '' : 'question word';
+      if (k === 'ei') return both(/^(k?ein(e|en|em|er|es|s)?|welche)$/i) ? '' : 'einer / keiner';
+      return '';
+    }
+    case 'nd': return a.slice(0, 4).toLowerCase() === w.slice(0, 4).toLowerCase() ? '' : 'n-noun';
+    case 'ls': return k === 'zp' && !both(/^(ist|sind|bin|bist|seid|war|waren|wird|werden|wurde|wurden|wirst|werde)$/i) && /^(ist|sind|wird|werden|war|wurde)$/i.test(a) ? 'sein / werden' : '';
     case 'fg': return k === 'wt' ? (both(/^(wegen|trotz|während)$/i) || both(XSET.ar) ? '' : 'wegen / trotz / während') : k === 'fu' ? (XSET.werden.test(a) || !/^ge/.test(a) ? '' : 'Futur') : '';
   }
   return '';
@@ -6195,6 +6802,7 @@ function planStep([ty, a, n]) {
   if (ty === 'ex') return { done:exDone(a) >= n, label:`${EX_MOD[a][0]}: ${n} ${n > 1 ? 'tasks' : 'task'} (${Math.min(exDone(a), n)}/${n})`, go:() => { S.exTab = a.startsWith('sb') ? 'sb' : a; save(); renderMenu(); $('#examBox').scrollIntoView({ block:'start' }); } };
   if (ty === 'cafe') return { done:chatsDone() >= a, label:`☕ Talk with Lena in the Sprach-Café (${Math.min(chatsDone(), a)}/${a})`, go:() => { S.cefr = topicTab(S.topic); cafeMode = 'cafe'; save(); renderMenu(); } };
   if (ty === 'telc') return { done:telcDone() >= a, label:`✍️ Write a TELC letter (${Math.min(telcDone(), a)}/${a})`, go:() => { S.exTab = 'sch'; save(); renderMenu(); } };
+  if (ty === 'role') { const t = CAFE_ROLES.find(x => x[0] === a); return { done:chatsDone(a) > 0, label:`☕ Rollenspiel: ${t[2]}`, go:() => openCafe(a) }; }
   const p = SPR.find(x => x.id === a);
   return { done:chatsDone(a) > 0, label:`🗣️ Sprechen ${p.part}`, go:() => { S.exTab = 'spr'; save(); renderMenu(); } };
 }
@@ -6202,7 +6810,7 @@ let planSteps = [];
 function planHTML() {
   planSteps = [];
   let firstOpen = false;
-  return '<h3>🗓️ 8 Wochen bis telc B1<small class="en2">8 weeks to telc B1</small></h3><p class="note">Etwa 30–45 Minuten pro Tag. Jeder Schritt wird automatisch abgehakt (ein Level zählt ab 6 von 8 richtig). Tippen Sie auf einen Schritt, um ihn zu starten.<small class="en2">About 30–45 minutes a day. Each step ticks itself off (a level counts with 6 of 8 right). Tap a step to start it.</small></p>' + PLAN.map(([title, steps]) => {
+  return '<h3>🗓️ 12 Wochen bis telc B1<small class="en2">12 weeks to telc B1</small></h3><p class="note">Etwa 30–45 Minuten pro Tag. Jeder Schritt wird automatisch abgehakt (ein Level zählt ab 6 von 8 richtig). Tippen Sie auf einen Schritt, um ihn zu starten.<small class="en2">About 30–45 minutes a day. Each step ticks itself off (a level counts with 6 of 8 right). Tap a step to start it.</small></p>' + PLAN.map(([title, steps]) => {
     const st = steps.map(planStep), n = st.filter(s => s.done).length, open = !firstOpen && n < st.length;
     if (open) firstOpen = true;
     return `<details class="pweek${n === st.length ? ' done' : ''}"${open ? ' open' : ''}><summary>${n === st.length ? '✅' : '📅'} ${esc(title)} <small>${n}/${st.length}</small></summary><div class="psteps">${st.map(s => { planSteps.push(s); return `<button class="pstep${s.done ? ' done' : ''}" data-step="${planSteps.length - 1}"><span>${s.done ? '✓' : '○'}</span>${esc(s.label)}</button>`; }).join('')}</div></details>`;
@@ -6472,7 +7080,7 @@ const cwItemHTML = w => `<div class="item"><div>
 const ASK = { msgs:[], busy:false, rec:null };
 const askMd = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^[-•] (.*)$/gm, '• $1').replace(/\n/g, '<br>');
 function askRender() {
-  $('#askChat').innerHTML = `<div class="anote">Dieser Chat wird nicht gespeichert: ✕ löscht ihn.<small class="en2">This chat is not saved: ✕ (or reloading) deletes it. Ask in Deutsch, English or தமிழ் – type or tap 🎤.</small></div>`
+  $('#askChat').innerHTML = `<div class="anote">Dieser Chat wird nicht gespeichert: ✕ löscht ihn.<small class="en2">This chat is not saved: ✕ (or reloading) deletes it. Ask in Deutsch, English or தமிழ் – type, or hold 🎤 and speak.</small></div>`
     + ASK.msgs.map(m => `<div class="${m.r === 'u' ? 'am' : 'al'}">${m.r === 'u' ? esc(m.t) : askMd(m.t)}</div>`).join('')
     + (ASK.busy ? '<div class="al typing"><i></i><i></i><i></i></div>' : '');
   const c = $('#askChat'); c.scrollTop = c.scrollHeight;
@@ -6508,28 +7116,30 @@ async function askSend(text, wav) {
   } catch (e) { if (wav) mine.t = '🎤'; ASK.msgs.push({ r:'l', t:(AI_MSG[e.message] || 'Das hat nicht geklappt. Bitte noch einmal. / That did not work, please try again.') }); }
   ASK.busy = false; askRender();
 }
-// 🎤: tap to start, tap again to send (stops by itself after 30 s). The sound is recorded as a small WAV (16 kHz, mono)
+// 🎤: hold to speak, let go to send (like the Sprach-Café; it sends by itself after 60 s). The sound is recorded as a small WAV (16 kHz, mono)
 // and Gemini listens to it, so German, English and Tamil all work without choosing a language.
 async function askMic() {
-  if (ASK.rec) { askStopRec(true); return; }
-  if (ASK.busy) return;
+  if (ASK.rec || ASK.starting || ASK.busy) return;
+  ASK.held = true; ASK.starting = true;
   const ctx = audioCtx();
-  if (!ctx || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { ASK.msgs.push({ r:'l', t:'Spracheingabe geht in diesem Browser nicht. Du kannst tippen. / Voice input does not work in this browser; you can type.' }); askRender(); return; }
+  if (!ctx || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { ASK.starting = false; ASK.msgs.push({ r:'l', t:'Spracheingabe geht in diesem Browser nicht. Du kannst tippen. / Voice input does not work in this browser; you can type.' }); askRender(); return; }
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true, channelCount:1 } }); }
-  catch (e) { ASK.msgs.push({ r:'l', t:'Das Mikrofon ist nicht erlaubt. Erlaube es im Browser oder tippe deine Frage. / The microphone is blocked: allow it in the browser, or type your question.' }); askRender(); return; }
+  catch (e) { ASK.starting = false; ASK.msgs.push({ r:'l', t:'Das Mikrofon ist nicht erlaubt. Erlaube es im Browser oder tippe deine Frage. / The microphone is blocked: allow it in the browser, or type your question.' }); askRender(); return; }
   const src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), chunks = [];
   proc.onaudioprocess = e => chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
   src.connect(proc); proc.connect(ctx.destination);
-  ASK.rec = { stream, src, proc, chunks, rate:ctx.sampleRate, t:setTimeout(() => askStopRec(true), 30000) };
-  const b = $('#askMic'); b.classList.add('on'); b.textContent = '■'; b.setAttribute('aria-label', 'Stop and send');
-  $('#askText').placeholder = '🎤 Ich höre zu … ■ = senden / Listening … ■ = send';
+  ASK.rec = { stream, src, proc, chunks, rate:ctx.sampleRate, t:setTimeout(() => askStopRec(true), 60000) }; ASK.starting = false;
+  const b = $('#askMic'); b.classList.add('on');
+  $('#askText').placeholder = '🎤 Ich höre zu … loslassen = senden / Listening … let go to send';
+  if (!ASK.held) askStopRec(true);   // let go while the microphone was still starting
 }
+function askMicUp() { ASK.held = false; if (ASK.rec) askStopRec(true); }
 function askStopRec(send) {
   const rc = ASK.rec; if (!rc) return; ASK.rec = null; clearTimeout(rc.t);
   try { rc.proc.disconnect(); rc.src.disconnect(); } catch (e) {}
   rc.stream.getTracks().forEach(t => t.stop());
-  const b = $('#askMic'); b.classList.remove('on'); b.textContent = '🎤'; b.setAttribute('aria-label', 'Speak');
+  $('#askMic').classList.remove('on');
   $('#askText').placeholder = 'Frage … / Ask … / கேள் …';
   if (!send) return;
   const n = rc.chunks.reduce((k, c) => k + c.length, 0);
@@ -6552,7 +7162,13 @@ $('#askMin').addEventListener('click', () => { askStopRec(false); $('#askBox').h
 $('#askEnd').addEventListener('click', () => { askStopRec(false); ASK.msgs = []; ASK.busy = false; $('#askBox').hidden = true; askVis(); });
 $('#askSend').addEventListener('click', () => askSend($('#askText').value));
 $('#askText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); askSend($('#askText').value); } });
-$('#askMic').addEventListener('click', askMic);
+// hold 🎤 to speak; letting go (or sliding off) sends the question
+const askMicBtn = $('#askMic');
+askMicBtn.addEventListener('pointerdown', e => { if (e.button > 0) return; e.preventDefault(); try { askMicBtn.setPointerCapture(e.pointerId); } catch (x) {} askMic(); });
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => askMicBtn.addEventListener(t, askMicUp));
+askMicBtn.addEventListener('contextmenu', e => e.preventDefault());
+askMicBtn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); askMic(); } });
+askMicBtn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); askMicUp(); } });
 
 /* ================= My words: pick a topic with level tabs + topic tiles ================= */
 let wLevel = 'all';
@@ -6703,7 +7319,7 @@ $('#genNew').addEventListener('change', e => { S.genNew = e.target.checked; save
 $('#gapUp').addEventListener('click', () => setGap(1));
 $$('#menu .btn.mode').forEach(b => b.addEventListener('click', () => { cafeMode = b.dataset.mode; $('#menuMsg').textContent = ''; renderMenu(); }));
 $('#cafeLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderCafeBox(); } });
-$('#cafeTopics').addEventListener('click', e => { const b = e.target.closest('[data-cafe]'); if (b) openCafe(b.dataset.cafe); });
+['#cafeTopics', '#cafeRoles'].forEach(id => $(id).addEventListener('click', e => { const b = e.target.closest('[data-cafe]'); if (b) openCafe(b.dataset.cafe); }));
 $('#cafe').addEventListener('pointerdown', unlockAudio, true); $('#cafe').addEventListener('keydown', unlockAudio, true);
 $('#cBack').addEventListener('click', closeCafe);
 $('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setAttribute('aria-pressed', C.slow); });
