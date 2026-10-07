@@ -87,12 +87,14 @@ details.bkp summary{cursor:pointer;font-weight:700}
 .ver{float:right;margin-left:8px;font-size:11px;font-weight:700;color:var(--grey);opacity:.8}
 .menu .streakline .sq{width:14px;height:14px;background:var(--yellow);border:2px solid var(--black)}
 .menu .levels{display:grid;gap:12px}
-.menu .gapset{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600}
-.menu .gapset span.l{flex:1}
-.menu .gapset button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:22px;font-weight:800;cursor:pointer}
-.menu .gapset button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
-.menu .gapset button:disabled{color:var(--grey);cursor:not-allowed}
-.menu .gapset b{min-width:56px;text-align:center}
+.gapset{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600}
+.gapset span.l{flex:1}
+#intro .gapset{margin:16px 0 4px}
+#pause .gapset{margin:6px 0 0}
+.gapset button{width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:22px;font-weight:800;cursor:pointer}
+.gapset button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.gapset button:disabled{color:var(--grey);cursor:not-allowed}
+.gapset b{min-width:56px;text-align:center}
 .menu .msg{min-height:22px;margin-top:12px;color:var(--red);font-weight:600}
 
 /* words & sentences */
@@ -642,13 +644,6 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         </div>
         <div class="levels" id="lvX" style="display:none"></div>
         <button class="btn yellow" data-level="0"><span><b>Tägliche Wiederholung</b><small>Gemerkte und falsche Wörter<small class="en2">Words you starred or got wrong</small></small></span><span class="badge" id="dueBadge">0</span></button>
-        <div class="gapset">
-          <span class="l">Time between gates</span>
-          <button id="gapDn" aria-label="Less time between gates">−</button>
-          <b id="gapVal" aria-live="polite"></b>
-          <button id="gapUp" aria-label="More time between gates">+</button>
-        </div>
-        <label class="gapset lanepref"><span class="l">Show the gate options early<small>in the question box, in lane order</small></span><input type="checkbox" id="lanePrev"></label>
         <label class="gapset lanepref" id="genRow"><span class="l">🎲 New sentences from Lena<small>Gemini writes a fresh set for every round; each sentence is grammar-checked</small></span><input type="checkbox" id="genNew"></label>
       </div>
       <div id="cafeBox" style="display:none">
@@ -694,6 +689,13 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <p class="lead" id="iLead">Three new words for this round. You'll meet them in the sentences you run through.</p>
       <div class="cards" id="iCards"></div>
       <p class="note" id="iNote">Tippen Sie auf ★, um ein Wort zu merken. Gemerkte Wörter kommen in der täglichen Wiederholung wieder.</p>
+      <div class="gapset">
+          <span class="l">Zeit zwischen den Toren<small class="en2">Time between gates</small></span>
+          <button type="button" data-gapd="-1" aria-label="Weniger Zeit zwischen den Toren / Less time between gates">−</button>
+          <b class="gapv" aria-live="polite"></b>
+          <button type="button" data-gapd="1" aria-label="Mehr Zeit zwischen den Toren / More time between gates">+</button>
+        </div>
+      <label class="gapset lanepref"><span class="l">Antworten früh zeigen<small class="en2">Show the gate options early: in the question box, in lane order</small></span><input type="checkbox" data-lanepref></label>
       <div class="row2"><button class="btn center" id="iBack">← Zurück<small class="en2">Back</small></button><button class="btn red center" id="iGo">Los geht's!</button></div>
     </div>
   </section>
@@ -714,6 +716,14 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <button class="themebtn tcorner" type="button"></button>
       <h2>Pause</h2>
       <p class="lead">Kurz durchatmen.<small class="en2">Take a breath.</small></p>
+      <div class="gapset">
+          <span class="l">Zeit zwischen den Toren<small class="en2">Time between gates</small></span>
+          <button type="button" data-gapd="-1" aria-label="Weniger Zeit zwischen den Toren / Less time between gates">−</button>
+          <b class="gapv" aria-live="polite"></b>
+          <button type="button" data-gapd="1" aria-label="Mehr Zeit zwischen den Toren / More time between gates">+</button>
+        </div>
+      <label class="gapset lanepref"><span class="l">Antworten früh zeigen<small class="en2">Show the gate options early: in the question box, in lane order</small></span><input type="checkbox" data-lanepref></label>
+      <p class="note" style="margin:4px 0 14px">Gilt ab dem nächsten Tor.<small class="en2">Takes effect from the next gate.</small></p>
       <div style="display:grid;gap:12px">
         <button class="btn blue center" id="pGo">Weiter<small class="en2">Resume</small></button>
         <button class="btn center" id="pQuit">Zum Menü<small class="en2">Quit to menu</small></button>
@@ -3421,7 +3431,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-7';
+const APP_VERSION = 'v2026.10.07-9';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4286,7 +4296,7 @@ function endRound() {
 function show(id) {
   $$('.screen').forEach(s => s.classList.toggle('show', s.id === id));
   if (id === 'menu') renderMenu();
-  askVis(); acctRender();
+  askVis(); acctRender(); renderGap(); $$('[data-lanepref]').forEach(c => { c.checked = S.lanePreview !== false; });
   if (PROFILE && SYNC && SYNC.pending && (id === 'menu' || id === 'prog')) cloudSoon(1500);
 }
 function renderMenu() {
@@ -4336,15 +4346,15 @@ function renderMenu() {
   if (here && cafeMode === 'write') renderWriteBox();
   if (here && cafeMode === 'cafe') renderCafeBox();
   renderGap();
-  $('#lanePrev').checked = S.lanePreview !== false;
+  $$('[data-lanepref]').forEach(c => { c.checked = S.lanePreview !== false; });
   $('#genRow').style.display = lsGet(AI_KEY) ? '' : 'none'; $('#genNew').checked = !!S.genNew;
 }
 const topicKey = () => (OLD_T[S.topic] || XBY[S.topic]) ? S.topic : 'wd';
 function setTopic(t) { S.topic = t; S.cefr = topicTab(t); cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
 
 function renderGap() {
-  $('#gapVal').textContent = `${S.gap} s`;
-  $('#gapDn').disabled = S.gap <= GAP_MIN; $('#gapUp').disabled = S.gap >= GAP_MAX;
+  $$('.gapv').forEach(b => { b.textContent = `${S.gap} s`; });
+  $$('[data-gapd]').forEach(b => { b.disabled = +b.dataset.gapd < 0 ? S.gap <= GAP_MIN : S.gap >= GAP_MAX; });
 }
 function setGap(d) { S.gap = Math.max(GAP_MIN, Math.min(GAP_MAX, S.gap + d)); save(); renderGap(); }
 
@@ -7604,10 +7614,9 @@ document.addEventListener('click', e => { const tb = e.target.closest('.themebtn
 $('#bWords').addEventListener('click', () => { wTopic = 'all'; wLevel = 'all'; renderWords(); show('words'); });   // always opens on All topics
 $('#wBack').addEventListener('click', () => show('menu'));
 $$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
-$('#gapDn').addEventListener('click', () => setGap(-1));
-$('#lanePrev').addEventListener('change', e => { S.lanePreview = e.target.checked; save(); });
+document.addEventListener('click', e => { const b = e.target.closest('[data-gapd]'); if (b) setGap(+b.dataset.gapd); });
+document.addEventListener('change', e => { if (!e.target.matches('[data-lanepref]')) return; S.lanePreview = e.target.checked; save(); $$('[data-lanepref]').forEach(c => { c.checked = S.lanePreview; }); renderLanes(); });
 $('#genNew').addEventListener('change', e => { S.genNew = e.target.checked; save(); });
-$('#gapUp').addEventListener('click', () => setGap(1));
 $$('#menu .btn.mode').forEach(b => b.addEventListener('click', () => { cafeMode = b.dataset.mode; $('#menuMsg').textContent = ''; renderMenu(); }));
 $('#cafeLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderCafeBox(); } });
 ['#cafeTopics', '#cafeRoles'].forEach(id => $(id).addEventListener('click', e => { const b = e.target.closest('[data-cafe]'); if (b) openCafe(b.dataset.cafe); }));
