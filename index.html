@@ -25,7 +25,9 @@ button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 .screen{position:absolute;inset:0;display:none;pointer-events:auto;overflow-y:auto;padding:20px;z-index:2}
 .screen.show{display:flex}
 .screen.dim{background:rgba(228,236,235,.62)}
-.panel{background:var(--white);border:3px solid var(--black);box-shadow:8px 8px 0 var(--shadow);padding:28px;max-width:620px;width:100%;margin:auto;user-select:none}
+.panel{background:var(--white);border:3px solid var(--black);box-shadow:8px 8px 0 var(--shadow);padding:28px;max-width:620px;width:100%;margin:auto}
+/* text can be selected everywhere (long-press a word to save it); buttons and the game stay unselectable */
+button,.btn,.tabs,.ptop,#hud,.lanes{user-select:none;-webkit-user-select:none}
 h2{font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-.01em;margin-bottom:6px}
 h3{font-size:19px;font-weight:600;margin:22px 0 10px}
 p{line-height:1.5}
@@ -268,6 +270,33 @@ p{line-height:1.5}
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-8px);opacity:1}}
 @media (prefers-reduced-motion: reduce){.b.typing i{animation:none}}
 .b .de,.b .fix{user-select:text;-webkit-user-select:text}
+.en2{display:block;font-size:.74em;font-weight:500;color:var(--grey);line-height:1.3;margin-top:2px;letter-spacing:0;text-transform:none}
+h2 .en2{font-size:.42em;margin-top:4px} h3 .en2{font-size:.7em}
+.btn .en2,.tcard.on .en2,.extabs .on .en2,.tabs .on .en2,.wlv .on .en2,.selpop .en2{color:inherit;opacity:.75}
+.btn.center .en2{text-align:center}
+#qHint .en2{font-size:.85em}
+.askfab{position:fixed;right:14px;bottom:14px;z-index:40;border:3px solid var(--black);background:var(--yellow);color:#2F3640;box-shadow:4px 4px 0 var(--shadow);border-radius:28px;padding:8px 14px 8px 10px;display:flex;align-items:center;gap:6px;font:inherit;font-weight:800;cursor:pointer}
+.askfab span{font-size:22px;line-height:1} .askfab small{font-size:14px}
+.askfab[hidden],.askbox[hidden]{display:none}
+.askbox{position:fixed;right:14px;bottom:14px;z-index:41;width:min(380px,calc(100vw - 28px));height:min(520px,calc(100vh - 90px));display:flex;flex-direction:column;border:3px solid var(--black);background:var(--white);box-shadow:6px 6px 0 var(--shadow)}
+.askhead{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:2px solid var(--black);background:var(--yellow);color:#2F3640}
+.askhead b{flex:1;font-size:16px} .askhead .en2{color:#5B6670}
+.askhead button{width:34px;height:34px;border:2px solid var(--black);background:var(--white);color:var(--black);font-weight:800;cursor:pointer;font-size:16px}
+.askchat{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.askchat .anote{font-size:13px;color:var(--grey);text-align:center}
+.askchat .am,.askchat .al{max-width:88%;border:2px solid var(--black);padding:8px 10px;line-height:1.45;font-size:15.5px;user-select:text;-webkit-user-select:text}
+.askchat .am{align-self:flex-end;background:#EEF4FB;border-radius:12px 0 12px 12px}
+.askchat .al{align-self:flex-start;background:var(--white);border-radius:0 12px 12px 12px}
+.askchat .al.typing{display:flex;gap:6px;padding:12px 14px}
+.askchat .al.typing i{width:8px;height:8px;border-radius:50%;background:var(--grey);animation:tdot 1.2s ease-in-out infinite}
+.askchat .al.typing i:nth-child(2){animation-delay:.18s} .askchat .al.typing i:nth-child(3){animation-delay:.36s}
+.askin{display:flex;gap:6px;padding:8px;border-top:2px solid var(--black)}
+.askin input{flex:1;min-width:0;border:2px solid var(--black);background:var(--white);color:var(--black);padding:8px;font:inherit;font-size:15.5px}
+.askin button{width:40px;flex:0 0 40px;border:2px solid var(--black);background:var(--white);color:var(--black);font-weight:800;cursor:pointer}
+#askMic.on{background:var(--red);color:#fff}
+html.dark .askchat .am{background:#24344A}
+#wfPen[aria-pressed="true"],#wfErase[aria-pressed="true"]{background:var(--ink);color:var(--on)}
+#wfCanvas.erasing{cursor:cell}
 .selpop{position:fixed;z-index:50;max-width:min(92vw,420px)}
 .selpop button,.selpop span{display:block;border:2px solid var(--black);background:var(--yellow);color:#2F3640;box-shadow:3px 3px 0 var(--shadow);padding:8px 12px;font:inherit;font-size:15.5px;font-weight:700;cursor:pointer;text-align:left}
 .selpop span{background:var(--white);color:var(--black);cursor:default;font-weight:600}
@@ -550,53 +579,53 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button class="themebtn" id="themeBtn" type="button"></button></div>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button></div>
       <div class="tcards" id="topicCards"></div>
-      <p class="modeq" id="pickTopic" style="display:none">👆 Wähle ein Thema. <span>Pick a topic above.</span></p>
+      <p class="modeq" id="pickTopic" style="display:none">👆 Wählen Sie ein Thema.<small class="en2">Pick a topic above.</small></p>
       <div id="examBox" style="display:none"></div>
-      <p class="modeq" id="modeQ">Was möchtest du machen? <span>What would you like to do?</span></p>
+      <p class="modeq" id="modeQ">Was möchten Sie machen?<small class="en2">What would you like to do?</small></p>
       <div class="row2 modes" id="modeRow">
-        <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner game</b><small>Run through the right gates</small></span></button>
-        <button class="btn mode" data-mode="cafe"><span class="mi">☕</span><span><b>Sprach-Café</b><small>Talk with Lena by voice</small></span></button>
-        <button class="btn mode" data-mode="write"><span class="mi">✍️</span><span><b>Schreiben</b><small>Type, write and get corrected</small></span></button>
+        <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner-Spiel</b><small>Laufen Sie durch die richtigen Tore<small class="en2">Run through the right gates</small></small></span></button>
+        <button class="btn mode" data-mode="cafe"><span class="mi">☕</span><span><b>Sprach-Café</b><small>Sprechen Sie mit Lena<small class="en2">Talk with Lena by voice</small></small></span></button>
+        <button class="btn mode" data-mode="write"><span class="mi">✍️</span><span><b>Schreiben</b><small>Tippen, schreiben, korrigieren lassen<small class="en2">Type, write and get corrected</small></small></span></button>
       </div>
       <div class="levels" id="runBox" style="display:none">
         <div class="levels" id="lvWd">
-          <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Choose the gate</b><small id="l1s">weil, dass, wenn, obwohl, ob, denn …?</small></span></button>
-          <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Build the clause</b><small id="l2s">Verb at the end, or in 2nd place?</small></span></button>
-          <button class="btn black" data-level="3"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l3s">Faster, plus das/dass and weil/denn traps</small></span></button>
-          <button class="btn green" data-level="10"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l10s">One word is wrong. Run through it!</small></span></button>
+          <button class="btn blue" data-level="1"><span class="shape"></span><span><b>Level 1: Das richtige Tor</b><small id="l1s">weil, dass, wenn, obwohl, ob, denn …?</small></span></button>
+          <button class="btn red" data-level="2"><span class="shape circle"></span><span><b>Level 2: Den Satz bauen</b><small id="l2s">Verb am Ende oder auf Position 2?</small></span></button>
+          <button class="btn black" data-level="3"><span class="shape tri"></span><span><b>Level 3: Boss-Mix</b><small id="l3s">Schneller, plus Fallen mit das/dass und weil/denn</small></span></button>
+          <button class="btn green" data-level="10"><span class="shape mag">🔍</span><span><b>Level 4: Fehler finden</b><small id="l10s">Ein Wort ist falsch. Finden Sie es!</small></span></button>
         </div>
         <div class="levels" id="lvPrep" style="display:none">
           <button class="btn blue" data-level="4"><span class="shape"></span><span><b>Level 1: Akkusativ oder Dativ?</b><small id="l4s">mit, für, durch, aus, zu…</small></span></button>
           <button class="btn red" data-level="5"><span class="shape circle"></span><span><b>Level 2: Wo oder wohin?</b><small id="l5s">Wechselpräpositionen</small></span></button>
-          <button class="btn black" data-level="6"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l6s">Faster, plus im/ins, am/an den, zum/zur</small></span></button>
-          <button class="btn green" data-level="11"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l11s">One word is wrong. Run through it!</small></span></button>
+          <button class="btn black" data-level="6"><span class="shape tri"></span><span><b>Level 3: Boss-Mix</b><small id="l6s">Schneller, plus im/ins, am/an den, zum/zur</small></span></button>
+          <button class="btn green" data-level="11"><span class="shape mag">🔍</span><span><b>Level 4: Fehler finden</b><small id="l11s">Ein Wort ist falsch. Finden Sie es!</small></span></button>
         </div>
         <div class="levels" id="lvAdj" style="display:none">
           <button class="btn blue" data-level="7"><span class="shape"></span><span><b>Level 1: Nach der / die / das</b><small id="l7s">der alte Mann · den alten Mann</small></span></button>
           <button class="btn red" data-level="8"><span class="shape circle"></span><span><b>Level 2: Nach ein / kein / mein</b><small id="l8s">ein alter Mann · ein neues Auto</small></span></button>
-          <button class="btn black" data-level="9"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l9s">Faster, plus no article: kalter Kaffee</small></span></button>
-          <button class="btn green" data-level="12"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l12s">One word is wrong. Run through it!</small></span></button>
+          <button class="btn black" data-level="9"><span class="shape tri"></span><span><b>Level 3: Boss-Mix</b><small id="l9s">Schneller, plus ohne Artikel: kalter Kaffee</small></span></button>
+          <button class="btn green" data-level="12"><span class="shape mag">🔍</span><span><b>Level 4: Fehler finden</b><small id="l12s">Ein Wort ist falsch. Finden Sie es!</small></span></button>
         </div>
         <div class="levels" id="lvTv" style="display:none">
           <button class="btn blue" data-level="13"><span class="shape"></span><span><b>Level 1: Trennbar oder nicht?</b><small id="l13s">Ich stehe … auf · ich verstehe</small></span></button>
           <button class="btn red" data-level="14"><span class="shape circle"></span><span><b>Level 2: Perfekt</b><small id="l14s">aufgestanden · verstanden</small></span></button>
-          <button class="btn black" data-level="15"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l15s">Faster, plus weil / dass: …, weil ich aufstehe</small></span></button>
-          <button class="btn green" data-level="16"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l16s">One word is wrong. Run through it!</small></span></button>
+          <button class="btn black" data-level="15"><span class="shape tri"></span><span><b>Level 3: Boss-Mix</b><small id="l15s">Schneller, plus weil / dass: …, weil ich aufstehe</small></span></button>
+          <button class="btn green" data-level="16"><span class="shape mag">🔍</span><span><b>Level 4: Fehler finden</b><small id="l16s">Ein Wort ist falsch. Finden Sie es!</small></span></button>
         </div>
         <div class="levels" id="lvPl" style="display:none">
           <button class="btn blue" data-level="17"><span class="shape"></span><span><b>Level 1: Die Pluralform</b><small id="l17s">der Tag → die Tage · das Kind → die Kinder</small></span></button>
           <button class="btn red" data-level="18"><span class="shape circle"></span><span><b>Level 2: Singular oder Plural?</b><small id="l18s">ein Kind · zwei Kinder</small></span></button>
-          <button class="btn black" data-level="19"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l19s">Faster, plus Dativ plural: mit den Kindern</small></span></button>
-          <button class="btn green" data-level="20"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l20s">One word is wrong. Run through it!</small></span></button>
+          <button class="btn black" data-level="19"><span class="shape tri"></span><span><b>Level 3: Boss-Mix</b><small id="l19s">Schneller, plus Dativ Plural: mit den Kindern</small></span></button>
+          <button class="btn green" data-level="20"><span class="shape mag">🔍</span><span><b>Level 4: Fehler finden</b><small id="l20s">Ein Wort ist falsch. Finden Sie es!</small></span></button>
         </div>
         <div class="levels" id="lvMv" style="display:none">
           <button class="btn blue" data-level="21"><span class="shape"></span><span><b>Level 1: Die richtige Form</b><small id="l21s">ich kann · du kannst · er kann</small></span></button>
-          <button class="btn red" data-level="22"><span class="shape circle"></span><span><b>Level 2: Welches Modalverb?</b><small id="l22s">muss nicht or darf nicht?</small></span></button>
-          <button class="btn black" data-level="23"><span class="shape tri"></span><span><b>Level 3: Boss mix</b><small id="l23s">Faster, plus Nebensatz: …, weil ich arbeiten muss</small></span></button>
-          <button class="btn green" data-level="24"><span class="shape mag">🔍</span><span><b>Level 4: Spot the error</b><small id="l24s">One word is wrong. Run through it!</small></span></button>
+          <button class="btn red" data-level="22"><span class="shape circle"></span><span><b>Level 2: Welches Modalverb?</b><small id="l22s">muss nicht oder darf nicht?</small></span></button>
+          <button class="btn black" data-level="23"><span class="shape tri"></span><span><b>Level 3: Boss-Mix</b><small id="l23s">Schneller, plus Nebensatz: …, weil ich arbeiten muss</small></span></button>
+          <button class="btn green" data-level="24"><span class="shape mag">🔍</span><span><b>Level 4: Fehler finden</b><small id="l24s">Ein Wort ist falsch. Finden Sie es!</small></span></button>
         </div>
         <div class="levels" id="lvX" style="display:none"></div>
-        <button class="btn yellow" data-level="0"><span><b>Daily review</b><small>Words you starred or got wrong</small></span><span class="badge" id="dueBadge">0</span></button>
+        <button class="btn yellow" data-level="0"><span><b>Tägliche Wiederholung</b><small>Gemerkte und falsche Wörter<small class="en2">Words you starred or got wrong</small></small></span><span class="badge" id="dueBadge">0</span></button>
         <div class="gapset">
           <span class="l">Time between gates</span>
           <button id="gapDn" aria-label="Less time between gates">−</button>
@@ -607,34 +636,34 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <label class="gapset lanepref" id="genRow"><span class="l">🎲 New sentences from Lena<small>Gemini writes a fresh set for every round; each sentence is grammar-checked</small></span><input type="checkbox" id="genNew"></label>
       </div>
       <div id="cafeBox" style="display:none">
-        <p class="cafe-lead">Pick your level and a topic. Lena will chat with you and slip in <b id="cafeFocusName">weil / dass</b> as often as she can.</p>
-        <div class="lvlpick" id="cafeLvl"><span>Level:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
+        <p class="cafe-lead">Wählen Sie Ihr Niveau und ein Thema. Lena spricht mit Ihnen und übt dabei: <b id="cafeFocusName">weil / dass</b>.<small class="en2">Pick your level and a topic. Lena chats with you and practises this grammar.</small></p>
+        <div class="lvlpick" id="cafeLvl"><span>Niveau:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
         <div class="topics" id="cafeTopics"></div>
       </div>
       <div id="writeBox" style="display:none">
-        <p class="cafe-lead">Writing practice for <b id="wrFocusName">weil / dass</b>: from typing single words to TELC-style letters.</p>
+        <p class="cafe-lead">Schreibtraining: <b id="wrFocusName">weil / dass</b> – von einzelnen Wörtern bis zu Briefen im telc-Stil.<small class="en2">Writing practice: from single words to telc-style letters.</small></p>
         <div class="levels">
-          <button class="btn blue" data-wl="l1"><span class="shape"></span><span><b>Level 1: Type the gap</b><small>The runner sentences, but you type the answer</small></span></button>
-          <button class="btn red" data-wl="l2"><span class="shape circle"></span><span><b>Level 2: Build the sentence</b><small>Write whole phrases and clauses yourself</small></span></button>
-          <button class="btn black" data-wl="dik"><span class="shape tri"></span><span><b>🎧 Diktat</b><small>Listen to Lena and write what you hear</small></span></button>
+          <button class="btn blue" data-wl="l1"><span class="shape"></span><span><b>Level 1: Lücke ergänzen</b><small>Die Sätze aus dem Spiel – Sie schreiben die Antwort<small class="en2">The runner sentences, but you type the answer</small></small></span></button>
+          <button class="btn red" data-wl="l2"><span class="shape circle"></span><span><b>Level 2: Satz bauen</b><small>Schreiben Sie ganze Satzteile und Sätze selbst<small class="en2">Write whole phrases and clauses yourself</small></small></span></button>
+          <button class="btn black" data-wl="dik"><span class="shape tri"></span><span><b>🎧 Diktat</b><small>Hören Sie Lena zu und schreiben Sie, was Sie hören<small class="en2">Listen to Lena and write what you hear</small></small></span></button>
         </div>
-        <h3>Level 3 · Free writing <small class="tr">Lena corrects with Gemini · type or write by hand</small></h3>
-        <div class="lvlpick" id="wLvl"><span>Level:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
-        <div class="wpick"><select id="wfTopic" aria-label="Topic"></select><button class="btn yellow center" id="wfStart">✍️ Start writing</button></div>
-        <h3>💬 Writing chat with Lena <small class="tr">every message you type gets corrected</small></h3>
-        <div class="wpick"><select id="wcTopic" aria-label="Chat topic"></select><button class="btn center" id="wcStart">💬 Start chat</button></div>
-        <h3>📝 TELC exam training · Schreiben</h3>
-        <div class="lvlpick" id="telcLvl"><span>Exam:</span><button data-tl="A2">telc A2</button><button data-tl="B1">telc B1</button></div>
+        <h3>Level 3 · Freies Schreiben <small class="tr">Lena korrigiert · tippen oder mit der Hand schreiben</small><small class="en2">Free writing: Lena corrects it · type or write by hand</small></h3>
+        <div class="lvlpick" id="wLvl"><span>Niveau:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
+        <div class="wpick"><select id="wfTopic" aria-label="Topic"></select><button class="btn yellow center" id="wfStart">✍️ Schreiben beginnen<small class="en2">Start writing</small></button></div>
+        <h3>💬 Schreib-Chat mit Lena <small class="tr">jede Nachricht wird korrigiert</small><small class="en2">Writing chat: every message you type gets corrected</small></h3>
+        <div class="wpick"><select id="wcTopic" aria-label="Chat topic"></select><button class="btn center" id="wcStart">💬 Chat starten<small class="en2">Start chat</small></button></div>
+        <h3>📝 telc-Prüfungstraining · Schreiben<small class="en2">telc exam training: writing</small></h3>
+        <div class="lvlpick" id="telcLvl"><span>Prüfung:</span><button data-tl="A2">telc A2</button><button data-tl="B1">telc B1</button></div>
         <div class="topics" id="telcTasks"></div>
-        <button class="btn center" id="telcGen" style="margin-top:10px">🎲 New TELC task made by Gemini</button>
+        <button class="btn center" id="telcGen" style="margin-top:10px">🎲 Neue telc-Aufgabe von Lena<small class="en2">New telc task from Lena</small></button>
         <p class="note">Practice tasks in the style of the telc exam, with a timer, word count and an assessment by the three telc criteria. A practice estimate, not an official result.</p>
       </div>
       <div class="guide" id="guide"></div>
       <div class="row2">
-        <button class="btn center" id="bWords">★ My words</button>
-        <button class="btn center" id="bProg">My progress</button>
+        <button class="btn center" id="bWords">★ Meine Wörter<small class="en2">My words</small></button>
+        <button class="btn center" id="bProg">Mein Fortschritt<small class="en2">My progress</small></button>
       </div>
-      <button class="btn center" id="bHist" style="margin-top:14px">📖 Past rounds</button>
+      <button class="btn center" id="bHist" style="margin-top:14px">📖 Frühere Runden<small class="en2">Past rounds</small></button>
       <div class="msg" id="menuMsg" role="status"></div>
     </div>
   </section>
@@ -646,8 +675,8 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <h2 id="iTitle">Neue Wörter</h2>
       <p class="lead" id="iLead">Three new words for this round. You'll meet them in the sentences you run through.</p>
       <div class="cards" id="iCards"></div>
-      <p class="note" id="iNote">Tap ★ to bookmark a word. Starred words come back in your daily review.</p>
-      <div class="row2"><button class="btn center" id="iBack">← Back</button><button class="btn red center" id="iGo">Los geht's!</button></div>
+      <p class="note" id="iNote">Tippen Sie auf ★, um ein Wort zu merken. Gemerkte Wörter kommen in der täglichen Wiederholung wieder.</p>
+      <div class="row2"><button class="btn center" id="iBack">← Zurück<small class="en2">Back</small></button><button class="btn red center" id="iGo">Los geht's!</button></div>
     </div>
   </section>
 
@@ -666,10 +695,10 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
     <div class="panel" style="max-width:420px">
       <button class="themebtn tcorner" type="button"></button>
       <h2>Pause</h2>
-      <p class="lead">Take a breath.</p>
+      <p class="lead">Kurz durchatmen.<small class="en2">Take a breath.</small></p>
       <div style="display:grid;gap:12px">
-        <button class="btn blue center" id="pGo">Resume</button>
-        <button class="btn center" id="pQuit">Quit to menu</button>
+        <button class="btn blue center" id="pGo">Weiter<small class="en2">Resume</small></button>
+        <button class="btn center" id="pQuit">Zum Menü<small class="en2">Quit to menu</small></button>
       </div>
     </div>
   </section>
@@ -681,11 +710,11 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <h2 id="eTitle">Runde vorbei!</h2>
       <div class="stats" id="eStats"></div>
       <div id="eUnlock"></div>
-      <h3 id="eListTitle">Your mistakes</h3>
+      <h3 id="eListTitle">Ihre Fehler<small class="en2">Your mistakes</small></h3>
       <div class="list" id="eList"></div>
       <div class="row2">
-        <button class="btn blue center" id="eAgain">Play again</button>
-        <button class="btn center" id="eMenu">Menu</button>
+        <button class="btn blue center" id="eAgain">Noch einmal<small class="en2">Play again</small></button>
+        <button class="btn center" id="eMenu">Menü<small class="en2">Menu</small></button>
       </div>
     </div>
   </section>
@@ -694,12 +723,12 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="words" class="screen dim">
     <div class="panel">
       <div class="ptop"><button class="tback" data-back="#wBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
-      <h2>My words</h2>
-      <p class="lead">The squares show how well you know each word. Five filled means mastered.</p>
-      <div class="tabs"><button data-tab="star" class="on">Starred</button><button data-tab="all">All seen</button></div>
+      <h2>Meine Wörter<small class="en2">My words</small></h2>
+      <p class="lead">Die Kästchen zeigen, wie gut Sie jedes Wort kennen. Fünf volle Kästchen = gelernt.<small class="en2">The squares show how well you know each word. Five filled = mastered. Long-press any word in the app to save it here.</small></p>
+      <div class="tabs"><button data-tab="star" class="on">Gemerkt<small class="en2">Starred</small></button><button data-tab="all">Alle gesehenen<small class="en2">All seen</small></button></div>
       <div class="wlv" id="wLevels" aria-label="Level"></div>
       <div class="wtiles" id="wTiles"></div>
-      <button class="btn blue center" id="wCards" style="width:100%;margin-bottom:12px">🃏 Flashcards</button>
+      <button class="btn blue center" id="wCards" style="width:100%;margin-bottom:12px">🃏 Karteikarten</button>
       <div class="list" id="wList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="wBack">Back to menu</button></div>
     </div>
@@ -750,7 +779,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <div class="cafe-input">
         <button id="cHelp" title="Hilfe: show me example answers">💡</button>
         <button id="cMic" aria-label="Hold to talk">🎤<small>hold</small></button>
-        <input id="cText" type="text" autocomplete="off" placeholder="Hold 🎤 and speak, or type here…">
+        <input id="cText" type="text" autocomplete="off" placeholder="🎤 gedrückt halten und sprechen – oder hier schreiben …">
         <button id="cSend" aria-label="Send">➤</button>
       </div>
       <div id="cStatus" class="cstatus" role="status"></div>
@@ -774,7 +803,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <div class="uml" data-target="wrInput"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
       <div class="winput">
         <input id="wrInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Schreib hier…">
-        <button class="btn blue center" id="wrCheck">Check</button>
+        <button class="btn blue center" id="wrCheck">Prüfen<small class="en2">Check</small></button>
       </div>
       <div id="wrFeedback" class="wfb"></div>
       <button class="btn center" id="wrNext" style="display:none">Weiter →</button>
@@ -791,7 +820,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <button class="themebtn" type="button"></button>
       </div>
       <div id="wfTask" class="wtask"></div>
-      <div class="tabs" id="wfMode"><button data-wm="type" class="on">⌨️ Type</button><button data-wm="hand">✍️ By hand</button></div>
+      <div class="tabs" id="wfMode"><button data-wm="type" class="on">⌨️ Tippen<small class="en2">Type</small></button><button data-wm="hand">✍️ Mit der Hand<small class="en2">By hand</small></button></div>
       <div id="wfTypeBox">
         <div class="uml" data-target="wfText"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
         <textarea id="wfText" rows="9" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Schreib deinen Text hier…"></textarea>
@@ -799,10 +828,10 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       </div>
       <div id="wfHandBox" style="display:none">
         <canvas id="wfCanvas" aria-label="Handwriting area"></canvas>
-        <div class="hbtns"><button class="btn center" id="wfUndo">↶ Undo</button><button class="btn center" id="wfClear">🗑 Clear</button></div>
-        <p class="note">Write with your finger or a stylus. Lena reads your handwriting with Gemini, then corrects it.</p>
+        <div class="hbtns"><button class="btn center" id="wfPen" aria-pressed="true">✏️ Stift<small class="en2">Pen</small></button><button class="btn center" id="wfErase" aria-pressed="false">🧽 Radierer<small class="en2">Eraser</small></button><button class="btn center" id="wfClear">🗑 Alles löschen<small class="en2">Clear</small></button></div>
+        <p class="note">Schreiben Sie mit dem Finger oder einem Stift. Radieren: 🧽 oder die Taste am Stift.<small class="en2">Write with your finger or a stylus. To erase: 🧽 or the button on your stylus. Lena reads your handwriting and corrects it.</small></p>
       </div>
-      <div class="row2"><button class="btn blue center" id="wfCheck">✔ Check with Lena</button><button class="btn center" id="wfNew">🎲 Another topic</button></div>
+      <div class="row2"><button class="btn blue center" id="wfCheck">✔ Von Lena prüfen lassen<small class="en2">Check with Lena</small></button><button class="btn center" id="wfNew">🎲 Anderes Thema<small class="en2">Another topic</small></button></div>
       <div id="wfStatus" class="cstatus" role="status"></div>
       <div id="wfResult"></div>
     </div>
@@ -824,8 +853,8 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="hist" class="screen dim">
     <div class="panel">
       <div class="ptop"><button class="tback" data-back="#hBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
-      <h2>Past rounds</h2>
-      <p class="lead">Tap a round or a café chat to see every question or message, your answers and the explanations. Tap 🗑 twice to delete one.</p>
+      <h2>Frühere Runden<small class="en2">Past rounds</small></h2>
+      <p class="lead">Tippen Sie auf eine Runde oder einen Chat: Sie sehen jede Frage, Ihre Antworten und die Erklärungen. Zweimal 🗑 = löschen.<small class="en2">Tap a round or a chat to see every question, your answers and the explanations. Tap 🗑 twice to delete it.</small></p>
       <div class="list" id="hList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="hBack">Back to menu</button></div>
     </div>
@@ -837,11 +866,11 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <p class="lead" id="hdSub"></p>
       <div class="hlist" id="hdList"></div>
       <div class="row2">
-        <button class="btn blue center" id="hdPlay">Practise this round again</button>
+        <button class="btn blue center" id="hdPlay">Diese Runde noch einmal üben<small class="en2">Practise this round again</small></button>
         <button class="btn center" id="hdBack">Back to rounds</button>
       </div>
       <div class="row2">
-        <button class="btn center" id="hdNew" style="display:none">New chat on this topic</button>
+        <button class="btn center" id="hdNew" style="display:none">Neuer Chat zu diesem Thema<small class="en2">New chat on this topic</small></button>
         <button class="btn center hdelbtn" id="hdDel">🗑 Delete</button>
       </div>
     </div>
@@ -851,7 +880,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="prog" class="screen dim">
     <div class="panel">
       <div class="ptop"><button class="tback" data-back="#pBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
-      <h2>My progress</h2>
+      <h2>Mein Fortschritt<small class="en2">My progress</small></h2>
       <div class="stats" id="pStats"></div>
       <div id="pBars"></div>
       <div class="tip" id="pTip"></div>
@@ -893,6 +922,13 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   </div>
 </div>
 
+<!-- FRAG LENA: small pop-up chat for questions (never saved) -->
+<button id="askFab" class="askfab" type="button" aria-label="Frag Lena · Ask Lena" hidden><span>💬</span><small>Frag Lena</small></button>
+<div id="askBox" class="askbox" role="dialog" aria-label="Frag Lena" hidden>
+  <div class="askhead"><b>💬 Frag Lena<small class="en2">Ask Lena about German</small></b><button id="askMin" type="button" aria-label="Minimise">–</button><button id="askEnd" type="button" aria-label="End and delete the chat">✕</button></div>
+  <div id="askChat" class="askchat"></div>
+  <div class="askin"><button id="askMic" type="button" aria-label="Speak">🎤</button><input id="askText" type="text" autocomplete="off" placeholder="Frage … / Ask … / கேள் …"><button id="askSend" type="button" aria-label="Send">➤</button></div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (async function () {
@@ -901,6 +937,14 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
 /* ================= helpers ================= */
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
+// instructions: German first, the English below in a smaller grey line (EN2 knows the fixed sentences)
+const EN2 = {};
+Object.assign(EN2, { 'Gesperrt: 6 von 8 richtig in Level 1':'Locked: get 6 of 8 in Level 1', 'Gesperrt: 6 von 8 richtig in Level 2':'Locked: get 6 of 8 in Level 2', 'Gesperrt: 4 von 6 richtig in Level 2':'Locked: get 4 of 6 in Level 2',
+  'Verb am Ende oder auf Position 2?':'Verb at the end, or in 2nd place?', 'Schneller, plus Fallen mit das/dass und weil/denn':'Faster, plus das/dass and weil/denn traps', 'Schneller, plus im/ins, am/an den, zum/zur':'Faster, plus im/ins, am/an den, zum/zur',
+  'Schneller, plus ohne Artikel: kalter Kaffee':'Faster, plus no article: kalter Kaffee', 'Schneller, plus weil / dass: …, weil ich aufstehe':'Faster, plus weil / dass: …, weil ich aufstehe', 'Schneller, plus Dativ Plural: mit den Kindern':'Faster, plus Dativ plural: mit den Kindern',
+  'muss nicht oder darf nicht?':'muss nicht or darf nicht?', 'Schneller, plus Nebensatz: …, weil ich arbeiten muss':'Faster, plus Nebensatz: …, weil ich arbeiten muss' });
+Object.assign(EN2, {"Präsens: Wird die Vorsilbe abgetrennt?":"Präsens: does the prefix split off?","Perfekt: Wo steht ge-, oder gibt es kein ge-?":"Perfekt: where does ge- go, or is there no ge-?","Nebensatz: Verb am Ende, in einem Wort":"Side clause: the verb at the end, in one piece","Welcher Plural ist richtig?":"Which plural is right?","Singular oder Plural? Achten Sie auf die Signalwörter.":"Singular or plural? Look at the clue words.","Dativ Plural: Braucht das Nomen ein -n?":"Dativ plural: does the noun need an extra -n?","Welche Form des Modalverbs ist richtig?":"Which form of the modal verb is right?","Welches Modalverb passt zur Bedeutung?":"Which modal verb fits the meaning?","Nebensatz: Welches Wort steht am Ende?":"Nebensatz: which word comes last?","Position 1 ist besetzt: Wo steht das Verb?":"Position 1 is taken: where does the verb go?","Fragewort + Verb + Subjekt – oder das Verb zuerst?":"Question word + verb + subject, or the verb first?","Nomen mit ein / ohne Artikel → kein, alles andere → nicht":"A noun with ein / no article → kein, everything else → nicht","Negative Frage + ja → doch":"A negative question + yes → doch","Wer macht es (Nominativ) – oder wen / was (Akkusativ)?":"Who does it (Nominativ), or whom / what (Akkusativ)?","Pronomen im Akkusativ: mich, dich, ihn …":"Akkusativ pronoun: mich, dich, ihn …","Wem? → Dativ: dem / der / den":"To whom? → Dativ: dem / der / den","Pronomen im Dativ: mir, dir, ihm …":"Dativ pronoun: mir, dir, ihm …","Welche Endung braucht der Possessivartikel?":"Which ending does the possessive need?","Bewegung oder Veränderung → sein, alles andere → haben":"Movement or change → sein, everything else → haben","Welches Partizip II ist richtig?":"Which participle is right?","Welches Reflexivpronomen passt zum Subjekt?":"Which reflexive pronoun fits the subject?","Gibt es noch ein Objekt? → mir / dir":"Is there another object? → mir / dir","Welche Komparativform ist richtig?":"Which comparative form is right?","Ungleich → als · gleich → wie":"Different → als · the same → wie","Welche Superlativform ist richtig?":"Which superlative form is right?","Präteritum von sein / haben / werden":"Past of sein / haben / werden","Präteritum des Modalverbs":"Past of the modal verb","Welche Präteritumform ist richtig?":"Which past form is right?","Höfliche Bitte: Welche Form passt zur Person?":"Polite request: which form fits the person?","Ratschlag: Welche Form ist richtig?":"Advice: which form is right?","Wunsch: würde + Infinitiv – oder wäre / hätte?":"Wish: würde + infinitive, or wäre / hätte?","Nicht real, nur vorgestellt → Konjunktiv II":"Not real, only imagined → Konjunktiv II","Welche Präposition gehört zu diesem Verb?":"Which preposition belongs to this verb?","Welchen Kasus braucht die Präposition?":"Which case does the preposition need?","Sache → da- / wo- · Person → auf wen?":"Thing → da- / wo- · person → auf wen?","zu + Infinitiv – oder nur der Infinitiv?":"zu + infinitive, or just the infinitive?","Gleiche Person → um … zu · neues Subjekt → damit":"Same person → um … zu · new subject → damit","ohne … zu oder statt … zu?":"without doing or instead of doing?","Welche Form von werden passt zum Subjekt?":"Which form of werden fits the subject?","werden + welches Partizip II?":"werden + which Partizip II?","Passiv im Präteritum: wurde oder wurden?":"Passiv in the past: wurde or wurden?","Was ist das Subjekt: die Person oder die Sache?":"What is the subject: the person or the thing?","entweder … oder – oder weder … noch?":"either … or, or neither … nor?","sowohl … als auch – oder nicht nur … sondern auch?":"both … and, or not only … but also?","je … desto: Welches Wort, und wo steht das Verb?":"je … desto: which word, and where is the verb?","zwar … aber":"admittedly … but","Futur: werden + Infinitiv":"Futur: werden + infinitive","Wessen? → Genitiv":"Whose? → Genitiv","Grund, Gegensatz oder gleiche Zeit?":"A reason, a contrast or the same time?","Welches Wort passt?":"Which word fits?","Was passt?":"Which one fits?","🔍 Ein Wort ist falsch. Laufen Sie durch das Tor mit diesem Wort.":"🔍 One word is wrong. Run through the gate with that word.","Laufen Sie durch das richtige Tor.":"Run through the right gate.","Vorsicht: eine typische Falle!":"Careful: a classic trap!","Welche Präposition passt zu diesem Kasus?":"Which preposition fits this case?","Wo? → Dativ · Wohin? → Akkusativ":"Where? → Dativ · Where to? → Akkusativ","Nach der/die/das: -e oder -en?":"After der/die/das: -e or -en?","Nach ein/kein/mein: Braucht das Adjektiv -er / -es?":"After ein/kein/mein: does the adjective need -er / -es?","Kein Artikel: Das Adjektiv zeigt den Kasus.":"No article: the adjective shows the case.","Tippen Sie auf ★, um ein Wort zu merken. Gemerkte Wörter kommen in der täglichen Wiederholung wieder.":"Tap ★ to bookmark a word. Starred words come back in your daily review. Tip: long-press any word to save it.","Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.":"Listen and write the whole sentence. Tap 🔊 to hear it again.","Schreiben Sie das Ende des Nebensatzes: Infinitiv + Modalverb.":"Type the end of the Nebensatz: infinitive + modal verb.","Schreiben Sie die richtige Form des Modalverbs.":"Type the right form of the modal verb.","Schreiben Sie den ganzen Satz: das Modalverb auf Position 2, der Infinitiv am Ende.":"Write the whole sentence: the modal verb in position 2, the infinitive at the end.","Schreiben Sie den Plural mit Artikel.":"Write the plural with its article.","Schreiben Sie den Dativ Plural: Braucht das Nomen ein -n?":"Type the Dativ plural: does the noun need an extra -n?","Schreiben Sie die Pluralform.":"Type the plural form.","Schreiben Sie das Partizip II: Wo steht ge-?":"Type the Partizip II: where does ge- go?","Schreiben Sie das Verb: am Ende des Nebensatzes, in einem Wort?":"Type the verb: at the end of the side clause, in one piece?","Schreiben Sie den ganzen Satz im Präsens. Wird die Vorsilbe abgetrennt?":"Write the whole sentence in the Präsens. Does the prefix split off?","Ergänzen Sie das fehlende Wort: das, dass, weil oder denn?":"Type the missing word: das, dass, weil or denn?","Schreiben Sie den Rest des Satzes mit diesen Wörtern. Wo steht das Verb?":"Write the rest of the sentence with these words. Where does the verb go?","Schreiben Sie das Adjektiv mit der richtigen Endung.":"Type the adjective with the right ending.","Ergänzen Sie die fehlende Präposition.":"Type the missing preposition.","Ergänzen Sie das fehlende Wort (Artikel oder Kurzform).":"Type the missing word (article or short form).","Schreiben Sie Artikel + Adjektiv + Nomen mit den richtigen Endungen.":"Write article + adjective + noun with the right endings.","Schreiben Sie die Präposition mit dem richtigen Artikel und dem Nomen.":"Write the preposition with the right article and the noun.","Schreiben Sie den ganzen Satz auf Deutsch mit diesen Wörtern.":"Write the whole German sentence with these words.","Im Diktat hören Sie die Sätze nur. Lesen Sie die Wörter jetzt.":"In the Diktat you only hear the sentences, so read the words now.","Zweite Runde: die Karten, die Sie noch nicht wussten":"Second round: the cards you didn’t know yet","Denken Sie an die Antwort und drehen Sie dann die Karte um.":"Think of the answer, then turn the card.","Lücke ergänzen":"Type the gap","Satz bauen":"Build the sentence","Freies Schreiben":"Free writing","Gesperrt: öffnet zusammen mit Level 3":"Locked: opens together with Level 3","Ein Wort ist falsch. Finden Sie es!":"One word is wrong. Find it!","Schneller, alles gemischt":"Faster, everything mixed","noch nicht geübt":"not tried yet"});
+const bi = (de, en) => { if (!de) return ''; de = String(de); if (de.includes('class="en2"')) return de; en = en || EN2[de]; return en ? `${de}<small class="en2">${en}</small>` : de; };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -1336,54 +1380,54 @@ function briefingHTML(q, fresh) {
   q = q.flatMap(x => x.type !== 'spot' ? [x] : x.src === 'w' ? [{ w:x.x }] : x.src === 't' ? [{ type:'trap', opts:x.x.o }] : x.src === 'v' ? [{ type:'verb', p:x.x, k:x.v }] : x.src === 'n' ? [{ type:'noun', p:x.x, k:x.v === 'dn' ? 'dn' : 'pf' }] : x.src === 'm' ? [{ type:'modal', p:x.x, k:x.v === 'ns' ? 'ns' : 'kj' }] : x.src === 'x' ? [{ type:'x', p:x.x }] : [{ type:x.src === 'p' ? 'prep' : 'adj', p:x.x }]);
   const preps = q.filter(x => x.type === 'prep').map(x => x.p), words = q.filter(x => x.w).map(x => x.w), traps = q.filter(x => x.type === 'trap');
   const adjs = q.filter(x => x.type === 'adj').map(x => x.p);
-  let h = spot ? '<div class="tip">🔍 <b>Spot the error:</b> every sentence has exactly one wrong word. The three gates show three words from the sentence. Run through the gate with the <b>wrong</b> word. Use the strip under the sentence to see the gate words early.</div>' : '';
+  let h = spot ? '<div class="tip">🔍 <b>Fehler finden:</b> In jedem Satz ist genau ein Wort falsch. Die drei Tore zeigen drei Wörter aus dem Satz. Laufen Sie durch das Tor mit dem <b>falschen</b> Wort. Die Leiste unter dem Satz zeigt die Tor-Wörter schon vorher.<small class="en2">Spot the error: every sentence has exactly one wrong word. The three gates show three words from the sentence; run through the gate with the wrong word.</small></div>' : '';
   const xs = q.filter(x => x.type === 'x').map(x => x.p);
   if (xs.length) h += xBriefing(xs, fresh);
   const modals = q.filter(x => x.type === 'modal');
   if (modals.length) {
     h += modalTipsHTML([...new Set(modals.map(x => x.k))]);
-    h += `<h3>Modal verbs</h3><div class="vgrid">${[...new Set(modals.map(x => x.p.mv))].map(modalCard).join('')}</div>`;
+    h += `<h3>Modalverben<small class="en2">Modal verbs</small></h3><div class="vgrid">${[...new Set(modals.map(x => x.p.mv))].map(modalCard).join('')}</div>`;
     const vs = [...new Map(modals.map(x => [x.p.inf, x.p])).values()];
-    h += `<h3>Verbs in the sentences</h3><div class="nlist">${vs.map(x => `<div><b>${esc(x.inf)}</b> <span class="tr">${esc(x.ie || '')} · ${esc(x.ita || '')}</span></div>`).join('')}</div>`;
+    h += `<h3>Verben in den Sätzen<small class="en2">Verbs in the sentences</small></h3><div class="nlist">${vs.map(x => `<div><b>${esc(x.inf)}</b> <span class="tr">${esc(x.ie || '')} · ${esc(x.ita || '')}</span></div>`).join('')}</div>`;
   }
   const nouns = q.filter(x => x.type === 'noun');
   if (nouns.length) {
     h += nounTipsHTML([...new Set(nouns.map(x => nRuleKey(x.p, x.k)))]);
-    h += `<h3>Nouns</h3><div class="vgrid">${[...new Set(nouns.map(x => x.p))].map(nounCard).join('')}</div>`;
+    h += `<h3>Nomen<small class="en2">Nouns</small></h3><div class="vgrid">${[...new Set(nouns.map(x => x.p))].map(nounCard).join('')}</div>`;
   }
   const verbs = q.filter(x => x.type === 'verb');
   if (verbs.length) {
     h += verbTipsHTML([...new Set(verbs.map(x => vRuleKey(x.p, x.k)))]);
-    h += `<h3>Verbs</h3><div class="vgrid">${[...new Set(verbs.map(x => x.p))].map(verbCard).join('')}</div>`;
+    h += `<h3>Verben<small class="en2">Verbs</small></h3><div class="vgrid">${[...new Set(verbs.map(x => x.p))].map(verbCard).join('')}</div>`;
   }
   if (adjs.length) {
     const kinds = ['weak', 'mixed', 'strong'].filter(k => adjs.some(x => x.k === k));
     h += `<div class="vgrid tips">${kinds.map(k => `<div class="vcard"><div class="big sm">${ADJ_TIPS[k][0]}</div><div class="mn">💡 ${ADJ_TIPS[k][1]}</div>${taMn(ADJ_TIPS[k][2])}</div>`).join('')}</div>`;
-    h += `<h3>Adjectives</h3><div class="vgrid">${[...new Set(adjs.map(x => x.adj))].map(k => { const [b, en, ta, mn, tmn] = ADJV[k]; return vcard(esc(b), esc(en), ta, esc(mn), '', tmn); }).join('')}</div>`;
+    h += `<h3>Adjektive<small class="en2">Adjectives</small></h3><div class="vgrid">${[...new Set(adjs.map(x => x.adj))].map(k => { const [b, en, ta, mn, tmn] = ADJV[k]; return vcard(esc(b), esc(en), ta, esc(mn), '', tmn); }).join('')}</div>`;
     const ns = [...new Set(adjs.map(x => x.n))].map(k => ANOUN[k]).filter(Boolean);
-    h += `<h3>Nouns (watch the gender!)</h3><div class="nlist">${ns.map(([de, en, ta]) => `<div>${wordHTML({ de })} <span class="tr">${esc(en)} · ${esc(ta)}</span></div>`).join('')}</div>`;
+    h += `<h3>Nomen (achten Sie auf das Genus!)<small class="en2">Nouns (watch the gender!)</small></h3><div class="nlist">${ns.map(([de, en, ta]) => `<div>${wordHTML({ de })} <span class="tr">${esc(en)} · ${esc(ta)}</span></div>`).join('')}</div>`;
   }
   if (preps.length) {
     const kinds = [...new Set(preps.map(p => p.pt === 'wech' ? 'wech' : p.cs))].sort();
     h += `<div class="vgrid tips">${kinds.map(k => `<div class="vcard tip-${k}"><div class="big sm">${TIPS[k][0]}</div><div class="mn">💡 ${TIPS[k][1]}</div>${taMn(TA_TIPS[k])}</div>`).join('')}</div>`;
     const prs = [...new Set(preps.map(p => p.pr))];
-    h += `<h3>Prepositions</h3><div class="vgrid">${prs.map(pr => { const [en, ta, mn, k] = PV[pr];
+    h += `<h3>Präpositionen<small class="en2">Prepositions</small></h3><div class="vgrid">${prs.map(pr => { const [en, ta, mn, k] = PV[pr];
       const tag = k === 'wech' ? '<span class="case wech">Dativ / Akk.</span>' : `<span class="case ${k}">${k === 'akk' ? 'Akkusativ' : 'Dativ'}</span>`;
       return vcard(esc(pr), esc(en), ta, esc(mn), tag, TA_P[pr]); }).join('')}</div>`;
     const cs = [...new Set(preps.map(p => p.a).filter(a => CONTR[a]))];
-    if (cs.length) h += `<h3>Short forms</h3><div class="vgrid">${cs.map(c => `<div class="vcard"><div class="big">${c}</div><div class="en">= ${CONTR[c]}</div></div>`).join('')}</div>`;
+    if (cs.length) h += `<h3>Kurzformen<small class="en2">Short forms</small></h3><div class="vgrid">${cs.map(c => `<div class="vcard"><div class="big">${c}</div><div class="en">= ${CONTR[c]}</div></div>`).join('')}</div>`;
     const ns = [...new Map(preps.filter(p => NOUN[p.id]).map(p => [NOUN[p.id][0], NOUN[p.id]])).values()];
-    if (ns.length) h += `<h3>Words in the sentences</h3><div class="nlist">${ns.map(([de, en, ta]) => `<div>${wordHTML({ de })} <span class="tr">${esc(en)} · ${esc(ta)}</span></div>`).join('')}</div>`;
+    if (ns.length) h += `<h3>Wörter in den Sätzen<small class="en2">Words in the sentences</small></h3><div class="nlist">${ns.map(([de, en, ta]) => `<div>${wordHTML({ de })} <span class="tr">${esc(en)} · ${esc(ta)}</span></div>`).join('')}</div>`;
   }
   if (traps.length) {
     const cj = [...new Set(traps.flatMap(t => t.opts))];
-    h += `<h3>Trap words</h3><div class="vgrid">${cj.map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`;
+    h += `<h3>Fallen<small class="en2">Trap words</small></h3><div class="vgrid">${cj.map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`;
   }
   if (words.length) {
     const cs = [...new Set(words.map(w => w.c))].filter(c => CONJ[c]);
-    h += `<h3>Connectors</h3><div class="vgrid">${cs.map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`;
+    h += `<h3>Konnektoren<small class="en2">Connectors</small></h3><div class="vgrid">${cs.map(c => vcard(`<span class="cj ${c}">${c}</span>`, esc(CONJ[c][0]), CONJ[c][1], esc(CONJ[c][2]), '', TA_C[c])).join('')}</div>`;
     const uniq = [...new Set(words)];
-    h += `<h3>${preps.length ? 'Nebensatz words' : 'Words in this round'}</h3><div class="cards">${uniq.map(w => { const [mn, ta] = VOC[w.id] || ['', ''];
+    h += `<h3>${preps.length ? 'Wörter im Nebensatz<small class="en2">Nebensatz words</small>' : 'Wörter in dieser Runde<small class="en2">Words in this round</small>'}</h3><div class="cards">${uniq.map(w => { const [mn, ta] = VOC[w.id] || ['', ''];
       return `<div class="wcard">
         <div><div class="de">${fresh.includes(w) ? '<span class="newtag">NEW</span> ' : wasMissed(w.id) ? '<span class="newtag again">↻ AGAIN</span> ' : ''}${wordHTML(w)}</div><div class="en">${esc(w.en)} · <span class="ta">${esc(ta)}</span></div></div>
         ${starBtn(w.id)}
@@ -1653,7 +1697,7 @@ function verbPrompt(x, k) {
   if (k === 'ns') return `${esc(x.nl)} ${esc(x.nm)} ${g}${x.p}${inf}`;
   return `${esc(x.a)} ${g} ${esc(x.m)}${x.p}${inf}`;
 }
-const VHINT = { pr:'Präsens: does the prefix split off?', pp:'Perfekt: where does ge- go, or is there no ge-?', ns:'Side clause: verb at the end, in one piece' };
+const VHINT = { pr:'Präsens: Wird die Vorsilbe abgetrennt?', pp:'Perfekt: Wo steht ge-, oder gibt es kein ge-?', ns:'Nebensatz: Verb am Ende, in einem Wort' };
 const VRULE = {
   sepPr:'<b>Separable</b> prefixes (ab, an, auf, aus, ein, mit, vor, weg, zu, zurück, fern…) <b>split off in a main clause</b>: the verb stands in <b>2nd place</b>, the prefix goes to the <b>very end</b>: Ich <b class="cj vsep">stehe</b> um 7 Uhr <b class="cj vsep">auf</b>.',
   insPr:'<b>be-, ver-, er-, ent-, emp-, ge-, zer-, miss-</b> are <b>inseparable</b>: they stay glued to the verb, in every tense: Ich <b class="cj vins">verstehe</b> die Frage.',
@@ -1765,7 +1809,7 @@ function nounPrompt(x, k) {
   const o = nounOpts(x, k), hint = k === 'ss' || k === 'sp' ? `${x.art} ${x.sg} – die ${x.pl}` : `${x.art} ${x.sg}`;
   return esc(o.q).replace('___', '<span class="gap">?</span>') + ` <span class="whint">(${esc(hint)})</span>`;
 }
-const NHINT = { pf:'Which plural is right?', ss:'Singular or plural? Look at the clues', sp:'Singular or plural? Look at the clues', dn:'Dativ plural: does it need an extra -n?' };
+const NHINT = { pf:'Welcher Plural ist richtig?', ss:'Singular oder Plural? Achten Sie auf die Signalwörter.', sp:'Singular oder Plural? Achten Sie auf die Signalwörter.', dn:'Dativ Plural: Braucht das Nomen ein -n?' };
 const NRULE = {
   e:'<b>+e</b>: many masculine (and some neuter) nouns, short ones often with an <b>umlaut</b>: der Tag → die Tag<b>e</b>, der Baum → die B<b>ä</b>um<b>e</b>, der Stuhl → die St<b>ü</b>hl<b>e</b>.',
   er:'<b>+er</b>: many short neuter nouns (and a few masculine), always with an <b>umlaut</b> when there is a, o, u: das Kind → die Kind<b>er</b>, das Haus → die H<b>ä</b>us<b>er</b>, der Mann → die M<b>ä</b>nn<b>er</b>.',
@@ -1871,7 +1915,7 @@ function modalPrompt(x, k) {
   const o = modalOpts(x, k), hint = k === 'bd' ? `“${x.t}”` : `(${x.mv})`;
   return esc(o.q).replace('___', '<span class="gap">?</span>') + ` <span class="whint">${esc(hint)}</span>`;
 }
-const MHINT = { kj:'Which form of the modal verb?', bd:'Which modal verb fits the meaning?', ns:'Nebensatz: which word comes last?' };
+const MHINT = { kj:'Welche Form des Modalverbs ist richtig?', bd:'Welches Modalverb passt zur Bedeutung?', ns:'Nebensatz: Welches Wort steht am Ende?' };
 const MRULE = {
   kj:'Modal verbs are irregular in the singular: <b>ich</b> and <b>er / sie / es</b> have the same form with <b>no ending</b> (ich kann, er kann, never "er kannt"), and most change their vowel (können → kann, müssen → muss, dürfen → darf, wollen → will). The plural is regular: wir können, ihr könnt, sie können.',
   bd:'Choose by meaning: <b>können</b> = ability or possibility, <b>müssen</b> = necessity, <b>dürfen</b> = permission, <b>wollen</b> = your own wish, <b>sollen</b> = someone else wants it, <b>möchten</b> = a polite wish. Careful: <b>nicht müssen</b> = don’t have to, <b>nicht dürfen</b> = must not.',
@@ -1898,7 +1942,7 @@ const XT = [
       fr:['Questions', 'W-question: question word, verb, subject (Wo wohnst du?). Yes / no question: the verb comes FIRST (Hast du Zeit?).', 'W-கேள்வி: கேள்விச்சொல் + வினை + எழுவாய். ஆம்/இல்லை கேள்வி: வினை முதலில்.'],
       ng:['nicht or kein?', 'kein replaces ein or "no article" in front of a noun (kein Auto, keine Zeit). Everything else is negated with nicht (nicht gut, nicht in Berlin, ich komme nicht).', 'ein அல்லது article இல்லாத பெயர்ச்சொல் → kein. மற்றவை எல்லாம் → nicht.'],
       do:['ja, nein or doch?', 'Answer a normal question with ja / nein. Answer a NEGATIVE question (nicht, kein) with doch when you mean yes.', 'எதிர்மறை கேள்விக்கு "ஆம்" சொல்ல doch; சாதாரண கேள்விக்கு ja.'] },
-    hint:{ v2:'Position 1 is taken: where does the verb go?', fr:'Question word + verb + subject, or the verb first', ng:'A noun with ein / no article → kein; everything else → nicht', do:'A negative question + yes → doch' },
+    hint:{ v2:'Position 1 ist besetzt: Wo steht das Verb?', fr:'Fragewort + Verb + Subjekt – oder das Verb zuerst?', ng:'Nomen mit ein / ohne Artikel → kein, alles andere → nicht', do:'Negative Frage + ja → doch' },
     lv:[{ t:'Verb auf Platz 2', s:'Heute gehe ich … · Wo wohnst du?', k:['v2', 'fr'] }, { t:'nicht oder kein?', s:'kein Auto · nicht heute · doch!', k:['ng', 'do'] }],
     err:'wordorder' },
   { tp:'ar', name:'Artikel & Fälle', short:'Fälle', icon:'🎯', cefr:'A1–A2', base:29,
@@ -1907,33 +1951,33 @@ const XT = [
       da:['Dativ articles', 'To whom? → Dativ: der / das → dem, die → der, plural die → den (+n). Verbs like helfen, danken, gefallen, gehören, schmecken always take the Dativ.', 'யாருக்கு? → Dativ: dem / der / den. helfen, danken, gefallen எப்போதும் Dativ.'],
       pd:['mir, dir, ihm …', 'Dativ pronouns: ich → mir, du → dir, er → ihm, sie → ihr, wir → uns, Sie → Ihnen.', 'Dativ: mir, dir, ihm, ihr, uns, Ihnen.'],
       po:['mein, sein, ihr …', 'Possessive articles take the endings of ein: meinen (Akk. masc.), meinem / meiner (Dativ). sein = his, ihr = her / their, Ihr = your (formal).', 'mein/sein/ihr → ein போல முடிவுகள். sein = அவனுடைய, ihr = அவளுடைய.'] },
-    hint:{ na:'Who does it (Nominativ) or whom / what (Akkusativ)?', pa:'Akkusativ pronoun: mich, dich, ihn …', da:'To whom? → Dativ: dem / der / den', pd:'Dativ pronoun: mir, dir, ihm …', po:'Which ending does the possessive need?' },
+    hint:{ na:'Wer macht es (Nominativ) – oder wen / was (Akkusativ)?', pa:'Pronomen im Akkusativ: mich, dich, ihn …', da:'Wem? → Dativ: dem / der / den', pd:'Pronomen im Dativ: mir, dir, ihm …', po:'Welche Endung braucht der Possessivartikel?' },
     lv:[{ t:'Nominativ oder Akkusativ?', s:'der Mann · den Mann · mich', k:['na', 'pa'] }, { t:'Der Dativ', s:'dem Mann · der Frau · mir', k:['da', 'pd'] }],
     boss:['na', 'pa', 'da', 'pd', 'po'], err:'case' },
   { tp:'pf', name:'Perfekt', short:'Perfekt', icon:'⏪', cefr:'A1–A2', base:33,
     kinds:{ hs:['haben or sein?', 'sein for a movement from A to B (gehen, fahren, fliegen), a change of state (aufstehen, einschlafen, werden) and for sein, bleiben, passieren. Everything else takes haben.', 'இடமாற்றம் / நிலைமாற்றம் → sein. மற்றவை எல்லாம் → haben.'],
       pp:['Partizip II', 'Regular: ge + stem + t (gespielt). Irregular: ge + … + en (gegessen, geschrieben). No ge- for verbs on -ieren (studiert) and with be-, ver-, er- … (verpasst). Separable verbs: ge in the middle (angerufen).', 'சாதாரண: ge…t; ஒழுங்கற்ற: ge…en; -ieren, ver-, be- → ge- இல்லை.'] },
-    hint:{ hs:'Movement or change → sein, everything else → haben', pp:'Which participle is right?' },
+    hint:{ hs:'Bewegung oder Veränderung → sein, alles andere → haben', pp:'Welches Partizip II ist richtig?' },
     lv:[{ t:'haben oder sein?', s:'ich bin gegangen · ich habe gegessen', k:['hs'] }, { t:'Das Partizip II', s:'gespielt · gegessen · studiert', k:['pp'] }],
     err:'perfekt' },
   { tp:'rv', name:'Reflexive Verben', short:'Reflexiv', icon:'🪞', cefr:'A2', base:37,
     kinds:{ ra:['mich, dich, sich …', 'Reflexive verbs point back to the subject: ich freue mich, du freust dich, er / sie freut sich, wir freuen uns, ihr freut euch, sie / Sie freuen sich.', 'தன்னையே குறிக்கும் வினை: ich → mich, du → dich, er/sie → sich.'],
       rd:['mir or mich?', 'If the sentence has ANOTHER object (die Hände, eine Jacke), the reflexive pronoun is Dativ: ich wasche mir die Hände, du ziehst dir eine Jacke an.', 'வேறு ஒரு பொருள் இருந்தால் Dativ: mir / dir.'] },
-    hint:{ ra:'Which reflexive pronoun fits the subject?', rd:'Is there another object? → mir / dir' },
+    hint:{ ra:'Welches Reflexivpronomen passt zum Subjekt?', rd:'Gibt es noch ein Objekt? → mir / dir' },
     lv:[{ t:'mich, dich, sich', s:'Ich freue mich · wir treffen uns', k:['ra'] }, { t:'mir oder mich?', s:'Ich wasche mir die Hände', k:['rd'] }],
     err:'reflexive' },
   { tp:'ks', name:'Komparativ & Superlativ', short:'Vergleich', icon:'📈', cefr:'A2', base:41,
     kinds:{ ko:['Komparativ: -er', 'Add -er: schnell → schneller. Short adjectives often get an umlaut: groß → größer, alt → älter. Irregular: gut → besser, viel → mehr, gern → lieber, hoch → höher. Never "mehr groß".', '-er சேர்: schneller. gut → besser, viel → mehr, gern → lieber.'],
       al:['als or wie?', 'Different: Komparativ + als (größer als). The same: so / genauso … wie (so groß wie).', 'வேறுபாடு → als; சமம் → so … wie.'],
       su:['Superlativ', 'am + -sten (am schnellsten, am besten) or der / die / das + -ste (der höchste Berg). Irregular: am besten, am liebsten, am meisten.', 'am …sten அல்லது der …ste. gut → am besten.'] },
-    hint:{ ko:'Which comparative form is right?', al:'Different → als · the same → wie', su:'Which superlative form is right?' },
+    hint:{ ko:'Welche Komparativform ist richtig?', al:'Ungleich → als · gleich → wie', su:'Welche Superlativform ist richtig?' },
     lv:[{ t:'Komparativ', s:'größer als · so groß wie', k:['ko', 'al'] }, { t:'Superlativ', s:'am größten · der größte Berg', k:['su'] }],
     err:'compare' },
   { tp:'pt', name:'Präteritum', short:'Präteritum', icon:'📜', cefr:'A2–B1', base:45,
     kinds:{ sh:['war, hatte, wurde', 'In speech, sein and haben use the Präteritum: ich war, du warst, er war, wir waren · ich hatte, du hattest, wir hatten. werden → wurde.', 'பேச்சிலும் sein/haben கடந்தகாலம்: war, hatte.'],
       mo:['konnte, musste …', 'Modal verbs in the past lose their umlaut and add -te: können → konnte, müssen → musste, dürfen → durfte, wollen → wollte, sollen → sollte.', 'Modal கடந்தகாலம்: umlaut இல்லை + te: konnte, musste.'],
       st:['Regular and irregular verbs', 'Regular: stem + te (spielte, wohnte, wartete). Irregular verbs change the vowel and have no ending for ich / er: ging, kam, schrieb, las. Mixed: brachte, dachte, wusste.', 'சாதாரண: -te; ஒழுங்கற்ற: உயிர் மாறும் (ging, kam).'] },
-    hint:{ sh:'Past of sein / haben / werden', mo:'Past of the modal verb', st:'Which past form is right?' },
+    hint:{ sh:'Präteritum von sein / haben / werden', mo:'Präteritum des Modalverbs', st:'Welche Präteritumform ist richtig?' },
     lv:[{ t:'war, hatte, konnte', s:'Gestern war ich krank · ich musste arbeiten', k:['sh', 'mo'] }, { t:'Erzählen im Präteritum', s:'ging · kam · spielte', k:['st'] }],
     err:'verbform' },
   { tp:'k2', name:'Konjunktiv II', short:'Konjunktiv II', icon:'💭', cefr:'B1', base:49,
@@ -1941,21 +1985,21 @@ const XT = [
       rt:['Advice', 'Advice: Du solltest … · An deiner Stelle würde ich … · Du könntest … · Es wäre besser, …', 'அறிவுரை: Du solltest … / An deiner Stelle würde ich …'],
       wu:['Wishes: würde, hätte, wäre', 'Most verbs: würde + infinitive at the end (Ich würde gern reisen). But sein → wäre, haben → hätte (Ich wäre gern reich, ich hätte gern Zeit).', 'ஆசை: würde + infinitive; sein → wäre, haben → hätte.'],
       wf:['Unreal wenn-sentences', 'Not real, only imagined: Konjunktiv II in BOTH parts. Wenn ich Zeit hätte, würde ich kommen.', 'கற்பனை நிபந்தனை: இரண்டு பகுதியிலும் Konjunktiv II.'] },
-    hint:{ hf:'Polite request: which form fits the person?', rt:'Advice: which form is right?', wu:'Wish: würde + infinitive, or wäre / hätte?', wf:'Imagined, not real → Konjunktiv II' },
+    hint:{ hf:'Höfliche Bitte: Welche Form passt zur Person?', rt:'Ratschlag: Welche Form ist richtig?', wu:'Wunsch: würde + Infinitiv – oder wäre / hätte?', wf:'Nicht real, nur vorgestellt → Konjunktiv II' },
     lv:[{ t:'Höflich & Ratschläge', s:'Könnten Sie …? · Du solltest …', k:['hf', 'rt'] }, { t:'Wünsche & Träume', s:'Wenn ich Zeit hätte, würde ich …', k:['wu', 'wf'] }],
     err:'konj2' },
   { tp:'vp', name:'Verben mit Präpositionen', short:'Verb + Präp.', icon:'🧲', cefr:'B1', base:53,
     kinds:{ pr:['Which preposition?', 'Many verbs come with a fixed preposition. Learn them as one block: warten auf, denken an, sich freuen auf, sich interessieren für, Angst haben vor, teilnehmen an, sich kümmern um.', 'வினை + நிலையான முன்னிடைச்சொல்லை ஒன்றாகக் கற்றுக்கொள்: warten auf.'],
       ca:['Which case?', 'The preposition decides the case: auf, an, über with these verbs usually take the Akkusativ (warten auf den Bus); von, mit, vor, nach, bei, zu take the Dativ (Angst vor dem Hund).', 'auf/an/über → பொதுவாக Akkusativ; von/mit/vor → Dativ.'],
       da:['darauf, worauf, auf wen?', 'For things: da + preposition (darauf, dafür), questions with wo + preposition (worauf, wofür); an r goes in before a vowel (da-r-auf, wo-r-an). For people: preposition + wen / wem (Auf wen wartest du?).', 'பொருள் → darauf / worauf; மனிதர் → auf wen?'] },
-    hint:{ pr:'Which preposition belongs to this verb?', ca:'Which case does the preposition need?', da:'Thing → da- / wo- · person → auf wen?' },
+    hint:{ pr:'Welche Präposition gehört zu diesem Verb?', ca:'Welchen Kasus braucht die Präposition?', da:'Sache → da- / wo- · Person → auf wen?' },
     lv:[{ t:'Welche Präposition?', s:'warten auf · denken an · Angst vor', k:['pr'] }, { t:'Welcher Kasus?', s:'auf den Bus · vor dem Hund', k:['ca'] }],
     boss:['pr', 'ca', 'da'], err:'prep' },
   { tp:'zu', name:'zu-Infinitiv, um … zu, damit', short:'zu + Infinitiv', icon:'🎯', cefr:'B1', base:57,
     kinds:{ zi:['With or without zu?', 'After expressions like Lust haben, Zeit haben, vergessen, versuchen, anfangen, es ist wichtig: zu + infinitive at the end. After modal verbs (kann, muss, möchte): NO zu. Separable verbs: zu goes in the middle (aufzustehen).', 'Lust haben, vergessen … → zu; modal வினைக்குப் பின் zu இல்லை.'],
       ud:['um … zu or damit?', 'Purpose. Same person, no new subject: um … zu + infinitive. A new subject with its own verb: damit + Nebensatz (verb at the end).', 'ஒரே நபர் → um … zu; வேறு எழுவாய் → damit.'],
       ow:['ohne … zu, statt … zu', 'ohne … zu = without doing; statt … zu = instead of doing. Both with the infinitive at the end.', 'ohne … zu = செய்யாமல்; statt … zu = பதிலாக.'] },
-    hint:{ zi:'zu + infinitive, or just the infinitive?', ud:'Same person → um … zu · new subject → damit', ow:'without / instead of doing …' },
+    hint:{ zi:'zu + Infinitiv – oder nur der Infinitiv?', ud:'Gleiche Person → um … zu · neues Subjekt → damit', ow:'ohne … zu oder statt … zu?' },
     lv:[{ t:'Mit oder ohne zu?', s:'Lust zu gehen · ich kann gehen', k:['zi'] }, { t:'um … zu oder damit?', s:'um zu arbeiten · damit du verstehst', k:['ud', 'ow'] }],
     err:'infinitive' },
   { tp:'pa', name:'Passiv', short:'Passiv', icon:'🏗️', cefr:'B1', base:61,
@@ -1963,7 +2007,7 @@ const XT = [
       pp:['The Partizip II', 'The second part is always the Partizip II at the end: wird gesprochen, wird repariert (-ieren: no ge-).', 'கடைசியில் Partizip II: gesprochen, repariert.'],
       pr:['Past: wurde', 'Passiv in the past: wurde / wurden + Partizip II (Das Haus wurde 1900 gebaut).', 'கடந்தகால Passiv: wurde + Partizip II.'],
       ak:['Aktiv or Passiv?', 'Aktiv: the person who does it is the subject (Die Chefin hat den Brief geschrieben). Passiv: the thing is the subject; the person can come with von (Der Brief wurde von der Chefin geschrieben).', 'செய்பவர் எழுவாய் → Aktiv; பொருள் எழுவாய் → Passiv (von …).'] },
-    hint:{ wd:'Which form of werden fits the subject?', pp:'werden + which Partizip II?', pr:'Passiv in the past: wurde or wurden?', ak:'Who is the subject: the person or the thing?' },
+    hint:{ wd:'Welche Form von werden passt zum Subjekt?', pp:'werden + welches Partizip II?', pr:'Passiv im Präteritum: wurde oder wurden?', ak:'Was ist das Subjekt: die Person oder die Sache?' },
     lv:[{ t:'Passiv Präsens', s:'wird gebaut · werden gekocht', k:['wd', 'pp'] }, { t:'Präteritum & Aktiv', s:'wurde gebaut · hat gebaut', k:['pr', 'ak'] }],
     err:'passive' },
   { tp:'zk', name:'Zweiteilige Konnektoren', short:'Konnektoren', icon:'🔀', cefr:'B1', base:65,
@@ -1971,14 +2015,14 @@ const XT = [
       sa:['sowohl … als auch · nicht nur … sondern auch', 'sowohl … als auch = both … and. nicht nur … sondern auch = not only … but also.', 'sowohl … als auch = இரண்டும்; nicht nur … sondern auch = மட்டுமல்ல … கூட.'],
       jd:['je … desto', 'je + comparative + verb at the END, desto + comparative + verb + subject: Je mehr ich lerne, desto besser spreche ich.', 'je … (வினை கடைசி), desto … (வினை உடனே).'],
       za:['zwar … aber', 'zwar … aber = admittedly … but: Das Hotel ist zwar teuer, aber schön.', 'zwar … aber = ஆனாலும்.'] },
-    hint:{ eo:'Either … or, or neither … nor?', sa:'Both … and, or not only … but also?', jd:'je … desto: which word, and where is the verb?', za:'zwar … aber' },
+    hint:{ eo:'entweder … oder – oder weder … noch?', sa:'sowohl … als auch – oder nicht nur … sondern auch?', jd:'je … desto: Welches Wort, und wo steht das Verb?', za:'zwar … aber' },
     lv:[{ t:'entweder, weder, sowohl', s:'entweder … oder · sowohl … als auch', k:['eo', 'sa'] }, { t:'je … desto · zwar … aber', s:'Je mehr, desto besser', k:['jd', 'za'] }],
     err:'conj' },
   { tp:'fg', name:'Futur & Genitiv', short:'Futur & Genitiv', icon:'🔮', cefr:'B1', base:69,
     kinds:{ fu:['Futur I', 'werden + infinitive at the end: Ich werde dich anrufen. Forms: ich werde, du wirst, er wird, wir werden, ihr werdet.', 'werden + infinitive கடைசியில்: Ich werde kommen.'],
       ge:['Genitiv: des / der', 'Whose? → Genitiv: masculine / neuter des + noun + (e)s (des Vaters, des Hauses); feminine and plural der (der Lehrerin, der Kinder). mein → meines / meiner.', 'யாருடைய? → des …s / der.'],
       wt:['wegen, trotz, während', 'wegen = because of, trotz = despite, während = during. In written German all three take the Genitiv (wegen des Regens).', 'wegen = காரணமாக, trotz = இருந்தும், während = போது.'] },
-    hint:{ fu:'Futur: werden + infinitive', ge:'Whose? → Genitiv', wt:'because of, despite or during?' },
+    hint:{ fu:'Futur: werden + Infinitiv', ge:'Wessen? → Genitiv', wt:'Grund, Gegensatz oder gleiche Zeit?' },
     lv:[{ t:'Futur I', s:'Ich werde dich anrufen', k:['fu'] }, { t:'Der Genitiv', s:'das Auto des Vaters · wegen des Regens', k:['ge', 'wt'] }],
     err:'case' }
 ];
@@ -2718,18 +2762,18 @@ const HOR = [
 ];
 // Sprechen: the three parts of the oral exam, with phrases to learn and role-plays with Lena (Sprach-Café)
 const SPR = [
-  { id:'sp1', part:'Teil 1 · Kontaktaufnahme', icon:'👋', lead:'You and your partner get to know each other: name, where you come from, where you live, family, work, languages, hobbies. Ask questions too, it is a conversation!',
+  { id:'sp1', part:'Teil 1 · Kontaktaufnahme', icon:'👋', lead:'Sie und Ihr Partner lernen sich kennen: Name, Herkunft, Wohnort, Familie, Beruf, Sprachen, Hobbys. Stellen Sie auch Fragen – es ist ein Gespräch!',
     phrases:[['Ich heiße … und komme aus …', 'My name is … and I come from …'], ['Ich wohne seit drei Jahren in …', 'I’ve been living in … for three years.'], ['Woher kommst du?', 'Where are you from?'], ['Was machst du beruflich?', 'What do you do for a living?'],
       ['Wie lange lernst du schon Deutsch?', 'How long have you been learning German?'], ['Was machst du gern in deiner Freizeit?', 'What do you like doing in your free time?'], ['Das ist ja interessant! Erzähl mal mehr.', 'That’s interesting! Tell me more.'], ['Kannst du das bitte wiederholen?', 'Can you repeat that, please?']],
     talks:[['sp1', '👋', 'Teil 1: Kontaktaufnahme', 'Getting to know each other', 'telc B1 oral exam, part 1 (Kontaktaufnahme). You are the exam partner: introduce yourself briefly, then ask the learner about name, origin, home town, family, work or school, languages, hobbies and plans. React to the answers and share small details about yourself, like a real partner. Ask follow-up questions (Warum? Seit wann? Wie findest du das?).']] },
-  { id:'sp2', part:'Teil 2 · Gespräch über ein Thema', icon:'💬', lead:'You read a short text about a topic. Tell your partner what it is about, talk about your own experience and your opinion, then react to your partner.',
+  { id:'sp2', part:'Teil 2 · Gespräch über ein Thema', icon:'💬', lead:'Sie lesen einen kurzen Text zu einem Thema. Erzählen Sie Ihrem Partner, worum es geht, berichten Sie von Ihren Erfahrungen und sagen Sie Ihre Meinung. Reagieren Sie auf Ihren Partner.',
     phrases:[['In meinem Text geht es um …', 'My text is about …'], ['Der Text sagt, dass …', 'The text says that …'], ['Ich habe die Erfahrung gemacht, dass …', 'In my experience …'], ['In meinem Heimatland ist das anders: …', 'In my home country it’s different: …'],
       ['Meiner Meinung nach …', 'In my opinion …'], ['Ich finde es gut / nicht so gut, dass …', 'I think it’s good / not so good that …'], ['Da stimme ich dir zu.', 'I agree with you.'], ['Da bin ich anderer Meinung, weil …', 'I see it differently, because …']],
     talks:[['sp2_home', '💻', 'Teil 2: Arbeiten im Homeoffice', 'Talking about a topic', 'telc B1 oral exam, part 2 (Gespräch über ein Thema). Topic: working from home (Homeoffice). Start by giving the learner a short "text" of 3 sentences, e.g. "Immer mehr Menschen arbeiten von zu Hause. Sie sparen Zeit, weil sie nicht ins Büro fahren müssen. Aber manche fühlen sich allein." Ask the learner to say what the text is about, then about their experience and opinion. Give your own opinion too and ask questions.'],
       ['sp2_handy', '📱', 'Teil 2: Kinder und Handys', 'Talking about a topic', 'telc B1 oral exam, part 2 (Gespräch über ein Thema). Topic: children and smartphones. Start with a short "text" of 3 sentences, e.g. "Viele Kinder haben schon mit neun Jahren ein eigenes Smartphone. Eltern können sie so immer erreichen. Ärzte warnen aber: Kinder sitzen zu viel vor dem Bildschirm." Ask the learner to report what the text says, then about experiences in their home country and their opinion.'],
       ['sp2_stadt', '🏙️', 'Teil 2: Stadt oder Land?', 'Talking about a topic', 'telc B1 oral exam, part 2 (Gespräch über ein Thema). Topic: living in the city or in the countryside. Start with a short "text" of 3 sentences about young families moving out of expensive cities to the countryside. Ask the learner to report the text, then about their experience and opinion.'],
       ['sp2_essen', '🥗', 'Teil 2: Gesund essen', 'Talking about a topic', 'telc B1 oral exam, part 2 (Gespräch über ein Thema). Topic: healthy food and cooking. Start with a short "text" of 3 sentences saying that many people hardly cook themselves any more and often eat fast food. Ask the learner to report the text, then about their eating habits, their home country and their opinion.']] },
-  { id:'sp3', part:'Teil 3 · Gemeinsam etwas planen', icon:'🗓️', lead:'You and your partner plan something together: make suggestions, react to your partner’s ideas, agree on the details (when, where, who does what).',
+  { id:'sp3', part:'Teil 3 · Gemeinsam etwas planen', icon:'🗓️', lead:'Sie planen zusammen mit Ihrem Partner etwas: Machen Sie Vorschläge, reagieren Sie auf die Ideen Ihres Partners und einigen Sie sich (wann, wo, wer macht was).',
     phrases:[['Wie wäre es, wenn wir …?', 'How about if we …?'], ['Ich schlage vor, dass …', 'I suggest that …'], ['Was hältst du davon?', 'What do you think about that?'], ['Das ist eine gute Idee!', 'That’s a good idea!'],
       ['Ich weiß nicht, ich finde …', 'I’m not sure, I think …'], ['Lass uns doch lieber …', 'Let’s rather …'], ['Wer kümmert sich um …?', 'Who takes care of …?'], ['Gut, dann machen wir es so: …', 'OK, let’s do it like this: …']],
     talks:[['sp3_feier', '🎂', 'Teil 3: Geburtstagsfeier planen', 'Planning together', 'telc B1 oral exam, part 3 (Gemeinsam etwas planen). Task: a colleague has her birthday soon; plan a small party together. Points to agree on: when, where, food and drinks, a present, who invites the others. Make your own suggestions, sometimes disagree politely, and agree on each point step by step.'],
@@ -3011,6 +3055,7 @@ function fixedSVG(p, [kind, a, b]) {
 }
 function picSVG(p, k) {
   if (!p) return '';
+  if (p.cw) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(p.en || p.de)}">${cwSVG(p)}</svg>`;
   if (p.xt) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(p.t)}">${xSVG(p)}</svg>`;
   if (p.mo) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(modalTr(p, k || 'kj'))}">${modalSVG(p, k || 'kj')}</svg>`;
   if (p.pn) return `<svg class="pic" viewBox="0 0 320 190" role="img" aria-label="${esc(nounTr(p, k || 'pf'))}">${nounSVG(p, k || 'pf')}</svg>`;
@@ -3335,8 +3380,8 @@ function startLevel(l, customQ) {
   const ruleHTML = pendingRule ? rule.cards.map(([h, body, ex, pic]) => `
       <div class="wcard"><div><div class="de">${h}</div></div><div class="ex">${body}<div class="tr" style="margin-top:6px">${ex}</div>${pic.includes('~') ? picSVG(BYID[pic.split('~')[0]], pic.split('~')[1]) : picSVG(BYID[pic])}</div></div>`).join('') : '';
   $('#iTitle').textContent = pendingRule ? rule.title : 'Vor der Runde';
-  $('#iLead').textContent = pendingRule ? rule.lead : `Here's the vocabulary for this round, with a memory trick for each.${pendingFresh.length ? ` ${pendingFresh.length} new word${pendingFresh.length > 1 ? 's' : ''} today.` : ''}`;
-  $('#iNote').textContent = 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
+  $('#iLead').innerHTML = pendingRule ? esc(rule.lead) : bi(`Die Wörter für diese Runde, jeweils mit einer Eselsbrücke.${pendingFresh.length ? ` Heute neu: ${pendingFresh.length}.` : ''}`, `The words for this round, each with a memory trick.${pendingFresh.length ? ` New today: ${pendingFresh.length}.` : ''}`);
+  $('#iNote').innerHTML = bi('Tippen Sie auf ★, um ein Wort zu merken. Gemerkte Wörter kommen in der täglichen Wiederholung wieder.');
   $('#iCards').innerHTML = ruleHTML + briefingHTML(pendingQueue, pendingFresh);
   introOpen();
   const tok = ++genTok, go = $('#iGo'); go.disabled = false; go.textContent = "Los geht's!"; pendingLena = false;
@@ -3409,7 +3454,7 @@ function renderPrompt() {
   const q = G.q; let html = '', hint = '';
   if (q.type === 'spot') {
     html = esc(q.before + q.err + q.after);
-    hint = '🔍 One word is wrong. Run through the gate with that word';
+    hint = '🔍 Ein Wort ist falsch. Laufen Sie durch das Tor mit diesem Wort.';
   } else if (q.type === 'modal') {
     html = modalPrompt(q.p, q.k); hint = MHINT[q.k];
   } else if (q.type === 'noun') {
@@ -3420,25 +3465,25 @@ function renderPrompt() {
     html = xPrompt(q.p); hint = xHint(q.p);
   } else if (q.type === 'gate') {
     const w = q.w; html = `${esc(w.m)}, <span class="gap">?</span> ${esc(w.b.join(' '))}${w.p || '.'}`;
-    hint = 'Run through the right gate';
+    hint = 'Laufen Sie durch das richtige Tor.';
   } else if (q.type === 'trap') {
     html = esc(q.t.q).replace('___', '<span class="gap">?</span>');
-    hint = 'Careful, this one is a classic trap';
+    hint = 'Vorsicht: eine typische Falle!';
   } else if (q.type === 'prep') {
     const p = q.p;
     html = esc(p.q).replace('___', '<span class="gap">?</span>');
-    hint = p.o.includes(p.pr) ? 'Which preposition fits this case?' : p.pt === 'wech' ? 'Wo? → Dativ · Wohin? → Akkusativ' : `Which case does ${p.pr} take?`;
+    hint = p.o.includes(p.pr) ? 'Welche Präposition passt zu diesem Kasus?' : p.pt === 'wech' ? 'Wo? → Dativ · Wohin? → Akkusativ' : bi(`Welchen Kasus hat „${p.pr}“?`, `Which case does ${p.pr} take?`);
   } else if (q.type === 'adj') {
     const x = q.p;
     html = esc(x.q).replace('___', '<span class="gap">?</span>');
-    hint = { weak:'After der/die/das: -e or -en?', mixed:'After ein/kein/mein: does the adjective need -er / -es?', strong:'No article: the adjective shows the case' }[x.k];
+    hint = { weak:'Nach der/die/das: -e oder -en?', mixed:'Nach ein/kein/mein: Braucht das Adjektiv -er / -es?', strong:'Kein Artikel: Das Adjektiv zeigt den Kasus.' }[x.k];
   } else {
     const w = q.w;
     const slots = w.b.map((b, i) => i < q.built.length ? `<span class="slot fill ${q.builtOk[i] ? '' : 'bad'}">${esc(q.built[i])}</span>` : '<span class="slot">&nbsp;</span>').join(' ');
     html = `${esc(w.m)}, <b class="cj ${w.c}">${w.c}</b> ${slots}${w.p || '.'}`;
-    hint = 'Collect the words in the right order · ' + (cjSub(w.c) ? 'Nebensatz: verb last' : w.c === 'deshalb' ? 'after deshalb: verb first' : 'Hauptsatz: verb in 2nd place');
+    hint = bi('Sammeln Sie die Wörter in der richtigen Reihenfolge · ' + (cjSub(w.c) ? 'Nebensatz: Verb am Ende' : w.c === 'deshalb' ? 'nach deshalb: zuerst das Verb' : 'Hauptsatz: Verb auf Position 2'), 'Collect the words in the right order · ' + (cjSub(w.c) ? 'Nebensatz: verb last' : w.c === 'deshalb' ? 'after deshalb: verb first' : 'Hauptsatz: verb in 2nd place'));
   }
-  $('#qText').innerHTML = html; $('#qHint').textContent = (q.retry ? '↻ Again — you missed this one. ' : '') + hint;
+  $('#qText').innerHTML = html; $('#qHint').innerHTML = (q.retry ? '↻ Noch einmal! ' : '') + bi(hint);
   $('#qCount').textContent = `${G.qi + 1} of ${G.queue.length}`;
 }
 
@@ -3630,6 +3675,7 @@ function endRound() {
 function show(id) {
   $$('.screen').forEach(s => s.classList.toggle('show', s.id === id));
   if (id === 'menu') renderMenu();
+  askVis();
 }
 function renderMenu() {
   const n = currentStreak();
@@ -3639,19 +3685,19 @@ function renderMenu() {
     const b = $(`[data-level="${l}"]`), locked = isLocked(l);
     b.classList.toggle('locked', locked); b.setAttribute('aria-disabled', locked);
   });
-  $('#l2s').textContent = S.unlocked >= 2 ? 'Verb at the end, or in 2nd place?' : 'Locked: get 6 of 8 in Level 1';
-  $('#l3s').textContent = S.unlocked >= 3 ? 'Faster, plus das/dass and weil/denn traps' : 'Locked: get 4 of 6 in Level 2';
-  $('#l5s').textContent = S.unlockedP >= 2 ? 'Wechselpräpositionen' : 'Locked: get 6 of 8 in Level 1';
-  $('#l6s').textContent = S.unlockedP >= 3 ? 'Faster, plus im/ins, am/an den, zum/zur' : 'Locked: get 6 of 8 in Level 2';
-  $('#l8s').textContent = (S.unlockedA || 1) >= 2 ? 'ein alter Mann · ein neues Auto' : 'Locked: get 6 of 8 in Level 1';
-  $('#l9s').textContent = (S.unlockedA || 1) >= 3 ? 'Faster, plus no article: kalter Kaffee' : 'Locked: get 6 of 8 in Level 2';
-  $('#l14s').textContent = (S.unlockedT || 1) >= 2 ? 'aufgestanden · verstanden' : 'Locked: get 6 of 8 in Level 1';
-  $('#l15s').textContent = (S.unlockedT || 1) >= 3 ? 'Faster, plus weil / dass: …, weil ich aufstehe' : 'Locked: get 6 of 8 in Level 2';
-  $('#l18s').textContent = (S.unlockedN || 1) >= 2 ? 'ein Kind · zwei Kinder' : 'Locked: get 6 of 8 in Level 1';
-  $('#l19s').textContent = (S.unlockedN || 1) >= 3 ? 'Faster, plus Dativ plural: mit den Kindern' : 'Locked: get 6 of 8 in Level 2';
-  $('#l22s').textContent = (S.unlockedM || 1) >= 2 ? 'muss nicht or darf nicht?' : 'Locked: get 6 of 8 in Level 1';
-  $('#l23s').textContent = (S.unlockedM || 1) >= 3 ? 'Faster, plus Nebensatz: …, weil ich arbeiten muss' : 'Locked: get 6 of 8 in Level 2';
-  [10, 11, 12, 16, 20, 24].forEach(l => { $('#l' + l + 's').textContent = isLocked(l) ? 'Locked: opens together with Level 3' : 'One word is wrong. Run through it!'; });
+  $('#l2s').innerHTML = bi(S.unlocked >= 2 ? 'Verb am Ende oder auf Position 2?' : 'Gesperrt: 6 von 8 richtig in Level 1');
+  $('#l3s').innerHTML = bi(S.unlocked >= 3 ? 'Schneller, plus Fallen mit das/dass und weil/denn' : 'Gesperrt: 4 von 6 richtig in Level 2');
+  $('#l5s').innerHTML = bi(S.unlockedP >= 2 ? 'Wechselpräpositionen' : 'Gesperrt: 6 von 8 richtig in Level 1');
+  $('#l6s').innerHTML = bi(S.unlockedP >= 3 ? 'Schneller, plus im/ins, am/an den, zum/zur' : 'Gesperrt: 6 von 8 richtig in Level 2');
+  $('#l8s').innerHTML = bi((S.unlockedA || 1) >= 2 ? 'ein alter Mann · ein neues Auto' : 'Gesperrt: 6 von 8 richtig in Level 1');
+  $('#l9s').innerHTML = bi((S.unlockedA || 1) >= 3 ? 'Schneller, plus ohne Artikel: kalter Kaffee' : 'Gesperrt: 6 von 8 richtig in Level 2');
+  $('#l14s').innerHTML = bi((S.unlockedT || 1) >= 2 ? 'aufgestanden · verstanden' : 'Gesperrt: 6 von 8 richtig in Level 1');
+  $('#l15s').innerHTML = bi((S.unlockedT || 1) >= 3 ? 'Schneller, plus weil / dass: …, weil ich aufstehe' : 'Gesperrt: 6 von 8 richtig in Level 2');
+  $('#l18s').innerHTML = bi((S.unlockedN || 1) >= 2 ? 'ein Kind · zwei Kinder' : 'Gesperrt: 6 von 8 richtig in Level 1');
+  $('#l19s').innerHTML = bi((S.unlockedN || 1) >= 3 ? 'Schneller, plus Dativ Plural: mit den Kindern' : 'Gesperrt: 6 von 8 richtig in Level 2');
+  $('#l22s').innerHTML = bi((S.unlockedM || 1) >= 2 ? 'muss nicht oder darf nicht?' : 'Gesperrt: 6 von 8 richtig in Level 1');
+  $('#l23s').innerHTML = bi((S.unlockedM || 1) >= 3 ? 'Schneller, plus Nebensatz: …, weil ich arbeiten muss' : 'Gesperrt: 6 von 8 richtig in Level 2');
+  [10, 11, 12, 16, 20, 24].forEach(l => { $('#l' + l + 's').innerHTML = bi(isLocked(l) ? 'Gesperrt: öffnet zusammen mit Level 3' : 'Ein Wort ist falsch. Finden Sie es!'); });
   const tab = renderTopicNav(), exam = tab === 'EX', here = !exam && topicTab(S.topic) === tab;
   const tp = topicKey();
   $('#lvWd').style.display = tp === 'wd' ? '' : 'none';
@@ -4160,7 +4206,7 @@ function openCafe(topicId, focus, lvl, write, resume) {
   $('#cFocus').textContent = `${C.write ? 'Writing chat · ' : ''}${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
   $('#cMic').style.display = C.write ? 'none' : '';
   $('#cUml').style.display = C.write ? '' : 'none';
-  $('#cText').placeholder = C.write ? 'Schreib auf Deutsch… Lena checks spelling too' : 'Hold 🎤 and speak, or type here…';
+  $('#cText').placeholder = C.write ? 'Schreiben Sie auf Deutsch … Lena prüft auch die Rechtschreibung.' : '🎤 gedrückt halten und sprechen – oder hier schreiben …';
   ['autocorrect', 'autocapitalize'].forEach(a => C.write ? $('#cText').setAttribute(a, 'off') : $('#cText').removeAttribute(a));
   $('#cText').spellcheck = !C.write;
   if (!$('#lena svg')) $('#lena').innerHTML = LENA_SVG;
@@ -4556,7 +4602,7 @@ function guideHTML(topic) {
   if (!guideCache[topic]) {
     const g = GUIDE[topic];
     // "flat" rules are one page to read (Adjektive); the others fold out section by section
-    guideCache[topic] = `<h3>📖 Rules: ${g.name}</h3><p class="note">Read before you play. ${g.flat ? 'The tables move to show where the endings come from.' : 'Tap a section to open it; the pictures move to show the rule.'}</p>`
+    guideCache[topic] = `<h3>📖 Regeln: ${g.name}<small class="en2">Rules</small></h3><p class="note">Lesen Sie die Regeln vor dem Spielen. ${g.flat ? 'Die Tabellen bewegen sich und zeigen, woher die Endungen kommen.' : 'Tippen Sie auf einen Abschnitt; die Bilder bewegen sich und zeigen die Regel.'}<small class="en2">Read before you play. ${g.flat ? 'The tables move to show where the endings come from.' : 'Tap a section to open it; the pictures move to show the rule.'}</small></p>`
       + g.sections().map(([t, h], i) => g.flat ? `<div class="gflat"><h4>${t}</h4><div class="gb">${h}</div></div>` : `<details${i ? '' : ' open'}><summary>${t}</summary><div class="gb">${h}</div></details>`).join('');
   }
   return guideCache[topic];
@@ -4591,7 +4637,7 @@ const ERR_INFO = { // category: [label, tip, Tamil tip]
   other:['Other', 'Read the correction and say the sentence out loud once.', 'திருத்தத்தை படித்து ஒருமுறை சத்தமாக சொல்.']
 };
 const ERR_CATS = Object.keys(ERR_INFO);
-const WLV = { l1:'Type the gap', l2:'Build the sentence', dik:'Diktat', free:'Free writing', telc:'TELC Schreiben' };
+const WLV = { l1:'Lücke ergänzen', l2:'Satz bauen', dik:'Diktat', free:'Freies Schreiben', telc:'telc Schreiben' };
 function logErr(cat) { S.werr = S.werr || {}; const c = ERR_INFO[cat] ? cat : 'other'; S.werr[c] = (S.werr[c] || 0) + 1; }
 const wst = k => { S.wstats = S.wstats || {}; return (S.wstats[k] = S.wstats[k] || { c:0, t:0 }); };
 const errTag = cat => cat && ERR_INFO[cat] ? `<span class="ecat">${ERR_INFO[cat][0]}</span>` : '';
@@ -4656,45 +4702,45 @@ function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap
   const gap = h => h.replace('___', '<span class="gap">?</span>');
   if (kind === 'm') {
     it.full = modalPlain(src, vk === 'ns' ? 'ns' : 'kj');
-    if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; }
-    else if (lv === 'l1') { it.prompt = modalPrompt(src, vk || 'kj'); it.answer = modalOpts(src, vk || 'kj').ans; it.hint = vk === 'ns' ? 'Type the end of the Nebensatz: infinitive + modal verb.' : 'Type the right form of the modal verb.'; }
-    else { it.prompt = `<span class="gap">…</span> <span class="whint">(${esc(src.mv)})</span>`; it.chips = shuffle([src.a, src.mv, src.m, src.inf]); it.answer = it.full; it.atStart = true; it.hint = 'Write the whole sentence: the modal verb in position 2, the infinitive at the end.'; }
+    if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.'; }
+    else if (lv === 'l1') { it.prompt = modalPrompt(src, vk || 'kj'); it.answer = modalOpts(src, vk || 'kj').ans; it.hint = vk === 'ns' ? 'Schreiben Sie das Ende des Nebensatzes: Infinitiv + Modalverb.' : 'Schreiben Sie die richtige Form des Modalverbs.'; }
+    else { it.prompt = `<span class="gap">…</span> <span class="whint">(${esc(src.mv)})</span>`; it.chips = shuffle([src.a, src.mv, src.m, src.inf]); it.answer = it.full; it.atStart = true; it.hint = 'Schreiben Sie den ganzen Satz: das Modalverb auf Position 2, der Infinitiv am Ende.'; }
     return it;
   }
   if (kind === 'n') {
-    if (lv === 'l2') { it.full = `die ${src.pl}`; it.answer = it.full; it.prompt = `${wordHTML({ de:`${src.art} ${src.sg}` })} → <span class="gap">…</span> <span class="whint">(plural with its article)</span>`; it.hint = 'Write the plural with its article.'; }
+    if (lv === 'l2') { it.full = `die ${src.pl}`; it.answer = it.full; it.prompt = `${wordHTML({ de:`${src.art} ${src.sg}` })} → <span class="gap">…</span> <span class="whint">(Plural mit Artikel)</span>`; it.hint = 'Schreiben Sie den Plural mit Artikel.'; }
     else {
       it.full = nounPlain(src, vk || 'pf');
-      if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; }
-      else { it.prompt = nounPrompt(src, vk || 'pf'); it.answer = nounOpts(src, vk || 'pf').ans; it.hint = vk === 'dn' ? 'Type the Dativ plural: does it need an extra -n?' : 'Type the plural form.'; }
+      if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.'; }
+      else { it.prompt = nounPrompt(src, vk || 'pf'); it.answer = nounOpts(src, vk || 'pf').ans; it.hint = vk === 'dn' ? 'Schreiben Sie den Dativ Plural: Braucht das Nomen ein -n?' : 'Schreiben Sie die Pluralform.'; }
     }
     return it;
   }
   if (kind === 'v') {
     it.full = verbPlain(src, vk);
-    if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; }
-    else if (lv === 'l1') { it.prompt = verbPrompt(src, vk); it.answer = verbOpts(src, vk).ans; it.hint = vk === 'pp' ? 'Type the Perfekt form (Partizip II): where does ge- go?' : 'Type the verb: at the end of a side clause, in one piece?'; }
-    else { it.prompt = `Präsens: <span class="gap">…</span> <span class="whint">(${esc(src.inf)})</span>`; it.chips = shuffle([src.a, src.inf, src.m]); it.answer = it.full; it.atStart = true; it.hint = 'Write the whole sentence in the Präsens. Does the prefix split off?'; }
+    if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.'; }
+    else if (lv === 'l1') { it.prompt = verbPrompt(src, vk); it.answer = verbOpts(src, vk).ans; it.hint = vk === 'pp' ? 'Schreiben Sie das Partizip II: Wo steht ge-?' : 'Schreiben Sie das Verb: am Ende des Nebensatzes, in einem Wort?'; }
+    else { it.prompt = `Präsens: <span class="gap">…</span> <span class="whint">(${esc(src.inf)})</span>`; it.chips = shuffle([src.a, src.inf, src.m]); it.answer = it.full; it.atStart = true; it.hint = 'Schreiben Sie den ganzen Satz im Präsens. Wird die Vorsilbe abgetrennt?'; }
     return it;
   }
   it.full = kind === 'w' ? fullW(src) : kind === 't' ? src.q.replace('___', src.a) : fillGap(src);
-  if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; return it; }
-  if (kind === 't') { it.prompt = gap(esc(src.q)); it.answer = src.a; it.hint = 'Type the missing word: das, dass, weil or denn?'; return it; }
+  if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.'; return it; }
+  if (kind === 't') { it.prompt = gap(esc(src.q)); it.answer = src.a; it.hint = 'Ergänzen Sie das fehlende Wort: das, dass, weil oder denn?'; return it; }
   if (kind === 'w') {
-    if (lv === 'l1') { it.prompt = `${esc(src.m)}, <span class="gap">?</span> ${esc(src.b.join(' '))}${src.p || '.'}`; it.answer = src.c; it.hint = `Type the missing word: ${(src.o || ['weil', 'dass']).join(' or ')}?`; }
-    else { it.prompt = `${esc(src.m)}, <span class="gap">…</span>${src.p || '.'}`; it.chips = shuffle([src.c, ...src.b]); it.answer = `${src.c} ${src.b.join(' ')}`; it.hint = 'Write the rest of the sentence with these words. Where does the verb go?'; }
+    if (lv === 'l1') { it.prompt = `${esc(src.m)}, <span class="gap">?</span> ${esc(src.b.join(' '))}${src.p || '.'}`; it.answer = src.c; it.hint = bi(`Ergänzen Sie das fehlende Wort: ${(src.o || ['weil', 'dass']).join(' oder ')}?`, `Type the missing word: ${(src.o || ['weil', 'dass']).join(' or ')}?`); }
+    else { it.prompt = `${esc(src.m)}, <span class="gap">…</span>${src.p || '.'}`; it.chips = shuffle([src.c, ...src.b]); it.answer = `${src.c} ${src.b.join(' ')}`; it.hint = 'Schreiben Sie den Rest des Satzes mit diesen Wörtern. Wo steht das Verb?'; }
     return it;
   }
   if (lv === 'l1') {
     it.prompt = gap(esc(src.q)) + (kind === 'a' ? ` <span class="whint">(${esc(ADJV[src.adj][0])})</span>` : '');
     it.answer = src.a; it.atStart = src.q.startsWith('___');
-    it.hint = kind === 'a' ? 'Type the adjective with the right ending.' : src.o.includes(src.pr) ? 'Type the missing preposition.' : 'Type the missing word (article or short form).';
+    it.hint = kind === 'a' ? 'Schreiben Sie das Adjektiv mit der richtigen Endung.' : src.o.includes(src.pr) ? 'Ergänzen Sie die fehlende Präposition.' : 'Ergänzen Sie das fehlende Wort (Artikel oder Kurzform).';
     return it;
   }
   const ph = kind === 'a' ? adjPhrase(src) : prepPhrase(src);
   it.answer = ph.text; it.atStart = it.full.startsWith(ph.text);
   it.prompt = esc(it.full.replace(ph.text, '___')).replace('___', '<span class="gap">…</span>') + ` <span class="whint">(${esc(ph.hint)})</span>`;
-  it.hint = kind === 'a' ? 'Write article + adjective + noun with the right endings.' : 'Write the preposition with the right article and the noun.';
+  it.hint = kind === 'a' ? 'Schreiben Sie Artikel + Adjektiv + Nomen mit den richtigen Endungen.' : 'Schreiben Sie die Präposition mit dem richtigen Artikel und dem Nomen.';
   return it;
 }
 function writeQueue(lv, topic) {
@@ -4753,8 +4799,8 @@ function startWriting(lv, items) {
   items = items || writeQueue(lv, topic);
   pendingWrite = { lv, topic, items };
   $('#iTitle').textContent = 'Vor dem Schreiben';
-  $('#iLead').textContent = `${WLV[lv]} · here are the words and memory tricks for these ${items.length} sentences.`;
-  $('#iNote').textContent = lv === 'dik' ? 'In the Diktat you only hear the sentences, so read the words now.' : 'Tap ★ to bookmark a word. Starred words come back in your daily review.';
+  $('#iLead').innerHTML = bi(`${WLV[lv]} · die Wörter und Eselsbrücken für diese ${items.length} Sätze.`, `${EN2[WLV[lv]] || WLV[lv]} · the words and memory tricks for these ${items.length} sentences.`);
+  $('#iNote').innerHTML = bi(lv === 'dik' ? 'Im Diktat hören Sie die Sätze nur. Lesen Sie die Wörter jetzt.' : 'Tippen Sie auf ★, um ein Wort zu merken. Gemerkte Wörter kommen in der täglichen Wiederholung wieder.');
   $('#iCards').innerHTML = briefingHTML(items.map(asQ), []);
   introOpen();
 }
@@ -4768,7 +4814,7 @@ function renderWriteItem() {
   $('#wrTitle').textContent = `✍️ ${WLV[WR.lv]}`;
   $('#wrSub').textContent = GUIDE[WR.topic].name;
   $('#wrCount').textContent = `${WR.i + 1} / ${WR.items.length}`;
-  $('#wrPrompt').innerHTML = (it.retry ? '<div class="whint again">↻ Again: you missed this one.</div>' : '') + `<div class="whead">${it.hint}</div>`
+  $('#wrPrompt').innerHTML = (it.retry ? '<div class="whint again">↻ Noch einmal: Das war vorher falsch.<small class="en2">Again: you missed this one.</small></div>' : '') + `<div class="whead">${bi(it.hint)}</div>`
     + (it.prompt ? `<div class="wq">${it.prompt}</div>` : '') + (it.chips ? `<div class="chips">${it.chips.map(c => `<span>${esc(c)}</span>`).join('')}</div>` : '');
   $('#wrTools').style.display = WR.lv === 'dik' ? '' : 'none';
   $('#wrSlow').setAttribute('aria-pressed', WR.slow);
@@ -4794,7 +4840,7 @@ function checkWrite() {
   $('#wrFeedback').innerHTML = head + (r.st === 'ok' ? '' : `<div class="wlbl">Your answer → the correct one:</div>${wordDiff(typed, it.answer)}${DIFF_LEGEND}`)
     + (cat && ERR_INFO[cat] && !ok ? `<div class="tip">💡 ${ERR_INFO[cat][1]}${taMn(ERR_INFO[cat][2])}</div>` : '') + explainHTML(it, !ok);
   $('#wrCheck').style.display = 'none'; $('#wrNext').style.display = '';
-  $('#wrNext').textContent = WR.i + 1 < WR.items.length ? 'Weiter →' : 'Finish';
+  $('#wrNext').textContent = WR.i + 1 < WR.items.length ? 'Weiter →' : 'Fertig · Finish';
   save(); setTimeout(() => $('#wrNext').focus(), 30);
 }
 function nextWrite() {
@@ -5385,7 +5431,8 @@ async function newFreeTask() {
 }
 
 // ---- handwriting: draw with finger / stylus, Gemini reads the image ----
-const HW = { strokes:[], cur:null, w:0, h:0, dpr:1 };
+const HW = { strokes:[], cur:null, w:0, h:0, dpr:1, erase:false, erasing:false };
+const HW_R = 14;   // eraser radius in px
 function hwSetup() {
   const cv = $('#wfCanvas'), w = Math.max(280, cv.parentElement.clientWidth), h = 380, dpr = Math.min(2, window.devicePixelRatio || 1);
   if (HW.w !== w) { HW.w = w; HW.h = h; HW.dpr = dpr; cv.width = w * dpr; cv.height = h * dpr; cv.style.width = w + 'px'; cv.style.height = h + 'px'; }
@@ -5403,14 +5450,34 @@ function hwDraw() {
 function hwImage() { hwDraw(); return $('#wfCanvas').toDataURL('image/png').split(',')[1]; }
 function hwInit() {
   const cv = $('#wfCanvas'), pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-  cv.addEventListener('pointerdown', e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {} HW.cur = [pos(e)]; HW.strokes.push(HW.cur); hwDraw(); });
+  // the stylus button (barrel button = 2, eraser end = 32) erases while pressed
+  const penErase = e => e.pointerType === 'pen' && ((e.buttons & 2) || (e.buttons & 32) || e.button === 5);
+  // erasing cuts strokes apart where the eraser touches them, so you can remove one word in the middle of a page
+  const eraseAt = ([x, y]) => {
+    const out = []; let hit = false;
+    for (const st of HW.strokes) {
+      let part = [];
+      for (const p of st) { if (Math.hypot(p[0] - x, p[1] - y) <= HW_R) { hit = true; if (part.length) out.push(part); part = []; } else part.push(p); }
+      if (part.length) out.push(part);
+    }
+    if (hit) { HW.strokes = out; hwDraw(); const g = cv.getContext('2d'); g.strokeStyle = '#8F9BA5'; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, HW_R, 0, 7); g.stroke(); g.strokeStyle = '#1E2A38'; g.lineWidth = 2.6; }
+  };
+  cv.addEventListener('contextmenu', e => e.preventDefault());
+  cv.addEventListener('pointerdown', e => {
+    e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {}
+    if (HW.erase || penErase(e)) { HW.erasing = true; HW.cur = null; eraseAt(pos(e)); return; }
+    HW.cur = [pos(e)]; HW.strokes.push(HW.cur); hwDraw();
+  });
   cv.addEventListener('pointermove', e => {
+    if (HW.erasing || (penErase(e) && e.buttons)) { HW.erasing = true; HW.cur = null; eraseAt(pos(e)); return; }
     if (!HW.cur) return; const p = pos(e), q = HW.cur[HW.cur.length - 1]; HW.cur.push(p);
     const g = cv.getContext('2d'); g.beginPath(); g.moveTo(q[0], q[1]); g.lineTo(p[0], p[1]); g.stroke();
   });
-  const end = () => { HW.cur = null; };
+  const end = () => { HW.cur = null; if (HW.erasing) { HW.erasing = false; HW.strokes = HW.strokes.filter(s => s.length); hwDraw(); } };
+  const tool = er => { HW.erase = er; $('#wfPen').setAttribute('aria-pressed', !er); $('#wfErase').setAttribute('aria-pressed', er); cv.classList.toggle('erasing', er); };
+  $('#wfPen').addEventListener('click', () => tool(false));
+  $('#wfErase').addEventListener('click', () => tool(true));
   cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end); cv.addEventListener('lostpointercapture', end);
-  $('#wfUndo').addEventListener('click', () => { HW.strokes.pop(); hwDraw(); });
   $('#wfClear').addEventListener('click', () => { HW.strokes = []; hwDraw(); });
   window.addEventListener('resize', () => { if (WF && WF.mode === 'hand') { HW.w = 0; hwSetup(); } });
 }
@@ -5445,14 +5512,14 @@ function writeHistHTML(h) {
 
 function writeProgHTML() {
   const ws = S.wstats || {}, pct = s => s && s.t ? Math.round(100 * s.c / s.t) : 0;
-  const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s && s.t ? pct(s) + '% of ' + s.t : 'not tried yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
+  const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s && s.t ? pct(s) + '% of ' + s.t : 'noch nicht geübt'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
   const errs = Object.entries(S.werr || {}).filter(([c, n]) => n && ERR_INFO[c]).sort((x, y) => y[1] - x[1]).slice(0, 6);
   return '<h3>✍️ Writing</h3>' + bar('Type the gap', ws.l1, 'var(--blue)') + bar('Build the sentence', ws.l2, 'var(--red)') + bar('Diktat', ws.dik, 'var(--yellow)')
     + bar('Free writing (texts without mistakes)', ws.free, 'var(--blue)') + bar('TELC tasks (texts without mistakes)', ws.telc, 'var(--red)') + bar('Writing chat (correct messages)', ws.chat, 'var(--yellow)')
     + (errs.length ? `<h3>Your typical writing mistakes</h3>${errs.map(([c, n]) => `<div class="wmis"><b>${ERR_INFO[c][0]}</b> × ${n}<div class="tr">${ERR_INFO[c][1]}</div>${taMn(ERR_INFO[c][2])}</div>`).join('')}` : '');
 }
 /* ---- past rounds ---- */
-const LEVEL_NAME = { 1:'Nebensätze · Level 1', 2:'Nebensätze · Level 2', 3:'Nebensätze · Boss mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss mix', 13:'Trennbare Verben · Level 1', 14:'Trennbare Verben · Perfekt', 15:'Trennbare Verben · Boss mix', 16:'Trennbare Verben · Spot the error', 17:'Singular / Plural · Level 1', 18:'Singular / Plural · Level 2', 19:'Singular / Plural · Boss mix', 20:'Singular / Plural · Spot the error', 21:'Modalverben · Level 1', 22:'Modalverben · Level 2', 23:'Modalverben · Boss mix', 24:'Modalverben · Spot the error', 10:'Nebensätze · Spot the error', 11:'Präpositionen · Spot the error', 12:'Adjektive · Spot the error', 0:'Review / practice' };
+const LEVEL_NAME = { 1:'Nebensätze · Level 1', 2:'Nebensätze · Level 2', 3:'Nebensätze · Boss-Mix', 4:'Präpositionen · Level 1', 5:'Präpositionen · Level 2', 6:'Präpositionen · Boss-Mix', 7:'Adjektive · Level 1', 8:'Adjektive · Level 2', 9:'Adjektive · Boss-Mix', 13:'Trennbare Verben · Level 1', 14:'Trennbare Verben · Perfekt', 15:'Trennbare Verben · Boss-Mix', 16:'Trennbare Verben · Fehler finden', 17:'Singular / Plural · Level 1', 18:'Singular / Plural · Level 2', 19:'Singular / Plural · Boss-Mix', 20:'Singular / Plural · Fehler finden', 21:'Modalverben · Level 1', 22:'Modalverben · Level 2', 23:'Modalverben · Boss-Mix', 24:'Modalverben · Fehler finden', 10:'Nebensätze · Fehler finden', 11:'Präpositionen · Fehler finden', 12:'Adjektive · Fehler finden', 0:'Review / practice' };
 const when = t => new Date(t).toLocaleString(undefined, { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
 const gapQ = h => h.replace('___', '<span class="gap">?</span>');
 function histItem(e, k) {
@@ -5594,7 +5661,7 @@ function practiseHist() {
 let wTab = 'star', wTopic = 'all';   // wTopic: 'all' or one topic key (see the level tabs + tiles below)
 // topics in the same (CEFR) order as the tabs on the menu
 // Lena's words join the topic of the chat they came from (exam talks: the telc Wortschatz)
-const WTOPICS = [...TOPICS.map(([k]) => [k, topicInfo(k).name, () => [...topicInfo(k).pool(), ...cwList().filter(w => cwTopic(w) === k)], topicInfo(k).icon]), ['wz', 'Wortschatz (telc)', () => [...WZ, ...cwList().filter(w => cwTopic(w) === 'wz')], '🗂️']];
+const WTOPICS = [...TOPICS.map(([k]) => [k, topicInfo(k).name, () => [...topicInfo(k).pool(), ...cwList().filter(w => cwTopic(w) === k)], topicInfo(k).icon]), ['wz', 'Wortschatz (telc)', () => [...WZ, ...cwList().filter(w => cwTopic(w) === 'wz')], '🗂️'], ['exam', 'Prüfung (telc B1)', () => cwList().filter(w => cwTopic(w) === 'exam'), '🗣️']];
 const wordItemHTML = w => w.cw ? cwItemHTML(w) : w.xt ? xItemHTML(w) : w.mo ? modalItemHTML(w) : w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
@@ -5616,7 +5683,7 @@ function renderProg() {
     <div class="stat"><b>${mastered}</b><span>Words mastered</span></div>
     <div class="stat"><b>${Object.keys(S.bm).length}</b><span>Starred</span></div>`;
   const bar = (label, s, col) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${s.t ? pct(s) + '% of ' + s.t : 'not played yet'}</span></div><div class="trk"><div class="fil" style="width:${pct(s)}%;background:${col}"></div></div></div>`;
-  $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('wenn, obwohl, ob, relative clauses, denn, aber, deshalb', st.cj2 || { c:0, t:0 }, 'var(--good)') + bar('das/dass and weil/denn traps', st.trap, 'var(--yellow)')
+  $('#pBars').innerHTML = bar('weil sentences', st.weil, 'var(--blue)') + bar('dass sentences', st.dass, 'var(--red)') + bar('wenn, obwohl, ob, relative clauses, denn, aber, deshalb', st.cj2 || { c:0, t:0 }, 'var(--good)') + bar('Fallen mit das/dass und weil/denn', st.trap, 'var(--yellow)')
     + bar('Prepositions with a fixed case', st.pfix, 'var(--blue)') + bar('Wechselpräpositionen (wo/wohin)', st.pwech, 'var(--red)')
     + bar('Adjectives after der/die/das', st.aweak, 'var(--blue)') + bar('Adjectives after ein/kein/mein', st.amixed, 'var(--yellow)') + bar('Adjectives without article', st.astrong, 'var(--red)') + bar('Modal verbs: forms', st.mkj || { c:0, t:0 }, 'var(--blue)') + bar('Modal verbs: meaning', st.mbd || { c:0, t:0 }, 'var(--yellow)') + bar('Modal verbs in a Nebensatz', st.mns || { c:0, t:0 }, 'var(--red)')
     + bar('Plural forms', st.npf || { c:0, t:0 }, 'var(--blue)') + bar('Singular or plural?', st.nsp || { c:0, t:0 }, 'var(--yellow)') + bar('Dativ plural (-n)', st.ndn || { c:0, t:0 }, 'var(--red)')
@@ -5648,7 +5715,7 @@ const xTip = x => x.xt === 'wz' ? ['', ''] : [(xTopicOf(x).kinds[x.k] || [])[1],
 const xHTML = x => esc(x.q).replace('___', `<b class="cj xc${xKindIdx(x) % 5}">${esc(x.a)}</b>`);
 const xPrompt = x => esc(x.q).replace('___', '<span class="gap">?</span>');
 const xPlain = x => x.q.replace('___', x.a);
-const xHint = x => x.xt === 'wz' ? 'Which word fits?' : (xTopicOf(x).hint[x.k] || 'Which one fits?');
+const xHint = x => x.xt === 'wz' ? 'Welches Wort passt?' : (xTopicOf(x).hint[x.k] || 'Was passt?');
 const xQ = x => ({ type:'x', p:x, opts:x.o, ans:x.a });
 const xWhy = x => `<b>${esc(x.why || '')}</b>`;
 const xItemHTML = x => `<div class="item"><div><div class="s">${xHTML(x)} ${dotsHTML(x.id)}</div><div class="tr">${esc(x.t)}</div><div class="w">${esc(x.why || '')}</div>${x.w && x.xt !== 'wz' ? `<div class="tr">💡 ${esc(x.w)}</div>` : ''}${picSVG(x)}</div>${starBtn(x.id)}</div>`;
@@ -5666,7 +5733,7 @@ function xLockMsg(l) {
 function xLevelName(l) {
   const v = XLV[l]; if (!v) return '';
   if (v.wz) return `Wortschatz · ${v.name}`;
-  return `${v.d.name} · ${v.n === 3 ? 'Boss mix' : v.n === 4 ? 'Spot the error' : v.d.lv[v.n - 1].t}`;
+  return `${v.d.name} · ${v.n === 3 ? 'Boss-Mix' : v.n === 4 ? 'Fehler finden' : v.d.lv[v.n - 1].t}`;
 }
 const xSpeed = l => { const v = XLV[l]; return !v || v.wz ? 12 : [12, 12, 15, 11.5][v.n - 1]; };
 // Spot the error needs at least two other words from the sentence for the other gates
@@ -5694,8 +5761,8 @@ function xBriefing(items, fresh) {
   let h = xTipsHTML(items);
   const words = [...new Set(items.map(x => x.w).filter(Boolean))];
   if (items.some(x => x.xt === 'wz')) {
-    h += `<h3>Words in this round</h3><div class="cards">${[...new Set(items)].map(x => `<div class="wcard"><div><div class="de">${fresh.includes(x) ? '<span class="newtag">NEW</span> ' : wasMissed(x.id) ? '<span class="newtag again">↻ AGAIN</span> ' : ''}${x.e} ${wordHTML({ de:(x.w || '').split(' = ')[0] })}</div><div class="en">${esc((x.w || '').split(' = ')[1] || '')}</div></div>${starBtn(x.id)}<div class="ex"><div class="tr">${esc(x.t)}</div></div></div>`).join('')}</div>`;
-  } else if (words.length) h += `<h3>Words in the sentences</h3><div class="nlist">${words.map(w => { const [de, en] = w.split(' = '); return `<div>${wordHTML({ de })} <span class="tr">${esc(en || '')}</span></div>`; }).join('')}</div>`;
+    h += `<h3>Wörter in dieser Runde<small class="en2">Words in this round</small></h3><div class="cards">${[...new Set(items)].map(x => `<div class="wcard"><div><div class="de">${fresh.includes(x) ? '<span class="newtag">NEW</span> ' : wasMissed(x.id) ? '<span class="newtag again">↻ AGAIN</span> ' : ''}${x.e} ${wordHTML({ de:(x.w || '').split(' = ')[0] })}</div><div class="en">${esc((x.w || '').split(' = ')[1] || '')}</div></div>${starBtn(x.id)}<div class="ex"><div class="tr">${esc(x.t)}</div></div></div>`).join('')}</div>`;
+  } else if (words.length) h += `<h3>Wörter in den Sätzen<small class="en2">Words in the sentences</small></h3><div class="nlist">${words.map(w => { const [de, en] = w.split(' = '); return `<div>${wordHTML({ de })} <span class="tr">${esc(en || '')}</span></div>`; }).join('')}</div>`;
   return h;
 }
 
@@ -6054,11 +6121,11 @@ async function xGenRound(l) {
 /* ---- writing: the same sentences, typed ---- */
 function xWriteItem(it, lv, src) {
   it.full = xPlain(src);
-  if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Listen and write the whole sentence. Tap 🔊 to hear it again.'; return it; }
-  if (lv === 'l1') { it.prompt = xPrompt(src); it.answer = src.a; it.atStart = src.q.startsWith('___'); it.hint = `Type the missing word${src.a.includes(' ') ? 's' : ''}. ${xHint(src)}`; return it; }
+  if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.'; return it; }
+  if (lv === 'l1') { it.prompt = xPrompt(src); it.answer = src.a; it.atStart = src.q.startsWith('___'); it.hint = bi(`Ergänzen Sie ${src.a.includes(' ') ? 'die fehlenden Wörter' : 'das fehlende Wort'}. ${xHint(src)}`, `Type the missing word${src.a.includes(' ') ? 's' : ''}. ${EN2[xHint(src)] || ''}`); return it; }
   const words = it.full.replace(/[.,!?–]/g, ' ').split(/\s+/).filter(Boolean);
   it.prompt = `<span class="whint">“${esc(src.t)}”</span>`; it.chips = shuffle(words); it.answer = it.full; it.atStart = true;
-  it.hint = 'Write the whole German sentence with these words.';
+  it.hint = 'Schreiben Sie den ganzen Satz auf Deutsch mit diesen Wörtern.';
   return it;
 }
 const xWriteQueue = (lv, tp) => pickPrep(XPOOL[tp], 8).map(x => writeItem(lv, 'x', x.id)).filter(Boolean);
@@ -6097,9 +6164,9 @@ function renderXLevels(tp) {
   const d = XBY[tp], kinds = [['blue', ''], ['red', ' circle'], ['black', ' tri'], ['green', ' mag']];
   $('#lvX').innerHTML = [0, 1, 2, 3].map(i => {
     const l = d.base + i, locked = xLocked(l);
-    const title = i < 2 ? `Level ${i + 1}: ${d.lv[i].t}` : i === 2 ? 'Level 3: Boss mix' : 'Level 4: Spot the error';
-    const sub = locked ? (i === 3 ? 'Locked: opens together with Level 3' : `Locked: get 6 of 8 in Level ${i}`) : i < 2 ? d.lv[i].s : i === 2 ? 'Faster, everything mixed' : 'One word is wrong. Run through it!';
-    return `<button class="btn ${kinds[i][0]}${locked ? ' locked' : ''}" data-xlevel="${l}" aria-disabled="${locked}"><span class="shape${kinds[i][1]}">${i === 3 ? '🔍' : ''}</span><span><b>${esc(title)}</b><small>${esc(sub)}</small></span>${levelPassed(l) ? '<span class="badge">★</span>' : ''}</button>`;
+    const title = i < 2 ? `Level ${i + 1}: ${d.lv[i].t}` : i === 2 ? 'Level 3: Boss-Mix' : 'Level 4: Fehler finden';
+    const sub = locked ? (i === 3 ? 'Gesperrt: öffnet zusammen mit Level 3' : `Gesperrt: 6 von 8 richtig in Level ${i}`) : i < 2 ? d.lv[i].s : i === 2 ? 'Schneller, alles gemischt' : 'Ein Wort ist falsch. Finden Sie es!';
+    return `<button class="btn ${kinds[i][0]}${locked ? ' locked' : ''}" data-xlevel="${l}" aria-disabled="${locked}"><span class="shape${kinds[i][1]}">${i === 3 ? '🔍' : ''}</span><span><b>${esc(title)}</b><small>${bi(esc(sub), EN2[sub] || (/^Gesperrt: 6 von 8 richtig in Level \d$/.test(sub) ? `Locked: get 6 of 8 in Level ${i}` : ''))}</small></span>${levelPassed(l) ? '<span class="badge">★</span>' : ''}</button>`;
   }).join('');
 }
 
@@ -6117,9 +6184,9 @@ const telcDone = () => ((S.wstats || {}).telc || {}).t || 0;
 // the exam: Sprachbausteine, Lesen and Hören are scored; 60 % is the pass mark
 function readinessHTML() {
   const g = Math.round(100 * TOPICS.reduce((s, [k]) => s + topicStars(k), 0) / (3 * TOPICS.length));
-  const row = (label, pct, extra) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${pct === null ? 'not tried yet' : pct + '%'}${extra ? ' · ' + extra : ''}</span></div><div class="trk pass"><div class="fil" style="width:${pct || 0}%;background:${pct === null ? 'transparent' : pct >= 60 ? 'var(--good)' : 'var(--yellow)'}"></div></div></div>`;
-  return `<h3>Am I ready for telc B1?</h3><p class="note">The line marks 60 %, the pass mark of every part. Your last result per task counts.</p>`
-    + row('🧠 Grammar (levels passed, all topics)', g) + row('🧩 Sprachbausteine', exModPct(['sb1', 'sb2'])) + row('📖 Lesen', exModPct(['les'])) + row('🎧 Hören', exModPct(['hoer']))
+  const row = (label, pct, extra) => `<div class="bar"><div class="lbl"><span>${label}</span><span>${pct === null ? 'noch nicht geübt' : pct + '%'}${extra ? ' · ' + extra : ''}</span></div><div class="trk pass"><div class="fil" style="width:${pct || 0}%;background:${pct === null ? 'transparent' : pct >= 60 ? 'var(--good)' : 'var(--yellow)'}"></div></div></div>`;
+  return `<h3>Bin ich bereit für telc B1?<small class="en2">Am I ready for telc B1?</small></h3><p class="note">Die Linie zeigt 60 % – die Bestehensgrenze jedes Teils. Es zählt Ihr letztes Ergebnis pro Aufgabe.<small class="en2">The line marks 60 %, the pass mark of every part. Your last result per task counts.</small></p>`
+    + row('🧠 Grammatik (bestandene Level, alle Themen)<small class="en2">Grammar: levels passed, all topics</small>', g) + row('🧩 Sprachbausteine', exModPct(['sb1', 'sb2'])) + row('📖 Lesen', exModPct(['les'])) + row('🎧 Hören', exModPct(['hoer']))
     + `<div class="lbl" style="margin-top:6px">✍️ TELC letters written: <b>${telcDone()}</b> · 🗣️ exam talks with Lena: <b>${chatsDone('sp')}</b></div>`;
 }
 function planStep([ty, a, n]) {
@@ -6135,30 +6202,30 @@ let planSteps = [];
 function planHTML() {
   planSteps = [];
   let firstOpen = false;
-  return '<h3>🗓️ 8 Wochen bis telc B1</h3><p class="note">About 30–45 minutes a day. Each step ticks itself off when you have done it (a level counts with 6 of 8 right). Tap a step to start it.</p>' + PLAN.map(([title, steps]) => {
+  return '<h3>🗓️ 8 Wochen bis telc B1<small class="en2">8 weeks to telc B1</small></h3><p class="note">Etwa 30–45 Minuten pro Tag. Jeder Schritt wird automatisch abgehakt (ein Level zählt ab 6 von 8 richtig). Tippen Sie auf einen Schritt, um ihn zu starten.<small class="en2">About 30–45 minutes a day. Each step ticks itself off (a level counts with 6 of 8 right). Tap a step to start it.</small></p>' + PLAN.map(([title, steps]) => {
     const st = steps.map(planStep), n = st.filter(s => s.done).length, open = !firstOpen && n < st.length;
     if (open) firstOpen = true;
     return `<details class="pweek${n === st.length ? ' done' : ''}"${open ? ' open' : ''}><summary>${n === st.length ? '✅' : '📅'} ${esc(title)} <small>${n}/${st.length}</small></summary><div class="psteps">${st.map(s => { planSteps.push(s); return `<button class="pstep${s.done ? ' done' : ''}" data-step="${planSteps.length - 1}"><span>${s.done ? '✓' : '○'}</span>${esc(s.label)}</button>`; }).join('')}</div></details>`;
   }).join('');
 }
-const taskBtn = (mod, t) => { const r = exScore(t.id); return `<button data-exam="${mod}" data-task="${t.id}"><span class="te">${t.icon || EX_MOD[mod][2]}</span>${esc(t.title)}<small>${r ? `last ${r.l}% · best ${r.b}%` : 'not tried yet'}</small></button>`; };
+const taskBtn = (mod, t) => { const r = exScore(t.id); return `<button data-exam="${mod}" data-task="${t.id}"><span class="te">${t.icon || EX_MOD[mod][2]}</span>${esc(t.title)}<small>${r ? `zuletzt ${r.l} % · beste ${r.b} %` : 'noch nicht geübt'}</small></button>`; };
 const genBtn = (mod, label) => lsGet(AI_KEY) ? `<button class="btn center exgen" data-exgen="${mod}">🎲 ${label}</button>` : '<p class="note">🎲 With a Gemini key (connect it once in the Sprach-Café), Lena can write new tasks for you.</p>';
 function renderExamBox() {
   const tab = S.exTab || 'plan';
   let h = `<div class="extabs">${EX_TABS.map(([k, e, n]) => `<button data-extab="${k}" class="${k === tab ? 'on' : ''}"><span>${e}</span>${n}</button>`).join('')}</div>`;
   if (tab === 'plan') h += readinessHTML() + planHTML();
-  else if (tab === 'sb') h += `<p class="cafe-lead">telc B1 <b>Sprachbausteine</b>: grammar inside a real letter. Teil 1: choose a, b or c for each gap. Teil 2: choose words from a list (some are left over).</p>
-    <h3>Teil 1 · a / b / c</h3><div class="topics">${SB1.map(t => taskBtn('sb1', t)).join('')}</div>${genBtn('sb1', 'New Teil 1 letter from Lena')}
-    <h3>Teil 2 · word list</h3><div class="topics">${SB2.map(t => taskBtn('sb2', t)).join('')}</div>`;
-  else if (tab === 'les') h += `<p class="cafe-lead">telc B1 <b>Leseverstehen</b>: read the text, then answer. Look for the sentence in the text that proves your answer.</p><div class="topics">${LES.map(t => taskBtn('les', t)).join('')}</div>${genBtn('les', 'New reading text from Lena')}`;
-  else if (tab === 'hoer') h += `<p class="cafe-lead">telc B1 <b>Hörverstehen</b>: Lena reads an announcement or a message. Read the sentences first, then listen (twice, like in the exam). The text appears after you check.</p><div class="topics">${HOR.map(t => taskBtn('hoer', t)).join('')}</div>${genBtn('hoer', 'New listening text from Lena')}`;
-  else if (tab === 'spr') h += `<p class="cafe-lead">telc B1 <b>Mündliche Prüfung</b>: three parts, about 15 minutes, with a partner. Learn the phrases (tap 🔊), then practise with Lena by voice.</p>` + SPR.map(p => `<div class="spart"><h3>${p.icon} ${esc(p.part)}</h3><p>${esc(p.lead)}</p>
+  else if (tab === 'sb') h += `<p class="cafe-lead">telc B1 <b>Sprachbausteine</b>: Lesen Sie den Text. Teil 1: Welches Wort passt in die Lücke? Wählen Sie a, b oder c. Teil 2: Wählen Sie die passenden Wörter aus der Liste. Einige Wörter bleiben übrig.<small class="en2">Grammar inside a real letter. Teil 1: choose a, b or c for each gap. Teil 2: choose words from a list; some are left over.</small></p>
+    <h3>Teil 1 · a / b / c</h3><div class="topics">${SB1.map(t => taskBtn('sb1', t)).join('')}</div>${genBtn('sb1', 'Neuer Brief für Teil 1 von Lena')}
+    <h3>Teil 2 · Wörterliste<small class="en2">Part 2 · word list</small></h3><div class="topics">${SB2.map(t => taskBtn('sb2', t)).join('')}</div>`;
+  else if (tab === 'les') h += `<p class="cafe-lead">telc B1 <b>Leseverstehen</b>: Lesen Sie den Text und lösen Sie die Aufgaben. Suchen Sie die Stelle im Text, die Ihre Antwort zeigt.<small class="en2">Read the text, then answer. Look for the sentence in the text that proves your answer.</small></p><div class="topics">${LES.map(t => taskBtn('les', t)).join('')}</div>${genBtn('les', 'Neuer Lesetext von Lena')}`;
+  else if (tab === 'hoer') h += `<p class="cafe-lead">telc B1 <b>Hörverstehen</b>: Lesen Sie zuerst die Aussagen. Hören Sie dann den Text – zweimal, wie in der Prüfung. Sind die Aussagen richtig oder falsch? Den Text sehen Sie nach dem Prüfen.<small class="en2">Read the statements first, then listen (twice, like in the exam). True or false? The text appears after you check.</small></p><div class="topics">${HOR.map(t => taskBtn('hoer', t)).join('')}</div>${genBtn('hoer', 'Neuer Hörtext von Lena')}`;
+  else if (tab === 'spr') h += `<p class="cafe-lead">telc B1 <b>Mündliche Prüfung</b>: drei Teile, etwa 15 Minuten, mit einem Partner. Lernen Sie die Redemittel (🔊) und üben Sie dann mit Lena.<small class="en2">Three parts, about 15 minutes, with a partner. Learn the phrases (🔊), then practise with Lena by voice.</small></p>` + SPR.map(p => `<div class="spart"><h3>${p.icon} ${esc(p.part)}</h3><p>${bi(esc(p.lead), { sp1:'You and your partner get to know each other: name, origin, home, family, work, languages, hobbies. Ask questions too – it is a conversation!', sp2:'You read a short text about a topic. Tell your partner what it is about, talk about your experience and your opinion, then react to your partner.', sp3:'You and your partner plan something together: make suggestions, react to your partner’s ideas and agree on the details (when, where, who does what).' }[p.id])}</p>
       <div class="phr">${p.phrases.map(([de, en]) => `<button class="linkbtn" data-say="${esc(de)}">🔊</button><div><b>${esc(de)}</b><span class="tr">${esc(en)}</span></div>`).join('')}</div>
-      <div class="topics">${p.talks.map(([id, e, de, en]) => `<button data-talk="${id}"><span class="te">${e}</span>${esc(de.replace(/^Teil \d: /, ''))}<small>☕ practise with Lena</small></button>`).join('')}</div></div>`).join('');
-  else if (tab === 'sch') h += `<p class="cafe-lead">telc B1 <b>Schriftlicher Ausdruck</b>: a letter or email of about 100 words in 30 minutes, covering all four points. Lena corrects it by the telc criteria.</p>
+      <div class="topics">${p.talks.map(([id, e, de, en]) => `<button data-talk="${id}"><span class="te">${e}</span>${esc(de.replace(/^Teil \d: /, ''))}<small>☕ mit Lena üben</small></button>`).join('')}</div></div>`).join('');
+  else if (tab === 'sch') h += `<p class="cafe-lead">telc B1 <b>Schriftlicher Ausdruck</b>: Schreiben Sie einen Brief oder eine E-Mail (etwa 100 Wörter, 30 Minuten). Schreiben Sie zu allen vier Punkten. Lena korrigiert nach den telc-Kriterien.<small class="en2">A letter or email of about 100 words in 30 minutes, covering all four points. Lena corrects it by the telc criteria.</small></p>
     <div class="topics">${TELC.filter(t => t.lvl === 'B1').map(t => `<button data-telc="${t.id}"><span class="te">${t.reg === 'formal' ? '📨' : '💌'}</span>${esc(t.title)}<small>${t.reg === 'formal' ? 'formal · Sie' : 'informal · du'} · ${t.minutes} min</small></button>`).join('')}</div>
-    ${lsGet(AI_KEY) ? '<button class="btn center exgen" id="exTelcGen">🎲 New TELC task made by Lena</button>' : ''}<p class="note">Useful in every letter: Konjunktiv II (Könnten Sie …? Ich hätte gern …), Nebensätze (weil, dass, ob) and connectors (deshalb, trotzdem, außerdem).</p>`;
-  else h += `<p class="cafe-lead"><b>Wortschatz</b> for the telc topics. Each theme is a runner round; the words join your memory boxes, ★ and Daily review.</p><div class="topics">${WZT.map(([th, name, e], i) => {
+    ${lsGet(AI_KEY) ? '<button class="btn center exgen" id="exTelcGen">🎲 Neue telc-Aufgabe von Lena</button>' : ''}<p class="note">Useful in every letter: Konjunktiv II (Könnten Sie …? Ich hätte gern …), Nebensätze (weil, dass, ob) and connectors (deshalb, trotzdem, außerdem).</p>`;
+  else h += `<p class="cafe-lead"><b>Wortschatz</b> zu den telc-Themen. Jedes Thema ist eine Runde im Spiel; die Wörter kommen in Ihre Lernboxen, zu ★ und in die tägliche Wiederholung.<small class="en2">Vocabulary for the telc topics. Each theme is a runner round; the words join your memory boxes, ★ and the daily review.</small></p><div class="topics">${WZT.map(([th, name, e], i) => {
       const pool = WZ.filter(x => x.k === th), pc = Math.round(100 * pool.reduce((s, x) => s + Math.min(5, (S.srs[x.id] || {}).box || 0), 0) / (5 * pool.length));
       return `<button data-wz="${101 + i}"><span class="te">${e}</span>${esc(name)}<small>${pool.length} words · ${pc}% learned${(S.best || {})[101 + i] ? ` · best ${S.best[101 + i]}` : ''}</small></button>`; }).join('')}</div>`;
   $('#examBox').innerHTML = h;
@@ -6189,12 +6256,12 @@ function renderExam() {
     if (mod === 'sb1') h += `<div class="exsheet">${t.gaps.map((g, i) => `<div class="exrow${mark(i)}" id="exrow${i}"><b>${i + 1}</b>${EXS.order[i].map(j => `<button class="xopt${EXS.ans[i] === j ? ' on' : ''}${done && j === g[1] ? ' right' : ''}" data-g="${i}" data-o="${j}"${done ? ' disabled' : ''}>${'abc'[EXS.order[i].indexOf(j)]}) ${esc(g[0][j])}</button>`).join('')}${done ? `<div class="exwhy">${exCorrect(i) ? '✓' : `✗ → <b>${esc(g[0][g[1]])}</b>`} ${esc(g[2])}</div>` : ''}</div>`).join('')}</div>`;
     else {
       const used = new Set(EXS.ans.filter(a => a !== null));
-      h += `<p class="note">${done ? '' : 'Tap a gap, then a word. Tap a filled gap to empty it. Every word fits only once; some words are not needed.'}</p><div class="exbank">${t.bank.map((w, k) => `<button class="xopt${used.has(w) ? ' used' : ''}" data-w="${esc(w)}"${done ? ' disabled' : ''}>${'abcdefghijklmno'[k]}) ${esc(w)}</button>`).join('')}</div>`;
+      h += `<p class="note">${done ? '' : bi('Tippen Sie auf eine Lücke und dann auf ein Wort. Tippen Sie auf eine volle Lücke, um sie zu leeren. Jedes Wort passt nur einmal; einige Wörter brauchen Sie nicht.', 'Tap a gap, then a word. Tap a filled gap to empty it. Every word fits only once; some words are not needed.')}</p><div class="exbank">${t.bank.map((w, k) => `<button class="xopt${used.has(w) ? ' used' : ''}" data-w="${esc(w)}"${done ? ' disabled' : ''}>${'abcdefghijklmno'[k]}) ${esc(w)}</button>`).join('')}</div>`;
       if (done) h += `<div class="exsheet">${t.ans.map((a, i) => `<div class="exrow${mark(i)}"><b>${i + 1}</b><div class="exwhy">${exCorrect(i) ? '✓' : `✗ → <b>${esc(a)}</b>`} ${esc(t.why[i] || '')}</div></div>`).join('')}</div>`;
     }
   } else {
     if (mod === 'les') h += `<div class="extext">${esc(t.text)}</div>`;
-    else h += `<div class="wtools"><button class="btn center" id="exPlay">🔊 Hör zu <small id="exPlays">${EXS.plays ? `${EXS.plays}×` : ''}</small></button><button class="btn center" id="exSlow" aria-pressed="${!!EXS.slow}">🐢 Langsam</button></div>${done ? `<details class="wex" open><summary>📄 The text</summary><div class="extext">${esc(t.text)}</div></details>` : ''}`;
+    else h += `<div class="wtools"><button class="btn center" id="exPlay">🔊 Hör zu <small id="exPlays">${EXS.plays ? `${EXS.plays}×` : ''}</small></button><button class="btn center" id="exSlow" aria-pressed="${!!EXS.slow}">🐢 Langsam</button></div>${done ? `<details class="wex" open><summary>📄 Der Text</summary><div class="extext">${esc(t.text)}</div></details>` : ''}`;
     h += `<div class="exsheet">${t.qs.map((q, i) => {
       const opts = mod === 'hoer' || !q[1] ? ['richtig', 'falsch'] : q[1], right = mod === 'hoer' ? q[1] : q[2], why = mod === 'hoer' ? q[2] : q[3];
       return `<div class="exrow${mark(i)}"><b>${i + 1}</b><div class="exq">${esc(q[0])}</div>${opts.map((o, j) => `<button class="xopt${EXS.ans[i] === j ? ' on' : ''}${done && j === right ? ' right' : ''}" data-g="${i}" data-o="${j}"${done ? ' disabled' : ''}>${opts.length > 2 ? 'abc'[j] + ') ' : ''}${esc(o)}</button>`).join('')}${done ? `<div class="exwhy">${exCorrect(i) ? '✓' : '✗'} ${esc(why)}</div>` : ''}</div>`;
@@ -6202,7 +6269,7 @@ function renderExam() {
   }
   const n = EXS.ans.length, c = EXS.ans.filter((a, i) => exCorrect(i)).length;
   h += done ? `<div class="tip"><b>${c} / ${n}</b> right · ${Math.round(100 * c / n)}% ${Math.round(100 * c / n) >= 60 ? '✅ above the pass mark (60 %)' : '· the pass mark is 60 %. Read the explanations and try again.'}</div><div class="row2"><button class="btn blue center" id="exAgain">↻ Try again</button><button class="btn center" id="exDone">Back</button></div>`
-    : `<div class="row2" style="grid-template-columns:1fr"><button class="btn blue center" id="exCheck">✔ Check (${EXS.ans.filter(a => a !== null).length}/${n} answered)</button></div>`;
+    : `<div class="row2" style="grid-template-columns:1fr"><button class="btn blue center" id="exCheck">✔ Prüfen (${EXS.ans.filter(a => a !== null).length}/${n} beantwortet)<small class="en2">Check (answered)</small></button></div>`;
   $('#exBody').innerHTML = h;
 }
 function checkExam() {
@@ -6295,31 +6362,52 @@ $('#exBody').addEventListener('click', e => {
 });
 $('#exBack').addEventListener('click', () => { stopVoice(); const rv = EXS && EXS.review; EXS = null; if (rv) { renderHist(); show('hist'); } else show('menu'); });
 
-/* ================= Lena's words: select a word in a chat message to save it to My words =================
-   Long-press a word on Android (or drag / double-click on a computer): a "☆ Save" button pops up under the selection.
-   Gemini looks up the dictionary form and meaning; saved words live in S.cw and get stars, memory boxes and flashcards. */
+/* ================= Save any word: select it anywhere in the app → My words =================
+   Long-press a word on the tablet (or drag / double-click on a computer) in any text: a "☆ speichern" button pops up under it.
+   Gemini looks up the dictionary form, the meaning (English + Tamil), an emoji for the picture and the translation of the sentence.
+   The word goes into My words under the topic (and so the level) you were working on; it gets stars, memory boxes and flashcards. */
 const CW_MAX = 1500;
 const cwId = de => 'cw_' + String(de).toLowerCase().replace(/^(der|die|das)\s+/, '').replace(/,.*$/, '').replace(/[^a-zäöüß]+/g, '_').replace(/^_+|_+$/g, '');
 function saveCafeWord(w, ex, exen, tp) {
   const id = cwId(w.de); if (id === 'cw_') return null;
   S.cw = S.cw || {};
-  if (!S.cw[id]) S.cw[id] = { id, cw:1, de:w.de, en:w.en || '', ta:w.ta || '', ex:ex || '', exen:exen || '', tp:tp || '', t:Date.now() };
+  const o = S.cw[id];
+  if (!o) S.cw[id] = { id, cw:1, de:w.de, en:w.en || '', ta:w.ta || '', e:w.e || '', ex:ex || '', exen:exen || '', tp:tp || '', t:Date.now() };
+  else if (!o.e && w.e) o.e = w.e;
   const ids = Object.keys(S.cw);
   if (ids.length > CW_MAX) ids.filter(k => !S.bm[k]).sort((a, b) => S.cw[a].t - S.cw[b].t).slice(0, ids.length - CW_MAX).forEach(k => { delete S.cw[k]; delete S.srs[k]; });
   return id;
 }
-const bubbleCtx = el => { const b = el.closest('.b'); return { de:b ? b.dataset.de || '' : '', en:b ? ((b.querySelector('.trbox .en') || {}).textContent || '') : '', b }; };
-const CW_SCHEMA = { type:'OBJECT', properties:{ de:{ type:'STRING' }, en:{ type:'STRING' }, ta:{ type:'STRING' } }, required:['de', 'en', 'ta'] };
-const selPop = document.createElement('div'); selPop.className = 'selpop'; selPop.hidden = true; document.getElementById('ui').appendChild(selPop);
+const CW_SCHEMA = { type:'OBJECT', properties:{ de:{ type:'STRING' }, en:{ type:'STRING' }, ta:{ type:'STRING' }, emoji:{ type:'STRING' }, ex_en:{ type:'STRING' } }, required:['de', 'en', 'ta', 'emoji', 'ex_en'] };
+// which topic does a selected word belong to? the screen tells: café chat, past round, exam, the round just played, or the chosen topic
+function topicOfLevel(l) {
+  const v = XLV[l]; if (v) return v.wz ? 'wz' : v.d.tp;
+  const t = TOPICS.find(([k]) => topicInfo(k).lv.includes(l)); return t ? t[0] : S.topic;
+}
+function selTopic(el) {
+  if (el.closest('#cafe')) return C.focus === 'exam' ? 'exam' : C.focus;
+  if (el.closest('#exam, #examBox')) return 'exam';
+  if (el.closest('#histD, #hist') && histOpen) return histOpen.k === 'cafe' ? (histOpen.f === 'exam' ? 'exam' : histOpen.f) : histOpen.k === 'write' ? histOpen.tp : histOpen.k === 'exam' ? 'exam' : topicOfLevel(histOpen.l);
+  if (el.closest('#intro, #wrong, #end') && lastLevel) return topicOfLevel(lastLevel);
+  if (el.closest('#write, #wfree') && WR) return WR.topic;
+  return S.topic;
+}
+const wordPlace = tp => tp === 'exam' ? 'B1 › Prüfung' : tp === 'wz' ? 'Mehr › Wortschatz' : `${topicTab(tp)} › ${topicInfo(tp).name}`;
+const selPop = document.createElement('div'); selPop.className = 'selpop'; selPop.hidden = true; document.body.appendChild(selPop);
 let selState = null, selT = null;
-// the selected text, if it is 1–4 words inside one of Lena's messages (or a correction)
+const LETTERS = /^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß\- ]*[A-Za-zÄÖÜäöüß]$|^[A-Za-zÄÖÜäöüß]$/;
 function selInfo() {
   const s = window.getSelection(); if (!s || s.isCollapsed || !s.rangeCount) return null;
   const text = s.toString().replace(/\s+/g, ' ').trim().replace(/^[^A-Za-zÄÖÜäöüß]+|[^A-Za-zÄÖÜäöüß]+$/g, '');
-  if (!text || text.length > 40 || text.split(' ').length > 4) return null;
+  if (!text || text.length > 40 || text.split(' ').length > 4 || !LETTERS.test(text)) return null;
   const n = s.anchorNode && (s.anchorNode.nodeType === 1 ? s.anchorNode : s.anchorNode.parentElement);
-  const el = n && n.closest('#cChat .b.lena .de, #hdList .b.lena .de, #cChat .fix, #hdList .fix'); if (!el) return null;
-  return { text, el, rect:s.getRangeAt(0).getBoundingClientRect() };
+  if (!n || !n.closest('#ui, #askBox') || n.closest('input, textarea, button, select, svg, #hud, .selpop')) return null;
+  // the sentence around the word (for the meaning in context and as the example)
+  const block = n.closest('p, li, td, .s, .sent, .de, .fix, .extext, .exq, .tr, .fsent, .item, .wq, .am, .al, div') || n;
+  const cl = block.cloneNode(true); cl.querySelectorAll('.gap, .en2, button').forEach(g => { g.textContent = g.classList.contains('gap') ? '…' : ''; });
+  const all = (cl.textContent || '').replace(/\s+/g, ' ').trim();
+  const sent = (all.match(/[^.!?]*[.!?]?/g) || []).map(x => x.trim()).find(x => x.includes(text)) || all;
+  return { text, el:n, sent:sent.slice(0, 220), rect:s.getRangeAt(0).getBoundingClientRect() };
 }
 function placeSelPop(r) {
   const w = selPop.offsetWidth, h = selPop.offsetHeight;
@@ -6330,8 +6418,9 @@ function hideSelPop() { selPop.hidden = true; selState = null; }
 function showSelPop() {
   if (selState && (selState.busy || selState.done)) return;
   const i = selInfo(); if (!i) { hideSelPop(); return; }
-  selState = { text:i.text, ctx:bubbleCtx(i.el), tp:i.el.closest('#cChat') ? C.focus : histOpen ? histOpen.f : S.topic };
-  selPop.innerHTML = `<button type="button" data-selsave>☆ Save „${esc(i.text)}“ to My words</button>`;
+  const b = i.el.closest('.b'), bubbleEn = b ? ((b.querySelector('.trbox .en') || {}).textContent || '') : '';
+  selState = { text:i.text, sent:i.sent, en:bubbleEn, tp:selTopic(i.el) };
+  selPop.innerHTML = `<button type="button" data-selsave>☆ „${esc(i.text)}“ speichern<small class="en2">Save to My words</small></button>`;
   selPop.hidden = false; placeSelPop(i.rect);
 }
 document.addEventListener('selectionchange', () => { clearTimeout(selT); selT = setTimeout(showSelPop, 250); });
@@ -6339,37 +6428,136 @@ selPop.addEventListener('pointerdown', e => e.preventDefault());   // keep the s
 selPop.addEventListener('click', async e => {
   if (!e.target.closest('[data-selsave]') || !selState || selState.busy) return;
   const st = selState, b = e.target.closest('[data-selsave]'), r = b.getBoundingClientRect();
-  if (!lsGet(AI_KEY)) { selPop.textContent = 'Saving a word needs the Gemini key (⚙ in the Sprach-Café).'; st.done = true; setTimeout(() => { if (selState === st) hideSelPop(); }, 3000); return; }
-  st.busy = true; b.disabled = true; b.textContent = '… looking it up';
+  const finish = html => { selPop.innerHTML = `<span>${html}</span>`; st.busy = false; st.done = true; placeSelPop(r); const s = window.getSelection(); if (s) s.removeAllRanges(); setTimeout(() => { if (selState === st) hideSelPop(); }, 3500); };
+  if (!lsGet(AI_KEY)) { finish('Dafür braucht Lena den Gemini-Schlüssel (⚙ im Sprach-Café).<small class="en2">Saving a word needs the Gemini key (⚙ in the Sprach-Café).</small>'); return; }
+  st.busy = true; b.disabled = true; b.innerHTML = '… Lena schlägt nach<small class="en2">looking it up</small>';
   try {
     const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:15000, budget:25000, temperature:0.2,
-      parts:[{ text:`The learner selected "${st.text}" in this German sentence: "${st.ctx.de}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this sentence. "ta" = the meaning in Tamil script.` }] });
-    const w = { de:gS(d.de) || st.text, en:gS(d.en), ta:gS(d.ta) }, id = saveCafeWord(w, st.ctx.de, st.ctx.en, st.tp), had = id && S.bm[id];
+      parts:[{ text:`The learner selected "${st.text}" in this German text: "${st.sent}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this text. "ta" = the meaning in Tamil script. "emoji" = ONE emoji that pictures the meaning. "ex_en" = an English translation of the German text.` }] });
+    const w = { de:gS(d.de) || st.text, en:gS(d.en), ta:gS(d.ta), e:gEmoji(d.emoji, '📘') };
+    const id = saveCafeWord(w, st.sent, st.en || gS(d.ex_en), st.tp), had = id && S.bm[id];
     if (id && !had) toggleStar(id); else save();
-    selPop.innerHTML = `<span>${had ? '★ Already in My words' : '★ Saved'}: <b>${esc(w.de)}</b> · ${esc(w.en)}</span>`;
-  } catch (err) { selPop.innerHTML = `<span>${esc(AI_MSG[err.message] || 'Could not look it up. Try again.')}</span>`; }
-  st.busy = false; st.done = true; placeSelPop(r);
-  const s = window.getSelection(); if (s) s.removeAllRanges();
-  setTimeout(() => { if (selState === st) hideSelPop(); }, 3000);
+    finish(`${had ? '★ Schon gespeichert' : '★ Gespeichert'}: <b>${esc(w.de)}</b> · ${esc(w.en)}<small class="en2">${had ? 'Already in' : 'Saved to'} My words › ${esc(wordPlace(cwTopic(S.cw[id])))}</small>`);
+  } catch (err) { finish(`${esc(AI_MSG[err.message] || 'Das hat nicht geklappt. Bitte noch einmal.')}`); }
 });
 document.addEventListener('pointerdown', e => { if (!selPop.hidden && !selPop.contains(e.target) && selState && !selState.busy) hideSelPop(); }, true);
-['cChat', 'hdList'].forEach(id => document.getElementById(id).addEventListener('scroll', () => { if (selState && !selState.busy) hideSelPop(); }));
+document.addEventListener('scroll', () => { if (selState && !selState.busy && !selState.done) { const i = selInfo(); if (i) placeSelPop(i.rect); else hideSelPop(); } }, true);
 const cwList = () => Object.values(S.cw || {});
-// the topic of a saved word: the chat's grammar topic; words saved before this existed find their chat in Past rounds
+// the topic of a saved word; words saved before topics existed find their chat in Past rounds
 function cwTopic(w) {
   if (!w.tp) { const h = (S.history || []).find(h => h.k === 'cafe' && (h.m || []).some(x => x.de === w.ex)); w.tp = h ? h.f : S.topic; }
-  return w.tp === 'exam' ? 'wz' : TOPICS.some(t => t[0] === w.tp) ? w.tp : 'wd';
+  return w.tp === 'exam' || w.tp === 'wz' ? w.tp : TOPICS.some(t => t[0] === w.tp) ? w.tp : 'wd';
+}
+// a picture card for a saved word: the emoji, the word with its article, the meaning, the example
+function cwSVG(w) {
+  const grey = '#8F9BA5', m = w.de.match(/^(der|die|das) (.+)$/), head = m ? m[2] : w.de;
+  let S2 = 26; while (textW(head, S2) > 190 && S2 > 12) S2 -= 1;
+  let s = appear(em(w.e || '📘', 62, 92, 58), 0.05);
+  if (m) s += `<rect x="120" y="62" width="${textW(m[1], 15) + 12}" height="24" fill="${XART[m[1]]}" stroke="#2F3640" stroke-width="2"/><text x="126" y="74" font-size="15" font-weight="700" fill="#fff" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif">${m[1]}</text>`;
+  s += `<text x="120" y="${m ? 104 : 88}" font-size="${S2}" font-weight="800" fill="#2F3640" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif">${esc(head)}</text>`;
+  if (w.en) s += `<text x="120" y="${m ? 130 : 116}" font-size="14" font-weight="600" fill="${grey}" dominant-baseline="central" font-family="Jost,Futura,Arial,sans-serif">${esc(w.en.length > 30 ? w.en.slice(0, 29) + '…' : w.en)}</text>`;
+  if (w.ex) s += captionSVG(w.ex.length > 90 ? w.ex.slice(0, 88) + '…' : w.ex, 166, 12.5);
+  return s + badge('Meine Wörter', '#5B6F86');
 }
 const cwItemHTML = w => `<div class="item"><div>
     <div style="font-size:19px;font-weight:600">${wordHTML({ de:w.de })} ${dotsHTML(w.id)} <button class="linkbtn" data-say="${esc(w.de.replace(/,.*$/, ''))}">🔊</button></div>
     <div class="tr">${esc(w.en)}${w.ta ? ` · <span class="ta">${esc(w.ta)}</span>` : ''}</div>
-    ${w.ex ? `<div class="s" style="margin-top:6px">☕ ${esc(w.ex)}</div>${w.exen ? `<div class="tr">${esc(w.exen)}</div>` : ''}` : ''}
+    ${w.ex ? `<div class="s" style="margin-top:6px">“${esc(w.ex)}”</div>${w.exen ? `<div class="tr">${esc(w.exen)}</div>` : ''}` : ''}${picSVG(w)}
   </div>${starBtn(w.id)}</div>`;
+
+/* ================= Frag Lena: a small pop-up chat for questions, anywhere in the app =================
+   Ask in German, English or Tamil, by typing or by voice. Lena sees what is on the screen, so "why sein?" works.
+   The chat lives only in memory: it is never saved in the game or in Past rounds, and it is gone when you tap ✕ or reload.
+   (Each question is sent to Gemini with your own key like all of Lena's features; Gemini keeps no chat for the game.) */
+const ASK = { msgs:[], busy:false, rec:null };
+const askMd = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^[-•] (.*)$/gm, '• $1').replace(/\n/g, '<br>');
+function askRender() {
+  $('#askChat').innerHTML = `<div class="anote">Dieser Chat wird nicht gespeichert: ✕ löscht ihn.<small class="en2">This chat is not saved: ✕ (or reloading) deletes it. Ask in Deutsch, English or தமிழ் – type or tap 🎤.</small></div>`
+    + ASK.msgs.map(m => `<div class="${m.r === 'u' ? 'am' : 'al'}">${m.r === 'u' ? esc(m.t) : askMd(m.t)}</div>`).join('')
+    + (ASK.busy ? '<div class="al typing"><i></i><i></i><i></i></div>' : '');
+  const c = $('#askChat'); c.scrollTop = c.scrollHeight;
+}
+function askVis() {
+  const cur = ($('.screen.show') || {}).id, playing = G.running && !G.paused;
+  $('#askFab').hidden = playing || cur === 'cafe' || !$('#askBox').hidden;
+  if (playing && !$('#askBox').hidden) $('#askBox').hidden = true;
+}
+function askScreen() {
+  const sc = $('.screen.show'), el = sc || ($('#hud').classList.contains('show') ? $('#hud .prompt') : null);
+  return el ? el.innerText.replace(/\s+/g, ' ').trim().slice(0, 1600) : '';
+}
+async function askSend(text, wav) {
+  text = (text || '').trim(); if ((!text && !wav) || ASK.busy) return;
+  $('#askText').value = '';
+  const mine = { r:'u', t:text || '🎤 …' };
+  if (!lsGet(AI_KEY)) { ASK.msgs.push(mine, { r:'l', t:'Ich brauche zuerst deinen Gemini-Schlüssel (⚙ im Sprach-Café). / I need your Gemini key first (⚙ in the Sprach-Café).' }); askRender(); return; }
+  ASK.msgs.push(mine); ASK.busy = true; askRender();
+  const turns = ASK.msgs.slice(-12, wav ? -1 : undefined).map(m => `${m.r === 'u' ? 'Learner' : 'Lena'}: ${m.t}`).join('\n');
+  try {
+    const d = await geminiJSON({ schema:{ type:'OBJECT', properties:{ heard:{ type:'STRING' }, answer:{ type:'STRING' } }, required:['heard', 'answer'] }, wait:30000, budget:50000, temperature:0.4,
+      system:`You are Lena, a patient German teacher inside a German learning app (levels A1–B1, aim: telc B1). The learner asks you questions about German: grammar, words, an exercise, the exam.
+- The learner may write or speak in German, English or Tamil (or mix them). Find out the language yourself and answer in the language of the learner's LAST message: English → English, Tamil → Tamil (Tamil script), German → simple German. German examples always stay in German (with a short translation).
+- If the last message is a voice recording: "heard" = exactly what the learner said, written in the language and script they used; otherwise "heard" = "".
+- Be short and clear: at most about 120 words, simple words, 1–3 German example sentences. Use **bold** for the important word or ending; you may use "- " for short lists.
+- The learner may ask about what is on their screen right now (an exercise, a mistake, a rule). Use the screen text to understand the question, explain WHY the answer is what it is, and correct the app politely if it is really wrong.
+- Never invent rules. If a question is not about German, answer briefly and kindly.`,
+      parts:[{ text:`What the learner sees on the screen right now:\n"""${askScreen()}"""\n\nThe conversation so far:\n${turns || '(none)'}\n\n${wav ? 'The learner\'s last message is the voice recording attached. Write down what they said in "heard" and answer it.' : 'Answer the learner\'s last message.'}` },
+        ...(wav ? [{ inline_data:{ mime_type:'audio/wav', data:wav } }] : [])] });
+    if (wav) mine.t = gS(d.heard) || '🎤';
+    ASK.msgs.push({ r:'l', t:gS(d.answer) || '…' });
+  } catch (e) { if (wav) mine.t = '🎤'; ASK.msgs.push({ r:'l', t:(AI_MSG[e.message] || 'Das hat nicht geklappt. Bitte noch einmal. / That did not work, please try again.') }); }
+  ASK.busy = false; askRender();
+}
+// 🎤: tap to start, tap again to send (stops by itself after 30 s). The sound is recorded as a small WAV (16 kHz, mono)
+// and Gemini listens to it, so German, English and Tamil all work without choosing a language.
+async function askMic() {
+  if (ASK.rec) { askStopRec(true); return; }
+  if (ASK.busy) return;
+  const ctx = audioCtx();
+  if (!ctx || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { ASK.msgs.push({ r:'l', t:'Spracheingabe geht in diesem Browser nicht. Du kannst tippen. / Voice input does not work in this browser; you can type.' }); askRender(); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true, channelCount:1 } }); }
+  catch (e) { ASK.msgs.push({ r:'l', t:'Das Mikrofon ist nicht erlaubt. Erlaube es im Browser oder tippe deine Frage. / The microphone is blocked: allow it in the browser, or type your question.' }); askRender(); return; }
+  const src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), chunks = [];
+  proc.onaudioprocess = e => chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  src.connect(proc); proc.connect(ctx.destination);
+  ASK.rec = { stream, src, proc, chunks, rate:ctx.sampleRate, t:setTimeout(() => askStopRec(true), 30000) };
+  const b = $('#askMic'); b.classList.add('on'); b.textContent = '■'; b.setAttribute('aria-label', 'Stop and send');
+  $('#askText').placeholder = '🎤 Ich höre zu … ■ = senden / Listening … ■ = send';
+}
+function askStopRec(send) {
+  const rc = ASK.rec; if (!rc) return; ASK.rec = null; clearTimeout(rc.t);
+  try { rc.proc.disconnect(); rc.src.disconnect(); } catch (e) {}
+  rc.stream.getTracks().forEach(t => t.stop());
+  const b = $('#askMic'); b.classList.remove('on'); b.textContent = '🎤'; b.setAttribute('aria-label', 'Speak');
+  $('#askText').placeholder = 'Frage … / Ask … / கேள் …';
+  if (!send) return;
+  const n = rc.chunks.reduce((k, c) => k + c.length, 0);
+  if (n < rc.rate * 0.5) return;   // shorter than half a second: nothing said
+  askSend('', wavBase64(rc.chunks, rc.rate));
+}
+function wavBase64(chunks, rate) {
+  const all = new Float32Array(chunks.reduce((k, c) => k + c.length, 0)); let o = 0; chunks.forEach(c => { all.set(c, o); o += c.length; });
+  const out = 16000, step = rate / out, len = Math.floor(all.length / step), buf = new ArrayBuffer(44 + len * 2), v = new DataView(buf);
+  const str = (p, t) => [...t].forEach((ch, i) => v.setUint8(p + i, ch.charCodeAt(0)));
+  str(0, 'RIFF'); v.setUint32(4, 36 + len * 2, true); str(8, 'WAVE'); str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, out, true); v.setUint32(28, out * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); str(36, 'data'); v.setUint32(40, len * 2, true);
+  for (let i = 0; i < len; i++) { const x = Math.max(-1, Math.min(1, all[Math.floor(i * step)])); v.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7FFF, true); }
+  const bytes = new Uint8Array(buf); let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+$('#askFab').addEventListener('click', () => { audioCtx(); $('#askBox').hidden = false; askRender(); askVis(); setTimeout(() => $('#askText').focus(), 50); });
+$('#askMin').addEventListener('click', () => { askStopRec(false); $('#askBox').hidden = true; askVis(); });
+$('#askEnd').addEventListener('click', () => { askStopRec(false); ASK.msgs = []; ASK.busy = false; $('#askBox').hidden = true; askVis(); });
+$('#askSend').addEventListener('click', () => askSend($('#askText').value));
+$('#askText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); askSend($('#askText').value); } });
+$('#askMic').addEventListener('click', askMic);
 
 /* ================= My words: pick a topic with level tabs + topic tiles ================= */
 let wLevel = 'all';
-const WLEVELS = [['all', 'All'], ['A1', 'A1'], ['A2', 'A2'], ['B1', 'B1'], ['X', '✨ More']];
-const wLevelOf = k => k === 'wz' ? 'X' : topicTab(k);
+const WLEVELS = [['all', 'Alle'], ['A1', 'A1'], ['A2', 'A2'], ['B1', 'B1'], ['X', '✨ Mehr']];
+const wLevelOf = k => k === 'wz' ? 'X' : k === 'exam' ? 'B1' : topicTab(k);
 function wGroups() {
   const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
   return WTOPICS.map(([key, name, pool, icon]) => ({ key, name, icon, lv:wLevelOf(key), list:pool().filter(has) }));
@@ -6383,7 +6571,7 @@ function renderWords() {
   const shown = wShown(groups), total = shown.reduce((n, g) => n + g.list.length, 0), single = wTopic !== 'all';
   const none = wTab === 'star' ? 'No starred words here yet. Tap ★ next to any word in a round, on the new-word cards, or select a word in Lena’s messages in the Sprach-Café.' : 'No words seen here yet. Play a round of this topic to meet your first words.';
   $('#wList').innerHTML = total ? shown.filter(g => g.list.length).map(g => `${single ? '' : `<h3 class="wgroup">${g.icon} ${esc(g.name)} <small>· ${g.list.length}</small></h3>`}${g.list.map(wordItemHTML).join('')}`).join('') : `<div class="empty">${none}</div>`;
-  $('#wCards').textContent = total ? `🃏 Flashcards (${total})` : '🃏 Flashcards';
+  $('#wCards').textContent = total ? `🃏 Karteikarten (${total})` : '🃏 Karteikarten';
   $('#wCards').disabled = !total;
 }
 $('#wLevels').addEventListener('click', e => { const b = e.target.closest('[data-wl]'); if (!b) return; wLevel = b.dataset.wl; wTopic = 'all'; renderWords(); });
@@ -6393,9 +6581,9 @@ $('#wTiles').addEventListener('click', e => { const b = e.target.closest('[data-
 let FC = null;
 function cardFaces(x) {
   const big = h => `<div class="fbig">${h}</div>`, tr = t => t ? `<div class="tr">${esc(t)}</div>` : '';
-  if (x.cw) return { f:big(wordHTML({ de:x.de })), say:x.de.replace(/,.*$/, ''), b:`${big(wordHTML({ de:x.de }))}<div class="fmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">${esc(x.ta)}</div>` : ''}${x.ex ? `<div class="s">☕ ${esc(x.ex)}</div>${tr(x.exen)}` : ''}` };
+  if (x.cw) return { f:big(wordHTML({ de:x.de })), say:x.de.replace(/,.*$/, ''), b:`${big(wordHTML({ de:x.de }))}<div class="fmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">${esc(x.ta)}</div>` : ''}${x.ex ? `<div class="s">“${esc(x.ex)}”</div>${tr(x.exen)}` : ''}${picSVG(x)}` };
   if (x.xt === 'wz') { const [de, en] = (x.w || x.a).split(' = '); return { f:`<div class="femo">${x.e}</div>${big(wordHTML({ de }))}`, say:de.replace(/,.*$/, ''), b:`${big(wordHTML({ de }))}<div class="fmean">${esc(en || '')}</div><div class="s">${xHTML(x)}</div>${tr(x.t)}` }; }
-  if (x.xt) return { f:`<div class="femo">${x.e}</div><div class="fsent">${xPrompt(x)}</div><div class="tr">${esc(xHint(x))}</div>`, say:xPlain(x), b:`<div class="fsent">${xHTML(x)}</div>${tr(x.t)}<div class="w">${esc(x.why || '')}</div>${picSVG(x)}` };
+  if (x.xt) return { f:`<div class="femo">${x.e}</div><div class="fsent">${xPrompt(x)}</div><div class="tr">${bi(xHint(x))}</div>`, say:xPlain(x), b:`<div class="fsent">${xHTML(x)}</div>${tr(x.t)}<div class="w">${esc(x.why || '')}</div>${picSVG(x)}` };
   if (x.pn) return { f:`<div class="femo">${x.e}</div>${big(wordHTML({ de:`${x.art} ${x.sg}` }))}<div class="tr">Plural?</div>`, say:`${x.art} ${x.sg}`, b:`${big(`die ${esc(x.pl)}`)}<div class="fmean">${esc(x.en)}</div><div class="w">${nounWhy(x, 'pf')}</div>${picSVG(x, 'pf')}` };
   if (x.tv) return { f:`<div class="femo">${x.e}</div>${big(VINF(x))}`, say:x.inf, b:`${big(VINF(x))}<div class="fmean">${esc(x.en)}</div><div class="s">${verbHTML(x, 'pr')}</div><div class="s">${verbHTML(x, 'pp')}</div>${picSVG(x, 'pr')}` };
   if (x.mo) return { f:`<div class="femo">${x.e}</div><div class="fsent">${modalPrompt(x, 'kj')}</div>`, say:modalPlain(x, 'kj'), b:`<div class="fsent">${modalHTML(x, 'kj')}</div>${tr(x.t)}${picSVG(x, 'kj')}` };
@@ -6422,9 +6610,9 @@ function renderCard() {
   }
   const x = FC.deck[FC.i], c = cardFaces(x);
   $('#fcCount').textContent = `${FC.i + 1} / ${n}`;
-  $('#fcSub').textContent = FC.round2 ? 'Second round: the ones you didn’t know' : 'Think of the answer, then turn the card';
+  $('#fcSub').innerHTML = FC.round2 ? 'Zweite Runde: die Karten, die Sie noch nicht wussten' : 'Denken Sie an die Antwort und drehen Sie dann die Karte um.';
   $('#fcArea').innerHTML = `<div class="fcard${FC.flip ? ' flip' : ''}" id="fcCard" tabindex="0" role="button" aria-label="Turn the card">
-      <div class="face front">${c.f}<div class="fhint">Tap to turn ↻</div></div>
+      <div class="face front">${c.f}<div class="fhint">Tippen zum Umdrehen ↻<small class="en2">Tap to turn</small></div></div>
       <div class="face back">${c.b}<div class="fbtns">${c.say ? `<button class="linkbtn" data-say="${esc(c.say)}">🔊</button>` : ''}${starBtn(x.id)}</div></div></div>
     <div class="row2"><button class="btn red center" id="fcNo"${FC.flip ? '' : ' disabled'}>✗ Noch nicht</button><button class="btn green center" id="fcYes"${FC.flip ? '' : ' disabled'}>✓ Gewusst</button></div>`;
 }
