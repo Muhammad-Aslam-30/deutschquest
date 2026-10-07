@@ -376,6 +376,42 @@ p{line-height:1.5}
 .tabs button+button{border-left:0}
 .tabs button.on{background:var(--ink);color:var(--on)}
 .backtop{display:block;margin:0 0 6px;font-size:15px;font-weight:700}
+.wlv{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 10px}
+.wlv button{border:2px solid var(--black);background:var(--white);color:var(--black);padding:6px 12px;font:inherit;font-weight:700;cursor:pointer;font-size:15px}
+.wlv button small{font-weight:600;color:var(--grey);margin-left:3px}
+.wlv button.on{background:var(--ink);color:var(--on)} .wlv button.on small{color:var(--on);opacity:.8}
+.wtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin-bottom:12px}
+.wtiles:empty{display:none}
+.wtile{position:relative;border:2px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);padding:8px 8px 10px;text-align:left;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:2px}
+.wtile .te{font-size:22px;line-height:1.1}
+.wtile b{font-size:14px;line-height:1.2}
+.wtile small{position:absolute;top:6px;right:8px;font-weight:800;font-size:14px;color:var(--grey)}
+.wtile.on{background:var(--ink);color:var(--on)} .wtile.on small{color:var(--on)}
+.wtile.empty{opacity:.45}
+.fcbar{height:8px;border:2px solid var(--black);background:var(--white);margin:2px 0 6px}
+.fcbar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+.fcard{display:grid;perspective:1400px;cursor:pointer;margin:12px 0 4px;outline:none}
+.fcard .face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .55s;border:3px solid var(--black);background:var(--white);box-shadow:6px 6px 0 var(--shadow);padding:22px 18px 16px;min-height:250px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:8px}
+.fcard .back{transform:rotateY(180deg);background:#FBF8F1}
+.fcard.flip .front{transform:rotateY(-180deg)} .fcard.flip .back{transform:rotateY(0)}
+.fcard .fbig{font-size:30px;font-weight:800;line-height:1.25}
+.fcard .fsent{font-size:22px;font-weight:600;line-height:1.45}
+.fcard .femo{font-size:44px;line-height:1}
+.fcard .fmean{font-size:20px;font-weight:600}
+.fcard .fhint{color:var(--grey);font-size:14px;margin-top:10px}
+.fcard .pic{max-width:320px;margin:6px auto 0}
+#fcArea .btn:disabled{opacity:.4;cursor:default;box-shadow:none}
+.fcard .fbtns{display:flex;gap:14px;align-items:center;margin-top:6px}
+.fcard .s,.fcard .w{font-size:16px;line-height:1.5}
+@media (prefers-reduced-motion: reduce){.fcard .face{transition:none}}
+.b.lena .tw{cursor:pointer;border-radius:3px}
+.b.lena .tw:hover,.b.lena .tw.sel{background:#FFF1C4;color:#2F3640}
+.cwords{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.cwchip{border:2px solid var(--black);background:var(--white);color:var(--black);padding:3px 9px;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer}
+.cwchip small{font-weight:500;color:var(--grey)}
+.cwchip.on{background:var(--yellow);color:#2F3640} .cwchip.on small{color:#5B6670}
+.wpop{margin-top:8px;padding:6px 10px;border:2px dashed var(--black);background:var(--white);font-size:15px}
+html.dark .fcard .back{background:#242C34}
 .wfilter{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;font-weight:700}
 .wfilter select{flex:1;max-width:340px;border:2px solid var(--black);background:var(--white);padding:8px 10px;font:inherit;font-size:15px;font-weight:600;color:var(--black);cursor:pointer}
 #wList h3.wgroup{margin:16px 0 6px;font-size:17px}
@@ -652,9 +688,25 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <h2>My words</h2>
       <p class="lead">The squares show how well you know each word. Five filled means mastered.</p>
       <div class="tabs"><button data-tab="star" class="on">Starred</button><button data-tab="all">All seen</button></div>
-      <label class="wfilter"><span>Topic</span><select id="wFilter" aria-label="Show words from"></select></label>
+      <div class="wlv" id="wLevels" aria-label="Level"></div>
+      <div class="wtiles" id="wTiles"></div>
+      <button class="btn blue center" id="wCards" style="width:100%;margin-bottom:12px">🃏 Flashcards</button>
       <div class="list" id="wList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="wBack">Back to menu</button></div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section id="cards" class="screen dim">
+    <div class="panel wpanel">
+      <div class="wtop">
+        <button id="fcBack" aria-label="Back to My words">←</button>
+        <div class="ct"><b>🃏 Karteikarten</b><small id="fcSub"></small></div>
+        <span id="fcCount" class="wcountbig"></span>
+        <button class="themebtn" type="button"></button>
+      </div>
+      <div class="fcbar"><i id="fcBar"></i></div>
+      <div id="fcArea"></div>
     </div>
   </section>
 
@@ -3715,7 +3767,8 @@ async function fetchModels(key) {
 const pickModel = async key => (await rankModels(key))[0];
 const REPLY_SCHEMA = { type:'OBJECT', properties:{
   reply_de:{ type:'STRING' }, reply_en:{ type:'STRING' }, grammar_note:{ type:'STRING' },
-  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' }, feedback_category:{ type:'STRING' } },
+  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' }, feedback_category:{ type:'STRING' },
+  words:{ type:'ARRAY', items:{ type:'OBJECT', properties:{ de:{ type:'STRING' }, en:{ type:'STRING' }, ta:{ type:'STRING' } }, required:['de', 'en', 'ta'] } } },
   required:['reply_de', 'reply_en', 'grammar_note', 'feedback_ok', 'feedback_corrected', 'feedback_explanation'] };
 function cafeSystem() {
   const t = cafeTopic(C.topic), lvl = S.cafeLevel || 'A2';
@@ -3727,6 +3780,7 @@ Rules:
 - reply_en: an accurate English translation of reply_de.
 - grammar_note: 1-2 short sentences in simple English explaining the grammar in reply_de, especially the grammar focus (e.g. why the verb is at the end after "weil", or why "dem" is Dativ after "mit").
 - feedback_*: judge ONLY the learner's last message. ${C.write ? 'The learner TYPES their messages (this is a writing chat): also check spelling, capital letters of nouns, umlauts and commas, and set feedback_category to the main mistake type, exactly one of: ' + ERR_CATS.join(', ') + ' (or "" if correct).' : 'Ignore missing capital letters and punctuation (it comes from speech recognition).'} If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
+- words: 1 to 3 useful words or short phrases from reply_de that a ${lvl} learner may not know yet (skip easy ones like ich, und, ist, gut). de = the dictionary form: nouns with der / die / das and the plural ending ("der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form; en = the English meaning in this context; ta = the meaning in Tamil script.
 - If the learner writes English or seems lost, help with a simple German sentence they could say.`;
 }
 // Lena's replies are short: skip Gemini's slow "thinking" step where the model allows it
@@ -3992,18 +4046,20 @@ function micUp() {
 function cafeStatus(t, err) { const s = $('#cStatus'); s.textContent = t; s.classList.toggle('err', !!err); }
 const chatEl = () => $('#cChat');
 function addBubble(cls, html) { const d = document.createElement('div'); d.className = 'b ' + cls; d.innerHTML = html; chatEl().appendChild(d); chatEl().scrollTop = chatEl().scrollHeight; return d; }
-const lenaInner = (de, en, gn) => `<div class="de">${esc(de)}</div>
+const lenaInner = (de, en, gn, words) => `<div class="de">${tapWords(de)}</div>${cwChips(words)}
     <div class="tools"><button data-c="tr">🌐 Translate</button><button data-c="say">🔊</button></div>
     <div class="trbox" hidden><div class="en">${esc(en)}</div><div class="gr"><b>Grammar:</b> ${esc(gn)}</div></div>`;
 function lenaBubble(a) {
-  const d = addBubble('lena', lenaInner(a.reply_de, a.reply_en, a.grammar_note));
+  const words = (Array.isArray(a.words) ? a.words : []).map(w => ({ de:gS(w && w.de), en:gS(w && w.en), ta:gS(w && w.ta) })).filter(w => w.de).slice(0, 3);
+  a.words = words;
+  const d = addBubble('lena', lenaInner(a.reply_de, a.reply_en, a.grammar_note, words));
   d.dataset.de = a.reply_de; if (!C.write) say(a.reply_de);
 }
 // café chats are saved to Past rounds (S.history) as soon as the learner has said something, and updated after every turn
 function cafeLog(mineText, a) {
   if (mineText) C.msgs.push({ r:'u', de:mineText, ok:a.feedback_ok ? 1 : 0, fix:a.feedback_corrected || undefined, why:a.feedback_explanation || undefined });
   if (mineText && C.write) { const s = wst('chat'); s.t++; if (a.feedback_ok) s.c++; else logErr(a.feedback_category || 'other'); }
-  C.msgs.push({ r:'l', de:a.reply_de, en:a.reply_en, gn:a.grammar_note });
+  C.msgs.push({ r:'l', de:a.reply_de, en:a.reply_en, gn:a.grammar_note, w:a.words && a.words.length ? a.words : undefined });
   if (!C.entry && mineText) {
     C.entry = { t:Date.now(), k:'cafe', tp:C.topic, f:C.focus, lv:S.cafeLevel || 'A2', w:C.write ? 1 : undefined, m:C.msgs };
     S.history = S.history || []; S.history.unshift(C.entry);
@@ -5459,7 +5515,7 @@ function cafeRow(h, i) {
 const cafeChatHTML = h => '<div class="chat hchat">' + cafeBubbles(h.m) + '</div>';
 function cafeBubbles(m) {
   return m.map(x => x.r === 'l'
-    ? `<div class="b lena" data-de="${esc(x.de)}">${lenaInner(x.de, x.en, x.gn)}</div>`
+    ? `<div class="b lena" data-de="${esc(x.de)}">${lenaInner(x.de, x.en, x.gn, x.w)}</div>`
     : `<div class="b me" data-de="${esc(x.de)}"><div class="de">${esc(x.de)}</div>${feedbackHTML({ feedback_ok:!!x.ok, feedback_corrected:x.fix || '', feedback_explanation:x.why || '' })}</div>`).join('');
 }
 function renderHist() {
@@ -5530,28 +5586,16 @@ function practiseHist() {
   if (q.length) startLevel(0, q);
 }
 
-let wTab = 'star', wTopic = 'all';
+let wTab = 'star', wTopic = 'all';   // wTopic: 'all' or one topic key (see the level tabs + tiles below)
 // topics in the same (CEFR) order as the tabs on the menu
-const WTOPICS = [...TOPICS.map(([k]) => [k, topicInfo(k).name, () => topicInfo(k).pool()]), ['wz', 'Wortschatz (telc)', () => WZ]];
-const wordItemHTML = w => w.xt ? xItemHTML(w) : w.mo ? modalItemHTML(w) : w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
+const WTOPICS = [...TOPICS.map(([k]) => [k, topicInfo(k).name, () => topicInfo(k).pool(), topicInfo(k).icon]), ['wz', 'Wortschatz (telc)', () => WZ, '🗂️'], ['cafe', 'Lena’s words', () => cwList(), '☕']];
+const wordItemHTML = w => w.cw ? cwItemHTML(w) : w.xt ? xItemHTML(w) : w.mo ? modalItemHTML(w) : w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
       <div class="tr">${esc(w.en)}</div>
       <div class="s" style="margin-top:6px">${sentHTML(w)}</div>
     </div>${starBtn(w.id)}</div>`;
-function renderWords() {
-  $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
-  const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
-  const groups = WTOPICS.map(([key, name, pool]) => ({ key, name, list:pool().filter(has) })), total = groups.reduce((n, g) => n + g.list.length, 0);
-  $('#wFilter').innerHTML = [['all', 'All topics', total], ...groups.map(g => [g.key, g.name, g.list.length])]
-    .map(([key, name, n]) => `<option value="${key}"${key === wTopic ? ' selected' : ''}>${esc(name)} (${n})</option>`).join('');
-  const shown = wTopic === 'all' ? groups.filter(g => g.list.length) : groups.filter(g => g.key === wTopic);
-  const none = wTab === 'star' ? 'No starred words yet. Tap ★ next to any word during a round, on the new-word cards, or on the results screen.' : 'No words yet. Play Level 1 to meet your first three.';
-  $('#wList').innerHTML = wTopic === 'all'
-    ? (total ? shown.map(g => `<h3 class="wgroup">${esc(g.name)} <small>· ${g.list.length}</small></h3>${g.list.map(wordItemHTML).join('')}`).join('') : `<div class="empty">${none}</div>`)
-    : (shown[0] && shown[0].list.length ? shown[0].list.map(wordItemHTML).join('')
-      : `<div class="empty">${wTab === 'star' ? 'No starred words' : 'No words seen'} in ${esc((WTOPICS.find(t => t[0] === wTopic) || [])[1] || '')} yet.${total ? ' Choose <b>All topics</b> to see the others.' : ''}</div>`);
-}
+// renderWords: see "My words: pick a topic" below
 
 function renderProg() {
   const st = S.stats, pct = s => s.t ? Math.round(100 * s.c / s.t) : 0;
@@ -6245,6 +6289,144 @@ $('#exBody').addEventListener('click', e => {
 });
 $('#exBack').addEventListener('click', () => { stopVoice(); const rv = EXS && EXS.review; EXS = null; if (rv) { renderHist(); show('hist'); } else show('menu'); });
 
+/* ================= Lena's words: save words from the Sprach-Café to My words =================
+   Every reply of Lena suggests 1–3 useful words (chips under her bubble); any other word can be tapped and saved too
+   (Gemini looks up its dictionary form and meaning). Saved words live in S.cw and get stars, memory boxes and flashcards. */
+const CW_MAX = 1500;
+const cwId = de => 'cw_' + String(de).toLowerCase().replace(/^(der|die|das)\s+/, '').replace(/,.*$/, '').replace(/[^a-zäöüß]+/g, '_').replace(/^_+|_+$/g, '');
+const cwChips = words => (words || []).length ? `<div class="cwords"><span class="tr">📌 Words:</span>${words.map(w => { const id = cwId(w.de);
+  return `<button class="cwchip${S.bm[id] ? ' on' : ''}" data-cwid="${id}" data-cwde="${esc(w.de)}" data-cwen="${esc(w.en || '')}" data-cwta="${esc(w.ta || '')}"><span class="cs">${S.bm[id] ? '★' : '☆'}</span> ${esc(w.de)} <small>${esc(w.en || '')}</small></button>`; }).join('')}</div>` : '';
+// Lena's German as tappable words
+const tapWords = de => esc(de).split(/(\s+)/).map(t => /[A-Za-zÄÖÜäöüß]/.test(t) ? `<span class="tw">${t}</span>` : t).join('');
+function saveCafeWord(w, ex, exen) {
+  const id = cwId(w.de); if (id === 'cw_') return null;
+  S.cw = S.cw || {};
+  if (!S.cw[id]) S.cw[id] = { id, cw:1, de:w.de, en:w.en || '', ta:w.ta || '', ex:ex || '', exen:exen || '', t:Date.now() };
+  const ids = Object.keys(S.cw);
+  if (ids.length > CW_MAX) ids.filter(k => !S.bm[k]).sort((a, b) => S.cw[a].t - S.cw[b].t).slice(0, ids.length - CW_MAX).forEach(k => { delete S.cw[k]; delete S.srs[k]; });
+  return id;
+}
+function syncCwChips(id) { $$(`.cwchip[data-cwid="${id}"]`).forEach(c => { c.classList.toggle('on', !!S.bm[id]); c.querySelector('.cs').textContent = S.bm[id] ? '★' : '☆'; }); }
+const bubbleCtx = el => { const b = el.closest('.b'); return { de:b ? b.dataset.de || '' : '', en:b ? ((b.querySelector('.trbox .en') || {}).textContent || '') : '', b }; };
+const CW_SCHEMA = { type:'OBJECT', properties:{ de:{ type:'STRING' }, en:{ type:'STRING' }, ta:{ type:'STRING' } }, required:['de', 'en', 'ta'] };
+document.addEventListener('click', async e => {
+  const chip = e.target.closest('.cwchip');
+  if (chip) {
+    const ctx = bubbleCtx(chip), id = saveCafeWord({ de:chip.dataset.cwde, en:chip.dataset.cwen, ta:chip.dataset.cwta }, ctx.de, ctx.en);
+    if (id) { toggleStar(id); syncCwChips(id); }
+    return;
+  }
+  const tw = e.target.closest('.b.lena .tw');
+  if (tw) {
+    const word = tw.textContent.replace(/[^A-Za-zÄÖÜäöüß-]/g, ''), ctx = bubbleCtx(tw); if (!word || !ctx.b) return;
+    $$('.wpop').forEach(p => p.remove()); $$('.tw.sel').forEach(t => t.classList.remove('sel')); tw.classList.add('sel');
+    ctx.b.insertAdjacentHTML('beforeend', `<div class="wpop" data-word="${esc(word)}"><b>${esc(word)}</b> <button class="linkbtn" data-cwsave>☆ Save to My words</button> <button class="linkbtn" data-cwx aria-label="Close">✕</button></div>`);
+    return;
+  }
+  if (e.target.closest('[data-cwx]')) { const p = e.target.closest('.wpop'); $$('.tw.sel').forEach(t => t.classList.remove('sel')); p.remove(); return; }
+  const sv = e.target.closest('[data-cwsave]');
+  if (sv) {
+    const p = sv.closest('.wpop'), word = p.dataset.word, ctx = bubbleCtx(p);
+    if (!lsGet(AI_KEY)) { p.innerHTML = 'Looking up a word needs the Gemini key (⚙ in the Sprach-Café).'; return; }
+    sv.disabled = true; sv.textContent = '… looking it up';
+    try {
+      const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:15000, budget:25000, temperature:0.2,
+        parts:[{ text:`The learner tapped the word "${word}" in this German sentence: "${ctx.de}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this sentence. "ta" = the meaning in Tamil script.` }] });
+      const w = { de:gS(d.de) || word, en:gS(d.en), ta:gS(d.ta) }, id = saveCafeWord(w, ctx.de, ctx.en);
+      if (id && !S.bm[id]) toggleStar(id); else save();
+      p.innerHTML = `★ Saved: <b>${esc(w.de)}</b> <span class="tr">${esc(w.en)}</span> <button class="linkbtn" data-cwx aria-label="Close">✕</button>`;
+    } catch (err) { sv.disabled = false; sv.textContent = '☆ Save to My words'; p.insertAdjacentHTML('beforeend', `<div class="tr">${esc(AI_MSG[err.message] || 'Could not look it up. Try again.')}</div>`); }
+  }
+});
+const cwList = () => Object.values(S.cw || {});
+const cwItemHTML = w => `<div class="item"><div>
+    <div style="font-size:19px;font-weight:600">${wordHTML({ de:w.de })} ${dotsHTML(w.id)} <button class="linkbtn" data-say="${esc(w.de.replace(/,.*$/, ''))}">🔊</button></div>
+    <div class="tr">${esc(w.en)}${w.ta ? ` · <span class="ta">${esc(w.ta)}</span>` : ''}</div>
+    ${w.ex ? `<div class="s" style="margin-top:6px">☕ ${esc(w.ex)}</div>${w.exen ? `<div class="tr">${esc(w.exen)}</div>` : ''}` : ''}
+  </div>${starBtn(w.id)}</div>`;
+
+/* ================= My words: pick a topic with level tabs + topic tiles ================= */
+let wLevel = 'all';
+const WLEVELS = [['all', 'All'], ['A1', 'A1'], ['A2', 'A2'], ['B1', 'B1'], ['X', '✨ More']];
+const wLevelOf = k => k === 'wz' || k === 'cafe' ? 'X' : topicTab(k);
+function wGroups() {
+  const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
+  return WTOPICS.map(([key, name, pool, icon]) => ({ key, name, icon, lv:wLevelOf(key), list:pool().filter(has) }));
+}
+function wShown(groups) { return wTopic !== 'all' ? groups.filter(g => g.key === wTopic) : wLevel === 'all' ? groups : groups.filter(g => g.lv === wLevel); }
+function renderWords() {
+  $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
+  const groups = wGroups(), cnt = lv => groups.filter(g => lv === 'all' || g.lv === lv).reduce((n, g) => n + g.list.length, 0);
+  $('#wLevels').innerHTML = WLEVELS.map(([k, n]) => `<button data-wl="${k}" class="${k === wLevel ? 'on' : ''}">${n} <small>${cnt(k)}</small></button>`).join('');
+  $('#wTiles').innerHTML = wLevel === 'all' ? '' : groups.filter(g => g.lv === wLevel).map(g => `<button class="wtile${g.key === wTopic ? ' on' : ''}${g.list.length ? '' : ' empty'}" data-wt="${g.key}"><span class="te">${g.icon}</span><b>${esc(g.name)}</b><small>${g.list.length}</small></button>`).join('');
+  const shown = wShown(groups), total = shown.reduce((n, g) => n + g.list.length, 0), single = wTopic !== 'all';
+  const none = wTab === 'star' ? 'No starred words here yet. Tap ★ next to any word in a round, on the new-word cards, or ☆ under Lena’s messages in the Sprach-Café.' : 'No words seen here yet. Play a round of this topic to meet your first words.';
+  $('#wList').innerHTML = total ? shown.filter(g => g.list.length).map(g => `${single ? '' : `<h3 class="wgroup">${g.icon} ${esc(g.name)} <small>· ${g.list.length}</small></h3>`}${g.list.map(wordItemHTML).join('')}`).join('') : `<div class="empty">${none}</div>`;
+  $('#wCards').textContent = total ? `🃏 Flashcards (${Math.min(total, FC_MAX)})` : '🃏 Flashcards';
+  $('#wCards').disabled = !total;
+}
+$('#wLevels').addEventListener('click', e => { const b = e.target.closest('[data-wl]'); if (!b) return; wLevel = b.dataset.wl; wTopic = 'all'; renderWords(); });
+$('#wTiles').addEventListener('click', e => { const b = e.target.closest('[data-wt]'); if (!b) return; wTopic = wTopic === b.dataset.wt ? 'all' : b.dataset.wt; renderWords(); });
+
+/* ================= Flashcards (Karteikarten) for the words shown in My words ================= */
+const FC_MAX = 30;
+let FC = null;
+function cardFaces(x) {
+  const big = h => `<div class="fbig">${h}</div>`, tr = t => t ? `<div class="tr">${esc(t)}</div>` : '';
+  if (x.cw) return { f:big(wordHTML({ de:x.de })), say:x.de.replace(/,.*$/, ''), b:`${big(wordHTML({ de:x.de }))}<div class="fmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">${esc(x.ta)}</div>` : ''}${x.ex ? `<div class="s">☕ ${esc(x.ex)}</div>${tr(x.exen)}` : ''}` };
+  if (x.xt === 'wz') { const [de, en] = (x.w || x.a).split(' = '); return { f:`<div class="femo">${x.e}</div>${big(wordHTML({ de }))}`, say:de.replace(/,.*$/, ''), b:`${big(wordHTML({ de }))}<div class="fmean">${esc(en || '')}</div><div class="s">${xHTML(x)}</div>${tr(x.t)}` }; }
+  if (x.xt) return { f:`<div class="femo">${x.e}</div><div class="fsent">${xPrompt(x)}</div><div class="tr">${esc(xHint(x))}</div>`, say:xPlain(x), b:`<div class="fsent">${xHTML(x)}</div>${tr(x.t)}<div class="w">${esc(x.why || '')}</div>${picSVG(x)}` };
+  if (x.pn) return { f:`<div class="femo">${x.e}</div>${big(wordHTML({ de:`${x.art} ${x.sg}` }))}<div class="tr">Plural?</div>`, say:`${x.art} ${x.sg}`, b:`${big(`die ${esc(x.pl)}`)}<div class="fmean">${esc(x.en)}</div><div class="w">${nounWhy(x, 'pf')}</div>${picSVG(x, 'pf')}` };
+  if (x.tv) return { f:`<div class="femo">${x.e}</div>${big(VINF(x))}`, say:x.inf, b:`${big(VINF(x))}<div class="fmean">${esc(x.en)}</div><div class="s">${verbHTML(x, 'pr')}</div><div class="s">${verbHTML(x, 'pp')}</div>${picSVG(x, 'pr')}` };
+  if (x.mo) return { f:`<div class="femo">${x.e}</div><div class="fsent">${modalPrompt(x, 'kj')}</div>`, say:modalPlain(x, 'kj'), b:`<div class="fsent">${modalHTML(x, 'kj')}</div>${tr(x.t)}${picSVG(x, 'kj')}` };
+  if (x.pt || x.ak) return { f:`<div class="fsent">${esc(x.q).replace('___', '<span class="gap">?</span>')}</div>`, say:fillGap(x), b:`<div class="fsent">${x.pt ? prepHTML(x) : adjHTML(x)}</div>${tr(x.t)}<div class="w">${x.pt ? `${esc(x.pr)} + ${caseName(x)}` : adjWhy(x)}</div>${picSVG(x)}` };
+  if (x.b) { const v = VOC[x.id] || ['', '']; return { f:big(wordHTML(x)), say:x.de, b:`${big(wordHTML(x))}<div class="fmean">${esc(x.en)}</div>${v[1] ? `<div class="ta">${esc(v[1])}</div>` : ''}<div class="s">${sentHTML(x)}</div>${tr(x.t)}` }; }
+  return { f:big(esc(x.de || x.id)), say:'', b:tr(x.t || x.en) };
+}
+function startCards() {
+  const list = wShown(wGroups()).flatMap(g => g.list), box = id => (S.srs[id] || {}).box || 0;
+  if (!list.length) return;
+  // the weakest words first, then a shuffle inside each memory box
+  const deck = shuffle(list.slice()).sort((a, b) => box(a.id) - box(b.id)).slice(0, FC_MAX);
+  FC = { deck, i:0, flip:false, known:0, again:[], first:new Set() };
+  show('cards'); renderCard();
+}
+function renderCard() {
+  const n = FC.deck.length;
+  $('#fcBar').style.width = `${Math.round(100 * FC.i / n)}%`;
+  if (FC.i >= n) {
+    $('#fcCount').textContent = '';
+    $('#fcArea').innerHTML = `<div class="wq" style="margin:18px 0">${FC.known === FC.first.size ? 'Super! 🎉' : 'Fertig!'} You knew <b>${FC.known} of ${FC.first.size}</b> cards.</div><p class="note">Cards you knew move up a memory box; the others come back sooner in your Daily review.</p>
+      <div class="row2">${FC.again.length ? `<button class="btn blue center" id="fcAgain">↻ Again: the ${FC.again.length} I didn’t know</button>` : `<button class="btn blue center" id="fcRestart">↻ New shuffle</button>`}<button class="btn center" id="fcDone">Back to My words</button></div>`;
+    return;
+  }
+  const x = FC.deck[FC.i], c = cardFaces(x);
+  $('#fcCount').textContent = `${FC.i + 1} / ${n}`;
+  $('#fcSub').textContent = FC.round2 ? 'Second round: the ones you didn’t know' : 'Think of the answer, then turn the card';
+  $('#fcArea').innerHTML = `<div class="fcard${FC.flip ? ' flip' : ''}" id="fcCard" tabindex="0" role="button" aria-label="Turn the card">
+      <div class="face front">${c.f}<div class="fhint">Tap to turn ↻</div></div>
+      <div class="face back">${c.b}<div class="fbtns">${c.say ? `<button class="linkbtn" data-say="${esc(c.say)}">🔊</button>` : ''}${starBtn(x.id)}</div></div></div>
+    <div class="row2"><button class="btn red center" id="fcNo"${FC.flip ? '' : ' disabled'}>✗ Noch nicht</button><button class="btn green center" id="fcYes"${FC.flip ? '' : ' disabled'}>✓ Gewusst</button></div>`;
+}
+function answerCard(ok) {
+  const x = FC.deck[FC.i];
+  if (!FC.first.has(x.id)) { FC.first.add(x.id); grade(x.id, ok); if (ok) FC.known++; save(); }
+  if (!ok) FC.again.push(x);
+  FC.i++; FC.flip = false; renderCard();
+}
+$('#wCards').addEventListener('click', startCards);
+$('#fcArea').addEventListener('click', e => {
+  if (e.target.closest('[data-say], [data-star]')) return;
+  if (e.target.closest('#fcCard')) { FC.flip = !FC.flip; $('#fcCard').classList.toggle('flip', FC.flip); $('#fcNo').disabled = $('#fcYes').disabled = !FC.flip; if (FC.flip) { const s = $('#fcCard [data-say]'); if (s) { audioCtx(); C.slow = false; say(s.dataset.say); } } return; }
+  if (e.target.closest('#fcYes')) { answerCard(true); return; }
+  if (e.target.closest('#fcNo')) { answerCard(false); return; }
+  if (e.target.closest('#fcAgain')) { FC = { deck:shuffle(FC.again.slice()), i:0, flip:false, known:FC.known, again:[], first:FC.first, round2:true }; renderCard(); return; }
+  if (e.target.closest('#fcRestart')) { startCards(); return; }
+  if (e.target.closest('#fcDone')) $('#fcBack').click();
+});
+$('#fcArea').addEventListener('keydown', e => { if (!FC || !e.target.closest('#fcCard')) return; if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); $('#fcCard').click(); } });
+$('#fcBack').addEventListener('click', () => { stopVoice(); FC = null; renderWords(); show('words'); });
+
 /* ================= input ================= */
 function move(d) { if (!G.running || G.paused) return; G.lane = Math.max(0, Math.min(2, G.lane + d)); renderLanes(); }
 function togglePause() {
@@ -6302,8 +6484,7 @@ function applyTheme(dark) {
 applyTheme(document.documentElement.classList.contains('dark'));
 // one handler for every 🌙 / ☀️ button on every screen (menu, briefing, game, pause, café, writing, past rounds …)
 document.addEventListener('click', e => { const tb = e.target.closest('.themebtn'); if (!tb) return; tb.blur(); const d = !document.documentElement.classList.contains('dark'); lsSet(THEME_KEY, d ? 'dark' : 'light'); applyTheme(d); });
-$('#bWords').addEventListener('click', () => { wTopic = 'all'; renderWords(); show('words'); });   // always opens on All topics
-$('#wFilter').addEventListener('change', e => { wTopic = e.target.value; renderWords(); });
+$('#bWords').addEventListener('click', () => { wTopic = 'all'; wLevel = 'all'; renderWords(); show('words'); });   // always opens on All topics
 $('#wBack').addEventListener('click', () => show('menu'));
 $$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
 $('#gapDn').addEventListener('click', () => setGap(-1));
@@ -6418,6 +6599,7 @@ function mergeSaves(a, b) {
   m.ux = Object.assign({}, b.ux || {});
   for (const [k, v] of Object.entries(a.ux || {})) m.ux[k] = Math.max(m.ux[k] || 1, v || 1);
   m.pass = Object.assign({}, b.pass || {}, a.pass || {});
+  m.cw = Object.assign({}, b.cw || {}, a.cw || {});   // Lena's words from both devices
   m.ex = Object.assign({}, b.ex || {});
   for (const [k, v] of Object.entries(a.ex || {})) { const o = m.ex[k]; if (!o || (v.n || 0) >= (o.n || 0)) m.ex[k] = Object.assign({}, v, { b:Math.max(v.b || 0, (o || {}).b || 0) }); }
   m.rounds = Math.max(a.rounds || 0, b.rounds || 0);
