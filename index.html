@@ -3433,7 +3433,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-10';
+const APP_VERSION = 'v2026.10.07-11';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4626,14 +4626,33 @@ async function speechToBuffer(r) {
   const d = await r.json(), part = ((((d.candidates || [])[0] || {}).content || {}).parts || []).find(p => p.inlineData && p.inlineData.data);
   if (!part) return null;
   const ctx = audioCtx(), rate = +(((part.inlineData.mimeType || '').match(/rate=(\d+)/) || [0, 24000])[1]);
-  const bin = atob(part.inlineData.data), n = bin.length >> 1, buf = ctx.createBuffer(1, n, rate), ch = buf.getChannelData(0);
-  for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; ch[i] = v / 32768; }
-  // the speech often stops on a loud sample: the jump to silence is the "glitch" at the end of a sentence.
-  // A 10 ms fade-in and a 40 ms fade-out (too short to hear) remove the click.
-  const fin = Math.min(n, Math.round(rate * 0.01)), fout = Math.min(n, Math.round(rate * 0.04));
+  const bin = atob(part.inlineData.data), n = bin.length >> 1, raw = new Float32Array(n);
+  for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; raw[i] = v / 32768; }
+  const len = speechEnd(raw, rate), buf = ctx.createBuffer(1, len, rate), ch = buf.getChannelData(0);
+  ch.set(raw.subarray(0, len));
+  // soft edges: a 10 ms fade-in and an 80 ms fade-out, too short to hear, so the sound never jumps to silence (a click)
+  const fin = Math.min(len, Math.round(rate * 0.01)), fout = Math.min(len, Math.round(rate * 0.08));
   for (let i = 0; i < fin; i++) ch[i] *= i / fin;
-  for (let i = 0; i < fout; i++) ch[n - 1 - i] *= i / fout;
+  for (let i = 0; i < fout; i++) ch[len - 1 - i] *= i / fout;
   return buf;
+}
+// where the speech really ends: the voice sometimes adds a short burst of noise after a pause at the end (the "glitch").
+// Measured in 10 ms steps: a loud bit of at most 60 ms (shorter than any word) after at least 100 ms of quiet is dropped; then 150 ms after the
+// last word are kept.
+function speechEnd(x, rate) {
+  const W = Math.max(1, Math.round(rate * 0.01)), nw = Math.floor(x.length / W); if (nw < 20) return x.length;
+  const rms = new Float32Array(nw);
+  for (let w = 0; w < nw; w++) { let s = 0; for (let i = w * W; i < (w + 1) * W; i++) s += x[i] * x[i]; rms[w] = Math.sqrt(s / W); }
+  const LOUD = 0.02;
+  let end = nw;
+  for (let pass = 0; pass < 3; pass++) {
+    let e = end; while (e > 0 && rms[e - 1] < LOUD) e--;          // skip the quiet tail
+    let b = e; while (b > 0 && rms[b - 1] >= LOUD) b--;          // the last loud bit
+    let q = b; while (q > 0 && rms[q - 1] < LOUD) q--;           // the pause before it
+    if (e - b <= 6 && b - q >= 10 && q > 20) end = b; else break;  // short burst after a pause, with speech before: noise
+  }
+  let last = end; while (last > 0 && rms[last - 1] < LOUD * 0.5) last--;
+  return Math.min(x.length, Math.min(end, last + 15) * W);
 }
 function loadVoice() {
   const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [], de = vs.filter(v => /^de/i.test(v.lang));
@@ -4658,7 +4677,16 @@ function speechChunks(text) {
   let n = 1; while (n < sent.length - 1 && sent.slice(0, n).join(' ').length < 25) n++;   // a very short "Hallo!" is merged with the next sentence
   return [sent.slice(0, n).join(' '), sent.slice(n).join(' ')];
 }
+// Many tablets (and Bluetooth speakers) switch the speaker off whenever the sound stops and on again when it starts;
+// that switch is a pop after every sentence. An inaudible tone (−100 dB) keeps the line open while the app is in use.
+let keepAlive = null;
+function audioKeepAlive() {
+  const ctx = audioCtx(); if (!ctx || keepAlive) return;
+  try { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 40; g.gain.value = 0.00001; o.connect(g); g.connect(ctx.destination); o.start(); keepAlive = o; } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && keepAlive) { try { keepAlive.stop(); } catch (e) {} keepAlive = null; } });
 function playBuffer(buf) {
+  audioKeepAlive();
   return new Promise(done => {
     const ctx = audioCtx(), src = ctx.createBufferSource();
     src.buffer = buf; src.playbackRate.value = C.slow ? 0.85 : 1; src.connect(ctx.destination);
