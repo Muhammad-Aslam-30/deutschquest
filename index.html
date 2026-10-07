@@ -4315,10 +4315,15 @@ async function fetchModels(key) {
   const r = await gfetch(`${AI_BASE}/models?pageSize=200`, { headers:{ 'x-goog-api-key':key } });
   if (!r.ok) throw await apiError(r);
   const names = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent')).map(m => m.name.replace('models/', ''));
-  const usable = names.filter(n => /^gemini/.test(n) && !/(image|tts|live|audio|embed|thinking|exp|8b|robotics|computer|native)/.test(n));
+  const sizeB = n => +((n.match(/-(\d+)b\b/) || [0, 0])[1]);   // Gemma size in billions (gemma-4-31b-it → 31)
+  const usable = names.filter(n => (/^gemini/.test(n) || (/^gemma-([3-9]|\d\d)/.test(n) && sizeB(n) >= 12)) && !/(image|tts|live|audio|embed|thinking|exp|-8b|robotics|computer|native|transcribe|translate|research)/.test(n));
   const ver = n => parseFloat((n.match(/gemini-(\d+(\.\d+)?)/) || [0, 0])[1]);
-  const tier = n => /flash-lite/.test(n) ? 1 : /flash/.test(n) ? 0 : /pro/.test(n) ? 2 : 3;   // flash first, then flash-lite, then pro
-  usable.sort((x, y) => tier(x) - tier(y) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0) || x.length - y.length);
+  // the Gemini models first (better German and corrections), the biggest free allowance per day first
+  // (Google AI Studio → Rate limit: Flash Lite 3.x 500 · Flash and Flash Lite 2.5 20); when all of them are used up,
+  // Gemma (14,400 a day) takes over. Google does not tell the app these numbers, so they are written here;
+  // models a key may not use at all ("limit: 0") are skipped while running.
+  const rpd = n => /^gemma/.test(n) ? 14400 : /flash-lite/.test(n) ? (ver(n) >= 3 ? 500 : 20) : /flash/.test(n) ? 20 : 0;
+  usable.sort((x, y) => (/^gemma/.test(x) ? 1 : 0) - (/^gemma/.test(y) ? 1 : 0) || rpd(y) - rpd(x) || ver(y) - ver(x) || sizeB(y) - sizeB(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0) || x.length - y.length);
   const fast = usable.filter(n => !/pro/.test(n));
   const list = fast.length ? fast : usable.length ? usable : ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
   const tts = names.filter(n => /tts/.test(n)).sort((x, y) => (/flash/.test(x) ? 0 : 1) - (/flash/.test(y) ? 0 : 1) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0));
@@ -4345,19 +4350,42 @@ Rules:
 const THINK = [{ thinkingBudget:0 }, { thinkingLevel:'low' }, null], thinkIdx = {};
 const CHAT_WAIT = 12000, CHAT_BUDGET = 30000, REST_MS = 120000;   // per-request limit, overall limit, how long a busy model is skipped
 const resting = {};
+const isGemma = m => /^gemma/.test(m);
+function gBody(model, system, contents, gen, schema, strict) {
+  if (isGemma(model)) {
+    const c = contents.map(x => ({ role:x.role, parts:x.parts.slice() }));
+    if (!c.length || c[0].role !== 'user') c.unshift({ role:'user', parts:[] });
+    const keys = schema && schema.properties ? ` with exactly these keys: ${Object.keys(schema.properties).join(', ')}` : '';
+    c[0].parts.unshift({ text:`${system}\n\nAnswer ONLY with one JSON object${keys}. No other text, no code fences.\n\n` });
+    return { contents:c, generationConfig:{ temperature:gen.temperature, maxOutputTokens:gen.maxOutputTokens } };
+  }
+  const think = THINK[thinkIdx[model] || 0];
+  return { systemInstruction:{ parts:[{ text:system + (strict ? '' : '\nAnswer ONLY with one JSON object, no other text.') }] }, contents,
+    generationConfig:Object.assign({ temperature:gen.temperature, maxOutputTokens:gen.maxOutputTokens, responseMimeType:'application/json' }, strict && schema ? { responseSchema:schema } : {}, think ? { thinkingConfig:think } : {}) };
+}
+// the JSON in a model's answer (Gemma may wrap it in a sentence or code fences)
+function gJSON(txt) {
+  txt = (txt || '').replace(/^\s*```(json)?\s*|\s*```\s*$/g, '');
+  try { return JSON.parse(txt); } catch (e) {}
+  const a = txt.indexOf('{'), b = txt.lastIndexOf('}');
+  if (a >= 0 && b > a) return JSON.parse(txt.slice(a, b + 1));
+  throw new Error('no json');
+}
+// try every usable model (not just four): "limit reached" answers come back at once, so trying more costs no time
+const modelOrder = (ranked, first, now, media) => {
+  const all = [first, ...ranked].filter((m, i, arr) => m && arr.indexOf(m) === i && !(media && isGemma(m)));   // pictures / voice: Gemini only
+  return [...all.filter(m => !(resting[m] > now)), ...all.filter(m => resting[m] > now)];
+};
 async function askLena(userText) {
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
-  const ranked = await rankModels(key), first = C.model || lsGet(AI_MODEL) || ranked[0], now = Date.now();
-  const all = [first, ...ranked.filter(m => m !== first)];
-  const order = [...all.filter(m => !(resting[m] > now)), ...all.filter(m => resting[m] > now)].slice(0, 4);   // models that just failed go last
+  const ranked = await rankModels(key), first = C.model || ranked[0], now = Date.now();
+  const order = modelOrder(ranked, first, now, false);   // models that just failed go last
   const deadline = now + CHAT_BUDGET;
   C.hist.push({ role:'user', parts:[{ text:userText }] });
   let schema = true, r = null, used = null, lastErr = null;
   const ctxTurns = C.hist.length > 15 ? C.hist.slice(-15) : C.hist;             // recent turns are enough and keep replies fast
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
-    body:JSON.stringify({ systemInstruction:{ parts:[{ text:cafeSystem() + (schema ? '' : '\nAnswer ONLY with a JSON object with the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.') }] }, contents:ctxTurns,
-      generationConfig:Object.assign({ temperature:0.8, maxOutputTokens:1024, responseMimeType:'application/json' }, schema ? { responseSchema:REPLY_SCHEMA } : {},
-        THINK[thinkIdx[model] || 0] ? { thinkingConfig:THINK[thinkIdx[model] || 0] } : {}) }) }, CHAT_WAIT);
+    body:JSON.stringify(gBody(model, cafeSystem() + (schema ? '' : '\nThe JSON object has the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.'), ctxTurns, { temperature:0.8, maxOutputTokens:1024 }, REPLY_SCHEMA, schema)) }, CHAT_WAIT);
   const attempt = async model => { try { return await call(model); } catch (e) { if (e.message === 'timeout') return null; throw e; } };
   try {
     outer: for (let round = 0; round < 2 && !used; round++) {
@@ -4377,6 +4405,7 @@ async function askLena(userText) {
         if (!r) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); continue; }
         if (r.ok) { used = model; break; }
         if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; continue; }
+        if (r.status === 400 && isGemma(model)) { lastErr = err; continue; }   // Gemma could not handle this request: the next model
         throw err;                                                            // key problems or other refusals: no point trying other models
       }
     }
@@ -4385,7 +4414,7 @@ async function askLena(userText) {
   C.model = used; cafeStatus('');
   const d = await r.json(), cand = (d.candidates || [])[0] || {}, parts = (cand.content || {}).parts || [];
   const txt = parts.filter(p => !p.thought).map(p => p.text || '').join('').replace(/^```(json)?\s*|\s*```$/g, '');
-  let a; try { a = JSON.parse(txt); } catch (e) { C.hist.pop(); throw new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); }
+  let a; try { a = gJSON(txt); } catch (e) { C.hist.pop(); throw new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); }
   C.hist.push({ role:'model', parts:[{ text:a.reply_de }] });
   return a;
 }
@@ -5383,13 +5412,10 @@ const writeItemFromKey = key => { const [lv, kind, id] = key.split(':'); return 
 async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000, temperature = 0.4 }) {
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
   const ranked = await rankModels(key), now = Date.now();
-  const all = [C.model || lsGet(AI_MODEL) || ranked[0], ...ranked].filter((m, i, arr) => m && arr.indexOf(m) === i);
-  const order = [...all.filter(m => !(resting[m] > now)), ...all.filter(m => resting[m] > now)].slice(0, 4);
+  const order = modelOrder(ranked, C.model || ranked[0], now, (parts || []).some(p => p.inline_data || p.inlineData));
   const deadline = now + budget; let useSchema = true, lastErr = null;
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
-    body:JSON.stringify({ systemInstruction:{ parts:[{ text:system + (useSchema ? '' : '\nAnswer ONLY with one JSON object, no other text.') }] }, contents:[{ role:'user', parts }],
-      generationConfig:Object.assign({ temperature, maxOutputTokens:8192, responseMimeType:'application/json' }, useSchema ? { responseSchema:schema } : {},
-        THINK[thinkIdx[model] || 0] ? { thinkingConfig:THINK[thinkIdx[model] || 0] } : {}) }) }, wait);
+    body:JSON.stringify(gBody(model, system, [{ role:'user', parts }], { temperature, maxOutputTokens:8192 }, schema, useSchema)) }, wait);
   for (const model of order) {
     for (let k = 0; k < 4; k++) {
       if (Date.now() > deadline) throw lastErr || new AIError('busy');
@@ -5397,12 +5423,13 @@ async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000,
       if (r.ok) {
         const d = await r.json(), cand = (d.candidates || [])[0] || {};
         const txt = ((cand.content || {}).parts || []).filter(p => !p.thought).map(p => p.text || '').join('').replace(/^```(json)?\s*|\s*```$/g, '');
-        try { return JSON.parse(txt); } catch (e) { lastErr = new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); break; }
+        try { return gJSON(txt); } catch (e) { lastErr = new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); break; }
       }
       const err = await apiError(r);
       if (r.status === 400 && /thinking/i.test(err.detail) && (thinkIdx[model] || 0) < THINK.length - 1) { thinkIdx[model] = (thinkIdx[model] || 0) + 1; continue; }
       if (r.status === 400 && useSchema && /schema|response_?mime|json|enum/i.test(err.detail)) { useSchema = false; continue; }
       if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; break; }
+      if (r.status === 400 && isGemma(model)) { lastErr = err; break; }   // Gemma could not handle this request: the next model
       throw err;
     }
   }
