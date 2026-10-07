@@ -591,7 +591,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 27 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
+      <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 28 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button></div>
       <div class="tcards" id="topicCards"></div>
@@ -975,6 +975,7 @@ Object.assign(EN2, { 'Welche Endung passt zur Person?':'Which ending fits the pe
   'lassen: Welche Form?':'lassen: which form?', 'sich lassen = man kann …':'sich lassen = it can be …', 'Vorgang (werden) oder Zustand (sein)?':'Process (werden) or state (sein)?',
   'Gleichzeitig, aktiv → Partizip I (-end)':'Happening now, active → Partizip I (-end)', 'Fertig oder passiv → Partizip II':'Finished or passive → Partizip II', 'Adjektiv als Nomen: Welche Endung?':'Adjective as a noun: which ending?',
   'dies- / welch- / jed-: Welche Endung?':'this / which / every: which ending?', 'Vergangenheit: hätte oder wäre + Partizip II?':'Past: hätte or wäre + Partizip II?', 'Wie? → indem · neues Subjekt → ohne dass':'How? → indem · a new subject → ohne dass', 'Grund, statt, innerhalb oder außerhalb?':'A reason, instead of, within or outside?' });
+Object.assign(EN2, { 'Regelmäßig: ge…t':'Regular: ge…t', 'Unregelmäßig: ge…en':'Irregular: ge…en', 'Gemischt: Vokalwechsel + t':'Mixed: vowel change + t', 'Kein ge-: -ieren, be-, ver-, er- …':'No ge-: -ieren, be-, ver-, er- …', 'Trennbar: ge in der Mitte':'Separable: ge in the middle' });
 const bi = (de, en) => { if (!de) return ''; de = String(de); if (de.includes('class="en2"')) return de; en = en || EN2[de]; return en ? `${de}<small class="en2">${en}</small>` : de; };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -2121,7 +2122,16 @@ const XT = [
       an:['Adjectives as nouns', 'An adjective or participle can become a noun (capital letter!) and keeps the adjective endings: der Deutsche, ein Deutscher, die Angestellte, die Erwachsenen, mein Bekannter. Also: etwas Neues, nichts Besonderes, das Beste.', 'பெயரடை → பெயர்ச்சொல் (பெரிய எழுத்து), பெயரடை முடிவுகளுடன்: der Deutsche, ein Deutscher.'] },
     hint:{ p1:'Gleichzeitig, aktiv → Partizip I (-end)', p2:'Fertig oder passiv → Partizip II', an:'Adjektiv als Nomen: Welche Endung?' },
     lv:[{ t:'lachend oder gelacht?', s:'das schlafende Kind · die geschlossene Tür', k:['p1', 'p2'] }, { t:'Adjektive als Nomen', s:'der Deutsche · ein Deutscher · etwas Neues', k:['an'] }],
-    err:'ending' }
+    err:'ending' },
+  { tp:'p2', name:'Partizip II', short:'Partizip II', icon:'🔨', cefr:'A1–A2', base:129,
+    kinds:{ rg:['Regular: ge…t', 'Regular verbs: ge + stem + t: spielen → gespielt, machen → gemacht, kaufen → gekauft. Stems on -t / -d add -et: arbeiten → gearbeitet, warten → gewartet.', 'சாதாரண வினை: ge + வேர் + t: gespielt, gemacht.'],
+      ir:['Irregular: ge…en', 'Irregular verbs end in -en and often change their vowel: essen → gegessen, trinken → getrunken, schreiben → geschrieben, fahren → gefahren, gehen → gegangen. Learn them in a list.', 'ஒழுங்கற்ற வினை: ge…en, உயிர் மாறலாம்: getrunken, geschrieben.'],
+      mx:['Mixed: vowel change + t', 'A few verbs mix both: the vowel changes AND they end in -t: bringen → gebracht, denken → gedacht, wissen → gewusst, kennen → gekannt, nennen → genannt, rennen → gerannt.', 'கலப்பு: உயிர் மாறும் + t: gebracht, gedacht, gewusst.'],
+      ng:['No ge-', 'No ge- for verbs on -ieren (studiert, telefoniert, repariert) and for verbs with an inseparable prefix be-, ver-, er-, ent-, emp-, zer-, ge-, miss- (besucht, verstanden, erklärt, bekommen, vergessen).', '-ieren, be-, ver-, er-, ent- → ge- இல்லை: studiert, besucht, verstanden.'],
+      tr:['Separable: ge in the middle', 'Separable verbs put ge between the prefix and the verb: aufstehen → aufgestanden, einkaufen → eingekauft, anrufen → angerufen, mitbringen → mitgebracht.', 'பிரியும் வினை: ge நடுவில்: aufgestanden, eingekauft.'] },
+    hint:{ rg:'Regelmäßig: ge…t', ir:'Unregelmäßig: ge…en', mx:'Gemischt: Vokalwechsel + t', ng:'Kein ge-: -ieren, be-, ver-, er- …', tr:'Trennbar: ge in der Mitte' },
+    lv:[{ t:'ge…t oder ge…en?', s:'gespielt · gegessen · gebracht', k:['rg', 'ir', 'mx'] }, { t:'Ohne ge- & trennbar', s:'studiert · besucht · aufgestanden', k:['ng', 'tr'] }],
+    err:'perfekt' }
 ];
 // kind colours: 1st kind blue, 2nd red, 3rd gold, 4th green, 5th grey-blue
 const XCOL = ['#4F7CAC', '#D9675B', '#A07A12', '#3E8E63', '#5B6F86'];
@@ -2811,6 +2821,52 @@ const XR = { // [id, kind, sentence, answer, wrong, English, emoji, why, key wor
     ['n7', 'an', 'Der ___ wurde sofort ins Krankenhaus gebracht.', 'Verletzte', 'Verletzten', 'The injured man was taken to hospital immediately.', '🚑', 'Nominativ after der → -e.', 'der / die Verletzte = injured person'],
     ['n8', 'an', 'Ich habe mit den ___ gesprochen.', 'Jugendlichen', 'Jugendliche', 'I spoke with the young people.', '🧑‍🤝‍🧑', 'Dativ plural → -en.', 'der / die Jugendliche = young person'],
     ['n9', 'an', 'Das ___ an diesem Job ist das Team.', 'Beste', 'Besten', 'The best thing about this job is the team.', '🏆', 'das + adjective as a noun → -e: das Beste.', 'gut, besser, am besten = good']
+  ],
+  p2:[
+    ['r1', 'rg', 'Ich habe gestern Fußball ___.', 'gespielt', 'gespielen', 'I played football yesterday.', '⚽', 'Regular verb: ge + spiel + t.', 'spielen = to play'],
+    ['r2', 'rg', 'Wir haben zusammen Pizza ___.', 'gemacht', 'gemachen', 'We made pizza together.', '🍕', 'machen is regular: ge-mach-t.', 'machen = to make'],
+    ['r3', 'rg', 'Sie hat ein neues Kleid ___.', 'gekauft', 'gekaufen', 'She bought a new dress.', '👗', 'kaufen: ge + kauf + t.', 'kaufen = to buy'],
+    ['r4', 'rg', 'Ich habe den ganzen Tag ___.', 'gearbeitet', 'gearbeitt', 'I worked all day.', '💼', 'Stem on -t: ge + arbeit + et.', 'arbeiten = to work'],
+    ['r5', 'rg', 'Wir haben lange auf den Bus ___.', 'gewartet', 'gewartt', 'We waited a long time for the bus.', '🚌', 'Stem on -t: ge + wart + et.', 'warten = to wait'],
+    ['r6', 'rg', 'Ich habe dich nicht ___.', 'gehört', 'gehören', 'I didn’t hear you.', '👂', 'hören: ge + hör + t.', 'hören = to hear'],
+    ['r7', 'rg', 'Er hat zwei Jahre in Berlin ___.', 'gewohnt', 'gewohnen', 'He lived in Berlin for two years.', '🏙️', 'wohnen: ge + wohn + t.', 'wohnen = to live'],
+    ['r8', 'rg', 'Was hast du am Wochenende ___?', 'gekocht', 'gekochen', 'What did you cook at the weekend?', '🍳', 'kochen: ge + koch + t.', 'kochen = to cook'],
+    ['r9', 'rg', 'Die Kinder haben laut ___.', 'gelacht', 'gelachen', 'The children laughed loudly.', '😂', 'lachen: ge + lach + t.', 'lachen = to laugh'],
+    ['i1', 'ir', 'Ich habe schon ___.', 'gegessen', 'geesst', 'I have already eaten.', '🍽️', 'essen is irregular: gegessen (with an extra g).', 'essen = to eat'],
+    ['i2', 'ir', 'Hast du genug Wasser ___?', 'getrunken', 'getrinkt', 'Have you drunk enough water?', '💧', 'trinken → getrunken (i → u).', 'trinken = to drink'],
+    ['i3', 'ir', 'Sie hat mir einen Brief ___.', 'geschrieben', 'geschreibt', 'She wrote me a letter.', '✉️', 'schreiben → geschrieben (ei → ie).', 'schreiben = to write'],
+    ['i4', 'ir', 'Wir sind nach Hamburg ___.', 'gefahren', 'gefahrt', 'We drove to Hamburg.', '🚗', 'fahren → gefahren.', 'fahren = to go, to drive'],
+    ['i5', 'ir', 'Er ist früh nach Hause ___.', 'gegangen', 'gegeht', 'He went home early.', '🏠', 'gehen → gegangen.', 'gehen = to go'],
+    ['i6', 'ir', 'Ich habe den Film schon ___.', 'gesehen', 'gesieht', 'I have already seen the film.', '🎬', 'sehen → gesehen.', 'sehen = to see'],
+    ['i7', 'ir', 'Hast du das Buch schon ___?', 'gelesen', 'geleset', 'Have you read the book yet?', '📖', 'lesen → gelesen.', 'lesen = to read'],
+    ['i8', 'ir', 'Am Sonntag haben wir lange ___.', 'geschlafen', 'geschlaft', 'On Sunday we slept for a long time.', '😴', 'schlafen → geschlafen.', 'schlafen = to sleep'],
+    ['i9', 'ir', 'Er hat mir ein Geschenk ___.', 'gegeben', 'gegebt', 'He gave me a present.', '🎁', 'geben → gegeben.', 'geben = to give'],
+    ['i10', 'ir', 'Wir haben lange miteinander ___.', 'gesprochen', 'gesprecht', 'We talked to each other for a long time.', '🗣️', 'sprechen → gesprochen (e → o).', 'sprechen = to speak'],
+    ['m1', 'mx', 'Ich habe dir Blumen ___.', 'gebracht', 'gebringt', 'I brought you flowers.', '💐', 'bringen → gebracht: new vowel + t.', 'bringen = to bring'],
+    ['m2', 'mx', 'Ich habe oft an dich ___.', 'gedacht', 'gedachen', 'I often thought of you.', '💭', 'denken → gedacht: new vowel + t.', 'denken an = to think of'],
+    ['m3', 'mx', 'Das habe ich nicht ___.', 'gewusst', 'gewisst', 'I didn’t know that.', '🤷', 'wissen → gewusst.', 'wissen = to know'],
+    ['m4', 'mx', 'Ich habe seine Eltern nicht ___.', 'gekannt', 'gekennt', 'I didn’t know his parents.', '🤝', 'kennen → gekannt (e → a).', 'kennen = to know (a person)'],
+    ['m5', 'mx', 'Wir sind zum Bus ___.', 'gerannt', 'gerennt', 'We ran to the bus.', '🏃', 'rennen → gerannt (with sein).', 'rennen = to run'],
+    ['m6', 'mx', 'Sie hat ihr Baby Mia ___.', 'genannt', 'genennt', 'She named her baby Mia.', '👶', 'nennen → genannt.', 'nennen = to name, to call'],
+    ['m7', 'mx', 'Hast du an meinen Geburtstag ___?', 'gedacht', 'gedenkt', 'Did you remember my birthday?', '🎂', 'denken an → gedacht.', 'der Geburtstag = birthday'],
+    ['m8', 'mx', 'Ich habe das Paket zur Post ___.', 'gebracht', 'gebrungen', 'I took the parcel to the post office.', '📦', 'bringen → gebracht, not gebrungen.', 'die Post = post office'],
+    ['n1', 'ng', 'Ich habe in Köln ___.', 'studiert', 'gestudiert', 'I studied in Cologne.', '🎓', 'Verbs on -ieren take no ge-.', 'studieren = to study'],
+    ['n2', 'ng', 'Wir haben meine Oma ___.', 'besucht', 'gebesucht', 'We visited my grandma.', '👵', 'be- verbs take no ge-.', 'besuchen = to visit'],
+    ['n3', 'ng', 'Hast du alles ___?', 'verstanden', 'geverstanden', 'Did you understand everything?', '💡', 'ver- verbs take no ge-.', 'verstehen = to understand'],
+    ['n4', 'ng', 'Der Lehrer hat die Regel ___.', 'erklärt', 'geerklärt', 'The teacher explained the rule.', '🧑‍🏫', 'er- verbs take no ge-.', 'erklären = to explain'],
+    ['n5', 'ng', 'Ich habe gestern mit Anna ___.', 'telefoniert', 'getelefoniert', 'I spoke to Anna on the phone yesterday.', '📞', '-ieren: no ge-.', 'telefonieren = to phone'],
+    ['n6', 'ng', 'Ich habe meinen Schlüssel ___.', 'vergessen', 'gevergessen', 'I forgot my key.', '🔑', 'ver-: no ge-.', 'vergessen = to forget'],
+    ['n7', 'ng', 'Sie hat ein Paket ___.', 'bekommen', 'gebekommen', 'She got a parcel.', '📦', 'be-: no ge-.', 'bekommen = to get, to receive'],
+    ['n8', 'ng', 'Der Mechaniker hat das Auto ___.', 'repariert', 'gerepariert', 'The mechanic repaired the car.', '🔧', '-ieren: no ge-.', 'reparieren = to repair'],
+    ['n9', 'ng', 'Wir haben einen neuen Tisch ___.', 'bestellt', 'gebestellt', 'We ordered a new table.', '🛒', 'be-: no ge-.', 'bestellen = to order'],
+    ['t1', 'tr', 'Ich bin heute um 6 Uhr ___.', 'aufgestanden', 'geaufstanden', 'I got up at 6 today.', '⏰', 'Separable: auf + ge + standen.', 'aufstehen = to get up'],
+    ['t2', 'tr', 'Wir haben im Supermarkt ___.', 'eingekauft', 'geeinkauft', 'We went shopping at the supermarket.', '🛒', 'ein + ge + kauft.', 'einkaufen = to shop'],
+    ['t3', 'tr', 'Hast du deine Mutter ___?', 'angerufen', 'geanrufen', 'Did you call your mother?', '📞', 'an + ge + rufen.', 'anrufen = to call'],
+    ['t4', 'tr', 'Sie hat einen Kuchen ___.', 'mitgebracht', 'gemitbracht', 'She brought a cake along.', '🍰', 'mit + ge + bracht.', 'mitbringen = to bring along'],
+    ['t5', 'tr', 'Der Zug ist pünktlich ___.', 'angekommen', 'geankommen', 'The train arrived on time.', '🚉', 'an + ge + kommen.', 'ankommen = to arrive'],
+    ['t6', 'tr', 'Ich habe mein Zimmer ___.', 'aufgeräumt', 'geaufräumt', 'I tidied my room.', '🧹', 'auf + ge + räumt.', 'aufräumen = to tidy up'],
+    ['t7', 'tr', 'Wir haben gestern Abend ___.', 'ferngesehen', 'gefernsehen', 'We watched TV last night.', '📺', 'fern + ge + sehen.', 'fernsehen = to watch TV'],
+    ['t8', 'tr', 'Hast du die Tür ___?', 'zugemacht', 'gezumacht', 'Did you close the door?', '🚪', 'zu + ge + macht.', 'zumachen = to close']
   ]
 };
 // extra kinds for older topics: they join an existing level, so level numbers and saved progress stay the same
@@ -3260,7 +3316,7 @@ const PLAN = [
   ['Woche 1 · A1: Verben und Satzbau', [['lv', 73], ['lv', 74], ['lv', 25], ['lv', 26], ['wz', 'familie'], ['cafe', 1]]],
   ['Woche 2 · A1: Zahlen, Uhrzeit und Fälle', [['lv', 77], ['lv', 78], ['lv', 29], ['lv', 30], ['wz', 'restaurant'], ['role', 'r_rest'], ['ex', 'hoer', 1]]],
   ['Woche 3 · A1: Plural und trennbare Verben', [['lv', 17], ['lv', 18], ['lv', 13], ['lv', 14], ['wz', 'wohnen'], ['wz', 'einkaufen'], ['role', 'r_bahn']]],
-  ['Woche 4 · A1–A2: Modalverben und Perfekt', [['lv', 21], ['lv', 22], ['lv', 33], ['lv', 34], ['wz', 'termine'], ['role', 'r_termin'], ['cafe', 3]]],
+  ['Woche 4 · A1–A2: Modalverben und Perfekt', [['lv', 21], ['lv', 22], ['lv', 33], ['lv', 129], ['lv', 34], ['wz', 'termine'], ['role', 'r_termin'], ['cafe', 3]]],
   ['Woche 5 · A2: Präteritum, Reflexiv, Präpositionen', [['lv', 45], ['lv', 37], ['lv', 4], ['lv', 5], ['wz', 'stadt'], ['role', 'r_weg'], ['ex', 'hoer', 2]]],
   ['Woche 6 · A2: Nebensätze und Relativsätze', [['lv', 1], ['lv', 2], ['lv', 81], ['lv', 82], ['wz', 'gesundheit'], ['role', 'r_arzt'], ['ex', 'les', 1]]],
   ['Woche 7 · A2: Temporalsätze und indirekte Fragen', [['lv', 85], ['lv', 86], ['lv', 89], ['lv', 90], ['wz', 'arbeit'], ['ex', 'sb1', 1], ['sp', 'sp1']]],
@@ -3272,7 +3328,7 @@ const PLAN = [
 ];
 
 // [topic, tab]; the order inside a tab is the teaching order
-const TOPICS = [['ps', 'A1'], ['sb', 'A1'], ['zd', 'A1'], ['ar', 'A1'], ['pl', 'A1'], ['tv', 'A1'], ['mv', 'A1'], ['pf', 'A1'],
+const TOPICS = [['ps', 'A1'], ['sb', 'A1'], ['zd', 'A1'], ['ar', 'A1'], ['pl', 'A1'], ['tv', 'A1'], ['mv', 'A1'], ['pf', 'A1'], ['p2', 'A1'],
   ['prep', 'A2'], ['rv', 'A2'], ['ks', 'A2'], ['pt', 'A2'], ['wd', 'A2'], ['rs', 'A2'], ['ts', 'A2'], ['adj', 'A2'], ['iq', 'A2'],
   ['k2', 'B1'], ['vp', 'B1'], ['zu', 'B1'], ['pa', 'B1'], ['ls', 'B1'], ['nd', 'B1'], ['zk', 'B1'], ['fg', 'B1'], ['nv', 'B1'], ['pz', 'B1']];
 const OLD_T = {
@@ -3293,7 +3349,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-4';
+const APP_VERSION = 'v2026.10.07-5';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -6661,6 +6717,17 @@ GUIDE.pz = { name:'Partizipien & Adjektive als Nomen', sections:() => [
   ['4 · Adjectives as nouns', `<p>${XBY.pz.kinds.an[1]}</p>${gtab(['', 'der / die / das …', 'ein / eine …', 'no article'], [['masc.', 'der Deutsche', 'ein Deutscher', 'Deutscher'], ['fem.', 'die Deutsche', 'eine Deutsche', 'Deutsche'], ['plural', 'die Deutschen', '–', 'Deutsche']])}<p>Same pattern: der / die Angestellte, Bekannte, Erwachsene, Jugendliche, Verwandte, Kranke. And with etwas / nichts: <b>etwas Neues, nichts Besonderes</b>.</p>${xPic('pz_n1')}${xEx(['pz_n2', 'pz_n4', 'pz_n5', 'pz_n9'])}${taMn(XBY.pz.kinds.an[2])}`],
   ['💡 Memory tricks', xTipsHTML(XPOOL.pz)]
 ] };
+GUIDE.p2 = { name:'Partizip II', sections:() => [
+  ['1 · Which ending? Four questions', `<p>The Partizip II is the second part of the Perfekt (<i>ich habe … <b>gespielt</b></i>) and of the Passiv. Ask these questions in this order:</p>${decisionSVG('Look at the verb …', [['-ieren, or be-, ver-, er-, ent- …', 'no ge-: studiert, besucht', XC_R], ['separable: auf-, ein-, an-, mit- …', 'ge in the middle: aufgestanden', XC_GD], ['regular', 'ge … t: gespielt', XC_B], ['irregular', 'ge … en: gegessen', XC_GR]])}`],
+  ['2 · Regular: ge…t', `<p>${XBY.p2.kinds.rg[1]}</p>${buildWordSVG([[[{ t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'spiel' }, { t:'t', c:XC_B, wt:800, fly:'r' }], 'spielen → gespielt'], [[{ t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'arbeit' }, { t:'et', c:XC_B, wt:800, fly:'r' }], 'arbeiten → gearbeitet (stem on -t)']], '')}${xPic('p2_r1')}${xEx(['p2_r3', 'p2_r4', 'p2_r6', 'p2_r8'])}${taMn(XBY.p2.kinds.rg[2])}`],
+  ['3 · Irregular: ge…en', `<p>${XBY.p2.kinds.ir[1]}</p>${buildWordSVG([[[{ t:'ge', c:XC_GR, wt:800, fly:'l' }, { t:'tr' }, { t:'u', c:XC_R, wt:800, fly:'l' }, { t:'nk' }, { t:'en', c:XC_GR, wt:800, fly:'r' }], 'trinken → getrunken (i → u)']], '')}
+    ${gtab(['Infinitiv', 'Partizip II', 'Infinitiv', 'Partizip II'], [['essen', 'gegessen', 'fahren', '(ist) gefahren'], ['trinken', 'getrunken', 'gehen', '(ist) gegangen'], ['schreiben', 'geschrieben', 'kommen', '(ist) gekommen'], ['lesen', 'gelesen', 'bleiben', '(ist) geblieben'], ['sehen', 'gesehen', 'finden', 'gefunden'], ['sprechen', 'gesprochen', 'helfen', 'geholfen'], ['nehmen', 'genommen', 'schlafen', 'geschlafen'], ['geben', 'gegeben', 'treffen', 'getroffen']])}${xPic('p2_i2')}${xEx(['p2_i1', 'p2_i3', 'p2_i5', 'p2_i10'])}${taMn(XBY.p2.kinds.ir[2])}`],
+  ['4 · Mixed: new vowel + t', `<p>${XBY.p2.kinds.mx[1]}</p>${buildWordSVG([[[{ t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'br' }, { t:'a', c:XC_R, wt:800, fly:'l' }, { t:'ch' }, { t:'t', c:XC_B, wt:800, fly:'r' }], 'bringen → gebracht'], [[{ t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'w' }, { t:'u', c:XC_R, wt:800, fly:'l' }, { t:'ss' }, { t:'t', c:XC_B, wt:800, fly:'r' }], 'wissen → gewusst']], 'only a handful of verbs: learn these six')}
+    ${gtab(['Infinitiv', 'Partizip II'], [['bringen', 'gebracht'], ['denken', 'gedacht'], ['wissen', 'gewusst'], ['kennen', 'gekannt'], ['nennen', 'genannt'], ['rennen', '(ist) gerannt']])}${xPic('p2_m1')}${xEx(['p2_m2', 'p2_m3', 'p2_m4', 'p2_m6'])}`],
+  ['5 · No ge-', `<p>${XBY.p2.kinds.ng[1]}</p>${buildWordSVG([[[{ t:'studier' }, { t:'t', c:XC_B, wt:800, fly:'r' }], 'studieren → studiert (no ge-)'], [[{ t:'be', c:XC_R, wt:800, fly:'l' }, { t:'such' }, { t:'t', c:XC_B, wt:800, fly:'r' }], 'besuchen → besucht'], [[{ t:'ver', c:XC_R, wt:800, fly:'l' }, { t:'standen' }], 'verstehen → verstanden']], 'the prefix already sits where ge- would go')}${xPic('p2_n1')}${xEx(['p2_n2', 'p2_n3', 'p2_n4', 'p2_n7'])}${taMn(XBY.p2.kinds.ng[2])}`],
+  ['6 · Separable: ge in the middle', `<p>${XBY.p2.kinds.tr[1]}</p>${buildWordSVG([[[{ t:'auf', c:XC_GD, wt:800 }, { t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'standen' }], 'aufstehen → aufgestanden'], [[{ t:'ein', c:XC_GD, wt:800 }, { t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'kauft' }], 'einkaufen → eingekauft']], 'one word, ge squeezed in after the prefix')}${xPic('p2_t1')}${xEx(['p2_t2', 'p2_t3', 'p2_t4', 'p2_t7'])}${taMn(XBY.p2.kinds.tr[2])}`],
+  ['💡 Memory tricks', xTipsHTML(XPOOL.p2)]
+] };
 // the extra kinds of older topics get their own section, just before the memory tricks
 [['sb', 'dw', 'dieser, welcher, jeder', () => `${tableSVG(['masc.', 'fem.', 'neut.', 'plural'], ['Nom.', 'Akk.', 'Dat.'], [[['dieser'], ['diese'], ['dieses'], ['diese']], [['diesen'], ['diese'], ['dieses'], ['diese']], [['diesem'], ['dieser'], ['diesem'], ['diesen']]], [[1, 0], [2, 0]], XC_R, 'welch- and jed- work the same way')}${xPic('sb_w1')}${xEx(['sb_w2', 'sb_w3', 'sb_w4', 'sb_w7'])}`],
  ['k2', 'vg', 'Konjunktiv II in the past', () => `${dreamSVG('Ich habe nicht gelernt.', ['Wenn ich gelernt hätte,', 'hätte ich bestanden!'], '😞', '🎓')}${decisionSVG('Perfekt with haben or sein?', [['haben (lernen, wissen …)', 'hätte + Partizip II', XC_B], ['sein (gehen, fahren, kommen …)', 'wäre + Partizip II', XC_R]])}${xPic('k2_g1')}${xEx(['k2_g2', 'k2_g3', 'k2_g4', 'k2_g6'])}`],
@@ -6693,7 +6760,8 @@ Object.assign(CAFE_FOCUS, {
   nv:{ name:'Nomen-Verb-Verbindungen', prompt:'Grammar focus (B1): noun-verb phrases: eine Entscheidung treffen, eine Frage stellen, einen Antrag stellen, Bescheid sagen / geben, Rücksicht nehmen auf, eine Rolle spielen, sich Sorgen machen um, einen Termin vereinbaren, zur Verfügung stehen, in Frage kommen, zu Ende gehen, in Kontakt bleiben, zum Ausdruck bringen. Talk about decisions, work, offices and plans and use these phrases yourself: "Welche wichtige Entscheidung hast du zuletzt getroffen?", "Worüber machst du dir Sorgen?", "Was spielt für dich bei einer Wohnung eine große Rolle?". In feedback, correct the verb or the preposition of the phrase.' },
   nd:{ name:'n-Deklination', prompt:'Grammar focus (B1): the n-Deklination: der Kollege → den / dem Kollegen, der Student, der Kunde, der Nachbar, der Polizist, der Junge, der Mensch, der Herr → Herrn, der Name → den Namen, des Namens. Talk about people at work, neighbours, customers and students: "Wie ist dein Nachbar?", "Hast du schon mal einem Touristen geholfen?", "Mit welchem Kollegen arbeitest du gern?". Use these nouns yourself in the Akkusativ and Dativ. In feedback, correct a missing -n (dem Kollege → dem Kollegen) or an extra -n in the Nominativ.' },
   ls:{ name:'lassen & Zustandspassiv', prompt:'Grammar focus (B1): lassen + infinitive (Ich lasse mein Auto reparieren; Ich lasse mir die Haare schneiden; Perfekt: habe … reparieren lassen), sich lassen (Das lässt sich machen) and the Zustandspassiv with sein + Partizip II (Das Geschäft ist geschlossen; Die Tür ist schon geöffnet) vs. werden + Partizip II for a process. Talk about services, repairs, the household and opening times: "Was machst du selbst und was lässt du machen?", "Wann lässt du dir die Haare schneiden?", "Ist bei euch sonntags alles geschlossen?". In feedback, correct the lassen forms, zu after lassen, and ist / wird.' },
-  pz:{ name:'Partizipien & Adjektive als Nomen', prompt:'Grammar focus (B1): Partizip I and II as adjectives (das schlafende Kind, kochendes Wasser, die geschlossene Tür, gebrauchte Autos) and adjectives as nouns (der Deutsche / ein Deutscher, die Angestellte, die Erwachsenen, mein Bekannter, etwas Neues, nichts Besonderes). Talk about people and things around the learner and use these forms yourself: "Gibt es etwas Neues bei dir?", "Was machen Jugendliche in deinem Land in der Freizeit?", "Kaufst du lieber neue oder gebrauchte Sachen?". In feedback, correct the endings and the participle form.' }
+  pz:{ name:'Partizipien & Adjektive als Nomen', prompt:'Grammar focus (B1): Partizip I and II as adjectives (das schlafende Kind, kochendes Wasser, die geschlossene Tür, gebrauchte Autos) and adjectives as nouns (der Deutsche / ein Deutscher, die Angestellte, die Erwachsenen, mein Bekannter, etwas Neues, nichts Besonderes). Talk about people and things around the learner and use these forms yourself: "Gibt es etwas Neues bei dir?", "Was machen Jugendliche in deinem Land in der Freizeit?", "Kaufst du lieber neue oder gebrauchte Sachen?". In feedback, correct the endings and the participle form.' },
+  p2:{ name:'Partizip II', prompt:'Grammar focus (A1–A2): the Partizip II in the Perfekt: regular ge…t (gespielt, gearbeitet), irregular ge…en (gegessen, geschrieben, gefahren, gegangen), mixed verbs (gebracht, gedacht, gewusst, gekannt), no ge- for -ieren verbs and be- / ver- / er- verbs (studiert, besucht, verstanden, erklärt) and ge in the middle of separable verbs (aufgestanden, eingekauft, angerufen). Ask many questions about the past: "Was hast du gestern gegessen?", "Wen hast du am Wochenende besucht?", "Wann bist du heute aufgestanden?", "Was hast du zuletzt gekauft?", "Hast du schon mal etwas Wichtiges vergessen?". In feedback, correct wrong participles and say which rule applies.' }
 });
 
 /* ---- 🎲 Lena writes new sentences for these topics; each one passes an offline check ---- */
@@ -6718,7 +6786,8 @@ const XGEN = {
   nv:'vb = the verb of a fixed noun-verb phrase (eine Entscheidung treffen, eine Frage stellen, Rücksicht nehmen, Bescheid sagen, eine Rolle spielen …), wrong = a verb that does NOT go with this noun (machen, geben, sagen); pp = the preposition (with its article) of a fixed phrase (zur Verfügung, in Frage, zum Ausdruck, in Kontakt, zu Ende …), wrong = a wrong preposition.',
   nd:'ns = an n-noun (Kollege, Student, Kunde, Nachbar, Polizist, Junge …) as the SUBJECT in the Nominativ singular, answer = without -n, wrong = with -(e)n; ak = the same kind of noun in the Akkusativ or Dativ singular, answer = with -(e)n, wrong = without; sp = Herr / Herrn / Herren, Name / Namen / Namens, Gedanke, Buchstabe in the right form, wrong = the wrong form.',
   ls:'la = a form of lassen (lasse, lässt, ließ) or the infinitive after lassen, wrong = a wrong person form, lassten, gelassen where an infinitive follows, or zu + infinitive; sl = sich lassen + infinitive (Das lässt sich machen), the gap is lässt / lassen / sich / the infinitive, wrong = a wrong form or the participle; zp = ist / sind vs. wird / werden with a clear signal (schon, seit = state → sein; gerade, im Moment = process → werden), or the Partizip II after ist, wrong = the other one or the infinitive.',
-  pz:'p1 = a Partizip I with an adjective ending (das schlafende Kind) for something happening now, wrong = the Partizip II with the same ending; p2 = a Partizip II with an adjective ending (das gestohlene Fahrrad), wrong = the Partizip I; an = an adjective used as a noun with the right ending and a capital letter (der Deutsche, ein Deutscher, die Angestellte, etwas Neues), wrong = a wrong ending.'
+  pz:'p1 = a Partizip I with an adjective ending (das schlafende Kind) for something happening now, wrong = the Partizip II with the same ending; p2 = a Partizip II with an adjective ending (das gestohlene Fahrrad), wrong = the Partizip I; an = an adjective used as a noun with the right ending and a capital letter (der Deutsche, ein Deutscher, die Angestellte, etwas Neues), wrong = a wrong ending.',
+  p2:'the gap is always the Partizip II in a Perfekt sentence. rg = a regular participle (gespielt, gearbeitet), wrong = a typical wrong form (gespielen, gearbeitt); ir = an irregular participle on -en (gegessen, geschrieben, getrunken), wrong = a regular-looking wrong form (geesst, geschreibt, getrinkt); mx = a mixed participle (gebracht, gedacht, gewusst, gekannt, genannt, gerannt), wrong = gebringt, gewisst, gekennt …; ng = a participle without ge- (studiert, besucht, verstanden, erklärt, vergessen), wrong = the same with ge- (gestudiert, gebesucht); tr = a separable participle with ge in the middle (aufgestanden, eingekauft, angerufen), wrong = ge at the front (geaufstanden, geeinkauft).'
 };
 // closed word classes for the offline check (the answer and the wrong word must both come from them)
 const XSET = {
@@ -6768,6 +6837,7 @@ function xCheckOne(x) {
     }
     case 'nd': return a.slice(0, 4).toLowerCase() === w.slice(0, 4).toLowerCase() ? '' : 'n-noun';
     case 'ls': return k === 'zp' && !both(/^(ist|sind|bin|bist|seid|war|waren|wird|werden|wurde|wurden|wirst|werde)$/i) && /^(ist|sind|wird|werden|war|wurde)$/i.test(a) ? 'sein / werden' : '';
+    case 'p2': return !/\s/.test(a) && /(t|en)$/.test(a) && /(t|en)$/.test(w) ? '' : 'participle';
     case 'fg': return k === 'wt' ? (both(/^(wegen|trotz|während)$/i) || both(XSET.ar) ? '' : 'wegen / trotz / während') : k === 'fu' ? (XSET.werden.test(a) || !/^ge/.test(a) ? '' : 'Futur') : '';
   }
   return '';
