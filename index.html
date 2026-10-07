@@ -803,6 +803,8 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <div class="keyrow"><input id="cKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Gemini API key"><button class="btn blue center" id="cKeySave">Save &amp; test</button></div>
         <p class="note" id="cKeyMsg"></p>
         <p class="note">Free keys: Google may use these chats to improve its services, so don't share private details with Lena. <button class="linkbtn" id="cKeyDel">Remove key from this device</button></p>
+        <button class="btn center" id="cVCheck" style="width:100%;margin-top:10px">🔬 Stimme prüfen<small class="en2">Voice check: shows the end of Lena's last sentence (send a screenshot if you hear a glitch)</small></button>
+        <div id="cVOut"></div>
       </div>
       <div id="cChat" class="chat" aria-live="polite"></div>
       <div class="uml" id="cUml" data-target="cText" style="display:none"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
@@ -3433,7 +3435,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-11';
+const APP_VERSION = 'v2026.10.07-13';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4569,7 +4571,7 @@ async function askLena(userText) {
 // If that is unavailable (free limit, not offered for the key, offline) Lena uses the device's built-in German voice.
 const LENA_VOICE = 'Aoede';
 const audioCache = new Map();
-let actx = null, curSrc = null, speakSeq = 0, ttsDown = false, deVoice = null;
+let actx = null, curSrc = null, speakSeq = 0, ttsDown = false, ttsDownAt = 0, deVoice = null;
 function audioCtx() {
   const A = window.AudioContext || window.webkitAudioContext; if (!A) return null;
   actx = actx || new A(); if (actx.state === 'suspended') actx.resume().catch(() => {});
@@ -4593,22 +4595,76 @@ function voiceBtn() { const b = $('#cVoice'); if (b) b.setAttribute('aria-presse
 const ttsPending = new Map();
 function ttsBuffer(text) {
   if (audioCache.has(text)) return Promise.resolve(audioCache.get(text));
-  if (!ttsPending.has(text)) ttsPending.set(text, fetchSpeech(text).finally(() => ttsPending.delete(text)));
+  if (!ttsPending.has(text)) ttsPending.set(text, (async () => {
+    const kept = await voiceGet(text); if (kept) { audioCache.set(text, kept); return kept; }
+    const buf = await fetchSpeech(text); voicePut(text, buf); return buf;
+  })().finally(() => ttsPending.delete(text)));
   return ttsPending.get(text);
+}
+// only what is already on the device (used when the natural voice's daily limit is reached)
+async function ttsKept(text) {
+  if (audioCache.has(text)) return audioCache.get(text);
+  const kept = await voiceGet(text); if (kept) { audioCache.set(text, kept); return kept; }
+  throw new AIError('notts');
+}
+/* ---- the voice store: 16-bit sound per text, at most VOICE_MAX pieces (the oldest go first); never synced ---- */
+const VOICE_MAX = 1200;
+let voiceDbP = null, voicePuts = 0;
+function voiceDb() {
+  if (!voiceDbP) voiceDbP = new Promise(ok => {
+    try { const q = indexedDB.open('dq-voice', 1); q.onupgradeneeded = () => q.result.createObjectStore('v'); q.onsuccess = () => ok(q.result); q.onerror = () => ok(null); } catch (e) { ok(null); }
+  });
+  return voiceDbP;
+}
+async function voiceGet(text) {
+  const db = await voiceDb(); if (!db) return null;
+  return new Promise(ok => {
+    try {
+      const q = db.transaction('v').objectStore('v').get(LENA_VOICE + '|' + text);
+      q.onsuccess = () => {
+        const v = q.result, ctx = audioCtx(); if (!v || !ctx) return ok(null);
+        const buf = ctx.createBuffer(1, v.pcm.length, v.rate), ch = buf.getChannelData(0);
+        for (let i = 0; i < v.pcm.length; i++) ch[i] = v.pcm[i] / 32767;
+        ok(buf);
+      };
+      q.onerror = () => ok(null);
+    } catch (e) { ok(null); }
+  });
+}
+async function voicePut(text, buf) {
+  const db = await voiceDb(); if (!db || !buf) return;
+  try {
+    const ch = buf.getChannelData(0), pcm = new Int16Array(ch.length);
+    for (let i = 0; i < ch.length; i++) pcm[i] = Math.max(-1, Math.min(1, ch[i])) * 32767;
+    db.transaction('v', 'readwrite').objectStore('v').put({ pcm, rate:buf.sampleRate, t:Date.now() }, LENA_VOICE + '|' + text);
+    if (++voicePuts % 40 === 0) voicePrune(db);
+  } catch (e) {}
+}
+function voicePrune(db) {   // keep the newest VOICE_MAX pieces
+  try {
+    const all = [], st = db.transaction('v', 'readwrite').objectStore('v'), c = st.openCursor();
+    c.onsuccess = () => {
+      const cur = c.result;
+      if (cur) { all.push([cur.key, cur.value.t || 0]); cur.continue(); return; }
+      if (all.length > VOICE_MAX) all.sort((a, b) => a[1] - b[1]).slice(0, all.length - VOICE_MAX).forEach(([k]) => st.delete(k));
+    };
+  } catch (e) {}
 }
 async function fetchSpeech(text) {
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
   await rankModels(key);
   const models = (modelCache && modelCache.tts) || []; if (!models.length) throw new AIError('notts');
   let lastErr = null;
-  for (const model of models.slice(0, 3)) {
+  const now = Date.now(), order = [...models.filter(m => !(resting[m] > now)), ...models.filter(m => resting[m] > now)];
+  for (const model of order) {
     const r = await gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
       body:JSON.stringify({ contents:[{ parts:[{ text }] }],
         generationConfig:{ responseModalities:['AUDIO'], speechConfig:{ languageCode:'de-DE', voiceConfig:{ prebuiltVoiceConfig:{ voiceName:LENA_VOICE } } } } }) });
     if (!r.ok) {
       lastErr = await apiError(r);
       if (r.status === 400 && /language_?code/i.test(lastErr.detail)) { lastErr = null; return fetchSpeechNoLang(key, model, text); }
-      if (r.status === 404 || r.status === 429 || r.status >= 500) continue; throw lastErr;
+      if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, lastErr.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); continue; }
+      throw lastErr;
     }
     const buf = await speechToBuffer(r); if (buf) { audioCache.set(text, buf); return buf; }
     lastErr = new AIError('notts');
@@ -4629,6 +4685,7 @@ async function speechToBuffer(r) {
   const bin = atob(part.inlineData.data), n = bin.length >> 1, raw = new Float32Array(n);
   for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; raw[i] = v / 32768; }
   const len = speechEnd(raw, rate), buf = ctx.createBuffer(1, len, rate), ch = buf.getChannelData(0);
+  lastVoice = { raw, rate, len, mime:part.inlineData.mimeType || '', bytes:bin.length };
   ch.set(raw.subarray(0, len));
   // soft edges: a 10 ms fade-in and an 80 ms fade-out, too short to hear, so the sound never jumps to silence (a click)
   const fin = Math.min(len, Math.round(rate * 0.01)), fout = Math.min(len, Math.round(rate * 0.08));
@@ -4679,12 +4736,36 @@ function speechChunks(text) {
 }
 // Many tablets (and Bluetooth speakers) switch the speaker off whenever the sound stops and on again when it starts;
 // that switch is a pop after every sentence. An inaudible tone (−100 dB) keeps the line open while the app is in use.
-let keepAlive = null;
+let keepAlive = null, lastVoice = null;
 function audioKeepAlive() {
   const ctx = audioCtx(); if (!ctx || keepAlive) return;
   try { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 40; g.gain.value = 0.00001; o.connect(g); g.connect(ctx.destination); o.start(); keepAlive = o; } catch (e) {}
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden && keepAlive) { try { keepAlive.stop(); } catch (e) {} keepAlive = null; } });
+function voiceCheck() {
+  const out = $('#cVOut');
+  if (!lastVoice) { out.innerHTML = '<p class="note">Lassen Sie Lena zuerst einen Satz mit der natürlichen Stimme sprechen.<small class="en2">Let Lena say a sentence with the natural voice first, then open ⚙ and tap here again.</small></p>'; return; }
+  const { raw, rate, len, mime, bytes } = lastVoice, W = Math.round(rate * 0.02), from = Math.max(0, raw.length - Math.round(rate * 1.5));
+  const win = [];
+  for (let a = from; a + W <= raw.length; a += W) {
+    let s2 = 0, z = 0, pk = 0;
+    for (let i = a; i < a + W; i++) { s2 += raw[i] * raw[i]; pk = Math.max(pk, Math.abs(raw[i])); if (i > a && (raw[i] >= 0) !== (raw[i - 1] >= 0)) z++; }
+    win.push({ t:a / rate, rms:Math.sqrt(s2 / W), zcr:z / W, pk });
+  }
+  const H = 120, bw = 300 / win.length, maxR = Math.max(0.05, ...win.map(w => w.rms));
+  let svg = win.map((w, i) => { const h = Math.max(1, (w.rms / maxR) * (H - 10)); const noisy = w.zcr > 0.25 && w.rms > 0.005; return `<rect x="${(i * bw).toFixed(1)}" y="${(H - h).toFixed(1)}" width="${Math.max(1, bw - 0.6).toFixed(1)}" height="${h.toFixed(1)}" fill="${noisy ? '#E08A2E' : '#4F7CAC'}"/>`; }).join('');
+  const cutX = ((len - from) / Math.max(1, raw.length - from)) * 300;
+  if (cutX >= 0 && cutX <= 300) svg += `<line x1="${cutX.toFixed(1)}" y1="0" x2="${cutX.toFixed(1)}" y2="${H}" stroke="#D9675B" stroke-width="2"/>`;
+  const tail = win.slice(-25).map(w => `${w.rms.toFixed(3)}/${w.zcr.toFixed(2)}`).join(' ');
+  out.innerHTML = `<svg class="gsvg" viewBox="0 0 300 ${H}" role="img">${svg}</svg>
+    <p class="note">Blau = Stimme, Orange = Rauschen, rote Linie = hier schneidet die App ab.<small class="en2">Blue = voice, orange = noise-like sound, red line = where the app cuts. Last 1.5 s of Lena's last sentence.</small></p>
+    <div class="row2" style="margin-top:0"><button class="btn center" id="cVRaw">▶ Original</button><button class="btn center" id="cVClean">▶ Bereinigt<small class="en2">cleaned</small></button></div>
+    <p class="note" style="font-family:monospace;font-size:11px;word-break:break-all">${esc(mime)} · ${rate} Hz · ${bytes} bytes · ${(raw.length / rate).toFixed(2)} s · cut ${(len / rate).toFixed(2)} s · tail rms/zcr: ${tail}</p>`;
+  const play = n => { const ctx = audioCtx(); if (!ctx) return; const b = ctx.createBuffer(1, n, rate); b.getChannelData(0).set(raw.subarray(0, n)); stopVoice(); playBuffer(b).then(() => talking(false)); };
+  $('#cVRaw').onclick = () => play(raw.length);
+  $('#cVClean').onclick = () => { const ctx = audioCtx(); if (!ctx) return; const b = ctx.createBuffer(1, len, rate), ch = b.getChannelData(0); ch.set(raw.subarray(0, len));
+    const fo = Math.min(len, Math.round(rate * 0.08)); for (let i = 0; i < fo; i++) ch[len - 1 - i] *= i / fo; stopVoice(); playBuffer(b).then(() => talking(false)); };
+}
 function playBuffer(buf) {
   audioKeepAlive();
   return new Promise(done => {
@@ -4697,8 +4778,9 @@ function playBuffer(buf) {
 const withTimeout = p => Promise.race([p, sleep(VOICE_WAIT).then(() => null)]);
 async function say(text) {
   stopVoice(); const my = speakSeq;
-  if ((S.cafeVoice || 'natural') === 'natural' && !ttsDown && lsGet(AI_KEY) && audioCtx()) {
-    const parts = speechChunks(text), jobs = parts.map(p => { const j = ttsBuffer(p); j.catch(() => {}); return j; });
+  if (ttsDown && Date.now() - ttsDownAt > 20 * 60000) ttsDown = false;   // try the natural voice again after a while
+  if ((S.cafeVoice || 'natural') === 'natural' && (lsGet(AI_KEY) || ttsDown) && audioCtx()) {
+    const parts = speechChunks(text), jobs = parts.map(p => { const j = ttsDown ? ttsKept(p) : ttsBuffer(p); j.catch(() => {}); return j; });
     let first = null, failed = null;
     if (!audioCache.has(parts[0])) cafeStatus('🗣 Lena is about to speak…');
     try { first = await withTimeout(jobs[0]); } catch (e) { failed = e; }
@@ -4720,8 +4802,8 @@ async function say(text) {
         talking(false); return;
       }
       cafeStatus('Tap the screen once so the browser lets Lena speak. Until then she uses the device voice.');
-    } else if (failed && !['busy', 'blocked', 'timeout'].includes(failed.message)) {
-      ttsDown = true; cafeStatus('The natural voice is not available right now (free limit or not offered for your key), so Lena uses the device voice.');
+    } else if (failed && !ttsDown && !['busy', 'blocked', 'timeout'].includes(failed.message)) {
+      ttsDown = true; ttsDownAt = Date.now(); cafeStatus('The natural voice is not available right now (free limit or not offered for your key), so Lena uses the device voice.');
     }
   }
   if (my === speakSeq) sayDevice(text);
@@ -7660,6 +7742,7 @@ $('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setA
 $('#cKeyBtn').addEventListener('click', () => showKeySetup($('#cSetup').style.display === 'none'));
 $('#cKeySave').addEventListener('click', saveKey);
 $('#cKey').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
+$('#cVCheck').addEventListener('click', () => { audioCtx(); voiceCheck(); });
 $('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); modelCache = null; C.model = null; $('#cKeyMsg').textContent = 'Key removed from this device.'; });
 const mic = $('#cMic');
 // one tap starts listening, the next tap sends
