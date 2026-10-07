@@ -383,7 +383,6 @@ p{line-height:1.5}
 .tabs button{flex:1;border:3px solid var(--black);background:var(--white);padding:9px;font-weight:600;cursor:pointer}
 .tabs button+button{border-left:0}
 .tabs button.on{background:var(--ink);color:var(--on)}
-.backtop{display:block;margin:0 0 6px;font-size:15px;font-weight:700}
 .wlv{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 10px}
 .wlv button{border:2px solid var(--black);background:var(--white);color:var(--black);padding:6px 12px;font:inherit;font-weight:700;cursor:pointer;font-size:15px}
 .wlv button small{font-weight:600;color:var(--grey);margin-left:3px}
@@ -519,7 +518,17 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
 .themebtn{margin-left:auto;flex:0 0 44px;width:44px;height:44px;border:3px solid var(--black);background:var(--white);box-shadow:3px 3px 0 var(--shadow);font-size:22px;cursor:pointer}
 .panel{position:relative}
 .themebtn.tcorner{position:absolute;top:12px;right:12px;width:40px;height:40px;flex:none;margin:0;font-size:19px;box-shadow:2px 2px 0 var(--shadow);z-index:1}
-.panel:has(> .tcorner) > h2,.panel:has(> .tcorner) > .backtop{padding-right:52px}
+.panel:has(> .tcorner) > h2{padding-right:52px}
+.ptop{position:sticky;top:-8px;z-index:3;display:flex;justify-content:space-between;align-items:center;margin:-14px -14px 6px;pointer-events:none}
+.ptop button{pointer-events:auto;width:44px;height:44px;flex:none;margin:0;border:3px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);font-size:20px;font-weight:700;cursor:pointer;display:grid;place-items:center}
+.tback,.cafe-top .tback,.wtop>.tback,.ptop .tback{width:44px;height:44px;flex:0 0 44px;margin:0;padding:0;border:3px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);display:grid;place-items:center;cursor:pointer}
+.tback:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.tback svg{display:block}
+.ptop button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+/* the top ← replaces the "Back to menu" buttons at the bottom (they stay as hidden click targets) */
+#wBack,#hBack,#pBack,#hdBack{display:none}
+.row2:has(> #wBack),.row2:has(> #hBack){display:none}
+.row2:has(> #pBack),.row2:has(> #hdBack){grid-template-columns:1fr}
 .cafe-top .themebtn,.wtop .themebtn{margin-left:0;flex:0 0 44px}
 .themebtn.hudtheme{margin-left:0;flex:none;width:42px;height:42px;box-shadow:none;font-size:18px;pointer-events:auto}
 .themebtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
@@ -633,8 +642,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <!-- INTRO -->
   <section id="intro" class="screen dim">
     <div class="panel">
-      <button class="themebtn tcorner" type="button"></button>
-      <button class="linkbtn backtop" id="iBackTop">← Back</button>
+      <div class="ptop"><button class="tback" id="iBackTop" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
       <h2 id="iTitle">Neue Wörter</h2>
       <p class="lead" id="iLead">Three new words for this round. You'll meet them in the sentences you run through.</p>
       <div class="cards" id="iCards"></div>
@@ -669,7 +677,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <!-- END -->
   <section id="end" class="screen dim">
     <div class="panel">
-      <button class="themebtn tcorner" type="button"></button>
+      <div class="ptop"><button class="tback" data-back="#eMenu" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
       <h2 id="eTitle">Runde vorbei!</h2>
       <div class="stats" id="eStats"></div>
       <div id="eUnlock"></div>
@@ -685,7 +693,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <!-- WORDS -->
   <section id="words" class="screen dim">
     <div class="panel">
-      <button class="themebtn tcorner" type="button"></button>
+      <div class="ptop"><button class="tback" data-back="#wBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
       <h2>My words</h2>
       <p class="lead">The squares show how well you know each word. Five filled means mastered.</p>
       <div class="tabs"><button data-tab="star" class="on">Starred</button><button data-tab="all">All seen</button></div>
@@ -701,7 +709,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="cards" class="screen dim">
     <div class="panel wpanel">
       <div class="wtop">
-        <button id="fcBack" aria-label="Back to My words">←</button>
+        <button class="tback" id="fcBack" aria-label="Back to My words"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="ct"><b>🃏 Karteikarten</b><small id="fcSub"></small></div>
         <span id="fcCount" class="wcountbig"></span>
         <button class="themebtn" type="button"></button>
@@ -715,7 +723,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="cafe" class="screen">
     <div class="cafe-wrap">
       <div class="cafe-top">
-        <button id="cBack" aria-label="Back to menu">←</button>
+        <button class="tback" id="cBack" aria-label="Back to menu"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="ct"><b id="cTopic"></b><small id="cFocus"></small></div>
         <button class="themebtn" type="button"></button>
         <button id="cVoice" aria-pressed="true" title="Natural voice (Gemini). Tap for the device voice.">🗣</button>
@@ -753,7 +761,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="write" class="screen dim">
     <div class="panel wpanel">
       <div class="wtop">
-        <button id="wrBack" aria-label="Back to menu">←</button>
+        <button class="tback" id="wrBack" aria-label="Back to menu"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="ct"><b id="wrTitle"></b><small id="wrSub"></small></div>
         <span id="wrCount" class="wcountbig"></span>
         <button class="themebtn" type="button"></button>
@@ -777,7 +785,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="wfree" class="screen dim">
     <div class="panel wpanel">
       <div class="wtop">
-        <button id="wfBack" aria-label="Back to menu">←</button>
+        <button class="tback" id="wfBack" aria-label="Back to menu"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="ct"><b id="wfTitle"></b><small id="wfSub"></small></div>
         <span id="wfTimer" class="timer"></span>
         <button class="themebtn" type="button"></button>
@@ -804,7 +812,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="exam" class="screen dim">
     <div class="panel wpanel">
       <div class="wtop">
-        <button id="exBack" aria-label="Back">←</button>
+        <button class="tback" id="exBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="ct"><b id="exTitle"></b><small id="exSub"></small></div>
         <button class="themebtn" type="button"></button>
       </div>
@@ -815,7 +823,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <!-- PAST ROUNDS -->
   <section id="hist" class="screen dim">
     <div class="panel">
-      <button class="themebtn tcorner" type="button"></button>
+      <div class="ptop"><button class="tback" data-back="#hBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
       <h2>Past rounds</h2>
       <p class="lead">Tap a round or a café chat to see every question or message, your answers and the explanations. Tap 🗑 twice to delete one.</p>
       <div class="list" id="hList"></div>
@@ -824,7 +832,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   </section>
   <section id="histD" class="screen dim">
     <div class="panel">
-      <button class="themebtn tcorner" type="button"></button>
+      <div class="ptop"><button class="tback" data-back="#hdBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
       <h2 id="hdTitle"></h2>
       <p class="lead" id="hdSub"></p>
       <div class="hlist" id="hdList"></div>
@@ -842,7 +850,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <!-- PROGRESS -->
   <section id="prog" class="screen dim">
     <div class="panel">
-      <button class="themebtn tcorner" type="button"></button>
+      <div class="ptop"><button class="tback" data-back="#pBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
       <h2>My progress</h2>
       <div class="stats" id="pStats"></div>
       <div id="pBars"></div>
@@ -5585,7 +5593,8 @@ function practiseHist() {
 
 let wTab = 'star', wTopic = 'all';   // wTopic: 'all' or one topic key (see the level tabs + tiles below)
 // topics in the same (CEFR) order as the tabs on the menu
-const WTOPICS = [...TOPICS.map(([k]) => [k, topicInfo(k).name, () => topicInfo(k).pool(), topicInfo(k).icon]), ['wz', 'Wortschatz (telc)', () => WZ, '🗂️'], ['cafe', 'Lena’s words', () => cwList(), '☕']];
+// Lena's words join the topic of the chat they came from (exam talks: the telc Wortschatz)
+const WTOPICS = [...TOPICS.map(([k]) => [k, topicInfo(k).name, () => [...topicInfo(k).pool(), ...cwList().filter(w => cwTopic(w) === k)], topicInfo(k).icon]), ['wz', 'Wortschatz (telc)', () => [...WZ, ...cwList().filter(w => cwTopic(w) === 'wz')], '🗂️']];
 const wordItemHTML = w => w.cw ? cwItemHTML(w) : w.xt ? xItemHTML(w) : w.mo ? modalItemHTML(w) : w.pn ? nounItemHTML(w) : w.tv ? verbItemHTML(w) : w.ak ? adjItemHTML(w) : w.pt ? prepItemHTML(w) : `
     <div class="item"><div>
       <div style="font-size:19px;font-weight:600">${wordHTML(w)} ${dotsHTML(w.id)}</div>
@@ -6291,10 +6300,10 @@ $('#exBack').addEventListener('click', () => { stopVoice(); const rv = EXS && EX
    Gemini looks up the dictionary form and meaning; saved words live in S.cw and get stars, memory boxes and flashcards. */
 const CW_MAX = 1500;
 const cwId = de => 'cw_' + String(de).toLowerCase().replace(/^(der|die|das)\s+/, '').replace(/,.*$/, '').replace(/[^a-zäöüß]+/g, '_').replace(/^_+|_+$/g, '');
-function saveCafeWord(w, ex, exen) {
+function saveCafeWord(w, ex, exen, tp) {
   const id = cwId(w.de); if (id === 'cw_') return null;
   S.cw = S.cw || {};
-  if (!S.cw[id]) S.cw[id] = { id, cw:1, de:w.de, en:w.en || '', ta:w.ta || '', ex:ex || '', exen:exen || '', t:Date.now() };
+  if (!S.cw[id]) S.cw[id] = { id, cw:1, de:w.de, en:w.en || '', ta:w.ta || '', ex:ex || '', exen:exen || '', tp:tp || '', t:Date.now() };
   const ids = Object.keys(S.cw);
   if (ids.length > CW_MAX) ids.filter(k => !S.bm[k]).sort((a, b) => S.cw[a].t - S.cw[b].t).slice(0, ids.length - CW_MAX).forEach(k => { delete S.cw[k]; delete S.srs[k]; });
   return id;
@@ -6321,7 +6330,7 @@ function hideSelPop() { selPop.hidden = true; selState = null; }
 function showSelPop() {
   if (selState && (selState.busy || selState.done)) return;
   const i = selInfo(); if (!i) { hideSelPop(); return; }
-  selState = { text:i.text, ctx:bubbleCtx(i.el) };
+  selState = { text:i.text, ctx:bubbleCtx(i.el), tp:i.el.closest('#cChat') ? C.focus : histOpen ? histOpen.f : S.topic };
   selPop.innerHTML = `<button type="button" data-selsave>☆ Save „${esc(i.text)}“ to My words</button>`;
   selPop.hidden = false; placeSelPop(i.rect);
 }
@@ -6335,7 +6344,7 @@ selPop.addEventListener('click', async e => {
   try {
     const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:15000, budget:25000, temperature:0.2,
       parts:[{ text:`The learner selected "${st.text}" in this German sentence: "${st.ctx.de}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this sentence. "ta" = the meaning in Tamil script.` }] });
-    const w = { de:gS(d.de) || st.text, en:gS(d.en), ta:gS(d.ta) }, id = saveCafeWord(w, st.ctx.de, st.ctx.en), had = id && S.bm[id];
+    const w = { de:gS(d.de) || st.text, en:gS(d.en), ta:gS(d.ta) }, id = saveCafeWord(w, st.ctx.de, st.ctx.en, st.tp), had = id && S.bm[id];
     if (id && !had) toggleStar(id); else save();
     selPop.innerHTML = `<span>${had ? '★ Already in My words' : '★ Saved'}: <b>${esc(w.de)}</b> · ${esc(w.en)}</span>`;
   } catch (err) { selPop.innerHTML = `<span>${esc(AI_MSG[err.message] || 'Could not look it up. Try again.')}</span>`; }
@@ -6346,6 +6355,11 @@ selPop.addEventListener('click', async e => {
 document.addEventListener('pointerdown', e => { if (!selPop.hidden && !selPop.contains(e.target) && selState && !selState.busy) hideSelPop(); }, true);
 ['cChat', 'hdList'].forEach(id => document.getElementById(id).addEventListener('scroll', () => { if (selState && !selState.busy) hideSelPop(); }));
 const cwList = () => Object.values(S.cw || {});
+// the topic of a saved word: the chat's grammar topic; words saved before this existed find their chat in Past rounds
+function cwTopic(w) {
+  if (!w.tp) { const h = (S.history || []).find(h => h.k === 'cafe' && (h.m || []).some(x => x.de === w.ex)); w.tp = h ? h.f : S.topic; }
+  return w.tp === 'exam' ? 'wz' : TOPICS.some(t => t[0] === w.tp) ? w.tp : 'wd';
+}
 const cwItemHTML = w => `<div class="item"><div>
     <div style="font-size:19px;font-weight:600">${wordHTML({ de:w.de })} ${dotsHTML(w.id)} <button class="linkbtn" data-say="${esc(w.de.replace(/,.*$/, ''))}">🔊</button></div>
     <div class="tr">${esc(w.en)}${w.ta ? ` · <span class="ta">${esc(w.ta)}</span>` : ''}</div>
@@ -6355,7 +6369,7 @@ const cwItemHTML = w => `<div class="item"><div>
 /* ================= My words: pick a topic with level tabs + topic tiles ================= */
 let wLevel = 'all';
 const WLEVELS = [['all', 'All'], ['A1', 'A1'], ['A2', 'A2'], ['B1', 'B1'], ['X', '✨ More']];
-const wLevelOf = k => k === 'wz' || k === 'cafe' ? 'X' : topicTab(k);
+const wLevelOf = k => k === 'wz' ? 'X' : topicTab(k);
 function wGroups() {
   const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
   return WTOPICS.map(([key, name, pool, icon]) => ({ key, name, icon, lv:wLevelOf(key), list:pool().filter(has) }));
@@ -6367,16 +6381,15 @@ function renderWords() {
   $('#wLevels').innerHTML = WLEVELS.map(([k, n]) => `<button data-wl="${k}" class="${k === wLevel ? 'on' : ''}">${n} <small>${cnt(k)}</small></button>`).join('');
   $('#wTiles').innerHTML = wLevel === 'all' ? '' : groups.filter(g => g.lv === wLevel).map(g => `<button class="wtile${g.key === wTopic ? ' on' : ''}${g.list.length ? '' : ' empty'}" data-wt="${g.key}"><span class="te">${g.icon}</span><b>${esc(g.name)}</b><small>${g.list.length}</small></button>`).join('');
   const shown = wShown(groups), total = shown.reduce((n, g) => n + g.list.length, 0), single = wTopic !== 'all';
-  const none = wTab === 'star' ? 'No starred words here yet. Tap ★ next to any word in a round, on the new-word cards, or ☆ under Lena’s messages in the Sprach-Café.' : 'No words seen here yet. Play a round of this topic to meet your first words.';
+  const none = wTab === 'star' ? 'No starred words here yet. Tap ★ next to any word in a round, on the new-word cards, or select a word in Lena’s messages in the Sprach-Café.' : 'No words seen here yet. Play a round of this topic to meet your first words.';
   $('#wList').innerHTML = total ? shown.filter(g => g.list.length).map(g => `${single ? '' : `<h3 class="wgroup">${g.icon} ${esc(g.name)} <small>· ${g.list.length}</small></h3>`}${g.list.map(wordItemHTML).join('')}`).join('') : `<div class="empty">${none}</div>`;
-  $('#wCards').textContent = total ? `🃏 Flashcards (${Math.min(total, FC_MAX)})` : '🃏 Flashcards';
+  $('#wCards').textContent = total ? `🃏 Flashcards (${total})` : '🃏 Flashcards';
   $('#wCards').disabled = !total;
 }
 $('#wLevels').addEventListener('click', e => { const b = e.target.closest('[data-wl]'); if (!b) return; wLevel = b.dataset.wl; wTopic = 'all'; renderWords(); });
 $('#wTiles').addEventListener('click', e => { const b = e.target.closest('[data-wt]'); if (!b) return; wTopic = wTopic === b.dataset.wt ? 'all' : b.dataset.wt; renderWords(); });
 
 /* ================= Flashcards (Karteikarten) for the words shown in My words ================= */
-const FC_MAX = 30;
 let FC = null;
 function cardFaces(x) {
   const big = h => `<div class="fbig">${h}</div>`, tr = t => t ? `<div class="tr">${esc(t)}</div>` : '';
@@ -6394,7 +6407,7 @@ function startCards() {
   const list = wShown(wGroups()).flatMap(g => g.list), box = id => (S.srs[id] || {}).box || 0;
   if (!list.length) return;
   // the weakest words first, then a shuffle inside each memory box
-  const deck = shuffle(list.slice()).sort((a, b) => box(a.id) - box(b.id)).slice(0, FC_MAX);
+  const deck = shuffle(list.slice()).sort((a, b) => box(a.id) - box(b.id));
   FC = { deck, i:0, flip:false, known:0, again:[], first:new Set() };
   show('cards'); renderCard();
 }
@@ -6466,6 +6479,8 @@ canvas.addEventListener('touchcancel', () => { tx = null; }, { passive:true });
 $$('[data-level]').forEach(b => b.addEventListener('click', () => startLevel(+b.dataset.level)));
 $('#iGo').addEventListener('click', () => pendingWrite ? beginWrite() : beginRound(lastLevel, pendingFresh));
 $('#iBackTop').addEventListener('click', () => $('#iBack').click());
+// ← in the top bar of a panel does what that screen's back button does
+document.addEventListener('click', e => { const b = e.target.closest('.tback[data-back]'); if (b) $(b.dataset.back).click(); });
 $('#iBack').addEventListener('click', () => {   // cancel the round (and any 🎲 sentences still being written)
   genTok++; pendingWrite = null; pendingQueue = []; pendingRule = null; pendingLena = false;
   $('#iGo').disabled = false; $('#iGo').textContent = "Los geht's!";
