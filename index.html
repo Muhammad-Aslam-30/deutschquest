@@ -72,6 +72,18 @@ p{line-height:1.5}
 .geo .d2{width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-bottom:38px solid var(--red)}
 .menu .tag{font-size:17px;color:var(--grey);margin:14px 0 18px}
 .menu .streakline{display:flex;gap:10px;align-items:center;font-weight:600;margin-bottom:16px}
+#acctBtn{margin-left:auto;height:44px;max-width:52%;border:3px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);font:inherit;font-weight:700;padding:0 10px 0 6px;cursor:pointer;display:flex;align-items:center;gap:7px;text-align:left}
+#acctBtn[hidden]{display:none}
+#acctBtn + .themebtn{margin-left:0}
+#acctBtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+#acctBtn .an{display:flex;flex-direction:column;line-height:1.1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}
+#acctBtn .an small{font-size:11px;font-weight:600;color:var(--grey);overflow:hidden;text-overflow:ellipsis}
+.av{flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.av.big{flex-basis:46px;width:46px;height:46px;font-size:22px}
+.acct{display:flex;gap:12px;align-items:center;margin:6px 0 10px}
+#acctMsg{min-height:20px;margin-top:8px;font-weight:600}
+details.bkp{margin-top:14px}
+details.bkp summary{cursor:pointer;font-weight:700}
 .menu .streakline .sq{width:14px;height:14px;background:var(--yellow);border:2px solid var(--black)}
 .menu .levels{display:grid;gap:12px}
 .menu .gapset{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600}
@@ -578,7 +590,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
       <p class="tag">German from A1 to B1: 27 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
-      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button class="themebtn" id="themeBtn" type="button"></button></div>
+      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button></div>
       <div class="tcards" id="topicCards"></div>
       <p class="modeq" id="pickTopic" style="display:none">👆 Wählen Sie ein Thema.<small class="en2">Pick a topic above.</small></p>
@@ -888,7 +900,9 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <div class="stats" id="pStats"></div>
       <div id="pBars"></div>
       <div class="tip" id="pTip"></div>
-      <h3>Backup &amp; move to another device</h3>
+      <h3>Konto &amp; Synchronisierung<small class="en2">Account &amp; sync</small></h3>
+      <div id="acctBox"></div>
+      <details class="bkp"><summary>Backup-Datei (optional)<small class="en2">Backup file (optional)</small></summary>
       <p class="note" style="margin-bottom:10px">Export saves your progress as a small file. Import it on another device (or after clearing the browser): it is combined with what is already there, keeping the better result for every word, so nothing gets lost.</p>
       <div class="row2" style="margin-top:0">
         <button class="btn blue center" id="pExport">⬇ Export progress</button>
@@ -896,6 +910,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       </div>
       <input type="file" id="pFile" accept=".json,application/json" hidden>
       <div class="msg" id="pMsg" role="status" style="min-height:22px;margin-top:10px;font-weight:600"></div>
+      </details>
       <div class="row2">
         <button class="btn center" id="pBack">Back to menu</button>
         <button class="btn center" id="pReset">Reset progress</button>
@@ -3276,16 +3291,19 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 const KEY = 'weil-dass-runner-v1';
+// signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
+const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
+const SKEY = PROFILE ? `${KEY}:${PROFILE.sub}` : KEY;
 const Store = {
   async load() {
-    try { if (window.storage && window.storage.get) { const r = await window.storage.get(KEY, false); if (r && r.value) return JSON.parse(r.value); } } catch (e) {}
-    try { const v = window.localStorage.getItem(KEY); if (v) return JSON.parse(v); } catch (e) {}
+    try { if (!PROFILE && window.storage && window.storage.get) { const r = await window.storage.get(KEY, false); if (r && r.value) return JSON.parse(r.value); } } catch (e) {}
+    try { const v = window.localStorage.getItem(SKEY); if (v) return JSON.parse(v); } catch (e) {}
     return null;
   },
   async save(d) {
     const s = JSON.stringify(d);
-    try { if (window.storage && window.storage.set) { await window.storage.set(KEY, s, false); return true; } } catch (e) {}
-    try { window.localStorage.setItem(KEY, s); return true; } catch (e) { return false; }
+    try { if (!PROFILE && window.storage && window.storage.set) { await window.storage.set(KEY, s, false); return true; } } catch (e) {}
+    try { window.localStorage.setItem(SKEY, s); return true; } catch (e) { return false; }
   }
 };
 const GAP_MIN = 4, GAP_MAX = 20, GAP_DEF = 6; // seconds between gates at Level 1 speed; other levels scale from their own pace
@@ -3307,7 +3325,7 @@ Object.values(S.lib || {}).forEach(c => { const x = Object.assign({}, c); regGen
 let saveT = null;
 // if the browser's storage is ever full, make room in Lena's sentence list and save again instead of losing progress
 const save = () => { clearTimeout(saveT); saveT = setTimeout(async () => {
-  if (await Store.save(S)) return;
+  if (await Store.save(S)) { if (PROFILE) cloudSoon(15000); return; }
   const n = Object.keys(S.lib || {}).length;
   if (n && pruneLib(Math.floor(n * 0.6))) Store.save(S);
 }, 250); };
@@ -4136,7 +4154,8 @@ function endRound() {
 function show(id) {
   $$('.screen').forEach(s => s.classList.toggle('show', s.id === id));
   if (id === 'menu') renderMenu();
-  askVis();
+  askVis(); acctRender();
+  if (PROFILE && SYNC && SYNC.pending && (id === 'menu' || id === 'prog')) cloudSoon(1500);
 }
 function renderMenu() {
   const n = currentStreak();
@@ -7461,10 +7480,161 @@ $('#pExport').addEventListener('click', exportProgress);
 $('#pImport').addEventListener('click', () => { $('#pFile').value = ''; $('#pFile').click(); });
 $('#pFile').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) importProgress(f); });
 
+/* ================= Google sign-in + Drive sync =================
+   The progress file lives in the hidden app folder of the player's own Google Drive (scope drive.appdata: the app can
+   only see its own file, nothing else in Drive). This browser keeps the working copy, so offline play still works and
+   syncs later. Both sides are combined with mergeSaves, so two devices never overwrite each other.
+   Every Google account has its own copy on this device; signed out = the guest copy. The Gemini key is never synced. */
+const GOOGLE_CLIENT_ID = '601538413866-0gr743ni2tisetp0cru49i2e4e09mj6r.apps.googleusercontent.com';   // ← paste the OAuth client ID from Google Cloud here (it is public, not a secret)
+const G_SCOPE = 'https://www.googleapis.com/auth/drive.appdata openid email profile', G_DRIVE = 'https://www.googleapis.com/auth/drive.appdata';
+const G_TOKEN = 'dq-gtoken', CLOUD_FILE = 'deutschquest-progress.json', SYNC_KEY = 'dq-sync-' + (PROFILE ? PROFILE.sub : '');
+var SYNC = { busy:false, t:null, dirty:false, pending:false, state:'', fileId:'', client:null, last:+lsGet(SYNC_KEY) || 0 };
+const gToken = () => { try { const t = JSON.parse(lsGet(G_TOKEN) || 'null'); return t && t.exp > Date.now() + 60000 ? t.v : ''; } catch (e) { return ''; } };
+function gisInit() {   // load Google's sign-in script early: the popup must open straight from a tap
+  if (!GOOGLE_CLIENT_ID || document.getElementById('gis')) return;
+  const s = document.createElement('script'); s.id = 'gis'; s.src = 'https://accounts.google.com/gsi/client'; s.async = true;
+  s.onload = () => { SYNC.client = google.accounts.oauth2.initTokenClient({ client_id:GOOGLE_CLIENT_ID, scope:G_SCOPE, callback:gotToken,
+    error_callback:() => syncState(PROFILE ? (gToken() ? 'ok' : 'tap') : '') }); };
+  s.onerror = () => { s.remove(); syncState(PROFILE ? 'offline' : ''); };
+  document.head.appendChild(s);
+}
+function gAuth(fresh) {   // fresh = choose an account (sign in); otherwise renew access for the signed-in account
+  if (!SYNC.client) { gisInit(); acctMsg('Google wird geladen … bitte gleich noch einmal tippen.<small class="en2">Loading Google … tap again in a moment.</small>'); return; }
+  SYNC.client.requestAccessToken(fresh || !PROFILE ? { prompt:'select_account' } : { prompt:'', login_hint:PROFILE.email });
+}
+async function gFetch(url, opt = {}) {
+  const r = await fetch(url, Object.assign({}, opt, { headers:Object.assign({ Authorization:'Bearer ' + gToken() }, opt.headers || {}) }));
+  if (r.status === 401) { lsSet(G_TOKEN, ''); throw new Error('auth'); }
+  if (!r.ok) throw new Error('http ' + r.status);
+  return r;
+}
+async function gotToken(r) {
+  if (!r || !r.access_token) { syncState(PROFILE ? 'tap' : ''); return; }
+  if (!google.accounts.oauth2.hasGrantedAllScopes(r, G_DRIVE)) { acctMsg('Bitte erlauben Sie den Zugriff auf den App-Ordner in Google Drive – sonst kann nichts gespeichert werden.<small class="en2">Please allow access to the app folder in Google Drive, otherwise nothing can be saved.</small>'); return; }
+  lsSet(G_TOKEN, JSON.stringify({ v:r.access_token, exp:Date.now() + (+r.expires_in || 3600) * 1000 }));
+  let me;
+  try { me = await (await gFetch('https://www.googleapis.com/oauth2/v3/userinfo')).json(); }
+  catch (e) { acctMsg('Die Anmeldung hat nicht geklappt. Bitte noch einmal.<small class="en2">Sign-in did not work. Please try again.</small>'); return; }
+  if (PROFILE && PROFILE.sub === me.sub) { syncNow(); return; }   // the same account: access renewed
+  // first sign-in or another account: this device switches to that account's copy
+  clearTimeout(saveT); await Store.save(S);                         // keep what is on screen now in the current copy
+  const key = `${KEY}:${me.sub}`;
+  if (!localStorage.getItem(key) && !PROFILE) {
+    let guest = null; try { guest = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+    const words = guest ? Object.keys(guest.srs || {}).length : 0, rounds = guest ? (guest.history || []).length : 0;
+    if ((words || rounds) && !lsGet('dq-guest-adopted') && confirm(`Auf diesem Gerät gibt es schon Fortschritt (${words} Wörter, ${rounds} Runden). In Ihr Google-Konto übernehmen?\n\nThis device already has progress (${words} words, ${rounds} rounds). Move it into your Google account?\n\nOK = übernehmen / move it · Abbrechen = mit dem Konto neu starten / start fresh`)) {
+      localStorage.setItem(key, JSON.stringify(guest));
+      localStorage.setItem(KEY + ':backup', JSON.stringify(guest));   // an untouched copy, just in case
+      localStorage.removeItem(KEY); lsSet('dq-guest-adopted', me.sub);
+    }
+  }
+  lsSet('dq-profile', JSON.stringify({ sub:me.sub, email:me.email || '', name:me.given_name || me.name || me.email || 'Google' }));
+  location.reload();   // start again with that account's progress; it syncs right after loading
+}
+async function signOut() {
+  if (gToken()) await syncNow(true);
+  clearTimeout(saveT); await Store.save(S);
+  lsSet(G_TOKEN, ''); lsSet('dq-profile', '');
+  location.reload();
+}
+async function cloudFind() {
+  if (SYNC.fileId) return SYNC.fileId;
+  const q = encodeURIComponent(`name='${CLOUD_FILE}' and trashed=false`);
+  const r = await (await gFetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&orderBy=modifiedTime%20desc&fields=files(id)`)).json();
+  return (SYNC.fileId = ((r.files || [])[0] || {}).id || '');
+}
+function cloudPut(id, data) {
+  const body = JSON.stringify(data);
+  if (id) return gFetch(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`, { method:'PATCH', headers:{ 'Content-Type':'application/json' }, body });
+  const b = 'dq' + Date.now(), meta = { name:CLOUD_FILE, parents:['appDataFolder'], mimeType:'application/json' };
+  return gFetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method:'POST', headers:{ 'Content-Type':`multipart/related; boundary=${b}` },
+    body:`--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${b}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${b}--` })
+    .then(async r => { SYNC.fileId = (await r.clone().json()).id || ''; return r; });
+}
+// a save from the cloud, with the defaults for fields it does not know yet
+function fromSave(L) {
+  const d = DEF(), m = Object.assign(DEF(), L);
+  m.stats = Object.assign(d.stats, L.stats || {}); m.best = Object.assign(d.best, L.best || {}); m.streak = Object.assign(d.streak, L.streak || {});
+  return m;
+}
+// only sync where nothing is in the middle of using the progress (not during a round, a chat or a writing task)
+const syncSafe = () => !G.running && ['menu', 'prog', 'end'].includes(($('.screen.show') || {}).id);
+async function syncNow(force) {
+  if (!PROFILE || SYNC.busy) return;
+  if (!gToken()) { syncState('tap'); return; }
+  if (!force && !syncSafe()) { SYNC.pending = true; return; }
+  if (!navigator.onLine) { syncState('offline'); return; }
+  SYNC.busy = true; SYNC.pending = false; syncState('busy');
+  try {
+    clearTimeout(saveT);
+    let id = await cloudFind(), cloud = null;
+    if (id) {
+      try { cloud = await (await gFetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`)).json(); }
+      catch (e) { if (e.message !== 'http 404') throw e; SYNC.fileId = id = ''; }
+    }
+    const before = JSON.stringify([Object.keys(S.srs).length, (S.history || []).length, S.pass, S.ux]);
+    if (cloud && cloud.v === 1 && typeof cloud.srs === 'object') {
+      if ((cloud.resetAt || 0) > (S.resetAt || 0)) S = fromSave(cloud);        // progress was reset on another device
+      else if ((S.resetAt || 0) === (cloud.resetAt || 0)) S = mergeSaves(S, cloud);
+      Object.values(S.lib || {}).forEach(c => { if (!BYID[c.id]) { const x = Object.assign({}, c); regGen(x); poolAdd(x); } });
+      pruneLib(LIB_MAX);
+    }
+    await Store.save(S);
+    await cloudPut(id, S);
+    SYNC.dirty = false; SYNC.last = Date.now(); lsSet(SYNC_KEY, String(SYNC.last)); syncState('ok');
+    if (before !== JSON.stringify([Object.keys(S.srs).length, (S.history || []).length, S.pass, S.ux])) {
+      const cur = ($('.screen.show') || {}).id;
+      if (cur === 'menu') renderMenu(); else if (cur === 'prog') renderProg();
+    }
+  } catch (e) {
+    syncState(e.message === 'auth' ? 'tap' : navigator.onLine ? 'err' : 'offline');
+  }
+  SYNC.busy = false;
+}
+function cloudSoon(ms) {
+  if (!PROFILE || !SYNC) return;
+  clearTimeout(SYNC.t);
+  SYNC.t = setTimeout(() => { if (gToken()) syncNow(); else syncState('tap'); }, ms);
+}
+function syncState(st) { SYNC.state = st; acctRender(); }
+const agoText = t => { const m = Math.round((Date.now() - t) / 60000); return !t ? 'noch nie / never' : m < 1 ? 'gerade eben / just now' : m < 60 ? `vor ${m} Min. / ${m} min ago` : `vor ${Math.round(m / 60)} Std. / ${Math.round(m / 60)} h ago`; };
+const SYNC_TXT = { ok:['☁️', 'Synchronisiert', 'Synced'], busy:['⏳', 'Synchronisiere …', 'Syncing …'], tap:['↻', 'Tippen zum Synchronisieren', 'Tap to sync'],
+  offline:['📴', 'Offline – später', 'Offline – syncs later'], err:['⚠️', 'Sync fehlgeschlagen – tippen', 'Sync failed – tap to retry'], '':['☁️', '', ''] };
+function acctMsg(h) { const m = $('#acctMsg'); if (m) m.innerHTML = h; }
+function acctRender() {
+  const b = $('#acctBtn'); if (!b || !SYNC) return;
+  b.hidden = !GOOGLE_CLIENT_ID;
+  const [ic, de, en] = SYNC_TXT[SYNC.state] || SYNC_TXT[''];
+  if (!PROFILE) { b.innerHTML = '<span class="av">G</span><span class="an">Anmelden<small>Sign in</small></span>'; b.title = 'Mit Google anmelden: Fortschritt auf allen Geräten / Sign in with Google: progress on all devices'; }
+  else { b.innerHTML = `<span class="av">${esc((PROFILE.name || '?')[0].toUpperCase())}</span><span class="an">${esc(PROFILE.name)}<small>${ic} ${esc(SYNC.state === 'ok' ? agoText(SYNC.last).split(' / ')[0] : de)}</small></span>`; b.title = `${PROFILE.email} · ${de} / ${en}`; }
+  const box = $('#acctBox'); if (!box) return;
+  if (!GOOGLE_CLIENT_ID) { box.innerHTML = '<p class="note">Google-Anmeldung ist noch nicht eingerichtet (GOOGLE_CLIENT_ID in index.html).<small class="en2">Google sign-in is not set up yet (GOOGLE_CLIENT_ID in index.html).</small></p>'; return; }
+  box.innerHTML = PROFILE
+    ? `<div class="acct"><span class="av big">${esc((PROFILE.name || '?')[0].toUpperCase())}</span><div><b>${esc(PROFILE.name)}</b><div class="tr">${esc(PROFILE.email)}</div><div class="tr">${ic} ${esc(de || 'Synchronisiert')} · zuletzt ${esc(agoText(SYNC.last))}</div></div></div>
+      <p class="note">Ihr Fortschritt wird automatisch in Ihrem Google Drive gespeichert (versteckter App-Ordner) und mit Ihren anderen Geräten zusammengeführt. Der Gemini-Schlüssel bleibt nur auf diesem Gerät.<small class="en2">Your progress is saved to your Google Drive (a hidden app folder) automatically and combined with your other devices. The Gemini key stays on this device only.</small></p>
+      <div class="row2" style="margin-top:0"><button class="btn blue center" id="acctSync">🔄 Jetzt synchronisieren<small class="en2">Sync now</small></button><button class="btn center" id="acctOut">Abmelden<small class="en2">Sign out</small></button></div><div class="msg" id="acctMsg" role="status"></div>`
+    : `<p class="note">Melden Sie sich mit Google an: Ihr Fortschritt wird dann automatisch in Ihrem Google Drive gespeichert und ist auf Tablet und Laptop gleich – ohne Export und Import. Jede Person hat ihr eigenes Konto.<small class="en2">Sign in with Google and your progress is saved to your Google Drive automatically, the same on tablet and laptop – no export or import. Everyone has their own account.</small></p>
+      <button class="btn blue center" id="acctIn" style="width:100%">G&nbsp; Mit Google anmelden<small class="en2">Sign in with Google</small></button><div class="msg" id="acctMsg" role="status"></div>`;
+}
+$('#acctBtn').addEventListener('click', () => {
+  if (PROFILE && (SYNC.state === 'tap' || SYNC.state === 'err') ) { if (gToken()) syncNow(true); else gAuth(); return; }
+  renderProg(); show('prog'); $('#acctBox').scrollIntoView({ block:'center' });
+});
+$('#acctBox').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.id === 'acctIn') gAuth(true);
+  else if (b.id === 'acctSync') { if (gToken()) syncNow(true); else gAuth(); }
+  else if (b.id === 'acctOut') { b.dataset.idle = 'Abmelden'; if (!armDelete(b, 'Noch einmal tippen / Tap again')) return; signOut(); }
+});
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && PROFILE && gToken()) cloudSoon(800); });
+window.addEventListener('online', () => cloudSoon(1500));
+gisInit();
+if (PROFILE) { if (gToken()) cloudSoon(1200); else syncState('tap'); } else acctRender();
+
 let resetArmed = false;
 $('#pReset').addEventListener('click', e => {
   if (!resetArmed) { resetArmed = true; e.currentTarget.textContent = 'Tap again to erase'; setTimeout(() => { resetArmed = false; $('#pReset').textContent = 'Reset progress'; }, 3000); return; }
-  S = Object.assign(DEF(), { gap:S.gap }); save(); resetArmed = false; $('#pReset').textContent = 'Reset progress'; renderProg();
+  S = Object.assign(DEF(), { gap:S.gap, resetAt:Date.now() }); save(); resetArmed = false; $('#pReset').textContent = 'Reset progress'; renderProg();
 });
 
 /* ================= loop ================= */
