@@ -262,7 +262,15 @@ p{line-height:1.5}
 .b .fb.ok{color:var(--good);font-weight:600}
 .b .fb .fix{font-weight:700;color:var(--black)}
 .b .fb .why{color:var(--grey);margin-top:3px}
-.b.typing{color:var(--grey);font-size:22px;letter-spacing:3px}
+.b.typing{display:flex;gap:7px;align-items:center;padding:16px 18px}
+.b.typing i{width:9px;height:9px;border-radius:50%;background:var(--grey);animation:tdot 1.2s ease-in-out infinite}
+.b.typing i:nth-child(2){animation-delay:.18s} .b.typing i:nth-child(3){animation-delay:.36s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-8px);opacity:1}}
+@media (prefers-reduced-motion: reduce){.b.typing i{animation:none}}
+.b .de,.b .fix{user-select:text;-webkit-user-select:text}
+.selpop{position:fixed;z-index:50;max-width:min(92vw,420px)}
+.selpop button,.selpop span{display:block;border:2px solid var(--black);background:var(--yellow);color:#2F3640;box-shadow:3px 3px 0 var(--shadow);padding:8px 12px;font:inherit;font-size:15.5px;font-weight:700;cursor:pointer;text-align:left}
+.selpop span{background:var(--white);color:var(--black);cursor:default;font-weight:600}
 .b.sys{align-self:center;max-width:94%;background:#FBF3DC;font-size:15px}
 .cafe-input{display:flex;gap:8px;align-items:center}
 .cafe-input input{flex:1;min-width:0;border:3px solid var(--black);padding:12px;font:inherit;font-size:17px;background:var(--white)}
@@ -404,13 +412,6 @@ p{line-height:1.5}
 .fcard .fbtns{display:flex;gap:14px;align-items:center;margin-top:6px}
 .fcard .s,.fcard .w{font-size:16px;line-height:1.5}
 @media (prefers-reduced-motion: reduce){.fcard .face{transition:none}}
-.b.lena .tw{cursor:pointer;border-radius:3px}
-.b.lena .tw:hover,.b.lena .tw.sel{background:#FFF1C4;color:#2F3640}
-.cwords{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
-.cwchip{border:2px solid var(--black);background:var(--white);color:var(--black);padding:3px 9px;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer}
-.cwchip small{font-weight:500;color:var(--grey)}
-.cwchip.on{background:var(--yellow);color:#2F3640} .cwchip.on small{color:#5B6670}
-.wpop{margin-top:8px;padding:6px 10px;border:2px dashed var(--black);background:var(--white);font-size:15px}
 html.dark .fcard .back{background:#242C34}
 .wfilter{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;font-weight:700}
 .wfilter select{flex:1;max-width:340px;border:2px solid var(--black);background:var(--white);padding:8px 10px;font:inherit;font-size:15px;font-weight:600;color:var(--black);cursor:pointer}
@@ -3767,8 +3768,7 @@ async function fetchModels(key) {
 const pickModel = async key => (await rankModels(key))[0];
 const REPLY_SCHEMA = { type:'OBJECT', properties:{
   reply_de:{ type:'STRING' }, reply_en:{ type:'STRING' }, grammar_note:{ type:'STRING' },
-  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' }, feedback_category:{ type:'STRING' },
-  words:{ type:'ARRAY', items:{ type:'OBJECT', properties:{ de:{ type:'STRING' }, en:{ type:'STRING' }, ta:{ type:'STRING' } }, required:['de', 'en', 'ta'] } } },
+  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' }, feedback_category:{ type:'STRING' } },
   required:['reply_de', 'reply_en', 'grammar_note', 'feedback_ok', 'feedback_corrected', 'feedback_explanation'] };
 function cafeSystem() {
   const t = cafeTopic(C.topic), lvl = S.cafeLevel || 'A2';
@@ -3780,7 +3780,6 @@ Rules:
 - reply_en: an accurate English translation of reply_de.
 - grammar_note: 1-2 short sentences in simple English explaining the grammar in reply_de, especially the grammar focus (e.g. why the verb is at the end after "weil", or why "dem" is Dativ after "mit").
 - feedback_*: judge ONLY the learner's last message. ${C.write ? 'The learner TYPES their messages (this is a writing chat): also check spelling, capital letters of nouns, umlauts and commas, and set feedback_category to the main mistake type, exactly one of: ' + ERR_CATS.join(', ') + ' (or "" if correct).' : 'Ignore missing capital letters and punctuation (it comes from speech recognition).'} If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
-- words: 1 to 3 useful words or short phrases from reply_de that a ${lvl} learner may not know yet (skip easy ones like ich, und, ist, gut). de = the dictionary form: nouns with der / die / das and the plural ending ("der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form; en = the English meaning in this context; ta = the meaning in Tamil script.
 - If the learner writes English or seems lost, help with a simple German sentence they could say.`;
 }
 // Lena's replies are short: skip Gemini's slow "thinking" step where the model allows it
@@ -4046,20 +4045,18 @@ function micUp() {
 function cafeStatus(t, err) { const s = $('#cStatus'); s.textContent = t; s.classList.toggle('err', !!err); }
 const chatEl = () => $('#cChat');
 function addBubble(cls, html) { const d = document.createElement('div'); d.className = 'b ' + cls; d.innerHTML = html; chatEl().appendChild(d); chatEl().scrollTop = chatEl().scrollHeight; return d; }
-const lenaInner = (de, en, gn, words) => `<div class="de">${tapWords(de)}</div>${cwChips(words)}
+const lenaInner = (de, en, gn) => `<div class="de">${esc(de)}</div>
     <div class="tools"><button data-c="tr">🌐 Translate</button><button data-c="say">🔊</button></div>
     <div class="trbox" hidden><div class="en">${esc(en)}</div><div class="gr"><b>Grammar:</b> ${esc(gn)}</div></div>`;
 function lenaBubble(a) {
-  const words = (Array.isArray(a.words) ? a.words : []).map(w => ({ de:gS(w && w.de), en:gS(w && w.en), ta:gS(w && w.ta) })).filter(w => w.de).slice(0, 3);
-  a.words = words;
-  const d = addBubble('lena', lenaInner(a.reply_de, a.reply_en, a.grammar_note, words));
+  const d = addBubble('lena', lenaInner(a.reply_de, a.reply_en, a.grammar_note));
   d.dataset.de = a.reply_de; if (!C.write) say(a.reply_de);
 }
 // café chats are saved to Past rounds (S.history) as soon as the learner has said something, and updated after every turn
 function cafeLog(mineText, a) {
   if (mineText) C.msgs.push({ r:'u', de:mineText, ok:a.feedback_ok ? 1 : 0, fix:a.feedback_corrected || undefined, why:a.feedback_explanation || undefined });
   if (mineText && C.write) { const s = wst('chat'); s.t++; if (a.feedback_ok) s.c++; else logErr(a.feedback_category || 'other'); }
-  C.msgs.push({ r:'l', de:a.reply_de, en:a.reply_en, gn:a.grammar_note, w:a.words && a.words.length ? a.words : undefined });
+  C.msgs.push({ r:'l', de:a.reply_de, en:a.reply_en, gn:a.grammar_note });
   if (!C.entry && mineText) {
     C.entry = { t:Date.now(), k:'cafe', tp:C.topic, f:C.focus, lv:S.cafeLevel || 'A2', w:C.write ? 1 : undefined, m:C.msgs };
     S.history = S.history || []; S.history.unshift(C.entry);
@@ -4092,7 +4089,7 @@ function cafeError(e, retry) {
 }
 async function cafeTurn(userText, mine) {
   if (C.busy) return; C.busy = true; $('#cSend').disabled = true;
-  const wait = addBubble('lena typing', '• • •'); cafeStatus('');
+  const wait = addBubble('lena typing', '<i></i><i></i><i></i>'); cafeStatus('');
   try {
     const a = await askLena(userText);
     wait.remove();
@@ -5515,7 +5512,7 @@ function cafeRow(h, i) {
 const cafeChatHTML = h => '<div class="chat hchat">' + cafeBubbles(h.m) + '</div>';
 function cafeBubbles(m) {
   return m.map(x => x.r === 'l'
-    ? `<div class="b lena" data-de="${esc(x.de)}">${lenaInner(x.de, x.en, x.gn, x.w)}</div>`
+    ? `<div class="b lena" data-de="${esc(x.de)}">${lenaInner(x.de, x.en, x.gn)}</div>`
     : `<div class="b me" data-de="${esc(x.de)}"><div class="de">${esc(x.de)}</div>${feedbackHTML({ feedback_ok:!!x.ok, feedback_corrected:x.fix || '', feedback_explanation:x.why || '' })}</div>`).join('');
 }
 function renderHist() {
@@ -6289,15 +6286,11 @@ $('#exBody').addEventListener('click', e => {
 });
 $('#exBack').addEventListener('click', () => { stopVoice(); const rv = EXS && EXS.review; EXS = null; if (rv) { renderHist(); show('hist'); } else show('menu'); });
 
-/* ================= Lena's words: save words from the Sprach-Café to My words =================
-   Every reply of Lena suggests 1–3 useful words (chips under her bubble); any other word can be tapped and saved too
-   (Gemini looks up its dictionary form and meaning). Saved words live in S.cw and get stars, memory boxes and flashcards. */
+/* ================= Lena's words: select a word in a chat message to save it to My words =================
+   Long-press a word on Android (or drag / double-click on a computer): a "☆ Save" button pops up under the selection.
+   Gemini looks up the dictionary form and meaning; saved words live in S.cw and get stars, memory boxes and flashcards. */
 const CW_MAX = 1500;
 const cwId = de => 'cw_' + String(de).toLowerCase().replace(/^(der|die|das)\s+/, '').replace(/,.*$/, '').replace(/[^a-zäöüß]+/g, '_').replace(/^_+|_+$/g, '');
-const cwChips = words => (words || []).length ? `<div class="cwords"><span class="tr">📌 Words:</span>${words.map(w => { const id = cwId(w.de);
-  return `<button class="cwchip${S.bm[id] ? ' on' : ''}" data-cwid="${id}" data-cwde="${esc(w.de)}" data-cwen="${esc(w.en || '')}" data-cwta="${esc(w.ta || '')}"><span class="cs">${S.bm[id] ? '★' : '☆'}</span> ${esc(w.de)} <small>${esc(w.en || '')}</small></button>`; }).join('')}</div>` : '';
-// Lena's German as tappable words
-const tapWords = de => esc(de).split(/(\s+)/).map(t => /[A-Za-zÄÖÜäöüß]/.test(t) ? `<span class="tw">${t}</span>` : t).join('');
 function saveCafeWord(w, ex, exen) {
   const id = cwId(w.de); if (id === 'cw_') return null;
   S.cw = S.cw || {};
@@ -6306,38 +6299,52 @@ function saveCafeWord(w, ex, exen) {
   if (ids.length > CW_MAX) ids.filter(k => !S.bm[k]).sort((a, b) => S.cw[a].t - S.cw[b].t).slice(0, ids.length - CW_MAX).forEach(k => { delete S.cw[k]; delete S.srs[k]; });
   return id;
 }
-function syncCwChips(id) { $$(`.cwchip[data-cwid="${id}"]`).forEach(c => { c.classList.toggle('on', !!S.bm[id]); c.querySelector('.cs').textContent = S.bm[id] ? '★' : '☆'; }); }
 const bubbleCtx = el => { const b = el.closest('.b'); return { de:b ? b.dataset.de || '' : '', en:b ? ((b.querySelector('.trbox .en') || {}).textContent || '') : '', b }; };
 const CW_SCHEMA = { type:'OBJECT', properties:{ de:{ type:'STRING' }, en:{ type:'STRING' }, ta:{ type:'STRING' } }, required:['de', 'en', 'ta'] };
-document.addEventListener('click', async e => {
-  const chip = e.target.closest('.cwchip');
-  if (chip) {
-    const ctx = bubbleCtx(chip), id = saveCafeWord({ de:chip.dataset.cwde, en:chip.dataset.cwen, ta:chip.dataset.cwta }, ctx.de, ctx.en);
-    if (id) { toggleStar(id); syncCwChips(id); }
-    return;
-  }
-  const tw = e.target.closest('.b.lena .tw');
-  if (tw) {
-    const word = tw.textContent.replace(/[^A-Za-zÄÖÜäöüß-]/g, ''), ctx = bubbleCtx(tw); if (!word || !ctx.b) return;
-    $$('.wpop').forEach(p => p.remove()); $$('.tw.sel').forEach(t => t.classList.remove('sel')); tw.classList.add('sel');
-    ctx.b.insertAdjacentHTML('beforeend', `<div class="wpop" data-word="${esc(word)}"><b>${esc(word)}</b> <button class="linkbtn" data-cwsave>☆ Save to My words</button> <button class="linkbtn" data-cwx aria-label="Close">✕</button></div>`);
-    return;
-  }
-  if (e.target.closest('[data-cwx]')) { const p = e.target.closest('.wpop'); $$('.tw.sel').forEach(t => t.classList.remove('sel')); p.remove(); return; }
-  const sv = e.target.closest('[data-cwsave]');
-  if (sv) {
-    const p = sv.closest('.wpop'), word = p.dataset.word, ctx = bubbleCtx(p);
-    if (!lsGet(AI_KEY)) { p.innerHTML = 'Looking up a word needs the Gemini key (⚙ in the Sprach-Café).'; return; }
-    sv.disabled = true; sv.textContent = '… looking it up';
-    try {
-      const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:15000, budget:25000, temperature:0.2,
-        parts:[{ text:`The learner tapped the word "${word}" in this German sentence: "${ctx.de}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this sentence. "ta" = the meaning in Tamil script.` }] });
-      const w = { de:gS(d.de) || word, en:gS(d.en), ta:gS(d.ta) }, id = saveCafeWord(w, ctx.de, ctx.en);
-      if (id && !S.bm[id]) toggleStar(id); else save();
-      p.innerHTML = `★ Saved: <b>${esc(w.de)}</b> <span class="tr">${esc(w.en)}</span> <button class="linkbtn" data-cwx aria-label="Close">✕</button>`;
-    } catch (err) { sv.disabled = false; sv.textContent = '☆ Save to My words'; p.insertAdjacentHTML('beforeend', `<div class="tr">${esc(AI_MSG[err.message] || 'Could not look it up. Try again.')}</div>`); }
-  }
+const selPop = document.createElement('div'); selPop.className = 'selpop'; selPop.hidden = true; document.getElementById('ui').appendChild(selPop);
+let selState = null, selT = null;
+// the selected text, if it is 1–4 words inside one of Lena's messages (or a correction)
+function selInfo() {
+  const s = window.getSelection(); if (!s || s.isCollapsed || !s.rangeCount) return null;
+  const text = s.toString().replace(/\s+/g, ' ').trim().replace(/^[^A-Za-zÄÖÜäöüß]+|[^A-Za-zÄÖÜäöüß]+$/g, '');
+  if (!text || text.length > 40 || text.split(' ').length > 4) return null;
+  const n = s.anchorNode && (s.anchorNode.nodeType === 1 ? s.anchorNode : s.anchorNode.parentElement);
+  const el = n && n.closest('#cChat .b.lena .de, #hdList .b.lena .de, #cChat .fix, #hdList .fix'); if (!el) return null;
+  return { text, el, rect:s.getRangeAt(0).getBoundingClientRect() };
+}
+function placeSelPop(r) {
+  const w = selPop.offsetWidth, h = selPop.offsetHeight;
+  let y = r.bottom + 12; if (y + h > innerHeight - 8) y = Math.max(8, r.top - h - 12);
+  selPop.style.left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8) + 'px'; selPop.style.top = y + 'px';
+}
+function hideSelPop() { selPop.hidden = true; selState = null; }
+function showSelPop() {
+  if (selState && (selState.busy || selState.done)) return;
+  const i = selInfo(); if (!i) { hideSelPop(); return; }
+  selState = { text:i.text, ctx:bubbleCtx(i.el) };
+  selPop.innerHTML = `<button type="button" data-selsave>☆ Save „${esc(i.text)}“ to My words</button>`;
+  selPop.hidden = false; placeSelPop(i.rect);
+}
+document.addEventListener('selectionchange', () => { clearTimeout(selT); selT = setTimeout(showSelPop, 250); });
+selPop.addEventListener('pointerdown', e => e.preventDefault());   // keep the selection while tapping the button
+selPop.addEventListener('click', async e => {
+  if (!e.target.closest('[data-selsave]') || !selState || selState.busy) return;
+  const st = selState, b = e.target.closest('[data-selsave]'), r = b.getBoundingClientRect();
+  if (!lsGet(AI_KEY)) { selPop.textContent = 'Saving a word needs the Gemini key (⚙ in the Sprach-Café).'; st.done = true; setTimeout(() => { if (selState === st) hideSelPop(); }, 3000); return; }
+  st.busy = true; b.disabled = true; b.textContent = '… looking it up';
+  try {
+    const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:15000, budget:25000, temperature:0.2,
+      parts:[{ text:`The learner selected "${st.text}" in this German sentence: "${st.ctx.de}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this sentence. "ta" = the meaning in Tamil script.` }] });
+    const w = { de:gS(d.de) || st.text, en:gS(d.en), ta:gS(d.ta) }, id = saveCafeWord(w, st.ctx.de, st.ctx.en), had = id && S.bm[id];
+    if (id && !had) toggleStar(id); else save();
+    selPop.innerHTML = `<span>${had ? '★ Already in My words' : '★ Saved'}: <b>${esc(w.de)}</b> · ${esc(w.en)}</span>`;
+  } catch (err) { selPop.innerHTML = `<span>${esc(AI_MSG[err.message] || 'Could not look it up. Try again.')}</span>`; }
+  st.busy = false; st.done = true; placeSelPop(r);
+  const s = window.getSelection(); if (s) s.removeAllRanges();
+  setTimeout(() => { if (selState === st) hideSelPop(); }, 3000);
 });
+document.addEventListener('pointerdown', e => { if (!selPop.hidden && !selPop.contains(e.target) && selState && !selState.busy) hideSelPop(); }, true);
+['cChat', 'hdList'].forEach(id => document.getElementById(id).addEventListener('scroll', () => { if (selState && !selState.busy) hideSelPop(); }));
 const cwList = () => Object.values(S.cw || {});
 const cwItemHTML = w => `<div class="item"><div>
     <div style="font-size:19px;font-weight:600">${wordHTML({ de:w.de })} ${dotsHTML(w.id)} <button class="linkbtn" data-say="${esc(w.de.replace(/,.*$/, ''))}">🔊</button></div>
