@@ -162,6 +162,28 @@ details.bkp summary{cursor:pointer;font-weight:700}
 .cj.xc0{color:var(--blue)} .cj.xc1{color:var(--red)} .cj.xc2{color:#A07A12} .cj.xc3{color:var(--good)} .cj.xc4{color:#5B6F86}
 .hrow.exam{background:#F1F7F0}
 .guide{margin-top:18px}
+.sctop{display:flex;align-items:center;gap:10px}
+.sctop h3{margin:0;flex:1}
+.tatog{border:3px solid var(--black);background:var(--white);color:var(--black);font:inherit;font-weight:700;font-size:15px;padding:5px 10px;cursor:pointer;box-shadow:3px 3px 0 var(--shadow)}
+.tatog[aria-pressed="true"]{background:var(--ink);color:var(--on)}
+.scdots{display:flex;gap:5px;margin:12px 0 8px}
+.scdots i{flex:1;height:6px;background:var(--black);opacity:.15}
+.scdots i.on{background:var(--blue);opacity:1}
+.sctrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.sctrack::-webkit-scrollbar{display:none}
+.scard{flex:0 0 100%;box-sizing:border-box;scroll-snap-align:start;border:3px solid var(--black);background:var(--white);padding:14px 16px 16px;min-height:390px;display:flex;flex-direction:column}
+.sclv{align-self:flex-start;font-size:12px;font-weight:800;padding:2px 8px;background:var(--yellow);color:#2F3640;border:2px solid var(--black)}
+.scard h4{font-size:25px;line-height:1.15;margin:12px 0 2px}
+.scen{color:var(--grey);margin:0 0 4px;font-size:15px}
+.scpic .pic{max-width:340px;margin:8px auto}
+.scex{font-size:20px;font-weight:600;text-align:center;margin-top:auto;padding-top:6px}
+.scex b{color:var(--blue)}
+.scta{display:none;margin-top:10px}
+.sc.ta .scta{display:block}
+.scnav{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-weight:700}
+.scnav button{width:52px;height:44px;border:3px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);font-size:20px;cursor:pointer}
+.scnav button:active,.tatog:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.scmore{width:100%;margin-top:14px}
 .guide>h3{margin:0 0 2px}
 .guide details{border:2px solid var(--black);background:var(--white);margin-top:8px}
 .guide summary{padding:10px 12px;font-weight:700;cursor:pointer;font-size:16.5px}
@@ -3433,7 +3455,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-15';
+const APP_VERSION = 'v2026.10.07-16';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4333,7 +4355,7 @@ function renderMenu() {
   $('#lvMv').style.display = tp === 'mv' ? '' : 'none';
   $('#lvX').style.display = XBY[tp] ? '' : 'none'; if (XBY[tp]) renderXLevels(tp);
   // the rules of the chosen topic, shown in every mode
-  if ($('#guide').dataset.topic !== tp) { $('#guide').innerHTML = guideHTML(tp); $('#guide').dataset.topic = tp; }
+  if ($('#guide').dataset.topic !== tp) { $('#guide').innerHTML = guideHTML(tp); $('#guide').dataset.topic = tp; scSync(); }
   $$('#menu .btn.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === cafeMode));
   // Exam tab: the exam box; a CEFR tab without the chosen topic: "pick a topic"; otherwise modes, levels and rules
   $('#modeQ').style.display = here && !cafeMode ? '' : 'none';
@@ -5260,7 +5282,16 @@ function nounSVG(x, k) {
 const nPic = (id, k = 'pf') => picSVG(BYID[id], k);
 const nEx = list => `<ul class="gex">${list.map(([id, k]) => { const x = BYID[id]; return x ? `<li>${nounHTML(x, k)} <span class="tr">${esc(nounTr(x, k))}</span></li>` : ''; }).join('')}</ul>`;
 const nTable = ty => `<table class="gtab"><tr><th>Singular</th><th>Plural</th></tr>${NPL.filter(x => !x.gen && nType(x) === ty).map(x => `<tr><td>${wordHTML({ de:`${x.art} ${x.sg}` })}</td><td>die <b>${plMark(x)}</b></td></tr>`).join('')}</table>`;
-GUIDE.pl = { name:'Singular / Plural', sections:() => [
+GUIDE.pl = { name:'Singular / Plural', cards:() => [
+  { lv:'Alle Level', h:'Plural = immer <b>die</b>', en:'Every plural takes die, whether the noun is der, die or das. In the Dativ: den.', pic:nPic('n_kind'), ex:'das Kind → <b>die</b> Kinder', ta:'பன்மையில் எப்போதும் die (Dativ: den).' },
+  { lv:'Level 1', h:'+e · oft mit ¨', en:'Short der-words. One syllable with a, o, u often gets dots.', pic:nPic('n_baum'), ex:'der Tag → die Tag<b>e</b>', ta:NTIPS.e[2] },
+  { lv:'Level 1', h:'+er · mit ¨', en:'Short das-words. a, o, u always get dots.', pic:nPic('n_haus'), ex:'das Kind → die Kind<b>er</b>', ta:NTIPS.er[2] },
+  { lv:'Level 1', h:'+(e)n · die-Wörter', en:'Nearly every die-word, and der-words on -e. Never dots.', pic:nPic('n_lampe'), ex:'die Frau → die Frau<b>en</b>', ta:NTIPS.n[2] },
+  { lv:'Level 1', h:'+s · wie Englisch', en:'A vowel at the end, or a word from English or French.', pic:nPic('n_auto'), ex:'das Hotel → die Hotel<b>s</b>', ta:NTIPS.s[2] },
+  { lv:'Level 1', h:'-er, -el, -en · keine Endung', en:'The word stays the same. Only die shows it is plural.', pic:nPic('n_apfel'), ex:'der Lehrer → <b>die</b> Lehrer', ta:NTIPS[0][2] },
+  { lv:'Level 2', h:'Eins oder viele?', en:'ein, mein, ist → one. zwei, viele, sind → more than one.', pic:nPic('n_kind', 'ss'), ex:'<b>ein</b> Kind · <b>zwei</b> Kinder', ta:NTIPS.num[2] },
+  { lv:'Level 3 · Boss', h:'Dativ Plural: den … + n', en:'After mit, von, zu … the plural adds -n. Already -n or -s? Nothing extra.', pic:nPic('n_kind', 'dn'), ex:'mit den Kinder<b>n</b>', ta:NTIPS.dn[2] }
+], sections:() => [
   ['1 · Plural: always die, and five patterns', `<p>In the plural every noun takes <b>die</b>, whether it is der, die or das in the singular: der Tag → <b>die</b> Tage, das Kind → <b>die</b> Kinder (Dativ: <b>den</b>). "ein" has no plural: ein Kind → zwei / viele / keine Kinder.</p>
     <p>German has <b>five plural patterns</b>. They are not 100 % predictable, so learn every noun with its plural (der Tag, die Tage), but these rules give very good guesses:</p>
     <table class="gtab"><tr><th>Pattern</th><th>Typical nouns</th><th>Example</th></tr>
@@ -5388,7 +5419,17 @@ GUIDE.mv = { name:'Modalverben', sections:() => [
   ['💡 Memory tricks', `${modalTipsHTML(['kj', 'bd', 'sb', 'ns'])}<h3>The six modal verbs</h3><div class="vgrid">${Object.keys(MODV).map(modalCard).join('')}</div>`]
 ] };
 const guideCache = {};
+function cardsHTML(g) {
+  const cards = g.cards();
+  return `<div class="sc"><div class="sctop"><h3>📖 Regeln: ${g.name}<small class="en2">${cards.length} Karten · ca. 2 Minuten · wischen / swipe</small></h3><button class="tatog" type="button" aria-pressed="false" aria-label="Tamil tips">தமிழ்</button></div>
+    <div class="scdots">${cards.map((c, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>
+    <div class="sctrack">${cards.map(c => `<div class="scard"><span class="sclv">${c.lv}</span><h4>${c.h}</h4><p class="scen">${c.en}</p><div class="scpic">${c.pic}</div><div class="scex">${c.ex}</div>${taMn(c.ta).replace('class="mn ta-mn"', 'class="mn ta-mn scta"')}</div>`).join('')}</div>
+    <div class="scnav"><button type="button" data-scgo="-1" aria-label="Vorherige Karte / previous card">←</button><span class="sccount">1 / ${cards.length}</span><button type="button" data-scgo="1" aria-label="Nächste Karte / next card">→</button></div>
+    <button class="btn center scmore" type="button">📚 Mehr Details<small class="en2">All tables, word lists and exceptions</small></button>
+    <div class="scdetails" hidden>${g.sections().map(([t, h]) => `<details><summary>${t}</summary><div class="gb">${h}</div></details>`).join('')}</div></div>`;
+}
 function guideHTML(topic) {
+  if (!guideCache[topic] && GUIDE[topic].cards) guideCache[topic] = cardsHTML(GUIDE[topic]);
   if (!guideCache[topic]) {
     const g = GUIDE[topic];
     // "flat" rules are one page to read (Adjektive); the others fold out section by section
@@ -7712,6 +7753,23 @@ function applyTheme(dark) {
 applyTheme(document.documentElement.classList.contains('dark'));
 // one handler for every 🌙 / ☀️ button on every screen (menu, briefing, game, pause, café, writing, past rounds …)
 document.addEventListener('click', e => { const tb = e.target.closest('.themebtn'); if (!tb) return; tb.blur(); const d = !document.documentElement.classList.contains('dark'); lsSet(THEME_KEY, d ? 'dark' : 'light'); applyTheme(d); });
+// rules cards: swipe (scroll-snap) or the arrows; the dots and the counter follow
+function scSync() {
+  $$('.sc').forEach(sc => { sc.classList.toggle('ta', !!S.taCards); const t = sc.querySelector('.tatog'); if (t) t.setAttribute('aria-pressed', !!S.taCards); });
+}
+function scUpdate(track) {
+  const sc = track.closest('.sc'), n = track.children.length, i = Math.max(0, Math.min(n - 1, Math.round(track.scrollLeft / Math.max(1, track.clientWidth))));
+  sc.querySelectorAll('.scdots i').forEach((d, k) => d.classList.toggle('on', k <= i));
+  sc.querySelector('.sccount').textContent = `${i + 1} / ${n}`;
+}
+document.addEventListener('scroll', e => { if (e.target.classList && e.target.classList.contains('sctrack')) scUpdate(e.target); }, true);
+$('#guide').addEventListener('click', e => {
+  const go = e.target.closest('[data-scgo]');
+  if (go) { const tr = go.closest('.sc').querySelector('.sctrack'); tr.scrollBy({ left:+go.dataset.scgo * tr.clientWidth, behavior:'smooth' }); return; }
+  if (e.target.closest('.tatog')) { S.taCards = !S.taCards; save(); scSync(); return; }
+  const more = e.target.closest('.scmore');
+  if (more) { const d = more.nextElementSibling; d.hidden = !d.hidden; more.firstChild.textContent = d.hidden ? '📚 Mehr Details' : '📚 Weniger Details'; if (!d.hidden) d.scrollIntoView({ block:'nearest' }); }
+});
 $('#bWords').addEventListener('click', () => { wTopic = 'all'; wLevel = 'all'; renderWords(); show('words'); });   // always opens on All topics
 $('#wBack').addEventListener('click', () => show('menu'));
 $$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
