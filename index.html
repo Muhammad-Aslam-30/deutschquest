@@ -107,7 +107,7 @@ details.bkp summary{cursor:pointer;font-weight:700}
 #cefrTabs button{font-size:17px;font-weight:700}
 .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:10px;margin-bottom:6px}
 .tcard{position:relative;border:2px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);padding:10px 10px 12px;text-align:left;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:2px}
-.tcard .te{font-size:26px;line-height:1.15}
+.tcard .te{font-size:26px;line-height:1.15;padding-right:46px}
 .tcard b{font-size:16px;line-height:1.2}
 .tcard small{color:var(--grey);font-size:13px}
 .tcard .stars{color:#C9A227;font-size:15px;letter-spacing:1px}
@@ -209,7 +209,8 @@ details.bkp summary{cursor:pointer;font-weight:700}
 .wcard .mn{margin:0 0 8px}
 .mn.ta-mn{font-family:'Noto Sans Tamil','Nirmala UI','Latha',Jost,sans-serif;background:#EAF2EC;border-left-color:var(--good);margin-top:6px}
 .vgrid.tips{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-bottom:4px}
-.case{position:absolute;top:8px;right:8px;font-size:12px;font-weight:700;color:var(--on);padding:2px 6px}
+.case{display:inline-block;margin:0 0 6px;font-size:12px;font-weight:700;color:var(--on);padding:2px 6px;line-height:1.3}
+.vcard .case + .big{clear:both}
 .case.akk{background:var(--red)} .case.dat{background:var(--blue)} .case.wech{background:var(--grey)}
 .newtag.again{background:var(--red);color:var(--on)}
 .newtag{background:var(--yellow);color:var(--black);font-size:12px;font-weight:800;padding:2px 6px;vertical-align:4px}
@@ -562,7 +563,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
 .panel{position:relative}
 .themebtn.tcorner{position:absolute;top:12px;right:12px;width:40px;height:40px;flex:none;margin:0;font-size:19px;box-shadow:2px 2px 0 var(--shadow);z-index:1}
 .panel:has(> .tcorner) > h2{padding-right:52px}
-.ptop{position:sticky;top:-8px;z-index:3;display:flex;justify-content:space-between;align-items:center;margin:-14px -14px 6px;pointer-events:none}
+.ptop{position:sticky;top:-20px;z-index:3;display:flex;justify-content:space-between;align-items:center;margin:-14px -14px 6px;padding:6px;background:var(--white);pointer-events:none}
 .ptop button{pointer-events:auto;width:44px;height:44px;flex:none;margin:0;border:3px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);font-size:20px;font-weight:700;cursor:pointer;display:grid;place-items:center}
 .tback,.cafe-top .tback,.wtop>.tback,.ptop .tback{width:44px;height:44px;flex:0 0 44px;margin:0;padding:0;border:3px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);display:grid;place-items:center;cursor:pointer}
 .tback:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
@@ -4286,10 +4287,22 @@ async function gfetch(url, opt, ms = 15000) {
 }
 async function apiError(r) {
   let msg = '', det = ''; try { const d = await r.json(); msg = (d.error && d.error.message) || ''; det = JSON.stringify((d.error && d.error.details) || ''); } catch (e) {}
+  // a new key whose project has the Gemini API switched off, or a key limited to other websites: say exactly that
+  if (/SERVICE_DISABLED|has not been used in project|API has not been used|is disabled/i.test(det + msg)) return new AIError('apioff', `${r.status}${msg ? ': ' + msg : ''}`);
+  if (/REFERRER_BLOCKED|referer|referrer/i.test(det + msg)) return new AIError('refblock', `${r.status}${msg ? ': ' + msg : ''}`);
   const keyish = r.status === 401 || r.status === 403 || /api key|API_KEY|permission/i.test(msg);
-  // 429 = a free-tier limit: Google says which one (per minute, or used up for the whole day)
-  return new AIError(r.status === 429 ? (/PerDay/i.test(det + msg) ? 'limitday' : 'limit') : keyish ? 'key' : r.status >= 500 ? 'busy' : 'api', `${r.status}${msg ? ': ' + msg : ''}`);
+  // 429 = a free-tier limit. Google says how long to wait ("retry in 8h9m34s"): hours mean the day's quota is used up.
+  // Models with "limit: 0" are not free for this key at all: they are skipped for a few hours.
+  if (r.status === 429) {
+    const m = msg.match(/retry in (?:(\d+)h)?(?:(\d+)m)?([\d.]+)s/), secs = m ? (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0) : 0;
+    (msg.match(/limit: 0, model: [\w.-]+/g) || []).forEach(x => { const md = x.split('model: ')[1]; resting[md] = Math.max(resting[md] || 0, Date.now() + 6 * 3600000); });
+    const day = /PerDay/i.test(det + msg) || secs > 600;
+    if (day && secs) limitUntil = Math.max(limitUntil, Date.now() + secs * 1000);
+    return new AIError(day ? 'limitday' : 'limit', `${r.status}${msg ? ': ' + msg : ''}`);
+  }
+  return new AIError(keyish ? 'key' : r.status >= 500 ? 'busy' : 'api', `${r.status}${msg ? ': ' + msg : ''}`);
 }
+let limitUntil = 0;   // when the free daily quota is back (from Google's "retry in …")
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let modelCache = null;
 let modelPending = null;   // shares one model-list request between callers that start at the same time
@@ -4363,7 +4376,7 @@ async function askLena(userText) {
         }
         if (!r) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); continue; }
         if (r.ok) { used = model; break; }
-        if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Date.now() + (r.status === 404 ? 3600000 : REST_MS); lastErr = err; continue; }
+        if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; continue; }
         throw err;                                                            // key problems or other refusals: no point trying other models
       }
     }
@@ -4618,13 +4631,20 @@ const AI_MSG = {
   nokey:'Add your Gemini key first (⚙).',
   key:'Gemini did not accept the key. Open ⚙ and paste it again from AI Studio.',
   limit:'Lena needs a short break: the free Gemini limit was reached on every model. Try again in a minute.',
-  limitday:'Your Gemini key has used up today’s free requests on every model. Lena is back after the daily reset (midnight US Pacific time, about 9:00 in Germany).',
+  apioff:'This key works, but its Google Cloud project does not have the Gemini API switched on yet. Open console.cloud.google.com with the account that made the key, choose the key’s project, go to APIs & Services → Library → “Generative Language API” → Enable. Wait 1–2 minutes, then tap Save & test again.',
+  refblock:'This key is limited to other websites. In Google Cloud → Credentials → open the key → Website restrictions, add this app’s address (e.g. https://yourname.github.io/*) or choose “None”, then try again.',
   busy:'Gemini is very busy right now and didn’t answer in time. Wait a moment, then tap Try again.',
   timeout:'Gemini didn’t answer in time. Wait a moment, then tap Try again.',
   blocked:'The request never reached Google. Check the internet connection. On a work laptop or with an ad/privacy blocker, Google AI may be blocked — try your tablet or another network.',
   api:'Gemini refused the request.',
   parse:'Lena got confused. Please try again.'
 };
+Object.defineProperty(AI_MSG, 'limitday', { enumerable:true, get:() => {
+  const left = limitUntil - Date.now();
+  if (left <= 0) return 'Your Gemini key has used up today’s free requests. Lena is back after the daily reset (midnight US Pacific time, about 9:00 in Germany).';
+  const h = Math.floor(left / 3600000), mn = Math.round((left % 3600000) / 60000);
+  return `Your Gemini key has used up today’s free requests. Lena is back at about ${new Date(limitUntil).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })} (in ${h ? h + ' h ' : ''}${mn} min). Saved words get their meaning then automatically.`;
+} });
 function cafeError(e, retry) {
   const base = AI_MSG[e.message] || 'Something went wrong. Please try again.';
   cafeStatus(base + (e.detail ? ` (Google says: ${e.detail})` : ''), true);
@@ -5382,7 +5402,7 @@ async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000,
       const err = await apiError(r);
       if (r.status === 400 && /thinking/i.test(err.detail) && (thinkIdx[model] || 0) < THINK.length - 1) { thinkIdx[model] = (thinkIdx[model] || 0) + 1; continue; }
       if (r.status === 400 && useSchema && /schema|response_?mime|json|enum/i.test(err.detail)) { useSchema = false; continue; }
-      if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Date.now() + (r.status === 404 ? 3600000 : REST_MS); lastErr = err; break; }
+      if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; break; }
       throw err;
     }
   }
@@ -7084,7 +7104,8 @@ async function cwFill() {
     if (w && w.p) cwResolve(w, { de:gS(d.de) || text, en:gS(d.en), ta:gS(d.ta), e:gEmoji(d.emoji, '📘'), exen:w.exen || gS(d.ex_en) });
     cwWait = 30000; cwBusy = false; cwSoon(1500);    // the next waiting word
   } catch (err) {
-    cwBusy = false; cwWait = Math.min(cwWait * 2, 15 * 60000); cwSoon(cwWait);
+    cwBusy = false; cwWait = Math.min(cwWait * 2, 15 * 60000);
+    cwSoon(err && err.message === 'limitday' && limitUntil > Date.now() ? limitUntil - Date.now() + 60000 : cwWait);
   }
 }
 // the dictionary form can be another word than the one selected (gehe → gehen): then the entry moves, keeping its star and memory box
