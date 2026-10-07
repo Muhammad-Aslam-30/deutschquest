@@ -3435,7 +3435,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-13';
+const APP_VERSION = 'v2026.10.07-14';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4609,7 +4609,8 @@ async function ttsKept(text) {
 }
 /* ---- the voice store: 16-bit sound per text, at most VOICE_MAX pieces (the oldest go first); never synced ---- */
 const VOICE_MAX = 1200;
-let voiceDbP = null, voicePuts = 0;
+const VOICE_KEY = LENA_VOICE + '|2|';   // 2 = cleaned with the burst rule; older pieces (with the noise) are no longer used
+let voiceDbP = null, voicePuts = 39;   // the first new piece also clears out old ones
 function voiceDb() {
   if (!voiceDbP) voiceDbP = new Promise(ok => {
     try { const q = indexedDB.open('dq-voice', 1); q.onupgradeneeded = () => q.result.createObjectStore('v'); q.onsuccess = () => ok(q.result); q.onerror = () => ok(null); } catch (e) { ok(null); }
@@ -4620,7 +4621,7 @@ async function voiceGet(text) {
   const db = await voiceDb(); if (!db) return null;
   return new Promise(ok => {
     try {
-      const q = db.transaction('v').objectStore('v').get(LENA_VOICE + '|' + text);
+      const q = db.transaction('v').objectStore('v').get(VOICE_KEY + text);
       q.onsuccess = () => {
         const v = q.result, ctx = audioCtx(); if (!v || !ctx) return ok(null);
         const buf = ctx.createBuffer(1, v.pcm.length, v.rate), ch = buf.getChannelData(0);
@@ -4636,7 +4637,7 @@ async function voicePut(text, buf) {
   try {
     const ch = buf.getChannelData(0), pcm = new Int16Array(ch.length);
     for (let i = 0; i < ch.length; i++) pcm[i] = Math.max(-1, Math.min(1, ch[i])) * 32767;
-    db.transaction('v', 'readwrite').objectStore('v').put({ pcm, rate:buf.sampleRate, t:Date.now() }, LENA_VOICE + '|' + text);
+    db.transaction('v', 'readwrite').objectStore('v').put({ pcm, rate:buf.sampleRate, t:Date.now() }, VOICE_KEY + text);
     if (++voicePuts % 40 === 0) voicePrune(db);
   } catch (e) {}
 }
@@ -4645,7 +4646,7 @@ function voicePrune(db) {   // keep the newest VOICE_MAX pieces
     const all = [], st = db.transaction('v', 'readwrite').objectStore('v'), c = st.openCursor();
     c.onsuccess = () => {
       const cur = c.result;
-      if (cur) { all.push([cur.key, cur.value.t || 0]); cur.continue(); return; }
+      if (cur) { if (!String(cur.key).startsWith(VOICE_KEY)) st.delete(cur.key); else all.push([cur.key, cur.value.t || 0]); cur.continue(); return; }
       if (all.length > VOICE_MAX) all.sort((a, b) => a[1] - b[1]).slice(0, all.length - VOICE_MAX).forEach(([k]) => st.delete(k));
     };
   } catch (e) {}
@@ -4693,9 +4694,17 @@ async function speechToBuffer(r) {
   for (let i = 0; i < fout; i++) ch[len - 1 - i] *= i / fout;
   return buf;
 }
-// where the speech really ends: the voice sometimes adds a short burst of noise after a pause at the end (the "glitch").
+// where the speech really ends: Google's voice sometimes adds a burst of noise after the sentence (the "glitch").
+// The voice check on the learner's tablet showed it: about 0.35 s of silence after the last word, then ~0.15 s of noise,
+// about five times louder than the voice itself.
 // Measured in 10 ms steps: a loud bit of at most 60 ms (shorter than any word) after at least 100 ms of quiet is dropped; then 150 ms after the
 // last word are kept.
+// how loud the voice itself is: the loud end (90th percentile) of the speech before the pause
+function voiceLevel(rms, upto, LOUD) {
+  const v = []; for (let w = 0; w < upto; w++) if (rms[w] >= LOUD) v.push(rms[w]);
+  if (!v.length) return Infinity;
+  v.sort((a, b) => a - b); return v[Math.floor(v.length * 0.9)];
+}
 function speechEnd(x, rate) {
   const W = Math.max(1, Math.round(rate * 0.01)), nw = Math.floor(x.length / W); if (nw < 20) return x.length;
   const rms = new Float32Array(nw);
@@ -4706,7 +4715,10 @@ function speechEnd(x, rate) {
     let e = end; while (e > 0 && rms[e - 1] < LOUD) e--;          // skip the quiet tail
     let b = e; while (b > 0 && rms[b - 1] >= LOUD) b--;          // the last loud bit
     let q = b; while (q > 0 && rms[q - 1] < LOUD) q--;           // the pause before it
-    if (e - b <= 6 && b - q >= 10 && q > 20) end = b; else break;  // short burst after a pause, with speech before: noise
+    let segMax = 0; for (let w = b; w < e; w++) segMax = Math.max(segMax, rms[w]);
+    const short = e - b <= 6 && b - q >= 10;                                  // a click: at most 60 ms after a pause
+    const burst = e - b <= 40 && b - q >= 12 && segMax >= 2.5 * voiceLevel(rms, q, LOUD);   // up to 400 ms after a pause, much louder than the voice
+    if (q > 20 && (short || burst)) end = b; else break;
   }
   let last = end; while (last > 0 && rms[last - 1] < LOUD * 0.5) last--;
   return Math.min(x.length, Math.min(end, last + 15) * W);
