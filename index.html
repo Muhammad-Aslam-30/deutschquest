@@ -176,6 +176,7 @@ details.bkp summary{cursor:pointer;font-weight:700}
 .scard h4{font-size:25px;line-height:1.15;margin:12px 0 2px}
 .scen{color:var(--grey);margin:0 0 4px;font-size:15px}
 .scpic .pic{max-width:340px;margin:8px auto}
+.scpic .gsvg{max-width:380px;margin:8px auto}
 .scex{font-size:20px;font-weight:600;text-align:center;margin-top:auto;padding-top:6px}
 .scex b{color:var(--blue)}
 .scta{display:none;margin-top:10px}
@@ -1979,7 +1980,7 @@ const modalHTML = (x, k) => k === 'ns'
 const modalPlain = (x, k) => k === 'ns' ? `${x.nl} ${x.nm} ${x.inf} ${x.f}${x.p}` : `${x.a} ${x.f} ${x.m} ${x.inf}${x.p}`;
 const modalTr = (x, k) => k === 'ns' ? x.nt : x.t;
 function modalPrompt(x, k) {
-  const o = modalOpts(x, k), hint = k === 'bd' ? `“${x.t}”` : `(${x.mv})`;
+  const o = modalOpts(x, k), hint = k === 'bd' ? `“${x.t}”` : k === 'ns' ? `(${x.mv} · ${x.inf})` : `(${x.mv})`;
   return esc(o.q).replace('___', '<span class="gap">?</span>') + ` <span class="whint">${esc(hint)}</span>`;
 }
 const MHINT = { kj:'Welche Form des Modalverbs ist richtig?', bd:'Welches Modalverb passt zur Bedeutung?', ns:'Nebensatz: Welches Wort steht am Ende?' };
@@ -3455,7 +3456,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.07-16';
+const APP_VERSION = 'v2026.10.08-2';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -5420,13 +5421,13 @@ GUIDE.mv = { name:'Modalverben', sections:() => [
 ] };
 const guideCache = {};
 function cardsHTML(g) {
-  const cards = g.cards();
-  return `<div class="sc"><div class="sctop"><h3>📖 Regeln: ${g.name}<small class="en2">${cards.length} Karten · ca. 2 Minuten · wischen / swipe</small></h3><button class="tatog" type="button" aria-pressed="false" aria-label="Tamil tips">தமிழ்</button></div>
+  const secs = g.sections(), cards = g.cards(secs), min = Math.max(1, Math.round(cards.length / 4));
+  return `<div class="sc"><div class="sctop"><h3>📖 Regeln: ${g.name}<small class="en2">${cards.length} Karten · ca. ${min} ${min > 1 ? 'Minuten' : 'Minute'} · wischen / swipe</small></h3><button class="tatog" type="button" aria-pressed="false" aria-label="Tamil tips">தமிழ்</button></div>
     <div class="scdots">${cards.map((c, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>
     <div class="sctrack">${cards.map(c => `<div class="scard"><span class="sclv">${c.lv}</span><h4>${c.h}</h4><p class="scen">${c.en}</p><div class="scpic">${c.pic}</div><div class="scex">${c.ex}</div>${taMn(c.ta).replace('class="mn ta-mn"', 'class="mn ta-mn scta"')}</div>`).join('')}</div>
     <div class="scnav"><button type="button" data-scgo="-1" aria-label="Vorherige Karte / previous card">←</button><span class="sccount">1 / ${cards.length}</span><button type="button" data-scgo="1" aria-label="Nächste Karte / next card">→</button></div>
     <button class="btn center scmore" type="button">📚 Mehr Details<small class="en2">All tables, word lists and exceptions</small></button>
-    <div class="scdetails" hidden>${g.sections().map(([t, h]) => `<details><summary>${t}</summary><div class="gb">${h}</div></details>`).join('')}</div></div>`;
+    <div class="scdetails" hidden>${secs.map(([t, h]) => `<details><summary>${t}</summary><div class="gb">${h}</div></details>`).join('')}</div></div>`;
 }
 function guideHTML(topic) {
   if (!guideCache[topic] && GUIDE[topic].cards) guideCache[topic] = cardsHTML(GUIDE[topic]);
@@ -5558,12 +5559,12 @@ function writeItem(lv, kind, id) {     // kind: w = weil/dass sentence, t = trap
   if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.'; return it; }
   if (kind === 't') { it.prompt = gap(esc(src.q)); it.answer = src.a; it.hint = 'Ergänzen Sie das fehlende Wort: das, dass, weil oder denn?'; return it; }
   if (kind === 'w') {
-    if (lv === 'l1') { it.prompt = `${esc(src.m)}, <span class="gap">?</span> ${esc(src.b.join(' '))}${src.p || '.'}`; it.answer = src.c; it.hint = bi(`Ergänzen Sie das fehlende Wort: ${(src.o || ['weil', 'dass']).join(' oder ')}?`, `Type the missing word: ${(src.o || ['weil', 'dass']).join(' or ')}?`); }
+    if (lv === 'l1') { it.prompt = `${esc(src.m)}, <span class="gap">?</span> ${esc(src.b.join(' '))}${src.p || '.'}` + (src.t ? `<br><span class="whint">“${esc(src.t)}”</span>` : ''); it.answer = src.c; it.hint = bi(`Ergänzen Sie das fehlende Wort: ${(src.o || ['weil', 'dass']).join(' oder ')}?`, `Type the missing word: ${(src.o || ['weil', 'dass']).join(' or ')}?`); }
     else { it.prompt = `${esc(src.m)}, <span class="gap">…</span>${src.p || '.'}`; it.chips = shuffle([src.c, ...src.b]); it.answer = `${src.c} ${src.b.join(' ')}`; it.hint = 'Schreiben Sie den Rest des Satzes mit diesen Wörtern. Wo steht das Verb?'; }
     return it;
   }
   if (lv === 'l1') {
-    it.prompt = gap(esc(src.q)) + (kind === 'a' ? ` <span class="whint">(${esc(ADJV[src.adj][0])})</span>` : '');
+    it.prompt = gap(esc(src.q)) + (kind === 'a' ? ` <span class="whint">(${esc(ADJV[src.adj][0])})</span>` : src.t ? `<br><span class="whint">“${esc(src.t)}”</span>` : '');
     it.answer = src.a; it.atStart = src.q.startsWith('___');
     it.hint = kind === 'a' ? 'Schreiben Sie das Adjektiv mit der richtigen Endung.' : src.o.includes(src.pr) ? 'Ergänzen Sie die fehlende Präposition.' : 'Ergänzen Sie das fehlende Wort (Artikel oder Kurzform).';
     return it;
@@ -6545,6 +6546,19 @@ const xRule = x => x.xt === 'wz' ? `<b>${esc(x.w || '')}</b>` : (xTopicOf(x).kin
 const xTip = x => x.xt === 'wz' ? ['', ''] : [(xTopicOf(x).kinds[x.k] || [])[1], (xTopicOf(x).kinds[x.k] || [])[2]];
 const xHTML = x => esc(x.q).replace('___', `<b class="cj xc${xKindIdx(x) % 5}">${esc(x.a)}</b>`);
 const xPrompt = x => esc(x.q).replace('___', '<span class="gap">?</span>');
+// the word cue in grey (arbeiten = to work) and the English sentence below it, so the learner knows which word is meant.
+// If the cue holds the answer itself, it becomes … (warten … = to wait for); a bare infinitive stays (kochen: the task is the form).
+function xCue(x) {
+  const tr = x.t ? `<span class="whint">“${esc(x.t)}”</span>` : '';
+  if (!x.w) return tr ? '<br>' + tr : '';
+  let w = x.w;
+  if (!/^[a-zäöüß]+n$/i.test(w.split(' = ')[0])) {
+    const a = x.a.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const [de, ...en] = w.split(' = ');   // only in the German part (der Name = name → der … = name)
+    w = [de.replace(new RegExp('(^|[^a-zäöüß])' + a + '(?=$|[^a-zäöüß])', 'gi'), '$1…'), ...en].join(' = ');
+  }
+  return ` <span class="whint">(${esc(w)})</span>${tr ? '<br>' + tr : ''}`;
+}
 const xPlain = x => x.q.replace('___', x.a);
 const xHint = x => x.xt === 'wz' ? 'Welches Wort passt?' : (xTopicOf(x).hint[x.k] || 'Was passt?');
 const xQ = x => ({ type:'x', p:x, opts:x.o, ans:x.a });
@@ -6989,6 +7003,184 @@ GUIDE.p2 = { name:'Partizip II', sections:() => [
   ['6 · Separable: ge in the middle', `<p>${XBY.p2.kinds.tr[1]}</p>${buildWordSVG([[[{ t:'auf', c:XC_GD, wt:800 }, { t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'standen' }], 'aufstehen → aufgestanden'], [[{ t:'ein', c:XC_GD, wt:800 }, { t:'ge', c:XC_B, wt:800, fly:'l' }, { t:'kauft' }], 'einkaufen → eingekauft']], 'one word, ge squeezed in after the prefix')}${xPic('p2_t1')}${xEx(['p2_t2', 'p2_t3', 'p2_t4', 'p2_t7'])}${taMn(XBY.p2.kinds.tr[2])}`],
   ['💡 Memory tricks', xTipsHTML(XPOOL.p2)]
 ] };
+
+/* ---- rules as swipe cards: one idea per card, a picture, one example; the full page stays behind "Mehr Details" ---- */
+// the n-th animated picture of a rules section (secs = GUIDE[topic].sections())
+const secSVG = (secs, i, n = 0) => (((secs[i] || [])[1] || '').match(/<svg class="gsvg"[\s\S]*?<\/svg>/g) || [])[n] || '';
+// cards for an 'x' topic: [kind, headline, English line, { id, sp:[section, n], ex, lv, ta }]
+const xCards = (tp, list) => secs => list.map(([k, h, en, o = {}]) => {
+  const d = XBY[tp], x = BYID[o.id] || XPOOL[tp].find(y => y.k === k);
+  return { lv:o.lv || (d.lv[0].k.includes(k) ? 'Level 1' : d.lv[1].k.includes(k) ? 'Level 2' : 'Level 3 · Boss'), h, en,
+    pic:o.sp ? secSVG(secs, ...o.sp) : x ? picSVG(x) : '', ex:o.ex || (x ? xHTML(x) : ''), ta:o.ta !== undefined ? o.ta : (d.kinds[k] || [])[2] || '' };
+});
+GUIDE.ps.cards = xCards('ps', [
+  ['ve', 'Stamm + Endung', 'ich -e, du -st, er -t, wir -en, ihr -t, sie -en. Stem on -t / -d: an extra e (er arbeitet).', { sp:[0, 0], id:'ps_e3' }],
+  ['sh', 'sein & haben', 'Irregular, learn them by heart: bin, bist, ist, sind, seid · habe, hast, hat, haben, habt.'],
+  ['vw', 'e → i, a → ä: nur du & er', 'sprechen → du sprichst, er spricht · fahren → er fährt. ich and wir stay normal.', { sp:[1, 0], id:'ps_w2' }],
+  ['im', 'Komm! · Kommt! · Kommen Sie!', 'du: just the stem. ihr: the ihr-form. Sie: verb first, then Sie.', { sp:[2, 0], id:'ps_i4' }]
+]);
+GUIDE.sb.cards = xCards('sb', [
+  ['v2', 'Verb auf Platz 2', 'Whatever comes first, the verb is 2nd and the subject moves behind it.', { sp:[0, 0], id:'sb_v1' }],
+  ['fr', 'Wo wohnst du? · Hast du Zeit?', 'W-question: question word, then the verb. Yes / no question: the verb comes first.', { id:'sb_f6' }],
+  ['ng', 'kein vor dem Nomen, sonst nicht', 'kein replaces ein or "no article" (kein Auto). Everything else: nicht.', { sp:[2, 0], id:'sb_n5' }],
+  ['do', 'Doch! = Ja auf eine Nein-Frage', 'Kommst du nicht? – Doch! (yes, I am coming).', { id:'sb_d1' }]
+]);
+GUIDE.ar.cards = xCards('ar', [
+  ['na', 'Wer? → der · Wen? → den', 'Subject: Nominativ. Object: Akkusativ, and only the masculine changes: den, einen.', { sp:[0, 0], id:'ar_n1' }],
+  ['pa', 'mich, dich, ihn, uns, euch', 'Akkusativ pronouns: ich → mich, du → dich, er → ihn.'],
+  ['da', 'Wem? → dem, der, den', 'der / das → dem, die → der, plural → den + n. helfen, danken, gefallen always take the Dativ.', { id:'ar_d1' }],
+  ['pd', 'mir, dir, ihm, ihr, Ihnen', 'Dativ pronouns: ich → mir, du → dir, er → ihm, sie → ihr.', { id:'ar_q1' }],
+  ['po', 'mein, sein, ihr: wie ein', 'Same endings as ein: meinen, meinem, meiner. sein = his, ihr = her / their.', { id:'ar_o2' }]
+]);
+GUIDE.pf.cards = xCards('pf', [
+  ['hs', 'sein: von A nach B', 'Movement or change (gehen, fahren, aufstehen, werden), plus sein and bleiben → sein. Everything else → haben.', { sp:[0, 0], id:'pf_h1' }],
+  ['pp', 'ge…t · ge…en · ohne ge-', 'gespielt, gegessen. No ge- for -ieren (studiert) and be-, ver-, er- (verpasst).', { sp:[1, 0], id:'pf_p4' }],
+  ['pp', 'habe … gegessen', 'haben / sein in 2nd place, the Partizip II at the very end.', { lv:'Alle Level', ex:'Ich <b>habe</b> gestern Pizza <b>gegessen</b>.', ta:'' }]
+]);
+GUIDE.rv.cards = xCards('rv', [
+  ['ra', 'mich, dich, sich, uns, euch', 'The pronoun points back to the subject: ich freue mich, er freut sich.', { sp:[0, 0], id:'rv_a1' }],
+  ['rd', 'Noch ein Objekt? → mir, dir', 'ich wasche mich, but ich wasche mir die Hände.', { sp:[2, 0], id:'rv_d1' }]
+]);
+GUIDE.ks.cards = xCards('ks', [
+  ['su', 'schnell · schneller · am schnellsten', 'Three steps: the basic form, the Komparativ (-er) and the Superlativ (am …sten).', { sp:[0, 0], lv:'Alle Level', ta:'' }],
+  ['ko', 'Komparativ: + er', 'Often with ¨: groß → größer. Irregular: gut → besser, viel → mehr, gern → lieber.', { sp:[1, 0], id:'ks_k1' }],
+  ['al', 'anders → als · gleich → wie', 'größer als (different) · so groß wie (the same).', { sp:[2, 0], id:'ks_l2' }],
+  ['su', 'am …sten · der …ste', 'am schnellsten, am besten · der höchste Berg.', { id:'ks_s1' }]
+]);
+GUIDE.pt.cards = xCards('pt', [
+  ['sh', 'war, hatte, wurde', 'Even when speaking, sein and haben use the Präteritum: ich war, ich hatte.', { sp:[0, 0], id:'pt_s1' }],
+  ['mo', 'Modalverb: kein ¨, + te', 'können → konnte, müssen → musste, dürfen → durfte, wollen → wollte.', { sp:[2, 0], id:'pt_m2' }],
+  ['st', 'spielte · ging', 'Regular: stem + te. Irregular: a new vowel and no ending for ich / er (ging, kam, las).', { id:'pt_t1' }]
+]);
+GUIDE.k2.cards = xCards('k2', [
+  ['hf', 'Könnten Sie …? Hätten Sie …?', 'Polite: Könnten Sie …? Würden Sie …? Ich hätte gern …', { sp:[0, 0], id:'k2_h1' }],
+  ['rt', 'Du solltest …', 'Advice: Du solltest … · An deiner Stelle würde ich …', { id:'k2_r1' }],
+  ['wu', 'würde + Infinitiv · wäre · hätte', 'Most verbs: würde + infinitive. But sein → wäre, haben → hätte.', { sp:[3, 0], id:'k2_w5' }],
+  ['wf', 'Wenn ich … hätte, würde ich …', 'Only imagined: Konjunktiv II in both parts.', { id:'k2_f2' }]
+]);
+GUIDE.vp.cards = xCards('vp', [
+  ['pr', 'Verb + Präposition = ein Block', 'warten auf, denken an, sich freuen auf: learn them together.', { id:'vp_p1' }],
+  ['ca', 'auf, an, über → Akk. · mit, von, vor → Dat.', 'The preposition decides the case: warten auf den Bus, Angst vor dem Hund.', { id:'vp_c2' }],
+  ['da', 'darauf · worauf · auf wen?', 'Things: da- / wo- + preposition. People: preposition + wen / wem.', { sp:[2, 1], id:'vp_d1' }]
+]);
+GUIDE.zu.cards = xCards('zu', [
+  ['zi', 'zu + Infinitiv am Ende', 'After Lust haben, vergessen, versuchen: zu + infinitive. After modal verbs: no zu.', { id:'zu_z1' }],
+  ['zi', 'an-zu-rufen', 'Separable verbs put zu in the middle.', { sp:[1, 0], ex:'Ich habe vergessen, dich an<b>zu</b>rufen.', ta:'' }],
+  ['ud', 'um … zu oder damit?', 'Same person: um … zu. A new subject: damit, verb at the end.', { sp:[2, 0], id:'zu_u1' }],
+  ['ow', 'ohne … zu · statt … zu', 'ohne … zu = without doing · statt … zu = instead of doing.']
+]);
+GUIDE.pa.cards = xCards('pa', [
+  ['wd', 'Passiv = werden + Partizip II', 'The thing is the subject: Das Haus wird gebaut. werden agrees: wird / werden.', { sp:[0, 0], id:'pa_w2' }],
+  ['pp', 'Partizip II ans Ende', 'wird gesprochen, wird repariert (-ieren: no ge-).'],
+  ['pr', 'Vergangenheit: wurde', 'Das Haus wurde 1900 gebaut.', { id:'pa_r1' }],
+  ['ak', 'Aktiv oder Passiv?', 'Aktiv: the person does it. Passiv: the thing is the subject, the person comes with von.', { sp:[3, 0], id:'pa_a2' }]
+]);
+GUIDE.zk.cards = xCards('zk', [
+  ['eo', 'entweder … oder · weder … noch', 'either … or (one of the two) · neither … nor (none of them).', { id:'zk_e2' }],
+  ['sa', 'sowohl … als auch', 'both … and. Also: nicht nur … sondern auch = not only … but also.'],
+  ['jd', 'Je mehr …, desto besser …', 'je: verb at the end. desto: verb right after the comparative.', { id:'zk_j3' }],
+  ['za', 'zwar … aber', 'admittedly … but: Das Hotel ist zwar teuer, aber schön.', { id:'zk_z1' }]
+]);
+GUIDE.fg.cards = xCards('fg', [
+  ['fu', 'werden + Infinitiv am Ende', 'Ich werde dich anrufen. werde, wirst, wird, werden, werdet.', { sp:[0, 0], id:'fg_f2' }],
+  ['ge', 'Wessen? → des …s · der', 'Masculine / neuter: des Vaters, des Hauses. Feminine and plural: der.', { sp:[1, 0], id:'fg_g1' }],
+  ['wt', 'wegen, trotz, während', 'because of, despite, during, with the Genitiv: wegen des Regens.', { sp:[2, 0], id:'fg_w1' }]
+]);
+GUIDE.zd.cards = xCards('zd', [
+  ['zl', '21 = ein-und-zwanzig', 'From 21 on, the ones come first. 30 = dreißig, 60 = sechzig, 70 = siebzig.', { sp:[0, 0], id:'zd_z1' }],
+  ['uh', 'halb acht = 7:30!', 'halb = half TO the next hour. Viertel nach = :15, Viertel vor = :45.', { sp:[1, 0], id:'zd_u1' }],
+  ['dt', 'der dritte · am dritten Mai', 'Up to 19: -te, from 20: -ste. Days: am. Months and seasons: im.', { sp:[2, 0], id:'zd_d1' }]
+]);
+GUIDE.rs.cards = xCards('rs', [
+  ['rn', 'der Mann, der … · Verb am Ende', 'Gender from the noun, case from its job in the clause. Subject → der, die, das.', { sp:[0, 0] }],
+  ['ra', 'Objekt → den (nur maskulin)', 'der Film, den ich sehe. die and das stay the same.', { sp:[1, 0], id:'rs_a1' }],
+  ['rd', 'dem, der, denen · mit dem', 'Dativ: dem, der, plural denen. A preposition comes first: die Stadt, in der ich wohne.', { id:'rs_d3' }],
+  ['rw', 'alles, was · die Stadt, wo', 'After alles, etwas, nichts: was. After a place: wo.', { sp:[3, 0], id:'rs_w1' }]
+]);
+GUIDE.ts.cards = xCards('ts', [
+  ['aw', 'einmal früher → als · oft → wenn', 'Als ich Kind war … · Immer wenn es regnet …', { sp:[0, 0], id:'ts_a1' }],
+  ['wb', 'während, bevor, bis, seit', 'while, before, until, since. The verb goes to the end.', { sp:[1, 0], id:'ts_b2' }],
+  ['ns', 'nachdem: eine Zeit zurück', 'First this, then that: Nachdem ich gegessen hatte, ging ich.', { sp:[2, 0], id:'ts_n2' }],
+  ['pq', 'hatte / war + Partizip II', 'The past before the past: ich hatte gegessen, sie war gegangen.', { id:'ts_p1' }]
+]);
+GUIDE.iq.cards = xCards('iq', [
+  ['wq', 'Wissen Sie, wo …? · ob', 'The question word stays. A yes / no question becomes ob.', { sp:[0, 0], id:'iq_q1' }],
+  ['vl', 'Verb am Ende', 'Wann fährt der Zug? → Wissen Sie, wann der Zug fährt?', { id:'iq_v1' }],
+  ['ip', 'jemand, niemand, etwas, nichts, man', 'somebody, nobody, something, nothing, one. man kann (like er).', { sp:[2, 0], id:'iq_i3' }],
+  ['ei', 'einen · keinen · welche', 'Instead of repeating the noun: Hast du einen Stift? – Ja, ich habe einen.', { sp:[3, 0], id:'iq_e2' }]
+]);
+GUIDE.nv.cards = xCards('nv', [
+  ['vb', 'Nomen + Verb = ein Block', 'eine Entscheidung treffen, eine Frage stellen: the verb is fixed.', { sp:[0, 0], id:'nv_v1' }],
+  ['pp', 'Mit Präposition', 'zur Verfügung stehen, in Frage kommen, zu Ende gehen.', { id:'nv_p1' }]
+]);
+GUIDE.nd.cards = xCards('nd', [
+  ['ak', 'Welche Nomen?', 'Masculine nouns on -e for people and animals, -ent, -ant, -ist, and der Herr, der Mensch, der Nachbar.', { sp:[0, 0], lv:'Alle Level', ex:'der Kollege → den Kolleg<b>en</b>', ta:'' }],
+  ['ns', 'Subjekt, Singular: kein -n', 'Only the Nominativ singular stays: Der Kollege kommt.'],
+  ['ak', 'Sonst überall: + (e)n', 'den, dem, des Kollegen · den Studenten.', { sp:[1, 0], id:'nd_a1' }],
+  ['sp', 'Herr, Name & Co.', 'den Herrn, des Namens. In letters: Sehr geehrter Herr Müller.', { id:'nd_s1' }]
+]);
+GUIDE.ls.cards = xCards('ls', [
+  ['la', 'lassen = jemand macht es für mich', 'Ich lasse mein Auto reparieren. ich lasse, du lässt, er lässt.', { sp:[0, 0], id:'ls_l2' }],
+  ['sl', 'sich lassen = man kann', 'Das Fenster lässt sich nicht öffnen = it can’t be opened.', { id:'ls_s1' }],
+  ['zp', 'sein + Partizip II = Zustand', 'wird geöffnet = someone is doing it. ist geöffnet = the result.', { sp:[2, 0], id:'ls_z1' }]
+]);
+GUIDE.pz.cards = xCards('pz', [
+  ['p1', 'lachend = gerade jetzt', 'Partizip I = infinitive + d: das lachende Kind (the child who is laughing).', { sp:[0, 1], id:'pz_a1' }],
+  ['p2', 'geschlossen = fertig, passiv', 'Partizip II as an adjective: die geschlossene Tür, das gestohlene Fahrrad.', { sp:[0, 0], id:'pz_b1' }],
+  ['an', 'der Deutsche · ein Deutscher', 'An adjective as a noun: capital letter, adjective endings stay.', { id:'pz_n1' }]
+]);
+GUIDE.p2.cards = xCards('p2', [
+  ['rg', 'Welche Endung? Vier Fragen', 'Separable? -ieren or be-, ver-? Irregular? Mixed? Otherwise: ge…t.', { sp:[0, 0], lv:'Alle Level', ex:'ge<b>spielt</b> · ge<b>gessen</b> · ge<b>bracht</b> · <b>studiert</b>', ta:'' }],
+  ['rg', 'ge + Stamm + t', 'spielen → gespielt. Stems on -t / -d: gearbeitet.', { sp:[1, 0], id:'p2_r1' }],
+  ['ir', 'ge + … + en', 'Often a new vowel: trinken → getrunken, gehen → gegangen.', { sp:[2, 0], id:'p2_i2' }],
+  ['mx', 'neuer Vokal + t', 'bringen → gebracht, denken → gedacht, wissen → gewusst.', { sp:[3, 0], id:'p2_m1' }],
+  ['ng', 'kein ge-', '-ieren (studiert) and be-, ver-, er-, ent- … (besucht, verstanden).', { sp:[4, 0], id:'p2_n1' }],
+  ['tr', 'auf-ge-standen', 'Separable verbs: ge goes in the middle: eingekauft, angerufen.', { sp:[5, 0], id:'p2_t1' }]
+]);
+GUIDE.sf.cards = xCards('sf', [
+  ['rg', 'Drei Formen pro Verb', 'Infinitiv – Präteritum – Partizip II.', { sp:[0, 0], lv:'Alle Level', ex:'kaufen – kauf<b>te</b> – <b>ge</b>kauf<b>t</b> · gehen – g<b>i</b>ng – <b>ge</b>gang<b>en</b>', ta:'' }],
+  ['rg', 'Regelmäßig: -te · ge…t', 'The vowel never changes: kaufen – kaufte – gekauft.', { id:'sf_g1' }],
+  ['pr', 'Unregelmäßig: neuer Vokal, kein -te', 'schreiben – schrieb, gehen – ging, sein – war.', { sp:[6, 0], id:'sf_p2' }],
+  ['pp', 'Partizip II: ge…en', 'trinken – trank – getrunken, sprechen – sprach – gesprochen.'],
+  ['mx', 'Gemischt: neuer Vokal + te', 'bringen – brachte – gebracht, denken – dachte – gedacht.', { sp:[7, 0], id:'sf_m1' }],
+  ['hs', 'hat oder ist?', 'ist: from A to B and change of state (ist gegangen). Everything else: hat.', { sp:[8, 0], id:'sf_h1' }]
+]);
+// the older topics
+GUIDE.wd.cards = secs => [
+  { lv:'Alle Level', h:'Nebensatz: Verb ans Ende', en:'After weil, dass, wenn, obwohl, ob the conjugated verb goes to the very end.', pic:secSVG(secs, 0, 0), ex:'…, <b>weil</b> ich krank <b>bin</b>.', ta:TA_C.weil },
+  { lv:'Level 1', h:'dass · ob', en:'dass = that (after glauben, sagen, hoffen). ob = whether (a yes / no question).', pic:secSVG(secs, 1, 0), ex:'Ich glaube, <b>dass</b> er recht hat.', ta:TA_C.dass },
+  { lv:'Level 1', h:'weil · wenn · obwohl', en:'because · when / if · although. All three send the verb to the end.', pic:orderAnim('Wir gehen raus,', ['obwohl', 'es', 'ist', 'kalt'], ['obwohl', 'es', 'kalt', 'ist'], ['ist'], 'obwohl', 'obwohl → the verb moves to the end'), ex:'<b>Obwohl</b> es kalt <b>ist</b>, gehen wir raus.', ta:TA_C.obwohl },
+  { lv:'Level 2', h:'Zwei Verben: das konjugierte zuletzt', en:'With möchte, kann, muss, habe the conjugated verb is the very last word.', pic:secSVG(secs, 4, 0), ex:'…, weil ich in Berlin arbeiten <b>möchte</b>.', ta:'' },
+  { lv:'Level 2', h:'das Buch, das ich lese', en:'der / die / das can start a Nebensatz too: the verb still goes to the end.', pic:secSVG(secs, 3, 0), ex:'Das ist das Buch, <b>das</b> ich gerade <b>lese</b>.', ta:'' },
+  { lv:'Level 3 · Boss', h:'denn · aber · deshalb', en:'denn and aber: normal order. deshalb: the verb comes right after it.', pic:secSVG(secs, 5, 0), ex:'…, <b>denn</b> ich <b>bin</b> krank.', ta:TA_C.denn },
+  { lv:'Level 3 · Boss', h:'das oder dass?', en:'Can you say welches instead? → das. It joins two clauses → dass.', pic:'', ex:`${trapHTML(TRAPS[0])}<br>${trapHTML(TRAPS[1])}`, ta:TA_C.das }
+];
+GUIDE.prep.cards = secs => [
+  { lv:'Alle Level', h:'Der Fall zeigt sich am Artikel', en:'Akkusativ: only der → den. Dativ: dem, der, dem, plural den + n.', pic:secSVG(secs, 0, 0), ex:'für <b>den</b> Mann · mit <b>dem</b> Mann', ta:'' },
+  { lv:'Level 1', h:'Immer Akkusativ: DOGFU', en:'durch, ohne, gegen, für, um.', pic:picSVG(BYID.p_durch_park), ex:prepHTML(BYID.p_durch_park), ta:TA_TIPS.akk },
+  { lv:'Level 1', h:'Immer Dativ', en:'aus, bei, mit, nach, seit, von, zu.', pic:picSVG(BYID.p_mit_bus), ex:prepHTML(BYID.p_mit_bus), ta:TA_TIPS.dat },
+  { lv:'Level 2', h:'Wo? → Dativ', en:'It rests there: liegen, stehen, sitzen, hängen, sein.', pic:picSVG(BYID.w_auf_tisch_wo), ex:prepHTML(BYID.w_auf_tisch_wo), ta:TA_TIPS.wech },
+  { lv:'Level 2', h:'Wohin? → Akkusativ', en:'It moves there: legen, stellen, setzen, gehen, fahren.', pic:picSVG(BYID.w_auf_tisch_wohin), ex:prepHTML(BYID.w_auf_tisch_wohin), ta:TA_TIPS.wech },
+  { lv:'Level 3 · Boss', h:'im · ins · am · zum · zur', en:'in dem → im, in das → ins, an dem → am, zu dem → zum, zu der → zur.', pic:'', ex:'Ich gehe <b>ins</b> Kino.<br>Ich bin <b>im</b> Kino.<br>Ich gehe <b>zur</b> Schule.', ta:'' }
+];
+GUIDE.adj.cards = secs => [
+  { lv:'Level 1', h:'Nach der / die / das: -e oder -en', en:'-e in the five lit-up boxes, -en everywhere else.', pic:secSVG(secs, 0, 0), ex:adjHTML(BYID.a_w2), ta:ADJ_TIPS.weak[2] },
+  { lv:'Level 2', h:'Nach ein: -er und -es springen', en:'Where ein has no ending, the adjective takes it: ein alter Mann, ein neues Auto.', pic:secSVG(secs, 1, 0), ex:adjHTML(BYID.a_m1), ta:ADJ_TIPS.mixed[2] },
+  { lv:'Level 3 · Boss', h:'Ohne Artikel: Adjektiv = Artikel', en:'The adjective carries the article’s ending: kalter Kaffee, mit heißem Wasser.', pic:secSVG(secs, 2, 0), ex:adjHTML(BYID.a_s2), ta:ADJ_TIPS.strong[2] }
+];
+GUIDE.tv.cards = () => [
+  { lv:'Level 1', h:'ab, an, auf, aus, ein, mit …: trennbar', en:'Stressed prefixes split off and go to the end of the sentence.', pic:vPic('v_aufstehen', 'pr'), ex:verbHTML(BYID.v_aufstehen, 'pr'), ta:VTIPS.sepPr[2] },
+  { lv:'Level 1', h:'be-, ver-, er-, ent-: bleiben dran', en:'Unstressed prefixes never split.', pic:vPic('v_verstehen', 'pr'), ex:verbHTML(BYID.v_verstehen, 'pr'), ta:VTIPS.insPr[2] },
+  { lv:'Level 2', h:'Perfekt: auf-ge-standen', en:'ge goes between the prefix and the verb: eingekauft, angerufen.', pic:vPic('v_aufstehen', 'pp'), ex:verbHTML(BYID.v_aufstehen, 'pp'), ta:VTIPS.sepPp[2] },
+  { lv:'Level 2', h:'Perfekt: kein ge-', en:'verstanden, bekommen, besucht (not geverstanden).', pic:vPic('v_verstehen', 'pp'), ex:verbHTML(BYID.v_verstehen, 'pp'), ta:VTIPS.insPp[2] },
+  { lv:'Level 3 · Boss', h:'Nebensatz: wieder ein Wort', en:'After weil / dass the verb is last, and so is the prefix: they join up.', pic:vPic('v_abfahren', 'ns'), ex:verbHTML(BYID.v_abfahren, 'ns'), ta:VTIPS.ns[2] }
+];
+GUIDE.mv.cards = () => [
+  { lv:'Level 1', h:'ich = er: keine Endung', en:'ich kann, er kann · ich muss, er muss. Only du gets -st.', pic:mPic('m_k1', 'kj'), ex:modalHTML(BYID.m_k1, 'kj'), ta:MTIPS.kj[2] },
+  { lv:'Level 1', h:'Modalverb auf 2, Infinitiv am Ende', en:'Everything else goes in between.', pic:mPic('m_k2', 'sb'), ex:modalHTML(BYID.m_k2, 'kj'), ta:MTIPS.sb[2] },
+  { lv:'Level 2', h:'muss nicht ≠ darf nicht', en:'muss nicht = not necessary. darf nicht = forbidden.', pic:mPic('m_m6', 'bd'), ex:modalHTML(BYID.m_m6, 'kj'), ta:MTIPS.bd[2] },
+  { lv:'Level 3 · Boss', h:'Nebensatz: Modalverb zuletzt', en:'After weil / dass the modal verb jumps to the very end.', pic:mPic('m_m1', 'ns'), ex:modalHTML(BYID.m_m1, 'ns'), ta:MTIPS.ns[2] }
+];
 // the extra kinds of older topics get their own section, just before the memory tricks
 [['sb', 'dw', 'dieser, welcher, jeder', () => `${tableSVG(['masc.', 'fem.', 'neut.', 'plural'], ['Nom.', 'Akk.', 'Dat.'], [[['dieser'], ['diese'], ['dieses'], ['diese']], [['diesen'], ['diese'], ['dieses'], ['diese']], [['diesem'], ['dieser'], ['diesem'], ['diesen']]], [[1, 0], [2, 0]], XC_R, 'welch- and jed- work the same way')}${xPic('sb_w1')}${xEx(['sb_w2', 'sb_w3', 'sb_w4', 'sb_w7'])}`],
  ['k2', 'vg', 'Konjunktiv II in the past', () => `${dreamSVG('Ich habe nicht gelernt.', ['Wenn ich gelernt hätte,', 'hätte ich bestanden!'], '😞', '🎓')}${decisionSVG('Perfekt with haben or sein?', [['haben (lernen, wissen …)', 'hätte + Partizip II', XC_B], ['sein (gehen, fahren, kommen …)', 'wäre + Partizip II', XC_R]])}${xPic('k2_g1')}${xEx(['k2_g2', 'k2_g3', 'k2_g4', 'k2_g6'])}`],
@@ -7138,7 +7330,7 @@ async function xGenRound(l) {
 function xWriteItem(it, lv, src) {
   it.full = xPlain(src);
   if (lv === 'dik') { it.answer = it.full; it.atStart = true; it.prompt = ''; it.hint = 'Hören Sie zu und schreiben Sie den ganzen Satz. Mit 🔊 hören Sie ihn noch einmal.'; return it; }
-  if (lv === 'l1') { it.prompt = xPrompt(src); it.answer = src.a; it.atStart = src.q.startsWith('___'); it.hint = bi(`Ergänzen Sie ${src.a.includes(' ') ? 'die fehlenden Wörter' : 'das fehlende Wort'}. ${xHint(src)}`, `Type the missing word${src.a.includes(' ') ? 's' : ''}. ${EN2[xHint(src)] || ''}`); return it; }
+  if (lv === 'l1') { it.prompt = xPrompt(src) + xCue(src); it.answer = src.a; it.atStart = src.q.startsWith('___'); it.hint = bi(`Ergänzen Sie ${src.a.includes(' ') ? 'die fehlenden Wörter' : 'das fehlende Wort'}. ${xHint(src)}`, `Type the missing word${src.a.includes(' ') ? 's' : ''}. ${EN2[xHint(src)] || ''}`); return it; }
   const words = it.full.replace(/[.,!?–]/g, ' ').split(/\s+/).filter(Boolean);
   it.prompt = `<span class="whint">“${esc(src.t)}”</span>`; it.chips = shuffle(words); it.answer = it.full; it.atStart = true;
   it.hint = 'Schreiben Sie den ganzen Satz auf Deutsch mit diesen Wörtern.';
