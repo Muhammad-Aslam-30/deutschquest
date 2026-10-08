@@ -3456,7 +3456,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.08-2';
+const APP_VERSION = 'v2026.10.08-4';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -7742,8 +7742,8 @@ async function askSend(text, wav) {
   try {
     const d = await geminiJSON({ schema:{ type:'OBJECT', properties:{ heard:{ type:'STRING' }, answer:{ type:'STRING' } }, required:['heard', 'answer'] }, wait:30000, budget:50000, temperature:0.4,
       system:`You are Lena, a patient German teacher inside a German learning app (levels A1–B1, aim: telc B1). The learner asks you questions about German: grammar, words, an exercise, the exam.
-- The learner may write or speak in German, English or Tamil (or mix them). Find out the language yourself and answer in the language of the learner's LAST message: English → English, Tamil → Tamil (Tamil script), German → simple German. German examples always stay in German (with a short translation).
-- If the last message is a voice recording: "heard" = exactly what the learner said, written in the language and script they used; otherwise "heard" = "".
+- The learner may write or speak in German, English, Tamil or Tanglish (Tamil mixed with English, often written in Latin letters), or mix them with German. Find out the language yourself and answer in the language of the learner's LAST message: English → English, Tamil → Tamil (Tamil script), Tanglish → Tanglish in Latin letters (simple, the way they wrote or spoke it), German → simple German. German examples always stay in German (with a short translation).
+- If the last message is a voice recording: "heard" = exactly what the learner said, written in the language and script they used (Tanglish in Latin letters); otherwise "heard" = "".
 - Be short and clear: at most about 120 words, simple words, 1–3 German example sentences. Use **bold** for the important word or ending; you may use "- " for short lists.
 - The learner may ask about what is on their screen right now (an exercise, a mistake, a rule). Use the screen text to understand the question, explain WHY the answer is what it is, and correct the app politely if it is really wrong.
 - Never invent rules. If a question is not about German, answer briefly and kindly.`,
