@@ -208,6 +208,25 @@ button.trch:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shado
 .stnext .btn{margin:0 auto}
 .stwait{text-align:center;padding:30px 0;font-size:17px}
 .stwait .typing{margin:0 auto 10px}
+#hTabs{margin:10px 0 14px}
+.fb .fbchk,.askchat .achk{font-size:13px;color:var(--grey);margin-top:5px;font-weight:600}
+.fb .fbre,.afix .fbre{font-weight:800;margin-bottom:3px}
+.fb .was{font-size:13px;color:var(--grey);margin-top:4px}
+.fb.fixed,.askchat .al.fixed{animation:flashy 1.8s ease-out}
+@keyframes flashy{0%,35%{background:var(--yellow);color:#2F3640}100%{}}
+@media (prefers-reduced-motion:reduce){.fb.fixed,.askchat .al.fixed{animation:none}}
+.askchat .afix{margin-top:8px;padding:7px 9px;border:2px solid var(--black);background:#FFF6D6;color:#2F3640;font-size:14.5px}
+.askchat .afix .en2{color:#5B6670}
+.askchat .afix .ahead{margin-top:4px}
+#hTabs button{font-size:17px;font-weight:700}
+.item.note .nq{font-weight:700;color:var(--grey);margin-bottom:6px}
+.item.note .nh,.fcard .nh{font-size:19px;font-weight:800;margin-bottom:4px}
+.item.note .nr,.fcard .nr{margin-bottom:6px;line-height:1.45}
+.item.note .nbad,.fcard .nbad{color:var(--red)}
+.item.note .nmeta{font-size:13px;color:var(--grey);margin-top:6px;display:flex;gap:8px;align-items:center}
+.ndel{align-self:flex-start;font-size:18px}
+.askchat .al .anote{margin-top:8px;padding-top:6px;border-top:1px dashed var(--grey);font-size:14px;font-weight:700}
+.askchat .al .anote .linkbtn{font-weight:700}
 .selpop .selmean{border:2px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);padding:7px 12px;margin-bottom:6px;font-size:15.5px;font-weight:600}
 .selpop .selmean i{font-style:normal;color:var(--grey)}
 .selpop .selmean.wait{color:var(--grey)}
@@ -749,7 +768,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       </div>
       <div class="guide" id="guide"></div>
       <div class="row2">
-        <button class="btn center" id="bWords">★ Meine Wörter<small class="en2">My words</small></button>
+        <button class="btn center" id="bWords">📒 Mein Heft<small class="en2">My notebook: words and explanations</small></button>
         <button class="btn center" id="bProg">Mein Fortschritt<small class="en2">My progress</small></button>
       </div>
       <button class="btn center" id="bHist" style="margin-top:14px">📖 Frühere Runden<small class="en2">Past rounds</small></button>
@@ -828,11 +847,15 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="words" class="screen dim">
     <div class="panel">
       <div class="ptop"><button class="tback" data-back="#wBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
-      <h2>Meine Wörter<small class="en2">My words</small></h2>
+      <h2>📒 Mein Heft<small class="en2">My notebook</small></h2>
+      <div class="tabs htabs" id="hTabs"><button data-ht="w" class="on">📖 Wörter<small class="en2">Words</small></button><button data-ht="n">💡 Erklärungen<small class="en2">Explanations</small></button></div>
+      <div id="wWordsPart">
       <p class="lead">Die Kästchen zeigen, wie gut Sie jedes Wort kennen. Fünf volle Kästchen = gelernt.<small class="en2">The squares show how well you know each word. Five filled = mastered. Long-press any word in the app to save it here.</small></p>
-      <div class="tabs"><button data-tab="star" class="on">Gemerkt<small class="en2">Starred</small></button><button data-tab="all">Alle gesehenen<small class="en2">All seen</small></button></div>
+      <div class="tabs" id="wTabs"><button data-tab="star" class="on">Gemerkt<small class="en2">Starred</small></button><button data-tab="all">Alle gesehenen<small class="en2">All seen</small></button></div>
       <div class="wlv" id="wLevels" aria-label="Level"></div>
       <div class="wtiles" id="wTiles"></div>
+      </div>
+      <p class="lead" id="nLead" hidden>Deine gespeicherten Antworten von Lena. Sie kommen in den Karteikarten wieder.<small class="en2">Lena’s answers you saved (tap 💡 Merken under an answer in Frag Lena). They come back in your flashcards.</small></p>
       <button class="btn blue center" id="wCards" style="width:100%;margin-bottom:12px">🃏 Karteikarten</button>
       <div class="list" id="wList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="wBack">Back to menu</button></div>
@@ -856,7 +879,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <section id="cards" class="screen dim">
     <div class="panel wpanel">
       <div class="wtop">
-        <button class="tback" id="fcBack" aria-label="Back to My words"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="tback" id="fcBack" aria-label="Back to Mein Heft"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="ct"><b>🃏 Karteikarten</b><small id="fcSub"></small></div>
         <span id="fcCount" class="wcountbig"></span>
         <button class="themebtn" type="button"></button>
@@ -3521,7 +3544,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.09-3';
+const APP_VERSION = 'v2026.10.09-6';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4578,15 +4601,22 @@ function cafeSystem() {
 Topic of the conversation: ${t[2]} (${t[3]}). ${t[0] === 'frei' ? 'Let the learner choose what to talk about.' : ''}
 ${CAFE_FOCUS[C.focus].prompt}${t[4] ? '\nThe situation: ' + t[4] : ''}
 Rules:
+- Be correct: before judging the learner's message, check its grammar step by step. Only call something wrong if it really is wrong, and make grammar_note and feedback_explanation accurate.
 - reply_de: natural, friendly spoken German at ${lvl} level, 1 to 3 short sentences. Use the grammar focus yourself, and always end with ONE question that stays on the topic and makes the learner use the grammar focus. Never use English in reply_de.
 - reply_en: an accurate English translation of reply_de.
 - grammar_note: 1-2 short sentences in simple English explaining the grammar in reply_de, especially the grammar focus (e.g. why the verb is at the end after "weil", or why "dem" is Dativ after "mit").
 - feedback_*: judge ONLY the learner's last message. ${C.write ? 'The learner TYPES their messages (this is a writing chat): also check spelling, capital letters of nouns, umlauts and commas, and set feedback_category to the main mistake type, exactly one of: ' + ERR_CATS.join(', ') + ' (or "" if correct).' : 'Ignore missing capital letters and punctuation (it comes from speech recognition).'} If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
 - If the learner writes English or seems lost, help with a simple German sentence they could say.`;
 }
-// Lena's replies are short: skip Gemini's slow "thinking" step where the model allows it
-const THINK = [{ thinkingBudget:0 }, { thinkingLevel:'low' }, null], thinkIdx = {};
-const CHAT_WAIT = 12000, CHAT_BUDGET = 30000, REST_MS = 120000;   // per-request limit, overall limit, how long a busy model is skipped
+// Lena always thinks before she answers, so what the learner learns is correct. "fast" = a short think (café chat, look-ups:
+// about a second more), "deep" = more thinking for explanations, corrections and notes. Gemini 3 models take a thinking level,
+// Gemini 2.5 a token budget; a model that refuses a setting (400) gets the next one in its list (the last = its own default).
+const THINK = {
+  fast:m => /gemini-[3-9]/.test(m) ? [{ thinkingLevel:'low' }, { thinkingBudget:512 }, null] : [{ thinkingBudget:512 }, { thinkingLevel:'low' }, null],
+  deep:m => /gemini-[3-9]/.test(m) ? [{ thinkingLevel:'medium' }, { thinkingLevel:'low' }, null] : [{ thinkingBudget:2048 }, { thinkingBudget:512 }, null]
+}, THINK_N = 3, thinkIdx = {};
+const ACCURACY = '\nAccuracy matters most: the learner trusts you and learns from what you say. Think before you answer, check the German grammar step by step, and never invent a rule. If you are not sure, say so.';
+const CHAT_WAIT = 15000, CHAT_BUDGET = 35000, REST_MS = 120000;   // per-request limit, overall limit, how long a busy model is skipped
 const resting = {};
 const isGemma = m => /^gemma/.test(m);
 function gBody(model, system, contents, gen, schema, strict) {
@@ -4594,11 +4624,12 @@ function gBody(model, system, contents, gen, schema, strict) {
     const c = contents.map(x => ({ role:x.role, parts:x.parts.slice() }));
     if (!c.length || c[0].role !== 'user') c.unshift({ role:'user', parts:[] });
     const keys = schema && schema.properties ? ` with exactly these keys: ${Object.keys(schema.properties).join(', ')}` : '';
-    c[0].parts.unshift({ text:`${system}\n\nAnswer ONLY with one JSON object${keys}. No other text, no code fences.\n\n` });
+    c[0].parts.unshift({ text:`${system}${ACCURACY}\n\nAnswer ONLY with one JSON object${keys}. No other text, no code fences.\n\n` });
     return { contents:c, generationConfig:{ temperature:gen.temperature, maxOutputTokens:gen.maxOutputTokens } };
   }
-  const think = THINK[thinkIdx[model] || 0];
-  return { systemInstruction:{ parts:[{ text:system + (strict ? '' : '\nAnswer ONLY with one JSON object, no other text.') }] }, contents,
+  const tk = m => m + '|' + (gen.think || 'deep');   // each kind of request remembers its own fallback per model
+  const think = THINK[gen.think || 'deep'](model)[Math.min(THINK_N - 1, thinkIdx[tk(model)] || 0)];
+  return { systemInstruction:{ parts:[{ text:system + ACCURACY + (strict ? '' : '\nAnswer ONLY with one JSON object, no other text.') }] }, contents,
     generationConfig:Object.assign({ temperature:gen.temperature, maxOutputTokens:gen.maxOutputTokens, responseMimeType:'application/json' }, strict && schema ? { responseSchema:schema } : {}, think ? { thinkingConfig:think } : {}) };
 }
 // the JSON in a model's answer (Gemma may wrap it in a sentence or code fences)
@@ -4615,6 +4646,7 @@ const modelOrder = (ranked, first, now, media) => {
   return [...all.filter(m => !(resting[m] > now)), ...all.filter(m => resting[m] > now)];
 };
 async function askLena(userText) {
+  const tk = m => m + '|fast';
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
   const ranked = await rankModels(key), first = C.model || ranked[0], now = Date.now();
   const order = modelOrder(ranked, first, now, false);   // models that just failed go last
@@ -4623,7 +4655,7 @@ async function askLena(userText) {
   let schema = true, r = null, used = null, lastErr = null;
   const ctxTurns = C.hist.length > 15 ? C.hist.slice(-15) : C.hist;             // recent turns are enough and keep replies fast
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
-    body:JSON.stringify(gBody(model, cafeSystem() + (schema ? '' : '\nThe JSON object has the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.'), ctxTurns, { temperature:0.8, maxOutputTokens:1024 }, REPLY_SCHEMA, schema)) }, CHAT_WAIT);
+    body:JSON.stringify(gBody(model, cafeSystem() + (schema ? '' : '\nThe JSON object has the keys reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.'), ctxTurns, { temperature:0.8, maxOutputTokens:3072, think:'fast' }, REPLY_SCHEMA, schema)) }, CHAT_WAIT);
   const attempt = async model => { try { return await call(model); } catch (e) { if (e.message === 'timeout') return null; throw e; } };
   try {
     outer: for (let round = 0; round < 2 && !used; round++) {
@@ -4637,8 +4669,8 @@ async function askLena(userText) {
         let err = await apiError(r);
         // adapt to what this model accepts: thinking switched off → lighter thinking → default; then plain JSON without schema
         // any 400 = a setting this model does not accept (Google does not always say which): first lighter / no thinking, then no schema
-        while (r.status === 400 && err.message !== 'key' && !isGemma(model) && ((thinkIdx[model] || 0) < THINK.length - 1 || schema)) {
-          if ((thinkIdx[model] || 0) < THINK.length - 1 && !(schema && /schema|response_?mime|json|enum/i.test(err.detail))) thinkIdx[model] = (thinkIdx[model] || 0) + 1; else schema = false;
+        while (r.status === 400 && err.message !== 'key' && !isGemma(model) && ((thinkIdx[tk(model)] || 0) < THINK_N - 1 || schema)) {
+          if ((thinkIdx[tk(model)] || 0) < THINK_N - 1 && !(schema && /schema|response_?mime|json|enum/i.test(err.detail))) thinkIdx[tk(model)] = (thinkIdx[tk(model)] || 0) + 1; else schema = false;
           r = await attempt(model); if (!r || r.ok) break; err = await apiError(r);
         }
         if (!r) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); continue; }
@@ -4979,7 +5011,7 @@ const lenaInner = (de, en, gn) => `<div class="de">${esc(de)}</div>
     <div class="trbox" hidden><div class="en">${esc(en)}</div><div class="gr"><b>Grammar:</b> ${esc(gn)}</div></div>`;
 function lenaBubble(a) {
   const d = addBubble('lena', lenaInner(a.reply_de, a.reply_en, a.grammar_note));
-  d.dataset.de = a.reply_de; if (!C.write) say(a.reply_de);
+  d.dataset.de = a.reply_de; C.speaking = C.write ? null : say(a.reply_de);
 }
 // café chats are saved to Past rounds (S.history) as soon as the learner has said something, and updated after every turn
 function cafeLog(mineText, a) {
@@ -4992,6 +5024,44 @@ function cafeLog(mineText, a) {
     if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
   }
   if (C.entry) save();
+}
+// Lena answers fast (short thinking). When she corrects the learner, a second, deep-thinking check looks at the correction
+// while she is speaking: ✓ geprüft, or the box is fixed (it flashes, the wrong correction stays crossed out, Lena says
+// "Kleine Korrektur …" once she is quiet). The checked version is what is kept in Past rounds.
+const CHECK_SCHEMA = { type:'OBJECT', properties:{ verdict:{ type:'STRING', enum:['right', 'learner_right', 'better_fix'] }, corrected:{ type:'STRING' }, explanation:{ type:'STRING' } }, required:['verdict', 'corrected', 'explanation'] };
+async function cafeCheck(text, a, mine, entry, lenaBefore) {
+  const box = mine.querySelector('.fb'); if (!box) return;
+  box.insertAdjacentHTML('beforeend', '<div class="fbchk">⏳ wird geprüft …<small class="en2">being checked</small></div>');
+  const n = C.msgs.length;
+  let d;
+  try {
+    d = await geminiJSON({ gemini:true, schema:CHECK_SCHEMA, wait:30000, budget:45000, temperature:0.1,
+      system:`You are an expert German teacher. Another teacher corrected a learner's sentence in a conversation. Check that correction very carefully.${C.write ? '' : ' The learner SPOKE the sentence (speech recognition), so ignore capital letters and punctuation.'}
+- verdict "right": the learner's sentence really had a mistake and the correction fixes it correctly.
+- verdict "learner_right": the learner's sentence was actually correct German in this context (the correction was not needed).
+- verdict "better_fix": the learner made a mistake, but the correction is wrong or not the right fix.
+- corrected: for "better_fix" the correct sentence, otherwise "".
+- explanation: 1–2 short sentences in simple English: for "learner_right" why the learner's sentence is correct, for "better_fix" what the right fix is and why, for "right" "".`,
+      parts:[{ text:`Lena's question before: "${lenaBefore}"\nThe learner said: "${text}"\nThe teacher's correction: "${a.feedback_corrected}"\nThe teacher's explanation: "${a.feedback_explanation}"` }] });
+  } catch (e) { const c = box.querySelector('.fbchk'); if (c) c.remove(); return; }   // no check possible right now: the first answer stays
+  const v = gS(d.verdict), chk = box.querySelector('.fbchk');
+  if (v !== 'learner_right' && v !== 'better_fix') { if (chk) chk.innerHTML = '✓ geprüft<small class="en2">checked: the correction is right</small>'; if (entry) { entry.chk = 1; if (C.entry) save(); } return; }
+  const old = a.feedback_corrected, ex = gS(d.explanation), fix = gS(d.corrected) || old;
+  const head = '<div class="fbre">🔄 Nach Prüfung korrigiert<small class="en2">corrected after checking</small></div>';
+  if (v === 'learner_right') {
+    box.className = 'fb ok fixed'; box.innerHTML = `${head}✓ Dein Satz war richtig!<small class="en2">Your sentence was right!</small><div class="why">${esc(ex)}</div><div class="was">Vorher: <s>${esc(old)}</s></div>`;
+    if (entry) Object.assign(entry, { ok:1, fix:undefined, why:ex, chk:1 });
+  } else {
+    box.className = 'fb fixed'; box.innerHTML = `${head}✎ Better: <span class="fix">${esc(fix)}</span> <button class="linkbtn" data-c="sayfix">🔊</button><div class="why">${esc(ex)}</div><div class="was">Vorher: <s>${esc(old)}</s></div>`;
+    if (entry) Object.assign(entry, { fix, why:ex, chk:1 });
+  }
+  if (C.entry) save();
+  if (C.write) return;
+  // say it once Lena has finished speaking (not if the learner already went on)
+  try { await C.speaking; } catch (e) {}
+  for (let i = 0; i < 60 && window.speechSynthesis && speechSynthesis.speaking; i++) await sleep(400);
+  if (C.msgs.length !== n || C.busy || !$('#cafe').classList.contains('show')) return;
+  say(v === 'learner_right' ? 'Kleine Korrektur: Dein Satz war richtig!' : `Kleine Korrektur. Besser ist: ${fix}`);
 }
 function feedbackHTML(a) {
   if (a.feedback_ok) return a.feedback_explanation ? `<div class="fb ok">✓ ${esc(a.feedback_explanation)}</div>` : '';
@@ -5032,7 +5102,9 @@ async function cafeTurn(userText, mine) {
     wait.remove();
     if (mine) mine.insertAdjacentHTML('beforeend', feedbackHTML(a));
     $$('#cChat .b.sys').forEach(b => b.remove());
+    const prevL = [...C.msgs].reverse().find(x => x.r === 'l');
     lenaBubble(a); cafeLog(mine ? mine.dataset.de : null, a);
+    if (mine && !a.feedback_ok && gS(a.feedback_corrected)) cafeCheck(mine.dataset.de, a, mine, C.msgs[C.msgs.length - 2], prevL ? prevL.de : '');
     if (mine && (C.coinN || 0) < 30) { const n = coinEarn(3); C.coinN = (C.coinN || 0) + n; const db = dailyBonus(); save(); coinToast(n + db, C.coinN === 3 ? 'cafe' : null); }
   } catch (e) { wait.remove(); if (mine) mine.classList.add('failed'); cafeError(e, () => { if (mine) mine.classList.remove('failed'); cafeTurn(userText, mine); }); }
   C.busy = false; $('#cSend').disabled = false;
@@ -5770,13 +5842,14 @@ const writeItemFromKey = key => { const [lv, kind, id] = key.split(':'); return 
 
 
 // ---- Gemini for writing: one structured request with the same timeouts / backup models as the café ----
-async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000, temperature = 0.4 }) {
+async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000, temperature = 0.4, think = 'deep', gemini = false }) {
+  const tk = m => m + '|' + think;
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
   const ranked = await rankModels(key), now = Date.now();
-  const order = modelOrder(ranked, C.model || ranked[0], now, (parts || []).some(p => p.inline_data || p.inlineData));
+  const order = modelOrder(ranked, C.model || ranked[0], now, gemini || (parts || []).some(p => p.inline_data || p.inlineData));
   const deadline = now + budget; let useSchema = true, lastErr = null;
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
-    body:JSON.stringify(gBody(model, system, [{ role:'user', parts }], { temperature, maxOutputTokens:8192 }, schema, useSchema)) }, wait);
+    body:JSON.stringify(gBody(model, system, [{ role:'user', parts }], { temperature, maxOutputTokens:8192, think }, schema, useSchema)) }, wait);
   for (const model of order) {
     for (let k = 0; k < 5; k++) {
       if (Date.now() > deadline) throw lastErr || new AIError('busy');
@@ -5789,7 +5862,7 @@ async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000,
       const err = await apiError(r);
       // any 400 = a setting this model does not accept: first lighter / no thinking, then no schema (the error does not always say which)
       if (r.status === 400 && err.message !== 'key' && !isGemma(model) && useSchema && /schema|response_?mime|json|enum/i.test(err.detail)) { useSchema = false; continue; }
-      if (r.status === 400 && err.message !== 'key' && !isGemma(model) && (thinkIdx[model] || 0) < THINK.length - 1) { thinkIdx[model] = (thinkIdx[model] || 0) + 1; continue; }
+      if (r.status === 400 && err.message !== 'key' && !isGemma(model) && (thinkIdx[tk(model)] || 0) < THINK_N - 1) { thinkIdx[tk(model)] = (thinkIdx[tk(model)] || 0) + 1; continue; }
       if (r.status === 400 && err.message !== 'key' && !isGemma(model) && useSchema) { useSchema = false; continue; }
       if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; break; }
       if (r.status === 400 && err.message !== 'key') { lastErr = err; break; }   // this model cannot handle the request at all: the next model
@@ -7747,7 +7820,7 @@ selPop.addEventListener('click', e => {
   DICT = null;
   if (Object.keys(S.cw).length >= 50) setTimeout(() => coinToast(coinOnce('cw50', 25)), 2400);
   if (!S.bm[id]) toggleStar(id); else save();
-  selPop.innerHTML = `<span>${had ? '★ Schon gespeichert' : '★ Gespeichert'}: <b>${esc(lk ? lk.de : st.text)}</b><small class="en2">${had ? 'Already in' : 'Saved to'} My words › ${esc(wordPlace(cwTopic(S.cw[id])))}${S.cw[id].p ? ' · Lena adds the meaning and picture in the background' : ''}</small></span>`;
+  selPop.innerHTML = `<span>${had ? '★ Schon gespeichert' : '★ Gespeichert'}: <b>${esc(lk ? lk.de : st.text)}</b><small class="en2">${had ? 'Already in' : 'Saved to'} Mein Heft › ${esc(wordPlace(cwTopic(S.cw[id])))}${S.cw[id].p ? ' · Lena adds the meaning and picture in the background' : ''}</small></span>`;
   st.done = true; placeSelPop(r);
   const sel = window.getSelection(); if (sel) sel.removeAllRanges();
   setTimeout(() => { if (selState === st) hideSelPop(); }, 2200);
@@ -7756,7 +7829,7 @@ selPop.addEventListener('click', e => {
 /* ---- background look-up: saved words waiting for their meaning (p:1) are filled in one by one.
    No key, offline or Gemini busy: they simply wait and are tried again later (a little longer each time). ---- */
 let cwBusy = false, cwT = null, cwWait = 30000;
-const cwAsk = (text, sent) => geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:20000, budget:30000, temperature:0.2,
+const cwAsk = (text, sent) => geminiJSON({ think:'fast', system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:20000, budget:30000, temperature:0.2,
       parts:[{ text:`The learner selected "${text}" in this German text: "${sent}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this text. "ta" = the meaning in Tamil script. "emoji" = ONE emoji that pictures the meaning. "ex_en" = an English translation of the German text.` }] });
 function cwSoon(ms) { clearTimeout(cwT); cwT = setTimeout(cwFill, ms); }
 async function cwFill() {
@@ -7823,10 +7896,13 @@ const cwItemHTML = w => `<div class="item"><div>
    The chat lives only in memory: it is never saved in the game or in Past rounds, and it is gone when you tap ✕ or reload.
    (Each question is sent to Gemini with your own key like all of Lena's features; Gemini keeps no chat for the game.) */
 const ASK = { msgs:[], busy:false, rec:null };
-const askMd = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^[-•] (.*)$/gm, '• $1').replace(/\n/g, '<br>');
+const askMd = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/(^|[^*\w])\*([^*\n]+?)\*(?![*\w])/g, '$1<i>$2</i>').replace(/^[-•] (.*)$/gm, '• $1').replace(/\n/g, '<br>');
+const askChkHTML = m => m.chk === 'wait' ? '<div class="achk">⏳ wird geprüft …<small class="en2">Lena’s answer is being checked</small></div>'
+  : m.chk === 'ok' ? '<div class="achk">✓ geprüft<small class="en2">checked: the answer is right</small></div>'
+  : m.chk === 'fixed' && m.nd ? `<div class="afix"><div class="fbre">🔄 Nach Prüfung korrigiert<small class="en2">corrected after checking</small></div>${askMd(gS(m.nd.correction))}${gS(m.nd.headline) ? `<div class="ahead">Richtig: <b>${esc(gS(m.nd.headline))}</b></div>` : ''}</div>` : '';
 function askRender() {
   $('#askChat').innerHTML = `<div class="anote">Dieser Chat wird nicht gespeichert: ✕ löscht ihn.<small class="en2">This chat is not saved: ✕ (or reloading) deletes it. Ask in Deutsch, English or தமிழ் – type, or tap 🎤, speak and tap again.</small></div>`
-    + ASK.msgs.map(m => `<div class="${m.r === 'u' ? 'am' : 'al'}">${m.r === 'u' ? esc(m.t) : askMd(m.t)}</div>`).join('')
+    + ASK.msgs.map((m, k) => `<div class="${m.r === 'u' ? 'am' : 'al'}${m.flashUntil > Date.now() ? ' fixed' : ''}">${m.r === 'u' ? esc(m.t) : askMd(m.t)}${m.r === 'l' && k > 0 && ASK.msgs[k - 1].r === 'u' && !m.fail ? `${askChkHTML(m)}<div class="anote">${m.saved ? '✓ Im Heft gespeichert<small class="en2">Saved in Mein Heft › 💡 Erklärungen</small>' : m.saving ? '⏳ Wird gespeichert …<small class="en2">Saving as soon as the check is done</small>' : `<button type="button" class="linkbtn" data-note="${k}">💡 Merken<small class="en2">Save to Mein Heft</small></button>${m.err ? `<small class="en2">${esc(m.err)}</small>` : ''}`}</div>` : ''}</div>`).join('')
     + (ASK.busy ? '<div class="al typing"><i></i><i></i><i></i></div>' : '');
   const c = $('#askChat'); c.scrollTop = c.scrollHeight;
 }
@@ -7853,12 +7929,13 @@ async function askSend(text, wav) {
 - If the last message is a voice recording: "heard" = exactly what the learner said, written in the language and script they used (Tanglish in Latin letters); otherwise "heard" = "".
 - Be short and clear: at most about 120 words, simple words, 1–3 German example sentences. Use **bold** for the important word or ending; you may use "- " for short lists.
 - The learner may ask about what is on their screen right now (an exercise, a mistake, a rule). Use the screen text to understand the question, explain WHY the answer is what it is, and correct the app politely if it is really wrong.
-- Never invent rules. If a question is not about German, answer briefly and kindly.`,
+- Before you explain, work out the structure of the sentence: which word each part belongs to and why (e.g. in "Lena schaut nach draußen", nach belongs to draußen = a direction, Wohin?; it is not the verb pair "schauen nach"). Never call something a fixed combination or a rule unless you are sure.
+- Never invent rules; if you are not sure, say so. If a question is not about German, answer briefly and kindly.`,
       parts:[{ text:`What the learner sees on the screen right now:\n"""${askScreen()}"""\n\nThe conversation so far:\n${turns || '(none)'}\n\n${wav ? 'The learner\'s last message is the voice recording attached. Write down what they said in "heard" and answer it.' : 'Answer the learner\'s last message.'}` },
         ...(wav ? [{ inline_data:{ mime_type:'audio/wav', data:wav } }] : [])] });
     if (wav) mine.t = gS(d.heard) || '🎤';
-    ASK.msgs.push({ r:'l', t:gS(d.answer) || '…' });
-  } catch (e) { if (wav) mine.t = '🎤'; ASK.msgs.push({ r:'l', t:(AI_MSG[e.message] || 'Das hat nicht geklappt. Bitte noch einmal. / That did not work, please try again.') }); }
+    const ak = ASK.msgs.push({ r:'l', t:gS(d.answer) || '…' }) - 1; setTimeout(() => askCheck(ak), 0);
+  } catch (e) { if (wav) mine.t = '🎤'; ASK.msgs.push({ r:'l', fail:1, t:(AI_MSG[e.message] || 'Das hat nicht geklappt. Bitte noch einmal. / That did not work, please try again.') }); }
   ASK.busy = false; askRender();
 }
 // 🎤: tap to speak, tap again to send (like the Sprach-Café; it sends by itself after 90 s). The sound is recorded as a small WAV (16 kHz, mono)
@@ -7906,6 +7983,7 @@ $('#askFab').addEventListener('click', () => { audioCtx(); $('#askBox').hidden =
 $('#askMin').addEventListener('click', () => { askStopRec(false); $('#askBox').hidden = true; askVis(); });
 $('#askEnd').addEventListener('click', () => { askStopRec(false); ASK.msgs = []; ASK.busy = false; $('#askBox').hidden = true; askVis(); });
 $('#askSend').addEventListener('click', () => askSend($('#askText').value));
+$('#askChat').addEventListener('click', e => { const b = e.target.closest('[data-note]'); if (b) noteSave(+b.dataset.note); });
 $('#askText').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); askSend($('#askText').value); } });
 // tap 🎤 to speak, tap again to send the question
 const askMicBtn = $('#askMic');
@@ -8243,7 +8321,7 @@ Rules:
   const prompt = `Characters: ${STORY.cast}.\n\nThe story so far:\n${story || '(this is the first chapter)'}\n\nNow write chapter ${i + 1} "${c.t}".\nPlot: ${c.plot}\nThe last paragraph (cliffhanger): ${c.end}${c.first ? `\nThe chapter MUST begin with exactly these words: ${c.first}` : ''}`;
   let note = '';
   for (let attempt = 0; attempt < 2; attempt++) {
-    const d = await geminiJSON({ system, parts:[{ text:prompt + note }], schema:STORY_SCHEMA, wait:45000, budget:70000, temperature:0.8 });
+    const d = await geminiJSON({ system, parts:[{ text:prompt + note }], schema:STORY_SCHEMA, wait:45000, budget:70000, temperature:0.8, think:'fast' });
     const paras = (d.paragraphs || []).map(p => ({ de:gS(p.de), en:gS(p.en) })).filter(p => p.de);
     const nWords = paras.reduce((s, p) => s + tokensDe(glossOut(p.de)).length, 0);
     const startOK = !c.first || tokensDe(paras.length ? paras[0].de : '').slice(0, 3).join(' ') === tokensDe(c.first).slice(0, 3).join(' ');
@@ -8307,6 +8385,69 @@ $('#stRead').addEventListener('click', () => {
 });
 $('#stBack').addEventListener('click', () => { stopVoice(); ST = null; S.cefr = 'TR'; show('menu'); });
 
+/* ================= 💡 Erklärungen: Lena's answers saved in Mein Heft =================
+   Under every answer in Frag Lena: "💡 Merken". Gemini first checks the answer again (it can be wrong) and turns it into a short
+   note: the question, a German headline, the rule in one or two lines, a right (and a wrong) example, a Tamil line, the topic.
+   Notes live in S.notes, come back in the Karteikarten (memory boxes like words) and are deleted with 🗑 (S.notesDel, synced). */
+let hTab = 'w';
+const noteList = () => Object.values(S.notes || {}).sort((a, b) => b.t - a.t);
+const notesFor = groups => { const keys = new Set(groups.map(g => g.key)); return noteList().filter(n => keys.has(n.tp)); };
+const noteBody = n => `<div class="nh">💡 ${esc(n.h)}</div><div class="nr">${esc(n.rule)}</div>`
+  + (n.ok ? `<div class="s">✓ ${esc(n.ok)}${n.okEn ? ` <span class="tr">${esc(n.okEn)}</span>` : ''}</div>` : '')
+  + (n.bad ? `<div class="s nbad">✗ ${esc(n.bad)}${n.badEn ? ` <span class="tr">${esc(n.badEn)}</span>` : ''}</div>` : '')
+  + (n.ta ? `<div class="ta">🪷 ${esc(n.ta)}</div>` : '');
+const noteItemHTML = n => `<div class="item note"><div><div class="nq">❓ ${esc(n.q)}</div>${noteBody(n)}
+  <div class="nmeta">${n.tp && (TOPICS.some(t => t[0] === n.tp)) ? esc(topicInfo(n.tp).name) + ' · ' : ''}${new Date(n.t).toLocaleDateString([], { day:'numeric', month:'short' })} ${dotsHTML(n.id)}</div></div>
+  <button class="linkbtn ndel" data-ndel="${n.id}" data-idle="🗑" aria-label="Delete">🗑</button></div>`;
+function noteDelete(id) {
+  if (!S.notes || !S.notes[id]) return;
+  delete S.notes[id]; delete S.srs[id];
+  S.notesDel = [...(S.notesDel || []), id].slice(-300); save();
+}
+const NOTE_SCHEMA = { type:'OBJECT', properties:{ question:{ type:'STRING' }, headline:{ type:'STRING' }, rule:{ type:'STRING' }, right_de:{ type:'STRING' }, right_en:{ type:'STRING' }, wrong_de:{ type:'STRING' }, wrong_en:{ type:'STRING' }, tamil:{ type:'STRING' }, topic:{ type:'STRING' }, was_wrong:{ type:'BOOLEAN' }, correction:{ type:'STRING' } },
+  required:['question', 'headline', 'rule', 'right_de', 'right_en', 'wrong_de', 'wrong_en', 'tamil', 'topic', 'was_wrong', 'correction'] };
+// the check of an answer = the note for Mein Heft, made right away (Gemini only, deep thinking)
+function noteMake(k) {
+  const a = ASK.msgs[k], q = ASK.msgs[k - 1];
+  const topics = TOPICS.map(([t]) => `${t} = ${topicInfo(t).name}`).join('; ');
+  return geminiJSON({ gemini:true, schema:NOTE_SCHEMA, wait:30000, budget:50000, temperature:0.2,
+    system:`You are an expert German teacher. A learner asked a question and a teacher (Lena) answered. Turn this into a short, CORRECT study note for the learner's notebook.
+- FIRST check Lena's answer very carefully. If it is wrong, misleading or incomplete, set was_wrong = true, put a short correction (1–2 sentences, in the language of the learner's question) into "correction", and make the note correct anyway. Otherwise was_wrong = false and correction = "".
+- question: the learner's question, short and clear, in the learner's own language (keep Tanglish / Tamil / English as they wrote it, fix only typos).
+- headline: a very short German headline with the key point (e.g. "nach draußen = Richtung (Wohin?)").
+- rule: the explanation in simple English, at most 2 short sentences.
+- right_de: one correct German example sentence (from the question if possible); right_en: its English meaning.
+- wrong_de: a typical WRONG or different version the learner might confuse it with, and wrong_en: what it would mean or why it is wrong; "" if there is none.
+- tamil: the key point in one short Tamil line (Tamil script).
+- topic: the key of the app topic it belongs to, exactly one of: ${topics}.`,
+    parts:[{ text:`What the learner sees on the screen:\n"""${askScreen().slice(0, 800)}"""\n\nThe learner's question:\n${q.t}\n\nLena's answer:\n${a.t}` }] });
+}
+function noteStore(a, q, d) {
+  const tp = TOPICS.some(t => t[0] === gS(d.topic)) ? gS(d.topic) : S.topic, id = 'nt_' + Date.now().toString(36);
+  S.notes = S.notes || {};
+  S.notes[id] = { id, nt:1, q:gS(d.question) || q.t, h:gS(d.headline), rule:gS(d.rule), ok:gS(d.right_de), okEn:gS(d.right_en), bad:gS(d.wrong_de), badEn:gS(d.wrong_en), ta:gS(d.tamil), tp, t:Date.now() };
+  a.saved = id; save();
+}
+function askCheck(k) {
+  const a = ASK.msgs[k], q = ASK.msgs[k - 1]; if (!a || a.r !== 'l' || !q || q.r !== 'u') return;
+  a.chk = 'wait'; askRender();
+  noteMake(k).then(d => {
+    a.nd = d; a.chk = d.was_wrong && gS(d.correction) ? 'fixed' : 'ok';
+    if (a.chk === 'fixed') a.flashUntil = Date.now() + 1800;
+    if (a.saving) { noteStore(a, q, d); a.saving = false; }
+  }).catch(e => { a.chk = 'skip'; if (a.saving) { a.saving = false; a.err = AI_MSG[e.message] || 'Speichern hat nicht geklappt. / Could not save, please try again.'; } })
+    .finally(() => { if (ASK.msgs[k] === a) askRender(); });
+}
+async function noteSave(k) {
+  const a = ASK.msgs[k], q = ASK.msgs[k - 1]; if (!a || !q || a.saving || a.saved) return;
+  if (a.nd) { noteStore(a, q, a.nd); askRender(); return; }          // already checked: saved at once
+  a.saving = true; askRender();
+  if (a.chk === 'wait') return;                                        // saved as soon as the check is done
+  try { const d = await noteMake(k); a.nd = d; a.chk = d.was_wrong && gS(d.correction) ? 'fixed' : 'ok'; noteStore(a, q, d); }
+  catch (e) { a.err = AI_MSG[e.message] || 'Speichern hat nicht geklappt. / Could not save, please try again.'; }
+  a.saving = false; askRender();
+}
+
 /* ================= My words: pick a topic with level tabs + topic tiles ================= */
 let wLevel = 'all';
 const WLEVELS = [['all', 'Alle'], ['A1', 'A1'], ['A2', 'A2'], ['B1', 'B1'], ['X', '✨ Mehr']];
@@ -8317,15 +8458,24 @@ function wGroups() {
 }
 function wShown(groups) { return wTopic !== 'all' ? groups.filter(g => g.key === wTopic) : wLevel === 'all' ? groups : groups.filter(g => g.lv === wLevel); }
 function renderWords() {
-  $$('#words .tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
+  $$('#hTabs button').forEach(b => b.classList.toggle('on', b.dataset.ht === hTab));
+  $('#wWordsPart').hidden = hTab === 'n'; $('#nLead').hidden = hTab !== 'n';
+  if (hTab === 'n') {
+    const notes = noteList();
+    $('#wList').innerHTML = notes.length ? notes.map(noteItemHTML).join('') : '<div class="empty">Noch keine Erklärungen. Frag Lena etwas und tippe unter ihrer Antwort auf 💡 Merken.<small class="en2">No explanations yet. Ask Lena something (the 💬 Frag Lena button) and tap 💡 Merken under her answer.</small></div>';
+    $('#wCards').textContent = notes.length ? `🃏 Karteikarten (${notes.length})` : '🃏 Karteikarten'; $('#wCards').disabled = !notes.length;
+    return;
+  }
+  $$('#wTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === wTab));
   const groups = wGroups(), cnt = lv => groups.filter(g => lv === 'all' || g.lv === lv).reduce((n, g) => n + g.list.length, 0);
   $('#wLevels').innerHTML = WLEVELS.map(([k, n]) => `<button data-wl="${k}" class="${k === wLevel ? 'on' : ''}">${n} <small>${cnt(k)}</small></button>`).join('');
   $('#wTiles').innerHTML = wLevel === 'all' ? '' : groups.filter(g => g.lv === wLevel).map(g => `<button class="wtile${g.key === wTopic ? ' on' : ''}${g.list.length ? '' : ' empty'}" data-wt="${g.key}"><span class="te">${g.icon}</span><b>${esc(g.name)}</b><small>${g.list.length}</small></button>`).join('');
   const shown = wShown(groups), total = shown.reduce((n, g) => n + g.list.length, 0), single = wTopic !== 'all';
   const none = wTab === 'star' ? 'No starred words here yet. Tap ★ next to any word in a round, on the new-word cards, or select a word in Lena’s messages in the Sprach-Café.' : 'No words seen here yet. Play a round of this topic to meet your first words.';
   $('#wList').innerHTML = total ? shown.filter(g => g.list.length).map(g => `${single ? '' : `<h3 class="wgroup">${g.icon} ${esc(g.name)} <small>· ${g.list.length}</small></h3>`}${g.list.map(wordItemHTML).join('')}`).join('') : `<div class="empty">${none}</div>`;
-  $('#wCards').textContent = total ? `🃏 Karteikarten (${total})` : '🃏 Karteikarten';
-  $('#wCards').disabled = !total;
+  const nn = notesFor(shown).length;
+  $('#wCards').textContent = total + nn ? `🃏 Karteikarten (${total + nn})` : '🃏 Karteikarten';
+  $('#wCards').disabled = !(total + nn);
 }
 $('#wLevels').addEventListener('click', e => { const b = e.target.closest('[data-wl]'); if (!b) return; wLevel = b.dataset.wl; wTopic = 'all'; renderWords(); });
 $('#wTiles').addEventListener('click', e => { const b = e.target.closest('[data-wt]'); if (!b) return; wTopic = wTopic === b.dataset.wt ? 'all' : b.dataset.wt; renderWords(); });
@@ -8334,6 +8484,7 @@ $('#wTiles').addEventListener('click', e => { const b = e.target.closest('[data-
 let FC = null;
 function cardFaces(x) {
   const big = h => `<div class="fbig">${h}</div>`, tr = t => t ? `<div class="tr">${esc(t)}</div>` : '';
+  if (x.nt) return { f:`<div class="femo">💡</div><div class="fsent">${esc(x.q)}</div><div class="tr">${bi('Weißt du die Antwort noch?', 'Do you remember the answer?')}</div>`, say:x.ok || '', b:noteBody(x) };
   if (x.cw) return { f:big(wordHTML({ de:x.de })), say:x.de.replace(/,.*$/, ''), b:`${big(wordHTML({ de:x.de }))}<div class="fmean">${x.p ? '⏳ Bedeutung kommt bald · meaning coming soon' : esc(x.en)}</div>${x.ta ? `<div class="ta">${esc(x.ta)}</div>` : ''}${x.ex ? `<div class="s">“${esc(x.ex)}”</div>${tr(x.exen)}` : ''}${picSVG(x)}` };
   if (x.xt === 'wz') { const [de, en] = (x.w || x.a).split(' = '); return { f:`<div class="femo">${x.e}</div>${big(wordHTML({ de }))}`, say:de.replace(/,.*$/, ''), b:`${big(wordHTML({ de }))}<div class="fmean">${esc(en || '')}</div><div class="s">${xHTML(x)}</div>${tr(x.t)}` }; }
   if (x.xt) return { f:`<div class="femo">${x.e}</div><div class="fsent">${xPrompt(x)}</div><div class="tr">${bi(xHint(x))}</div>`, say:xPlain(x), b:`<div class="fsent">${xHTML(x)}</div>${tr(x.t)}<div class="w">${esc(x.why || '')}</div>${picSVG(x)}` };
@@ -8345,7 +8496,7 @@ function cardFaces(x) {
   return { f:big(esc(x.de || x.id)), say:'', b:tr(x.t || x.en) };
 }
 function startCards() {
-  const list = wShown(wGroups()).flatMap(g => g.list), box = id => (S.srs[id] || {}).box || 0;
+  const shown = hTab === 'n' ? [] : wShown(wGroups()), list = hTab === 'n' ? noteList() : [...shown.flatMap(g => g.list), ...notesFor(shown)], box = id => (S.srs[id] || {}).box || 0;
   if (!list.length) return;
   // the weakest words first, then a shuffle inside each memory box
   const deck = shuffle(list.slice()).sort((a, b) => box(a.id) - box(b.id));
@@ -8467,7 +8618,9 @@ $('#guide').addEventListener('click', e => {
 });
 $('#bWords').addEventListener('click', () => { wTopic = 'all'; wLevel = 'all'; renderWords(); show('words'); });   // always opens on All topics
 $('#wBack').addEventListener('click', () => show('menu'));
-$$('#words .tabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
+$$('#wTabs button').forEach(b => b.addEventListener('click', () => { wTab = b.dataset.tab; renderWords(); }));
+$('#hTabs').addEventListener('click', e => { const b = e.target.closest('[data-ht]'); if (!b) return; hTab = b.dataset.ht; renderWords(); });
+$('#wList').addEventListener('click', e => { const b = e.target.closest('[data-ndel]'); if (!b || !armDelete(b, 'Löschen?')) return; noteDelete(b.dataset.ndel); renderWords(); });
 document.addEventListener('click', e => { const b = e.target.closest('[data-gapd]'); if (b) setGap(+b.dataset.gapd); });
 document.addEventListener('change', e => { if (!e.target.matches('[data-lanepref]')) return; S.lanePreview = e.target.checked; save(); $$('[data-lanepref]').forEach(c => { c.checked = S.lanePreview; }); renderLanes(); });
 $('#genNew').addEventListener('change', e => { S.genNew = e.target.checked; save(); });
@@ -8593,6 +8746,8 @@ function mergeSaves(a, b) {
   }
   m.history = [...byT.values()].sort((x, y) => (y.u || y.t) - (x.u || x.t)).slice(0, HIST_MAX);
   m.lib = Object.assign({}, b.lib || {}, a.lib || {});   // Lena's sentences from both devices
+  m.notesDel = [...new Set([...(a.notesDel || []), ...(b.notesDel || [])])].slice(-300);
+  m.notes = Object.assign({}, b.notes || {}, a.notes || {}); m.notesDel.forEach(id => delete m.notes[id]);
   m.coins = mergeCoins(a.coins, b.coins); if (!m.coins) delete m.coins;   // coins: see the Tresor section
   m.story = mergeStory(a.story, b.story); if (!m.story) delete m.story;
   return m;
