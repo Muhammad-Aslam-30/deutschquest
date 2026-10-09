@@ -202,7 +202,6 @@ button.trch:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shado
 .stde{display:block}
 .sten{display:none;color:var(--grey);font-size:15px;line-height:1.45;margin-top:3px}
 #story.en .sten{display:block}
-#stBody ruby rt{font-size:11px;color:var(--blue);font-weight:700;letter-spacing:.02em}
 .stend{text-align:center;font-weight:800;letter-spacing:.06em;margin:24px 0 10px;color:var(--red)}
 .stnext{border:3px dashed var(--black);padding:12px 14px;text-align:center;font-size:16px}
 .stnext p{font-size:19px;font-style:italic;margin:6px 0 12px}
@@ -3522,7 +3521,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.09-1';
+const APP_VERSION = 'v2026.10.09-3';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -7732,7 +7731,7 @@ function showSelPop() {
   const i = selInfo(); if (!i) { hideSelPop(); return; }
   const b = i.el.closest('.b'), bubbleEn = b ? ((b.querySelector('.trbox .en') || {}).textContent || '') : '';
   selState = { text:i.text, sent:i.sent, en:bubbleEn, tp:selTopic(i.el), rect:i.rect };
-  const mean = dictFind(i.text), ask = !mean && lsGet(AI_KEY) && navigator.onLine;
+  const nw = i.el.closest('.nw'), mean = nw && nw.dataset.en ? { de:nw.textContent, en:nw.dataset.en } : dictFind(i.text), ask = !mean && lsGet(AI_KEY) && navigator.onLine;
   selPop.innerHTML = (mean ? meanHTML(mean) : ask ? '<div class="selmean wait">⏳ Bedeutung …<small class="en2">Looking up the meaning</small></div>' : '<div class="selmean wait">Bedeutung kommt beim Speichern<small class="en2">Save it: Lena adds the meaning when you are online</small></div>') + `<button type="button" data-selsave>☆ „${esc(i.text)}“ speichern<small class="en2">Save to My words</small></button>`;
   selPop.hidden = false; placeSelPop(i.rect);
   if (ask) selLook(selState);
@@ -8268,7 +8267,7 @@ async function ensureChapter(i) {
 
 /* ---- the reader ---- */
 let ST = null;
-const glossHTML = t => esc(t).replace(/\{\{([^|}]+)\|([^}]*)\}\}/g, (m, w, en) => `<ruby>${w}<rt>${en}</rt></ruby>`);
+const glossHTML = t => esc(t).replace(/\{\{([^|}]+)\|([^}]*)\}\}/g, (m, w, en) => `<span class="nw" data-en="${en}">${w}</span>`);   // a new word: looks like any other word; long-press shows its meaning
 function renderChapter() {
   const i = ST.i, c = STORY.ch[i], ch = ((S.story || {}).ch || {})[chId(i)];
   $('#stTitle').textContent = `Kapitel ${i + 1}: ${c.t}`;
