@@ -162,6 +162,56 @@ details.bkp summary{cursor:pointer;font-weight:700}
 .cj.xc0{color:var(--blue)} .cj.xc1{color:var(--red)} .cj.xc2{color:#A07A12} .cj.xc3{color:var(--good)} .cj.xc4{color:#5B6F86}
 .hrow.exam{background:#F1F7F0}
 .guide{margin-top:18px}
+.coinpill{margin-left:auto;border:3px solid var(--black);background:var(--yellow);color:#2F3640;font-weight:800;padding:3px 10px;cursor:pointer;box-shadow:3px 3px 0 var(--shadow);white-space:nowrap}
+.coinpill:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.mcheer{margin:-6px 0 12px;font-weight:700}
+#cefrTabs .trtab{display:flex;align-items:center;justify-content:center;gap:5px}
+@media (max-width:520px){#cefrTabs button{font-size:15px;padding:9px 3px}#cefrTabs .chest{width:18px;height:18px}}
+.coinwin{border:3px solid var(--black);background:var(--white);padding:12px 14px;margin:0 0 14px;text-align:center}
+.cwbig{font-size:30px;font-weight:800;animation:coinup .7s ease-out}
+.cwlist{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin:6px 0;font-weight:700;font-size:14px}
+.cwlist span{display:inline-flex;flex-direction:column;align-items:center}
+.cwcheer{font-size:19px;font-weight:700;margin-top:4px}
+@keyframes coinup{0%{transform:translateY(14px) scale(.6);opacity:0}60%{transform:translateY(-4px) scale(1.12);opacity:1}100%{transform:none;opacity:1}}
+.coinpop{position:fixed;left:50%;top:72px;transform:translateX(-50%);z-index:60;background:var(--yellow);color:#2F3640;border:3px solid #2F3640;box-shadow:4px 4px 0 rgba(47,54,64,.35);padding:8px 14px;font-weight:700;display:flex;gap:12px;align-items:center;max-width:92vw;pointer-events:none}
+.coinpop[hidden]{display:none}
+.coinpop b{font-size:20px;white-space:nowrap}
+.coinpop .en2{color:#2F3640}
+.coinpop.go{animation:popin .45s ease-out}
+@keyframes popin{0%{transform:translate(-50%,-14px);opacity:0}100%{transform:translate(-50%,0);opacity:1}}
+@media (prefers-reduced-motion:reduce){.cwbig,.coinpop.go{animation:none}}
+.trhead{display:flex;align-items:center;gap:12px;margin:6px 0 12px}
+.trti{flex:1}.trti h3{margin:0}
+.trbal{font-size:22px;font-weight:800;border:3px solid var(--black);background:var(--yellow);color:#2F3640;padding:4px 12px;white-space:nowrap}
+.trseason{border:3px solid var(--black);background:var(--white);padding:12px}
+.trst{font-weight:800;font-size:17px;margin-bottom:4px}
+.trch{display:flex;align-items:center;gap:12px;width:100%;border:3px solid var(--black);background:var(--white);color:var(--black);text-align:left;padding:10px 12px;margin-top:8px}
+button.trch{cursor:pointer;box-shadow:3px 3px 0 var(--shadow)}
+button.trch:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.trch.lock{opacity:.5;border-style:dashed}
+.trn{width:34px;height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;font-weight:800;border:2px solid var(--black);background:var(--yellow);color:#2F3640}
+.trt{flex:1;display:flex;flex-direction:column}.trt small{color:var(--grey);font-size:13px}
+.tra{font-weight:700;white-space:nowrap}
+.trch .trbuy{width:auto;margin:0;padding:6px 14px;flex:0 0 auto}
+.trhow{margin-top:14px}.trhow summary{cursor:pointer;font-weight:700}
+.sttools{display:flex;gap:10px;margin:12px 0 14px}
+.sttools .btn{flex:1;margin:0}
+.sttools .btn[aria-pressed="true"]{background:var(--ink);color:var(--on)}
+#stBody{font-size:20px;line-height:1.7}
+.stp{margin:0 0 14px}
+.stde{display:block}
+.sten{display:none;color:var(--grey);font-size:15px;line-height:1.45;margin-top:3px}
+#story.en .sten{display:block}
+#stBody ruby rt{font-size:11px;color:var(--blue);font-weight:700;letter-spacing:.02em}
+.stend{text-align:center;font-weight:800;letter-spacing:.06em;margin:24px 0 10px;color:var(--red)}
+.stnext{border:3px dashed var(--black);padding:12px 14px;text-align:center;font-size:16px}
+.stnext p{font-size:19px;font-style:italic;margin:6px 0 12px}
+.stnext .btn{margin:0 auto}
+.stwait{text-align:center;padding:30px 0;font-size:17px}
+.stwait .typing{margin:0 auto 10px}
+.selpop .selmean{border:2px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);padding:7px 12px;margin-bottom:6px;font-size:15.5px;font-weight:600}
+.selpop .selmean i{font-style:normal;color:var(--grey)}
+.selpop .selmean.wait{color:var(--grey)}
 .sctop{display:flex;align-items:center;gap:10px}
 .sctop h3{margin:0;flex:1}
 .tatog{border:3px solid var(--black);background:var(--white);color:var(--black);font:inherit;font-weight:700;font-size:15px;padding:5px 10px;cursor:pointer;box-shadow:3px 3px 0 var(--shadow)}
@@ -619,11 +669,13 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
       <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 29 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
-      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
-      <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button></div>
+      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="mCoins" class="coinpill" type="button" aria-label="Coins: open the Tresor"></button><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
+      <p class="mcheer" id="mCheer" hidden></p>
+      <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button><button data-cefr="TR" class="trtab"><svg class="chest" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 10.5Q3 4.5 12 4.5Q21 4.5 21 10.5Z" fill="#C98E57" stroke="#2F3640" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="10" width="18" height="10" rx="1.2" fill="#B07A4A" stroke="#2F3640" stroke-width="1.6"/><rect x="3" y="9.2" width="18" height="2.6" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><path d="M7.5 5.4V20M16.5 5.4V20" stroke="#8A5A33" stroke-width="1.3"/><rect x="10" y="11" width="4" height="4.8" rx="1" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><circle cx="12" cy="13.2" r="0.85" fill="#2F3640"/></svg><span>Tresor</span></button></div>
       <div class="tcards" id="topicCards"></div>
       <p class="modeq" id="pickTopic" style="display:none">👆 Wählen Sie ein Thema.<small class="en2">Pick a topic above.</small></p>
       <div id="examBox" style="display:none"></div>
+      <div id="tresorBox" style="display:none"></div>
       <p class="modeq" id="modeQ">Was möchten Sie machen?<small class="en2">What would you like to do?</small></p>
       <div class="row2 modes" id="modeRow">
         <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner-Spiel</b><small>Laufen Sie durch die richtigen Tore<small class="en2">Run through the right gates</small></small></span></button>
@@ -762,6 +814,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <div class="ptop"><button class="tback" data-back="#eMenu" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="themebtn" type="button"></button></div>
       <h2 id="eTitle">Runde vorbei!</h2>
       <div class="stats" id="eStats"></div>
+      <div id="eCoins"></div>
       <div id="eUnlock"></div>
       <h3 id="eListTitle">Ihre Fehler<small class="en2">Your mistakes</small></h3>
       <div class="list" id="eList"></div>
@@ -784,6 +837,19 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <button class="btn blue center" id="wCards" style="width:100%;margin-bottom:12px">🃏 Karteikarten</button>
       <div class="list" id="wList"></div>
       <div class="row2" style="grid-template-columns:1fr"><button class="btn center" id="wBack">Back to menu</button></div>
+    </div>
+  </section>
+
+  <!-- STORY: Lenas Geschichte (bought in the Tresor) -->
+  <section id="story" class="screen dim">
+    <div class="panel wpanel">
+      <div class="wtop">
+        <button class="tback" id="stBack" aria-label="Back to the Tresor"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="ct"><b id="stTitle"></b><small id="stSub"></small></div>
+        <button class="themebtn" type="button"></button>
+      </div>
+      <div class="sttools"><button class="btn center" id="stRead">🔊 Vorlesen<small class="en2">Read aloud</small></button><button class="btn center" id="stEn" aria-pressed="false">🌐 English<small class="en2">Show the translation</small></button></div>
+      <div id="stBody"></div>
     </div>
   </section>
 
@@ -3456,7 +3522,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.08-4';
+const APP_VERSION = 'v2026.10.09-1';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4137,7 +4203,7 @@ function updateHUD() {
   $('#lives').innerHTML = [0, 1, 2].map(i => `<i class="${i < G.lives ? '' : 'lost'}"></i>`).join('');
   $('#scoreBox').textContent = G.score;
   const sb = $('#streakBox');
-  if (G.streak >= 2) { sb.style.display = 'block'; sb.textContent = `${G.streak} in a row`; } else sb.style.display = 'none';
+  if (G.streak >= 2) { sb.style.display = 'block'; const rc = rowCheer(G.streak); sb.textContent = rc ? `${rc} · ${G.streak} in a row` : `${G.streak} in a row`; } else sb.style.display = 'none';
 }
 
 function resolveRow(row) {
@@ -4291,8 +4357,10 @@ function endRound() {
     if (u < xv.n + 1) { S.ux[xv.d.tp] = xv.n + 1; unlock = xv.n === 1 ? `${xv.d.name} Level 2 is unlocked: ${xv.d.lv[1].t}.` : `${xv.d.name} Level 3 and Spot the error are unlocked.`; }
   }
   // 75 % on the first try = level passed (a star on the topic card, a tick in the study plan)
+  const wasPassed = !!(S.pass || {})[l];
   if (l && G.answered >= 6 && G.correct >= Math.ceil(G.answered * 0.75)) { S.pass = S.pass || {}; S.pass[l] = 1; }
   const newBest = G.score > (S.best[l] || 0); if (newBest) S.best[l] = G.score;
+  const cParts = runnerCoins(l, wasPassed, newBest), cCheer = runnerCheer(l, newBest);
   save(); keepStorage();
 
   $('#eTitle').textContent = G.lives <= 0 ? 'Out of lives' : (G.mistakes.length === 0 ? 'Perfekt!' : 'Runde vorbei!');
@@ -4300,6 +4368,7 @@ function endRound() {
     <div class="stat"><b>${G.score}</b><span>${newBest ? 'New best score' : 'Score'}</span></div>
     <div class="stat"><b>${G.correct}/${G.answered}</b><span>Correct</span></div>
     <div class="stat"><b>${currentStreak()}</b><span>Day streak</span></div>`;
+  $('#eCoins').innerHTML = coinsHTML(cParts, cCheer);
   $('#eUnlock').innerHTML = unlock ? `<div class="tip">${unlock}</div>` : '';
   $('#eListTitle').style.display = G.mistakes.length ? 'block' : 'none';
   $('#eList').innerHTML = G.mistakes.map(q => q.type === 'spot'
@@ -4346,7 +4415,8 @@ function renderMenu() {
   $('#l22s').innerHTML = bi((S.unlockedM || 1) >= 2 ? 'muss nicht oder darf nicht?' : 'Gesperrt: 6 von 8 richtig in Level 1');
   $('#l23s').innerHTML = bi((S.unlockedM || 1) >= 3 ? 'Schneller, plus Nebensatz: …, weil ich arbeiten muss' : 'Gesperrt: 6 von 8 richtig in Level 2');
   [10, 11, 12, 16, 20, 24].forEach(l => { $('#l' + l + 's').innerHTML = bi(isLocked(l) ? 'Gesperrt: öffnet zusammen mit Level 3' : 'Ein Wort ist falsch. Finden Sie es!'); });
-  const tab = renderTopicNav(), exam = tab === 'EX', here = !exam && topicTab(S.topic) === tab;
+  const tab = renderTopicNav(), exam = tab === 'EX', tres = tab === 'TR', here = !exam && !tres && topicTab(S.topic) === tab;
+  renderCoins();
   const tp = topicKey();
   $('#lvWd').style.display = tp === 'wd' ? '' : 'none';
   $('#lvPrep').style.display = tp === 'prep' ? '' : 'none';
@@ -4362,7 +4432,9 @@ function renderMenu() {
   $('#modeQ').style.display = here && !cafeMode ? '' : 'none';
   $('#modeRow').style.display = here ? '' : 'none';
   $('#guide').style.display = here ? '' : 'none';
-  $('#pickTopic').style.display = !exam && !here ? '' : 'none';
+  $('#pickTopic').style.display = !exam && !tres && !here ? '' : 'none';
+  $('#tresorBox').style.display = tres ? '' : 'none';
+  if (tres) renderTresor();
   $('#examBox').style.display = exam ? '' : 'none';
   if (exam) renderExamBox();
   $('#runBox').style.display = here && cafeMode === 'run' ? '' : 'none';
@@ -4962,6 +5034,7 @@ async function cafeTurn(userText, mine) {
     if (mine) mine.insertAdjacentHTML('beforeend', feedbackHTML(a));
     $$('#cChat .b.sys').forEach(b => b.remove());
     lenaBubble(a); cafeLog(mine ? mine.dataset.de : null, a);
+    if (mine && (C.coinN || 0) < 30) { const n = coinEarn(3); C.coinN = (C.coinN || 0) + n; const db = dailyBonus(); save(); coinToast(n + db, C.coinN === 3 ? 'cafe' : null); }
   } catch (e) { wait.remove(); if (mine) mine.classList.add('failed'); cafeError(e, () => { if (mine) mine.classList.remove('failed'); cafeTurn(userText, mine); }); }
   C.busy = false; $('#cSend').disabled = false;
 }
@@ -5007,7 +5080,7 @@ function openCafe(topicId, focus, lvl, write, resume) {
   if (lvl) S.cafeLevel = lvl;
   audioCtx(); ttsDown = false; voiceBtn();          // unlock audio while we still have the tap
   if (!modelCache && lsGet(AI_KEY)) rankModels(lsGet(AI_KEY)).catch(() => {});
-  Object.assign(C, { topic:topicId, focus:focus || topicKey(), hist:[], busy:false, msgs:[], entry:null, model:null, write:!!write, started:false });
+  Object.assign(C, { coinN:0, topic:topicId, focus:focus || topicKey(), hist:[], busy:false, msgs:[], entry:null, model:null, write:!!write, started:false });
   if (resume && resume.m && resume.m.length) {   // continue a saved chat: same history entry, Lena remembers what was said
     Object.assign(C, { entry:resume, msgs:resume.m, hist:cafeHistFrom(resume.m) });
     const H = S.history || [], i = H.indexOf(resume);
@@ -5685,7 +5758,7 @@ function endWrite() {
   S.history = S.history || [];
   S.history.unshift({ t:Date.now(), k:'write', x:WR.lv, tp:WR.topic, c, a:firsts.length, it:WR.res });
   if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
-  bumpStreak(); save(); keepStorage();
+  bumpStreak(); const wCoins = coinEarn(2 * c) + (firsts.length >= 6 && c === firsts.length ? coinEarn(5) : 0) + dailyBonus(); save(); keepStorage(); coinToast(wCoins, 'write');
   const wrong = firsts.filter(x => x.st === 'wrong');
   $('#wrCount').textContent = ''; $('#wrTools').style.display = 'none'; $('#wrCheck').style.display = 'none'; $('#wrNext').style.display = 'none';
   $('#wrInput').disabled = true;
@@ -6245,7 +6318,7 @@ async function checkFree() {
     S.history = S.history || [];
     S.history.unshift({ t:Date.now(), k:'write', x:task.kind, tp:task.focus, hand:hand ? 1 : undefined, task:Object.assign({}, task), text:original, res });
     if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
-    bumpStreak(); save(); keepStorage();
+    bumpStreak(); const fCoins = coinEarn(task.kind === 'telc' ? 15 : 10) + dailyBonus(); save(); keepStorage(); coinToast(fCoins, 'write');
     $('#wfStatus').textContent = '';
     $('#wfResult').innerHTML = renderCorrection(res, original, task) + `<div class="row2"><button class="btn blue center" id="wfAgain">✏️ Improve my text and check again</button><button class="btn center" id="wfDone">Menu</button></div>`;
     $('#wfAgain').onclick = () => { if (hand) setWriteMode('type'); if (!$('#wfText').value.trim()) $('#wfText').value = original; updateWordCount(); $('#wfText').focus(); $('#wfText').scrollIntoView({ block:'center' }); };
@@ -7360,8 +7433,8 @@ function renderTopicNav() {
   const tab = S.cefr || topicTab(S.topic);
   $$('#cefrTabs button').forEach(b => b.classList.toggle('on', b.dataset.cefr === tab));
   const next = (TOPICS.find(([k]) => topicStars(k) < 3) || [])[0];
-  $('#topicCards').style.display = tab === 'EX' ? 'none' : '';
-  if (tab !== 'EX') $('#topicCards').innerHTML = TOPICS.filter(t => t[1] === tab).map(([k]) => {
+  $('#topicCards').style.display = tab === 'EX' || tab === 'TR' ? 'none' : '';
+  if (tab !== 'EX' && tab !== 'TR') $('#topicCards').innerHTML = TOPICS.filter(t => t[1] === tab).map(([k]) => {
     const t = topicInfo(k), st = topicStars(k), pc = topicLearned(k);
     return `<button class="tcard${k === S.topic ? ' on' : ''}" data-topic="${k}">${k === next ? '<span class="nexttag">NEXT</span>' : ''}<span class="te">${t.icon}</span><b>${esc(t.name)}</b><small>${t.cefr}</small>`
       + `<span class="stars" aria-label="${st} of 3 levels passed">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span><span class="tbar" title="${pc}% learned"><i style="width:${pc}%"></i></span></button>`;
@@ -7490,7 +7563,7 @@ function checkExam() {
   S.history = S.history || [];
   S.history.unshift({ t:Date.now(), k:'exam', x:EXS.mod, id, c, a:n, ans:EXS.ans.slice(), task:EXS.task.gen ? EXS.task : undefined });
   if (S.history.length > HIST_MAX) S.history.length = HIST_MAX;
-  bumpStreak(); save(); keepStorage();
+  bumpStreak(); const xCoins = coinEarn(15) + dailyBonus(); save(); keepStorage(); coinToast(xCoins, 'exam');
   renderExam(); $('#exam').scrollTop = 0;
 }
 const exTaskOf = h => h.task || (EX_MOD[h.x] ? EX_MOD[h.x][1].find(t => t.id === h.id) : null);
@@ -7601,6 +7674,36 @@ function selTopic(el) {
   if (el.closest('#write, #wfree') && WR) return WR.topic;
   return S.topic;
 }
+// the meaning of a selected word: first the app's own word lists (offline, at once), otherwise Gemini (a second or two)
+let DICT = null;
+function dictBuild() {
+  DICT = new Map();
+  const put = (k, v) => { k = String(k || '').toLowerCase().replace(/^(der|die|das)\s+/, '').replace(/,.*$/, '').trim(); if (k && v.en && !DICT.has(k)) DICT.set(k, v); };
+  for (const w of Object.values(S.cw || {})) if (!w.p) put(w.de, { de:w.de, en:w.en, ta:w.ta });
+  for (const x of NPL) { const v = { de:`${x.art} ${x.sg}, die ${x.pl}`, en:x.en, ta:x.ta }; put(x.sg, v); put(x.pl, v); }
+  for (const x of V) { const v = { de:x.inf, en:x.en, ta:x.ta }; [x.inf, x.v, x.pp].forEach(f => put(f, v)); }
+  for (const a of Object.values(ADJV)) put(a[0], { de:a[0], en:a[1], ta:a[2] });
+  for (const x of W) if (x.de) put(x.de, { de:x.de, en:x.en });
+  for (const x of [...XI, ...WZ]) if (x.w && x.w.includes(' = ')) { const [de, en] = x.w.split(' = '); if (de.split(' ').length <= 3) put(de, { de, en }); }
+}
+function dictFind(t) {
+  if (!DICT) dictBuild();
+  const k = t.toLowerCase().replace(/^(der|die|das|den|dem|des|ein|eine|einen|einem|einer)\s+/, '');
+  if (DICT.has(k)) return DICT.get(k);
+  for (const end of ['e', 'en', 'er', 'es', 'em', 'n', 's', 'st', 't', 'te', 'ten', 'et']) if (k.endsWith(end) && k.length - end.length >= 3) { const b = k.slice(0, -end.length); for (const c of [b, b + 'en', b + 'n', b + 'e']) if (DICT.has(c)) return DICT.get(c); }
+  return null;
+}
+const meanHTML = m => `<div class="selmean"><b>${esc(m.de)}</b> · ${esc(m.en)}${m.ta ? ` · <i>${esc(m.ta)}</i>` : ''}</div>`;
+const LOOKS = new Map();
+async function selLook(st) {
+  await sleep(450); if (selState !== st || st.done) return;   // still the same word after a moment
+  const key = st.text + '|' + st.sent;
+  try {
+    const d = LOOKS.get(key) || await cwAsk(st.text, st.sent); LOOKS.set(key, d);
+    st.look = { de:gS(d.de) || st.text, en:gS(d.en), ta:gS(d.ta), e:gEmoji(d.emoji, '📘'), exen:gS(d.ex_en) };
+    if (selState === st && !st.done) { const m = selPop.querySelector('.selmean'); if (m) m.outerHTML = meanHTML(st.look); placeSelPop(st.rect); }
+  } catch (e) { if (selState === st && !st.done) { const m = selPop.querySelector('.selmean'); if (m) m.innerHTML = 'Bedeutung gerade nicht verfügbar<small class="en2">No meaning right now: save it and Lena adds it later</small>'; } }
+}
 const wordPlace = tp => tp === 'exam' ? 'B1 › Prüfung' : tp === 'wz' ? 'Mehr › Wortschatz' : `${topicTab(tp)} › ${topicInfo(tp).name}`;
 const selPop = document.createElement('div'); selPop.className = 'selpop'; selPop.hidden = true; document.body.appendChild(selPop);
 let selState = null, selT = null;
@@ -7628,20 +7731,24 @@ function showSelPop() {
   if (selState && (selState.busy || selState.done)) return;
   const i = selInfo(); if (!i) { hideSelPop(); return; }
   const b = i.el.closest('.b'), bubbleEn = b ? ((b.querySelector('.trbox .en') || {}).textContent || '') : '';
-  selState = { text:i.text, sent:i.sent, en:bubbleEn, tp:selTopic(i.el) };
-  selPop.innerHTML = `<button type="button" data-selsave>☆ „${esc(i.text)}“ speichern<small class="en2">Save to My words</small></button>`;
+  selState = { text:i.text, sent:i.sent, en:bubbleEn, tp:selTopic(i.el), rect:i.rect };
+  const mean = dictFind(i.text), ask = !mean && lsGet(AI_KEY) && navigator.onLine;
+  selPop.innerHTML = (mean ? meanHTML(mean) : ask ? '<div class="selmean wait">⏳ Bedeutung …<small class="en2">Looking up the meaning</small></div>' : '<div class="selmean wait">Bedeutung kommt beim Speichern<small class="en2">Save it: Lena adds the meaning when you are online</small></div>') + `<button type="button" data-selsave>☆ „${esc(i.text)}“ speichern<small class="en2">Save to My words</small></button>`;
   selPop.hidden = false; placeSelPop(i.rect);
+  if (ask) selLook(selState);
 }
 document.addEventListener('selectionchange', () => { clearTimeout(selT); selT = setTimeout(showSelPop, 250); });
 selPop.addEventListener('pointerdown', e => e.preventDefault());   // keep the selection while tapping the button
 selPop.addEventListener('click', e => {
   if (!e.target.closest('[data-selsave]') || !selState || selState.busy) return;
   const st = selState, r = e.target.closest('[data-selsave]').getBoundingClientRect();
-  const id = cwId(st.text); if (id === 'cw_') return;
+  const lk = st.look, id = cwId(lk ? lk.de : st.text); if (id === 'cw_') return;
   const had = S.cw && S.cw[id] && S.bm[id];
-  if (!S.cw || !S.cw[id]) { saveCafeWord({ de:st.text, e:'⏳' }, st.sent, st.en, st.tp); Object.assign(S.cw[id], { p:1, q:st.text }); }
+  if (!S.cw || !S.cw[id]) { if (lk) saveCafeWord({ de:lk.de, en:lk.en, ta:lk.ta, e:lk.e }, st.sent, st.en || lk.exen, st.tp); else { saveCafeWord({ de:st.text, e:'⏳' }, st.sent, st.en, st.tp); Object.assign(S.cw[id], { p:1, q:st.text }); } }
+  DICT = null;
+  if (Object.keys(S.cw).length >= 50) setTimeout(() => coinToast(coinOnce('cw50', 25)), 2400);
   if (!S.bm[id]) toggleStar(id); else save();
-  selPop.innerHTML = `<span>${had ? '★ Schon gespeichert' : '★ Gespeichert'}: <b>${esc(st.text)}</b><small class="en2">${had ? 'Already in' : 'Saved to'} My words › ${esc(wordPlace(cwTopic(S.cw[id])))}${S.cw[id].p ? ' · Lena adds the meaning and picture in the background' : ''}</small></span>`;
+  selPop.innerHTML = `<span>${had ? '★ Schon gespeichert' : '★ Gespeichert'}: <b>${esc(lk ? lk.de : st.text)}</b><small class="en2">${had ? 'Already in' : 'Saved to'} My words › ${esc(wordPlace(cwTopic(S.cw[id])))}${S.cw[id].p ? ' · Lena adds the meaning and picture in the background' : ''}</small></span>`;
   st.done = true; placeSelPop(r);
   const sel = window.getSelection(); if (sel) sel.removeAllRanges();
   setTimeout(() => { if (selState === st) hideSelPop(); }, 2200);
@@ -7650,6 +7757,8 @@ selPop.addEventListener('click', e => {
 /* ---- background look-up: saved words waiting for their meaning (p:1) are filled in one by one.
    No key, offline or Gemini busy: they simply wait and are tried again later (a little longer each time). ---- */
 let cwBusy = false, cwT = null, cwWait = 30000;
+const cwAsk = (text, sent) => geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:20000, budget:30000, temperature:0.2,
+      parts:[{ text:`The learner selected "${text}" in this German text: "${sent}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this text. "ta" = the meaning in Tamil script. "emoji" = ONE emoji that pictures the meaning. "ex_en" = an English translation of the German text.` }] });
 function cwSoon(ms) { clearTimeout(cwT); cwT = setTimeout(cwFill, ms); }
 async function cwFill() {
   if (cwBusy) return;
@@ -7658,8 +7767,7 @@ async function cwFill() {
   cwBusy = true;
   const id = next.id, text = next.q || next.de, sent = next.ex || text;
   try {
-    const d = await geminiJSON({ system:'You are a German–English dictionary for a learner. Answer with JSON that matches the schema exactly.', schema:CW_SCHEMA, wait:20000, budget:30000, temperature:0.2,
-      parts:[{ text:`The learner selected "${text}" in this German text: "${sent}". Give "de" = its dictionary form: nouns with der / die / das and the plural ending (e.g. "der Urlaub, -e"), verbs as the infinitive (separable verbs complete, e.g. "aufstehen"), adjectives in the base form, fixed phrases as they are. "en" = a short English meaning that fits this text. "ta" = the meaning in Tamil script. "emoji" = ONE emoji that pictures the meaning. "ex_en" = an English translation of the German text.` }] });
+    const d = await cwAsk(text, sent);
     const w = (S.cw || {})[id];   // the progress may have been replaced by a sync meanwhile: look the word up again
     if (w && w.p) cwResolve(w, { de:gS(d.de) || text, en:gS(d.en), ta:gS(d.ta), e:gEmoji(d.emoji, '📘'), exen:w.exen || gS(d.ex_en) });
     cwWait = 30000; cwBusy = false; cwSoon(1500);    // the next waiting word
@@ -7805,6 +7913,401 @@ const askMicBtn = $('#askMic');
 askMicBtn.addEventListener('click', e => { e.preventDefault(); if (ASK.rec || ASK.starting) askMicUp(); else askMic(); });
 askMicBtn.addEventListener('contextmenu', e => e.preventDefault());
 
+
+/* ---- Lenas Geschichte, Staffel 1: "Tisch 7" (a thriller) ----
+   Each chapter: the title, the plot for Gemini (it writes the German in the words and grammar the learner already knows),
+   the first line (shown as the preview at the end of the chapter before), and a simple A1 version for when Gemini is not there.
+   {{Wort|meaning}} = a new word, shown with its meaning right above it. */
+const STORY = { id:'s1', title:'Tisch 7', price:80, cast:'Lena (young barista in a small café in Berlin, about 22), Herr Brandt (her boss, owner of the café, friendly, about 60), Jonas (new colleague, only two weeks in the café, charming), Frau Weber (old regular guest, always tea at table 7, never talks), Max (a man who only appears as a voice on the phone), Anna (Lena’s mother; Lena was told she died 20 years ago)', ch:[
+  { t:'Tisch 7', words:['das Paket = the package', 'die Theke = the counter', 'der Kühlschrank = the fridge'],
+    plot:'Late at night (11 pm) Lena is alone, cleaning the empty café. Under table 7 she finds a phone that is not hers; the screen lights up with messages: "Hast du das Paket? Er darf es nicht finden." – "Warum antwortest du nicht?" – "Ich sehe dich." She looks outside: the street is dark and empty; she thinks it is a joke. The phone rings; a man whispers her NAME and tells her to put the phone away and NOT to open the fridge. She never told him her name. She sees the fridge door in the kitchen is slightly open – but she always closes it.',
+    end:'The lights suddenly go out.',
+    easy:[
+      ['Es ist elf Uhr in der Nacht. Das Café ist leer. Lena ist müde. Sie macht die Tische sauber.', 'It’s eleven at night. The café is empty. Lena is tired. She is cleaning the tables.'],
+      ['Dann sieht sie etwas. Unter Tisch 7 liegt ein Handy. Das ist nicht ihr Handy. Der Bildschirm ist hell.', 'Then she sees something. Under table 7 there is a phone. It isn’t her phone. The screen is bright.'],
+      ['Eine Nachricht: „Hast du das {{Paket|package}}? Er darf es nicht finden.“', 'A message: “Do you have the package? He must not find it.”'],
+      ['Lena kennt die Nummer nicht. Sie legt das Handy auf die {{Theke|counter}}. Dann kommt noch eine Nachricht: „Warum antwortest du nicht?“ Und noch eine: „Ich sehe dich.“', 'Lena doesn’t know the number. She puts the phone on the counter. Then another message comes: “Why aren’t you answering?” And another one: “I can see you.”'],
+      ['Lena schaut aus dem Fenster. Die Straße ist dunkel. Niemand ist da. „Das ist nur ein {{Witz|joke}}“, denkt sie.', 'Lena looks out of the window. The street is dark. Nobody is there. “It’s just a joke,” she thinks.'],
+      ['Da klingelt das Handy. Lena nimmt es. Ein Mann sagt leise: „Lena. Leg das Handy weg. Und mach den {{Kühlschrank|fridge}} nicht auf.“', 'Then the phone rings. Lena picks it up. A man says quietly: “Lena. Put the phone away. And don’t open the fridge.”'],
+      ['Der Mann kennt ihren Namen. Aber woher?', 'The man knows her name. But how?'],
+      ['Lena schaut in die Küche. Die Tür vom Kühlschrank ist offen. Nur ein bisschen. Aber Lena macht die Tür immer zu. Immer.', 'Lena looks into the kitchen. The fridge door is open. Just a little. But Lena always closes the door. Always.'],
+      ['Dann ist das Licht aus.', 'Then the light goes out.']
+    ] },
+  { t:'Der Kühlschrank', first:'„Hallo? Wer ist da?“, fragt Lena leise. Niemand antwortet.', words:['die Hintertür = the back door', 'der Zettel = the note'],
+    plot:'In the dark, only the phone glows. Lena walks slowly into the kitchen and opens the fridge: between milk, butter and cheese lies a small package with her name on it: LENA. She hears the back door open and close – someone runs away; outside the street is empty. The light comes back on. On the package is a note: "Morgen. 7 Uhr. Tisch 7. Sag es niemandem." The phone pings: "Jetzt hast du es. Jetzt bist du dabei."',
+    end:'Lena hears a key in the lock of the front door. Only two people have a key: Lena and her boss Herr Brandt – and Herr Brandt is on holiday in Spain.',
+    easy:[
+      ['„Hallo? Wer ist da?“, fragt Lena leise. Niemand antwortet. Es ist dunkel. Lena hört nur ihr Herz.', '“Hello? Who’s there?” Lena asks quietly. Nobody answers. It’s dark. Lena only hears her heart.'],
+      ['Das Handy ist noch hell. Lena nimmt es und geht langsam in die Küche. Ein Schritt. Noch ein Schritt.', 'The phone is still glowing. Lena takes it and walks slowly into the kitchen. One step. Another step.'],
+      ['Der Kühlschrank ist offen. Lena macht die Tür ganz auf. Milch, Butter, Käse. Und ein kleines Paket. Auf dem Paket steht ein Name: LENA.', 'The fridge is open. Lena opens the door all the way. Milk, butter, cheese. And a small package. On the package there is a name: LENA.'],
+      ['Dann hört sie etwas. Die {{Hintertür|back door}} geht auf und zu. Jemand rennt weg! Lena rennt zur Tür. Aber die Straße ist leer.', 'Then she hears something. The back door opens and shuts. Someone is running away! Lena runs to the door. But the street is empty.'],
+      ['Das Licht geht wieder an. Lena hat Angst. Auf dem Paket ist ein {{Zettel|note}}: „Morgen. 7 Uhr. Tisch 7. Sag es niemandem.“', 'The light comes back on. Lena is scared. On the package there is a note: “Tomorrow. 7 o’clock. Table 7. Tell nobody.”'],
+      ['Das Handy macht „Ping“. Eine Nachricht: „Jetzt hast du es. Jetzt bist du dabei.“', 'The phone goes “ping”. A message: “Now you have it. Now you’re part of this.”'],
+      ['Da hört Lena einen {{Schlüssel|key}}. Vorne, an der Tür vom Café. Nur zwei Menschen haben einen Schlüssel: Lena und ihr Chef, Herr Brandt.', 'Then Lena hears a key. At the front, at the café door. Only two people have a key: Lena and her boss, Herr Brandt.'],
+      ['Aber Herr Brandt ist in Spanien.', 'But Herr Brandt is in Spain.']
+    ] },
+  { t:'Der Schlüssel', first:'Langsam geht die Tür auf. Lena kann nicht atmen.', words:['atmen = to breathe', 'der Mantel = the coat', 'winken = to wave'],
+    plot:'The door opens: it is Jonas, the new colleague (only two weeks in the café). He says he is looking for his wallet and that he has a key from Herr Brandt – but Herr Brandt never gives anyone a key. The package is in Lena’s bag; does Jonas see it? At home Lena opens the package: an old photo of the café twenty years ago; at table 7 sits a young woman who looks EXACTLY like Lena. On the back: "Sie war die Erste." The phone pings: "Schönes Foto, oder? Schau aus dem Fenster."',
+    end:'Down on the street, under a street lamp, a man in a grey coat looks up at her window – and waves.',
+    easy:[
+      ['Langsam geht die Tür auf. Lena kann nicht {{atmen|breathe}}. Ein Mann kommt herein. Groß. Dunkle Jacke.', 'Slowly the door opens. Lena can’t breathe. A man comes in. Tall. Dark jacket.'],
+      ['„Lena? Bist du noch hier?“ Es ist Jonas, der neue Kollege. Er arbeitet erst zwei Wochen im Café.', '“Lena? Are you still here?” It’s Jonas, the new colleague. He has only worked at the café for two weeks.'],
+      ['„Jonas! Was machst du hier?“ – „Ich suche mein Portemonnaie“, sagt er und lächelt. „Ich habe einen Schlüssel. Von Herrn Brandt.“', '“Jonas! What are you doing here?” – “I’m looking for my wallet,” he says with a smile. “I have a key. From Herr Brandt.”'],
+      ['Lena sagt nichts. Herr Brandt gibt niemandem einen Schlüssel. Niemandem. Das Paket ist in ihrer Tasche. Sieht Jonas es?', 'Lena says nothing. Herr Brandt never gives anyone a key. Nobody. The package is in her bag. Can Jonas see it?'],
+      ['Zu Hause macht Lena das Paket auf. Ein altes Foto. Das Café, vor zwanzig Jahren. An Tisch 7 sitzt eine junge Frau.', 'At home Lena opens the package. An old photo. The café, twenty years ago. A young woman is sitting at table 7.'],
+      ['Lena schaut genau hin. Die Frau sieht aus wie Lena. Genau wie Lena. Hinten auf dem Foto steht: „Sie war die Erste.“', 'Lena looks closely. The woman looks like Lena. Exactly like Lena. On the back of the photo it says: “She was the first.”'],
+      ['Das Handy macht „Ping“. „Schönes Foto, oder? Schau aus dem Fenster.“', 'The phone goes “ping”. “Nice photo, isn’t it? Look out of the window.”'],
+      ['Lena geht zum Fenster. Unten auf der Straße steht ein Mann in einem grauen {{Mantel|coat}}. Er schaut zu ihr hoch. Und er {{winkt|waves}}.', 'Lena goes to the window. Down on the street there’s a man in a grey coat. He looks up at her. And he waves.']
+    ] },
+  { t:'Frau Weber', first:'Lena macht das Licht aus. Die Straße ist leer. Der Mann ist weg.', words:['nicken = to nod', 'flüstern = to whisper'],
+    plot:'The man is gone; Lena doesn’t sleep. At 7 am she is at the café: at table 7 sits Frau Weber, the old regular guest who always drinks tea and NEVER talks. Today she talks: "Setz dich, Lena. Du hast das Foto, oder?" She says the woman in the photo is Lena’s mother. Lena: "My mother is dead, for twenty years." Frau Weber takes her hand: "Nein. Sie lebt." Then Jonas comes in; Frau Weber goes white, whispers "Er darf mich hier nicht sehen" and leaves quickly. Under her cup lies a note with a phone number.',
+    end:'Jonas comes to the table, smiles and asks: "War das Frau Weber? Kennst du sie gut?" – Lena never told Jonas her name. How does he know it?',
+    easy:[
+      ['Lena macht das Licht aus. Die Straße ist leer. Der Mann ist weg. Lena schläft in dieser Nacht nicht.', 'Lena turns off the light. The street is empty. The man is gone. Lena doesn’t sleep that night.'],
+      ['Um sieben Uhr ist Lena im Café. Tisch 7 ist nicht leer. Dort sitzt Frau Weber. Sie ist alt und kommt jeden Tag. Sie trinkt immer Tee. Und sie spricht nie.', 'At seven o’clock Lena is at the café. Table 7 isn’t empty. Frau Weber is sitting there. She is old and comes every day. She always drinks tea. And she never talks.'],
+      ['Heute spricht sie. „Setz dich, Lena. Du hast das Foto, oder?“ Lena {{nickt|nods}}.', 'Today she talks. “Sit down, Lena. You have the photo, right?” Lena nods.'],
+      ['„Die Frau auf dem Foto ist deine Mutter.“ Lena lacht nervös. „Meine Mutter ist tot. Seit zwanzig Jahren.“', '“The woman in the photo is your mother.” Lena laughs nervously. “My mother is dead. For twenty years.”'],
+      ['Frau Weber nimmt Lenas Hand. „Nein, Lena. Sie lebt.“', 'Frau Weber takes Lena’s hand. “No, Lena. She is alive.”'],
+      ['Da geht die Tür auf. Jonas kommt herein. Frau Weber ist plötzlich ganz weiß. Sie steht schnell auf. „Er darf mich hier nicht sehen“, {{flüstert|whispers}} sie. Dann ist sie weg.', 'Then the door opens. Jonas comes in. Suddenly Frau Weber is completely white. She stands up quickly. “He must not see me here,” she whispers. Then she is gone.'],
+      ['Unter ihrer Tasse liegt ein Zettel. Eine Telefonnummer.', 'Under her cup there’s a note. A phone number.'],
+      ['Jonas kommt zum Tisch. Er lächelt. „Guten Morgen! War das Frau Weber? Kennst du sie gut?“', 'Jonas comes to the table. He smiles. “Good morning! Was that Frau Weber? Do you know her well?”'],
+      ['Lena sagt nichts. Sie sagt Jonas nie den Namen von Frau Weber. Woher kennt er ihn?', 'Lena says nothing. She never told Jonas Frau Weber’s name. How does he know it?']
+    ] },
+  { t:'Die Nummer', first:'Lena ruft die Nummer an. Es klingelt einmal. Zweimal.', words:['die Stimme = the voice', 'sich verstecken = to hide', 'die Schublade = the drawer'],
+    plot:'Lena calls the number. A voice answers – she knows it: the man from the phone. "Hör gut zu. Ich heiße Max. Ich kenne deine Mutter. Sie lebt, aber sie muss sich verstecken." A man has been looking for her mother for twenty years, and now he is looking for Lena. "Du kennst ihn gut. Du arbeitest für ihn." The call ends. Herr Brandt?! Lena goes into his office. In an unlocked desk drawer: lots of photos of Lena – on her way to work, in the park, in front of her flat – and a photo of her mother with a red X.',
+    end:'A voice behind her: "Lena?" Herr Brandt stands in the door, calm: "Ich bin schon zurück aus Spanien. Was machst du in meinem Büro?"',
+    easy:[
+      ['Lena ruft die Nummer an. Es klingelt einmal. Zweimal. Dann hört sie eine {{Stimme|voice}}. Diese Stimme kennt sie. Es ist der Mann vom Handy!', 'Lena calls the number. It rings once. Twice. Then she hears a voice. She knows this voice. It’s the man from the phone!'],
+      ['„Hör gut zu, Lena. Ich heiße Max. Ich kenne deine Mutter. Sie lebt. Aber sie muss sich {{verstecken|hide}}.“', '“Listen carefully, Lena. My name is Max. I know your mother. She is alive. But she has to hide.”'],
+      ['„Warum?“ – „Ein Mann sucht sie. Seit zwanzig Jahren. Und jetzt sucht er dich.“ – „Wer ist der Mann?“', '“Why?” – “A man is looking for her. For twenty years. And now he is looking for you.” – “Who is the man?”'],
+      ['„Du kennst ihn gut, Lena. Du arbeitest für ihn.“ Dann ist das Gespräch zu Ende.', '“You know him well, Lena. You work for him.” Then the call ends.'],
+      ['Herr Brandt? Ihr netter Chef? Lena geht in sein Büro. Der Schreibtisch hat eine {{Schublade|drawer}}. Lena macht sie auf.', 'Herr Brandt? Her nice boss? Lena goes into his office. The desk has a drawer. Lena opens it.'],
+      ['In der Schublade liegen Fotos. Viele Fotos. Lena auf dem Weg zur Arbeit. Lena im Park. Lena vor ihrer Wohnung.', 'There are photos in the drawer. Lots of photos. Lena on her way to work. Lena in the park. Lena in front of her flat.'],
+      ['Und ein Foto von ihrer Mutter. Mit einem roten X.', 'And a photo of her mother. With a red X.'],
+      ['Da hört sie eine Stimme hinter sich. „Lena?“ Herr Brandt steht in der Tür. „Ich bin schon zurück aus Spanien“, sagt er ruhig. „Was machst du in meinem Büro?“', 'Then she hears a voice behind her. “Lena?” Herr Brandt is standing in the doorway. “I’m already back from Spain,” he says calmly. “What are you doing in my office?”']
+    ] },
+  { t:'Wem glaubst du?', first:'„Ich suche nur einen Stift“, sagt Lena. Ihr Herz schlägt laut.', words:['gefährlich = dangerous', 'die Falle = the trap', 'die Wahrheit = the truth'],
+    plot:'Lena lies: she is only looking for a pen. Herr Brandt smiles, gives her a pen: "Du siehst müde aus. Mach heute frei." Lena leaves quickly. In the street a car waits; Jonas sits at the wheel: "Steig ein, Lena! Schnell!" He shows her a card: POLIZEI. He doesn’t really work at the café – he is watching Brandt, Brandt is dangerous. "Und Max?" – "Max arbeitet für Brandt. Das Paket ist eine Falle. Für dich." Who is telling the truth? Jonas opens the car door.',
+    end:'The phone in Lena’s bag pings. A message from Max: "Steig NICHT in das Auto. Jonas ist kein Polizist."',
+    easy:[
+      ['„Ich suche nur einen Stift“, sagt Lena. Ihr Herz schlägt laut. Herr Brandt lächelt. „Hier, bitte.“ Er gibt ihr einen Stift.', '“I’m just looking for a pen,” says Lena. Her heart is beating loudly. Herr Brandt smiles. “Here you are.” He gives her a pen.'],
+      ['„Du siehst müde aus, Lena. Mach heute frei.“ Lena geht schnell aus dem Café.', '“You look tired, Lena. Take the day off.” Lena leaves the café quickly.'],
+      ['Auf der Straße wartet ein Auto. Im Auto sitzt Jonas. „Steig ein, Lena! Schnell!“', 'A car is waiting in the street. Jonas is sitting in the car. “Get in, Lena! Quickly!”'],
+      ['„Nein! Wer bist du?“ Jonas zeigt ihr eine Karte. POLIZEI. „Ich arbeite nicht wirklich im Café. Ich beobachte Herrn Brandt. Er ist {{gefährlich|dangerous}}.“', '“No! Who are you?” Jonas shows her a card. POLICE. “I don’t really work at the café. I’m watching Herr Brandt. He is dangerous.”'],
+      ['„Und Max?“, fragt Lena. Jonas schaut sie lange an. „Max arbeitet für Brandt. Das Paket ist eine {{Falle|trap}}, Lena. Für dich.“', '“And Max?” asks Lena. Jonas looks at her for a long time. “Max works for Brandt. The package is a trap, Lena. For you.”'],
+      ['Lena hat Angst. Wer sagt die {{Wahrheit|truth}}? Jonas macht die Autotür auf. „Komm. Bitte.“', 'Lena is scared. Who is telling the truth? Jonas opens the car door. “Come on. Please.”'],
+      ['Da macht das Handy in ihrer Tasche „Ping“. Eine Nachricht von Max:', 'Then the phone in her bag goes “ping”. A message from Max:'],
+      ['„Steig NICHT in das Auto. Jonas ist kein Polizist.“', '“Do NOT get in the car. Jonas is not a police officer.”']
+    ] },
+  { t:'Die Wohnung', first:'Lena rennt. Sie schaut nicht zurück.', words:['der Stadtplan = the city map', 'sich umdrehen = to turn around'],
+    plot:'Lena runs and does not look back; she hears Jonas calling, she runs to the U-Bahn. In the train she texts Max: "Wo ist Frau Weber?" – the answer is an address. Frau Weber’s flat, fourth floor: the door is open, nobody is there, a cup of tea on the table is still warm. On the wall: a big map of Berlin with red dots everywhere, and a calendar – today is marked red: "Tisch 7 – 23 Uhr – Sie kommt zurück." Lena knows who is coming back. At 10:55 pm she is in the dark café and does not turn on the light. Someone is already sitting at table 7: a woman, who slowly turns around.',
+    end:'The woman has Lena’s face, only older. "Hallo, Lena. Ich bin deine Mutter. Wir haben nicht viel Zeit."',
+    easy:[
+      ['Lena rennt. Sie schaut nicht zurück. Sie hört Jonas rufen. Aber sie rennt weiter, bis zur U-Bahn.', 'Lena runs. She doesn’t look back. She hears Jonas calling. But she keeps running, all the way to the U-Bahn.'],
+      ['In der U-Bahn schreibt sie Max: „Wo ist Frau Weber?“ Die Antwort kommt sofort. Eine Adresse.', 'On the train she texts Max: “Where is Frau Weber?” The answer comes at once. An address.'],
+      ['Die Wohnung von Frau Weber ist im vierten Stock. Die Tür ist offen. „Frau Weber?“ Niemand antwortet.', 'Frau Weber’s flat is on the fourth floor. The door is open. “Frau Weber?” Nobody answers.'],
+      ['Auf dem Tisch steht eine Tasse Tee. Der Tee ist noch warm.', 'There’s a cup of tea on the table. The tea is still warm.'],
+      ['An der Wand hängt ein großer {{Stadtplan|city map}} von Berlin. Überall sind rote Punkte. Und ein Kalender. Heute ist rot. Dort steht: „Tisch 7 – 23 Uhr – Sie kommt zurück.“', 'A big map of Berlin hangs on the wall. There are red dots everywhere. And a calendar. Today is red. It says: “Table 7 – 11 pm – She is coming back.”'],
+      ['Wer kommt zurück? Lena weiß es. Ihr Herz weiß es.', 'Who is coming back? Lena knows. Her heart knows.'],
+      ['Um 22:55 Uhr ist Lena im dunklen Café. Sie macht kein Licht an. An Tisch 7 sitzt schon jemand. Eine Frau. Sie {{dreht sich um|turns around}}. Langsam.', 'At 10:55 pm Lena is in the dark café. She doesn’t turn on the light. Someone is already sitting at table 7. A woman. She turns around. Slowly.'],
+      ['Die Frau hat Lenas Gesicht. Nur älter. „Hallo, Lena“, sagt sie leise. „Ich bin deine Mutter. Wir haben nicht viel Zeit.“', 'The woman has Lena’s face. Only older. “Hello, Lena,” she says quietly. “I am your mother. We don’t have much time.”']
+    ] },
+  { t:'Die Erste', first:'„Mama?“ Lena kann nicht sprechen.', words:['die Pistole = the gun', 'abgeschlossen = locked'],
+    plot:'"Mama?" Her mother takes her hands: her name is Anna, and she is so sorry. Twenty years ago, here at table 7, Anna saw Herr Brandt with another man, money and a gun – and Brandt saw her. She had to leave at once; Lena was a baby and her grandmother took her. Suddenly lights outside: two cars stop. Herr Brandt gets out of the first car, Jonas out of the second. They talk and laugh together – they work together! Anna pulls Lena into the kitchen; the back door is locked. At the front the café door opens and a calm voice says: "Zwanzig Jahre, Anna." Anna opens the big fridge: behind it is a hidden door that nobody knows. They go through; the door shuts behind them; it is completely dark.',
+    end:'A voice in the dark – not Brandt, not Jonas, not Max – says: "Endlich. Ich warte schon so lange auf euch zwei." (End of season 1.)',
+    easy:[
+      ['„Mama?“ Lena kann nicht sprechen. Ihre Mutter nimmt ihre Hände. „Ich heiße Anna. Und es tut mir so leid.“', '“Mum?” Lena can’t speak. Her mother takes her hands. “My name is Anna. And I’m so sorry.”'],
+      ['„Vor zwanzig Jahren. Hier, an Tisch 7. Ich sehe Herrn Brandt und einen Mann. Ich sehe Geld. Und eine {{Pistole|gun}}. Und Brandt sieht mich.“', '“Twenty years ago. Here, at table 7. I see Herr Brandt and a man. I see money. And a gun. And Brandt sees me.”'],
+      ['„Ich muss sofort weg. Du bist noch ein Baby. Deine Oma nimmt dich.“', '“I have to leave at once. You are still a baby. Your grandma takes you.”'],
+      ['Draußen sind plötzlich Lichter. Zwei Autos halten vor dem Café. Aus dem ersten Auto steigt Herr Brandt. Aus dem zweiten Auto steigt Jonas. Sie sprechen zusammen. Sie lachen.', 'Suddenly there are lights outside. Two cars stop in front of the café. Herr Brandt gets out of the first car. Jonas gets out of the second. They talk together. They laugh.'],
+      ['„Sie arbeiten zusammen“, flüstert Lena. Anna nimmt ihre Hand. „Schnell! In die Küche!“ Die Hintertür ist zu. {{Abgeschlossen|locked}}.', '“They work together,” Lena whispers. Anna takes her hand. “Quick! Into the kitchen!” The back door is shut. Locked.'],
+      ['Vorne geht die Tür vom Café auf. Eine ruhige Stimme sagt: „Zwanzig Jahre, Anna. Zwanzig Jahre.“', 'At the front, the café door opens. A calm voice says: “Twenty years, Anna. Twenty years.”'],
+      ['Anna macht den großen Kühlschrank auf. „Hier, Lena. Hinter dem Kühlschrank ist eine Tür. Das weiß niemand.“ Sie gehen durch die Tür. Die Tür geht hinter ihnen zu. Es ist ganz dunkel.', 'Anna opens the big fridge. “Here, Lena. Behind the fridge there is a door. Nobody knows about it.” They go through the door. The door shuts behind them. It’s completely dark.'],
+      ['Dann spricht eine Stimme im Dunkeln. Nicht Brandt. Nicht Jonas. Nicht Max.', 'Then a voice speaks in the dark. Not Brandt. Not Jonas. Not Max.'],
+      ['„Endlich. Ich warte schon so lange auf euch zwei.“', '“Finally. I’ve been waiting for you two for so long.”']
+    ] }
+] };
+
+/* ================= 🪙 Coins, encouraging words and the Tresor =================
+   Coins reward learning: correct answers, passed levels, writing, flashcards, café talks, exam tasks, the first activity of the day.
+   They are kept so that two devices never overwrite or double-count each other:
+   - S.coins.bp   = coins for the progress made before coins existed (worked out once; merging keeps the larger)
+   - S.coins.once = one-time coins (milestones, the daily bonus), by name: the same name never pays twice
+   - S.coins.d    = coins earned on each device (by device id): merging keeps the larger number per device
+   - spent        = the price of every chapter in S.story.own (bought chapters), so a purchase is counted once
+   The balance is bp + once + d − spent. */
+const DEV = (() => { let d = lsGet('dq-dev'); if (!d) { d = Math.random().toString(36).slice(2, 10); lsSet('dq-dev', d); } return d; })();
+const CHEST = (sz = 22) => `<svg class="chest" viewBox="0 0 24 24" width="${sz}" height="${sz}" aria-hidden="true"><path d="M3 10.5Q3 4.5 12 4.5Q21 4.5 21 10.5Z" fill="#C98E57" stroke="#2F3640" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="10" width="18" height="10" rx="1.2" fill="#B07A4A" stroke="#2F3640" stroke-width="1.6"/><rect x="3" y="9.2" width="18" height="2.6" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><path d="M7.5 5.4V20M16.5 5.4V20" stroke="#8A5A33" stroke-width="1.3"/><rect x="10" y="11" width="4" height="4.8" rx="1" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><circle cx="12" cy="13.2" r="0.85" fill="#2F3640"/></svg>`;
+function coinsInit() {
+  if (S.coins) return;
+  // the first time: coins for everything done so far
+  const passed = Object.keys(S.pass || {}).length, topics = TOPICS.filter(([k]) => topicStars(k) === 3).length;
+  const chats = (S.history || []).filter(h => h.k === 'cafe' && cafeCount(h)[1] >= 2).length, words = Object.keys(S.cw || {}).length;
+  const bp = passed * 20 + topics * 50 + chats * 10 + words;
+  S.coins = { bp, bpd:{ passed, topics, chats, words }, once:{}, d:{}, t:{} };
+  if (bp) S.coins.welcome = 1;   // say "here are your coins" once
+  save();
+}
+const coinsOwned = () => Object.keys((S.story || {}).own || {});
+const chapterPrice = () => STORY.price;
+function coinBal() {
+  const c = S.coins || {}; let n = c.bp || 0;
+  for (const v of Object.values(c.once || {})) n += v || 0;
+  for (const v of Object.values(c.d || {})) n += v || 0;
+  return n - coinsOwned().length * chapterPrice();
+}
+function coinEarn(n) { if (!n) return 0; coinsInit(); delete S.coins.welcome; S.coins.d[DEV] = (S.coins.d[DEV] || 0) + n; return n; }
+function coinOnce(key, n) { coinsInit(); if (S.coins.once[key]) return 0; S.coins.once[key] = n; return n; }
+// today's counters on this device (how often a level was played, flashcards paid): not synced
+function coinDay() { coinsInit(); const d = dayStr(Date.now()); if (!S.coins.t || S.coins.t.d !== d) S.coins.t = { d, lv:{}, fc:0 }; return S.coins.t; }
+// the first activity of a day: 5 coins + 1 per streak day (at most 25)
+const dailyBonus = () => coinOnce('day:' + dayStr(Date.now()), Math.min(25, 5 + currentStreak()));
+function mergeCoins(a, b) {
+  if (!a && !b) return undefined; if (!a || !b) return JSON.parse(JSON.stringify(a || b));
+  const m = { bp:Math.max(a.bp || 0, b.bp || 0), bpd:(a.bp || 0) >= (b.bp || 0) ? a.bpd : b.bpd, once:Object.assign({}, b.once || {}, a.once || {}), d:Object.assign({}, b.d || {}), t:a.t || {} };
+  for (const [k, v] of Object.entries(a.d || {})) m.d[k] = Math.max(m.d[k] || 0, v || 0);
+  return m;
+}
+function mergeStory(a, b) {
+  if (!a && !b) return undefined; a = a || {}; b = b || {};
+  const ch = Object.assign({}, b.ch || {});
+  for (const [k, v] of Object.entries(a.ch || {})) if (!ch[k] || (v.at || 0) <= (ch[k].at || 0)) ch[k] = v;   // the chapter written first stays
+  return { ch, own:Object.assign({}, b.own || {}, a.own || {}), read:Object.assign({}, b.read || {}, a.read || {}) };
+}
+
+// ---- encouraging words: German, with the English line underneath ----
+const pick1 = a => a[Math.floor(Math.random() * a.length)];
+const CHEER = {
+  perfect:[['Perfekt! Kein einziger Fehler.', 'Perfect! Not a single mistake.'], ['Wow, alles richtig!', 'Wow, everything right!'], ['Fehlerfrei! Du bist richtig stark.', 'No mistakes! You’re really strong.']],
+  better:[['{n} Fehler weniger als letztes Mal!', '{n} fewer mistakes than last time!'], ['Besser als beim letzten Mal: {n} Fehler weniger!', 'Better than last time: {n} fewer mistakes!']],
+  best:[['Neuer Rekord!', 'A new best score!'], ['So gut warst du hier noch nie!', 'You’ve never been this good here!']],
+  tough:[['Fehler sind normal. Jetzt kennst du sie!', 'Mistakes are normal. Now you know them!'], ['Nicht aufgeben! Nächstes Mal klappt es besser.', 'Don’t give up! Next time it will go better.'], ['Jeder Fehler hilft deinem Gehirn beim Lernen.', 'Every mistake helps your brain learn.']],
+  good:[['Gut gemacht!', 'Well done!'], ['Sehr gut, weiter so!', 'Very good, keep going!'], ['Du wirst immer besser!', 'You’re getting better and better!'], ['Super Arbeit!', 'Great work!']],
+  write:[['Toll geschrieben!', 'Nicely written!'], ['Deine Hand lernt mit!', 'Your hand is learning too!']],
+  cards:[['Dein Gedächtnis wird stärker!', 'Your memory is getting stronger!'], ['Wörter sind dein Werkzeug!', 'Words are your tools!']],
+  cafe:[['Du sprichst Deutsch!', 'You’re speaking German!'], ['Lena freut sich über dich!', 'Lena is happy to talk to you!']],
+  exam:[['Ein Schritt näher zur Prüfung!', 'One step closer to the exam!'], ['Prüfungstraining macht stark!', 'Exam practice makes you strong!']]
+};
+const cheerBi = (k, n) => { const [de, en] = pick1(CHEER[k]); return bi(esc(de.replace('{n}', n)), esc(en.replace('{n}', n))); };
+// in the runner: a few right answers in a row
+const ROW_CHEER = { 3:'Weiter so!', 5:'Stark!', 8:'Läuft bei dir!', 12:'Unglaublich!', 16:'Wahnsinn!' };
+const rowCheer = n => { let t = ''; for (const k of Object.keys(ROW_CHEER)) if (n >= +k) t = ROW_CHEER[k]; return t; };
+// a small coin note at the bottom of the screen (café, flashcards, writing, exam)
+const coinPop = document.createElement('div'); coinPop.className = 'coinpop'; coinPop.hidden = true; document.body.appendChild(coinPop);
+let coinPopT = null;
+function coinToast(n, cheerKey) {
+  if (!n) return;
+  coinPop.innerHTML = `<b>🪙 +${n}</b>${cheerKey ? `<span>${cheerBi(cheerKey)}</span>` : ''}`;
+  coinPop.hidden = false; coinPop.classList.remove('go'); void coinPop.offsetWidth; coinPop.classList.add('go');
+  clearTimeout(coinPopT); coinPopT = setTimeout(() => { coinPop.hidden = true; }, 2600);
+}
+// a level counts as a boss level (for the "first boss" milestone)
+const isBossLevel = l => [3, 6, 9, 15, 19, 23].includes(l) || (XLV[l] && !XLV[l].wz && XLV[l].n === 3);
+// coins for a finished runner round; returns the lines for the end screen
+function runnerCoins(l, wasPassed, newBest) {
+  const day = coinDay(), k = String(l); day.lv[k] = (day.lv[k] || 0) + 1;
+  const tired = day.lv[k] > 3, parts = [];
+  const add = (n, de, en) => { if (n) parts.push([n, de, en]); };
+  add(coinEarn(tired ? Math.ceil(G.correct / 2) : G.correct), `${G.correct} richtig`, tired ? 'half: 4th+ round of this level today' : 'correct');
+  if (G.answered >= 6 && !G.mistakes.length && G.lives > 0) add(coinEarn(5), 'fehlerfrei', 'perfect round');
+  if (newBest && G.score > 0) add(coinEarn(5), 'Rekord', 'new best');
+  if (l && !wasPassed && (S.pass || {})[l]) add(coinEarn(20), 'Level bestanden', 'level passed');
+  if (l && (S.pass || {})[l] && isBossLevel(l)) add(coinOnce('boss1', 25), 'erster Boss besiegt!', 'first boss beaten');
+  const tp = l ? topicOfLevel(l) : null;
+  if (tp && TOPICS.some(t => t[0] === tp) && topicStars(tp) === 3) add(coinOnce('topic:' + tp, 50), `${topicInfo(tp).name} geschafft!`, 'topic finished');
+  add(dailyBonus(), 'Tagesbonus', 'first round today');
+  return parts;
+}
+function runnerCheer(l, newBest) {
+  if (G.answered >= 6 && !G.mistakes.length && G.lives > 0) return cheerBi('perfect');
+  const prev = (S.history || []).slice(1).find(h => h.l === l && !h.q && h.a);
+  const was = prev ? prev.a - prev.c : null, now = G.answered - G.correct;
+  if (was !== null && now < was) return cheerBi('better', was - now);
+  if (newBest && G.score > 0) return cheerBi('best');
+  if (G.lives <= 0 || G.correct < G.answered / 2) return cheerBi('tough');
+  return cheerBi('good');
+}
+function coinsHTML(parts, cheer) {
+  const total = parts.reduce((s, p) => s + p[0], 0);
+  return `<div class="coinwin">${total ? `<div class="cwbig">🪙 +${total}</div><div class="cwlist">${parts.map(([n, de, en]) => `<span>+${n} ${esc(de)}<small class="en2">${esc(en)}</small></span>`).join('')}</div>` : ''}<div class="cwcheer">${cheer}</div></div>`;
+}
+// the menu: balance in the header, and one encouraging line when it fits
+function nextChapter() { for (let i = 1; i < STORY.ch.length; i++) if (!(S.story && S.story.own && S.story.own[chId(i)])) return i; return -1; }
+function menuCheer() {
+  const c = S.coins || {};
+  if (c.welcome) return bi(`🎉 Willkommen im Tresor! Für deinen Fortschritt bisher bekommst du 🪙 ${c.bp}.`, `Welcome! For your progress so far you get ${c.bp} coins. Spend them in the Tresor tab.`);
+  const last = S.streak && S.streak.last, yest = dayStr(Date.now() - DAY), today = dayStr(Date.now());
+  if (S.rounds && last && last !== today && last !== yest) return bi('Schön, dass du wieder da bist!', 'Nice to have you back!');
+  const i = nextChapter(); if (i < 0) return '';
+  const need = chapterPrice() - coinBal();
+  if (need <= 0) return bi(`🔓 Du kannst Kapitel ${i + 1} von Lenas Geschichte öffnen!`, `You can open chapter ${i + 1} of Lena’s story in the Tresor!`);
+  if (need <= 30) return bi(`Noch 🪙 ${need} bis Kapitel ${i + 1}!`, `${need} more coins until chapter ${i + 1}!`);
+  return '';
+}
+function renderCoins() {
+  coinsInit();
+  $('#mCoins').textContent = `🪙 ${coinBal()}`;
+  const ch = menuCheer(); $('#mCheer').innerHTML = ch; $('#mCheer').hidden = !ch;
+}
+
+/* ---- the Tresor tab ---- */
+const chId = i => `${STORY.id}-${i + 1}`;
+const chOwned = i => i === 0 || !!(S.story && S.story.own && S.story.own[chId(i)]);
+const chRead = i => !!(S.story && S.story.read && S.story.read[chId(i)]);
+function renderTresor() {
+  coinsInit();
+  const bal = coinBal(), price = chapterPrice(), c = S.coins;
+  if (c.welcome) { delete c.welcome; save(); }
+  const rows = STORY.ch.map((ch, i) => {
+    if (chOwned(i)) return `<button class="trch own" data-chap="${i}"><span class="trn">${i + 1}</span><span class="trt"><b>${esc(ch.t)}</b><small>${chRead(i) ? '✓ gelesen · read' : i === 0 ? 'Gratis · free · neu' : 'Neu · new'}</small></span><span class="tra">Lesen →</span></button>`;
+    if (chOwned(i - 1)) return `<div class="trch next"><span class="trn">${i + 1}</span><span class="trt"><b>Kapitel ${i + 1}</b><small>${bal >= price ? 'Bereit · ready to open' : `Noch 🪙 ${price - bal} · ${price - bal} more coins`}</small></span><button class="btn blue center trbuy" data-buy="${i}"${bal >= price ? '' : ' disabled'}>🪙 ${price}<small class="en2">Öffnen · open</small></button></div>`;
+    return `<div class="trch lock"><span class="trn">${i + 1}</span><span class="trt"><b>🔒 Kapitel ${i + 1}</b></span></div>`;
+  }).join('');
+  const how = [['Runner: jede richtige Antwort', 'each correct answer', '1'], ['Runde ohne Fehler · neuer Rekord', 'perfect round · new best', '+5 · +5'], ['Level zum ersten Mal bestanden', 'level passed for the first time', '+20'], ['Schreiben: jede richtige Antwort', 'writing: each correct answer', '2'], ['Karteikarten: jede Karte', 'flashcards: each card (40 a day)', '1'],
+    ['Sprach-Café: jede Antwort an Lena', 'café: each answer to Lena (30 per chat)', '3'], ['Freies Schreiben · telc-Aufgabe', 'free writing · exam task', '10 · 15'], ['Erste Übung des Tages', 'first activity of the day: 5 + streak days', 'bis 25'], ['Erster Boss · Thema geschafft', 'first boss · whole topic finished', '25 · 50']];
+  $('#tresorBox').innerHTML = `<div class="trhead">${CHEST(46)}<div class="trti"><h3>Tresor<small class="en2">The vault: spend your coins on rewards</small></h3></div><div class="trbal">🪙 ${bal}</div></div>
+    <div class="trseason"><div class="trst">📖 Lenas Geschichte · Staffel 1: „${esc(STORY.title)}“<small class="en2">A thriller in 8 chapters, written in the German you already know. Each chapter: 🪙 ${price}.</small></div>${rows}</div>
+    <details class="trhow"><summary>🪙 So verdienst du Münzen<small class="en2">How to earn coins</small></summary><table class="gtab">${how.map(([de, en, n]) => `<tr><td>${esc(de)}<small class="en2">${esc(en)}</small></td><td><b>${esc(n)}</b></td></tr>`).join('')}</table>
+    <p class="note">Spielst du ein Level mehr als dreimal am Tag, gibt es die Hälfte.<small class="en2">From the 4th round of the same level on one day, a round gives half the coins.</small></p></details>`;
+}
+$('#tresorBox').addEventListener('click', e => {
+  const r = e.target.closest('[data-chap]'); if (r) { openChapter(+r.dataset.chap); return; }
+  const b = e.target.closest('[data-buy]'); if (b && !b.disabled) buyChapter(+b.dataset.buy);
+});
+$('#mCoins').addEventListener('click', () => { S.cefr = 'TR'; save(); renderMenu(); $('#cefrTabs').scrollIntoView({ block:'start', behavior:'smooth' }); });
+
+/* ---- the chapters: Gemini writes them in the learner's own German; the simple version is always there as a fallback ---- */
+// words the learner knows: the sentences they practised (S.srs), their saved words, plus the most basic words
+const BASIC_DE = `ich du er sie es wir ihr mich dich sich mir dir ihm ihn uns euch ihnen mein meine meinen meinem meiner dein deine sein seine ihre ihren unser unsere
+der die das den dem des ein eine einen einem einer kein keine keinen nicht nie nichts niemand niemandem jemand etwas alles man ja nein doch oh bitte danke hallo
+und aber oder denn weil dass wenn ob als wie was wer wen wem wo wann warum woher wohin
+in im ins an am auf unter vor hinter neben zwischen mit von vom zu zum zur aus bei beim nach seit für ohne gegen durch um über bis
+sein bin bist ist sind seid war haben habe hast hat habt werden wird kann kannst können muss musst müssen will willst wollen darf darfst dürfen möchte möchtest soll
+gehen gehe gehst geht kommen komme kommst kommt machen mache machst macht sagen sage sagst sagt sehen sehe siehst sieht hören höre hörst hört wissen weiß weißt
+kennen kenne kennst kennt nehmen nehme nimmst nimmt geben gebe gibst gibt finden finde findest findet stehen steht stehe liegen liegt sitzen sitzt sitze laufen läuft
+rennen rennt renne schauen schaut schaue fragen fragt frage antworten antwortet lachen lacht lächeln lächelt denken denkt warten wartet suchen sucht suche
+öffnen öffnet wohnen wohnt arbeiten arbeitet arbeite trinken trinkt essen isst schlafen schläft heißen heiße heißt leben lebt klingeln klingelt rufen ruft
+zeigen zeigt helfen hilft brauchen braucht bleiben bleibt halten hält legen legt holen holt spielen spielt lernen lernt lesen liest schreiben schreibt sprechen spricht
+glauben glaubt fahren fährt steigen steigt sterben stirbt tun tut lassen lässt mag mögen gefällt
+tag tage nacht morgen abend uhr zeit jahr jahre minute minuten stunde woche haus tür türen fenster tisch tische stuhl licht straße stadt café küche zimmer wohnung
+auto handy telefon nummer name namen frau mann männer kind kinder mutter vater mama papa oma opa freund freundin kollege chef hand hände kopf herz auge augen gesicht
+wasser kaffee tee milch brot butter käse geld foto fotos bild brief nachricht arbeit weg ende anfang angst problem frage leute mensch menschen
+gut schlecht groß klein alt neu jung schnell langsam leise laut dunkel hell leer voll müde kalt warm schön rot grau schwarz weiß blau grün lang kurz nett ruhig
+heute gestern jetzt dann da hier dort schon noch nur auch sehr ganz wieder sofort plötzlich endlich vielleicht genau wirklich zusammen allein weg zurück
+vorne hinten oben unten draußen drinnen links rechts immer oft bald mehr viel viele wenig so zu sehr eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf zwanzig hundert
+lena brandt jonas weber max anna berlin herr herrn frau spanien u-bahn`.split(/\s+/).filter(Boolean);
+const STORY_NAMES = new Set(['lena', 'lenas', 'brandt', 'jonas', 'weber', 'max', 'anna', 'annas', 'berlin', 'spanien', 'polizei']);
+const tokensDe = t => (String(t).toLowerCase().match(/[a-zäöüß]+(?:-[a-zäöüß]+)*/g) || []);
+function knownWords() {
+  const set = new Set(BASIC_DE);
+  const addText = t => tokensDe(t).forEach(w => set.add(w));
+  const SKIP = new Set(['id', 't', 'en', 'why', 'mn', 'tmn', 'ta', 'nt', 'tr', 'e', 'ts', 'tp', 'td', 'k', 'xt', 'gk', 'cs', 'pt']);
+  for (const id of Object.keys(S.srs || {})) {
+    const x = BYID[id]; if (!x) continue;
+    for (const [k, v] of Object.entries(x)) {
+      if (SKIP.has(k)) continue;
+      if (typeof v === 'string') addText(k === 'w' ? v.split(' = ')[0] : v);
+      else if (Array.isArray(v)) v.forEach(y => { if (typeof y === 'string') addText(y); });
+    }
+  }
+  for (const w of Object.values(S.cw || {})) addText(w.de);
+  return set;
+}
+// does the learner probably know this word? (an exact match, or the same word with a common ending)
+function knowsWord(w, set) {
+  if (set.has(w) || STORY_NAMES.has(w) || /^\d/.test(w)) return true;
+  for (const end of ['e', 'en', 'er', 'es', 'em', 'n', 's', 'st', 't', 'te', 'ten', 'et', 'est']) if (w.endsWith(end) && w.length - end.length >= 3 && (set.has(w.slice(0, -end.length)) || set.has(w.slice(0, -end.length) + 'en') || set.has(w.slice(0, -end.length) + 'n'))) return true;
+  if (w.length >= 6) for (const k of [w.slice(0, -1) + 'en', w + 'en', w + 'n']) if (set.has(k)) return true;
+  return false;
+}
+// the grammar the learner has practised (topics with at least one passed level)
+const knownTopics = () => TOPICS.filter(([k]) => topicStars(k) >= 1).map(([k]) => topicInfo(k).name);
+const glossOut = t => String(t).replace(/\{\{([^|}]+)\|[^}]*\}\}/g, '$1');   // the words, without their meanings
+const STORY_SCHEMA = { type:'OBJECT', properties:{ paragraphs:{ type:'ARRAY', items:{ type:'OBJECT', properties:{ de:{ type:'STRING' }, en:{ type:'STRING' } }, required:['de', 'en'] } } }, required:['paragraphs'] };
+function unknownIn(paras, set) {
+  const out = new Set(); let n = 0, bad = 0;
+  for (const p of paras) for (const w of tokensDe(p.de.replace(/\{\{[^}]*\}\}/g, ' '))) { n++; if (!knowsWord(w, set)) { bad++; out.add(w); } }
+  return { list:[...out], share:n ? bad / n : 0 };   // every time an unknown word appears counts
+}
+async function writeChapter(i) {
+  const c = STORY.ch[i], set = knownWords(), topics = knownTopics();
+  const words = [...set].filter(w => w.length > 2).slice(0, 2500).join(', ');
+  const story = STORY.ch.slice(0, i).map((x, k) => `Chapter ${k + 1} "${x.t}": ${x.plot} It ended: ${x.end}`).join('\n');
+  const system = `You write one chapter of a thriller for a German learner. It must feel EXCITING and EASY: the learner reads it as a reward, not as homework.
+Rules:
+- German only in "de"; "en" is an accurate English translation of the same paragraph.
+- 8 to 11 short paragraphs, 170 to 260 German words in total. Short, punchy sentences (mostly 4–10 words). Lively dialogue. Present tense (Präsens) for the narration.
+- Grammar: only very basic grammar (Präsens, verb in 2nd place, simple questions, nicht / kein, und / aber / oder / denn, simple modal verbs) plus these topics the learner has practised: ${topics.length ? topics.join('; ') : '(none yet: keep it to the basics)'}. Never use other grammar.
+- Words: use ONLY words from this list of words the learner knows (any form of them), names and numbers: ${words}.
+- If the story truly needs a word that is not in the list, you may use at most 4 such words in the whole chapter. Write each of them like this: {{Wort|English meaning}} (e.g. {{Paket|package}}). These words may be: ${c.words.join('; ')} – or other simple words if really needed.
+- Follow the plot exactly, keep all names and facts. End the chapter EXACTLY on the cliffhanger: the very last paragraph is the cliffhanger moment, with nothing explained or resolved after it.`;
+  const prompt = `Characters: ${STORY.cast}.\n\nThe story so far:\n${story || '(this is the first chapter)'}\n\nNow write chapter ${i + 1} "${c.t}".\nPlot: ${c.plot}\nThe last paragraph (cliffhanger): ${c.end}${c.first ? `\nThe chapter MUST begin with exactly these words: ${c.first}` : ''}`;
+  let note = '';
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const d = await geminiJSON({ system, parts:[{ text:prompt + note }], schema:STORY_SCHEMA, wait:45000, budget:70000, temperature:0.8 });
+    const paras = (d.paragraphs || []).map(p => ({ de:gS(p.de), en:gS(p.en) })).filter(p => p.de);
+    const nWords = paras.reduce((s, p) => s + tokensDe(glossOut(p.de)).length, 0);
+    const startOK = !c.first || tokensDe(paras.length ? paras[0].de : '').slice(0, 3).join(' ') === tokensDe(c.first).slice(0, 3).join(' ');
+    if (paras.length < 5 || nWords < 110 || !startOK) { note = '\n\nYour last answer was too short or did not start with the required words. Try again.'; continue; }
+    const u = unknownIn(paras, set);
+    if (u.share <= 0.06 || (attempt === 1 && u.share <= 0.12)) return paras;
+    note = `\n\nYour last version used words the learner does not know: ${u.list.slice(0, 40).join(', ')}. Replace them with words from the list (or write them as {{Wort|meaning}}, at most 4 in total).`;
+  }
+  throw new Error('too hard');
+}
+const easyChapter = i => STORY.ch[i].easy.map(([de, en]) => ({ de, en }));
+async function ensureChapter(i) {
+  S.story = S.story || { ch:{}, own:{}, read:{} };
+  const id = chId(i); if (S.story.ch[id]) return S.story.ch[id];
+  let p = null, g = 0;
+  if (lsGet(AI_KEY) && navigator.onLine) { try { p = await writeChapter(i); g = 1; } catch (e) { p = null; } }
+  const ch = { p:p || easyChapter(i), g, at:Date.now() };
+  S.story.ch[id] = ch; save();
+  return ch;
+}
+
+/* ---- the reader ---- */
+let ST = null;
+const glossHTML = t => esc(t).replace(/\{\{([^|}]+)\|([^}]*)\}\}/g, (m, w, en) => `<ruby>${w}<rt>${en}</rt></ruby>`);
+function renderChapter() {
+  const i = ST.i, c = STORY.ch[i], ch = ((S.story || {}).ch || {})[chId(i)];
+  $('#stTitle').textContent = `Kapitel ${i + 1}: ${c.t}`;
+  $('#stSub').innerHTML = bi(`Lenas Geschichte · Staffel 1: „${esc(STORY.title)}“`, ch && ch.g ? 'Written for you, in the German you know' : 'The easy version');
+  $('#story').classList.toggle('en', !!ST.en); $('#stEn').setAttribute('aria-pressed', !!ST.en);
+  if (!ch) { $('#stBody').innerHTML = `<div class="stwait"><div class="al typing"><i></i><i></i><i></i></div><p>${bi('✍️ Lena schreibt dein Kapitel …', 'Lena is writing your chapter, in the German you already know …')}</p></div>`; $('#stRead').disabled = true; return; }
+  $('#stRead').disabled = false;
+  let h = ch.p.map(p => `<p class="stp"><span class="stde">${glossHTML(p.de)}</span><span class="sten">${esc(p.en)}</span></p>`).join('');
+  if (i + 1 < STORY.ch.length) {
+    const nx = STORY.ch[i + 1], price = chapterPrice(), bal = coinBal();
+    h += `<div class="stend">– Fortsetzung folgt –</div><div class="stnext"><small>Im nächsten Kapitel …<span class="en2">In the next chapter …</span></small><p>${esc(nx.first)}</p>`
+      + (chOwned(i + 1) ? `<button class="btn blue center" data-stgo="${i + 1}">Weiterlesen →<small class="en2">Read on</small></button>`
+        : `<button class="btn blue center" data-stbuy="${i + 1}"${bal >= price ? '' : ' disabled'}>🪙 ${price} · Kapitel ${i + 2} öffnen<small class="en2">${bal >= price ? 'Open chapter ' + (i + 2) : `${price - bal} more coins needed: keep practising!`}</small></button>`) + '</div>';
+  } else h += `<div class="stend">– Ende von Staffel 1 –</div><div class="stnext"><p>${bi('Staffel 2 kommt bald …', 'Season 2 is coming soon …')}</p></div>`;
+  $('#stBody').innerHTML = h;
+}
+async function openChapter(i, buy) {
+  if (!chOwned(i) && !buy) return;
+  stopVoice(); ST = { i, en:false }; show('story'); $('#story').scrollTop = 0; renderChapter();
+  try { await ensureChapter(i); } catch (e) {}
+  if (!ST || ST.i !== i) return;
+  if (buy && !chOwned(i)) { S.story.own[chId(i)] = Date.now(); }   // the coins are spent once the chapter is there
+  S.story.read[chId(i)] = 1; save(); renderChapter();
+}
+function buyChapter(i) {
+  if (chOwned(i) || !chOwned(i - 1) || coinBal() < chapterPrice()) return;
+  openChapter(i, true);
+}
+$('#stBody').addEventListener('click', e => {
+  const g = e.target.closest('[data-stgo]'); if (g) { openChapter(+g.dataset.stgo); return; }
+  const b = e.target.closest('[data-stbuy]'); if (b && !b.disabled) buyChapter(+b.dataset.stbuy);
+});
+$('#stEn').addEventListener('click', () => { if (!ST) return; ST.en = !ST.en; renderChapter(); });
+$('#stRead').addEventListener('click', () => {
+  if (!ST) return; const ch = ((S.story || {}).ch || {})[chId(ST.i)]; if (!ch) return;
+  audioCtx(); C.slow = false; say(ch.p.map(p => glossOut(p.de)).join(' '));
+});
+$('#stBack').addEventListener('click', () => { stopVoice(); ST = null; S.cefr = 'TR'; show('menu'); });
+
 /* ================= My words: pick a topic with level tabs + topic tiles ================= */
 let wLevel = 'all';
 const WLEVELS = [['all', 'Alle'], ['A1', 'A1'], ['A2', 'A2'], ['B1', 'B1'], ['X', '✨ Mehr']];
@@ -7855,6 +8358,7 @@ function renderCard() {
   $('#fcBar').style.width = `${Math.round(100 * FC.i / n)}%`;
   if (FC.i >= n) {
     $('#fcCount').textContent = '';
+    if (FC.coins) { coinToast(FC.coins, 'cards'); FC.coins = 0; }
     $('#fcArea').innerHTML = `<div class="wq" style="margin:18px 0">${FC.known === FC.first.size ? 'Super! 🎉' : 'Fertig!'} You knew <b>${FC.known} of ${FC.first.size}</b> cards.</div><p class="note">Cards you knew move up a memory box; the others come back sooner in your Daily review.</p>
       <div class="row2">${FC.again.length ? `<button class="btn blue center" id="fcAgain">↻ Again: the ${FC.again.length} I didn’t know</button>` : `<button class="btn blue center" id="fcRestart">↻ New shuffle</button>`}<button class="btn center" id="fcDone">Back to My words</button></div>`;
     return;
@@ -7869,7 +8373,7 @@ function renderCard() {
 }
 function answerCard(ok) {
   const x = FC.deck[FC.i];
-  if (!FC.first.has(x.id)) { FC.first.add(x.id); grade(x.id, ok); if (ok) FC.known++; save(); }
+  if (!FC.first.has(x.id)) { FC.first.add(x.id); grade(x.id, ok); if (ok) FC.known++; const dd = coinDay(); if (dd.fc < 40) { dd.fc++; FC.coins = (FC.coins || 0) + coinEarn(1); } FC.coins = (FC.coins || 0) + dailyBonus(); save(); }
   if (!ok) FC.again.push(x);
   FC.i++; FC.flip = false; renderCard();
 }
@@ -8090,6 +8594,8 @@ function mergeSaves(a, b) {
   }
   m.history = [...byT.values()].sort((x, y) => (y.u || y.t) - (x.u || x.t)).slice(0, HIST_MAX);
   m.lib = Object.assign({}, b.lib || {}, a.lib || {});   // Lena's sentences from both devices
+  m.coins = mergeCoins(a.coins, b.coins); if (!m.coins) delete m.coins;   // coins: see the Tresor section
+  m.story = mergeStory(a.story, b.story); if (!m.story) delete m.story;
   return m;
 }
 function importProgress(file) {
