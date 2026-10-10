@@ -74,6 +74,7 @@ p{line-height:1.5}
 .menu .streakline{display:flex;gap:10px;align-items:center;font-weight:600;margin-bottom:16px}
 #acctBtn{margin-left:auto;height:44px;max-width:52%;border:3px solid var(--black);background:var(--white);color:var(--black);box-shadow:3px 3px 0 var(--shadow);font:inherit;font-weight:700;padding:0 10px 0 6px;cursor:pointer;display:flex;align-items:center;gap:7px;text-align:left}
 #acctBtn[hidden]{display:none}
+#cVoice[hidden]{display:none}
 #acctBtn + .themebtn{margin-left:0}
 #acctBtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
 #acctBtn .an{display:flex;flex-direction:column;line-height:1.1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}
@@ -900,7 +901,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <button class="tback" id="cBack" aria-label="Back to menu"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="ct"><b id="cTopic"></b><small id="cFocus"></small></div>
         <button class="themebtn" type="button"></button>
-        <button id="cVoice" aria-pressed="true" title="Natural voice (Gemini). Tap for the device voice.">🗣</button>
+        <button id="cVoice" hidden aria-pressed="true" title="Natural voice (Gemini). Tap for the device voice.">🗣</button>
         <button id="cSlow" aria-pressed="false" title="Speak slowly">🐢</button>
         <button id="cKeyBtn" title="Gemini key">⚙</button>
       </div>
@@ -3548,7 +3549,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.10-3';
+const APP_VERSION = 'v2026.10.10-5';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4885,9 +4886,10 @@ function sayDevice(text) {
   });
 }
 const VOICE_WAIT = 10000;   // if the natural voice takes longer than this, Lena uses the device voice instead
-// Start speaking sooner: the first sentence and the rest are recorded in parallel; the short first one is ready
-// quickly and the rest is usually ready before it finishes. At most two voice requests per reply.
+// A reply is spoken in one piece (one voice request). Long texts: the first sentence and the rest are recorded in parallel,
+// the short first one is ready quickly and the rest is usually ready before it finishes.
 function speechChunks(text) {
+  if (text.trim().length <= 280) return [text.trim()];   // Lena's replies: one piece, one request
   const parts = text.match(/[^.!?…]+[.!?…]+["“”»«]*|[^.!?…]+$/g) || [text];
   const sent = parts.map(x => x.trim()).filter(Boolean);
   if (sent.length < 2) return [text.trim()];
@@ -4912,15 +4914,24 @@ function playBuffer(buf) {
   });
 }
 const withTimeout = p => Promise.race([p, sleep(VOICE_WAIT).then(() => null)]);
+// Lena speaks with the device voice only: Gemini's natural voice allows only a few requests a day on a free key and caused
+// silent or half-spoken replies on the tablet (user's choice, 2026-10-10). The code stays, switched off.
+const NATURAL_VOICE = false;
 async function say(text) {
   stopVoice(); const my = speakSeq;
   if (ttsDown && Date.now() - ttsDownAt > 20 * 60000) ttsDown = false;   // try the natural voice again after a while
-  if ((S.cafeVoice || 'natural') === 'natural' && (lsGet(AI_KEY) || ttsDown) && audioCtx()) {
+  if (NATURAL_VOICE && (S.cafeVoice || 'natural') === 'natural' && (lsGet(AI_KEY) || ttsDown) && audioCtx()) {
     const parts = speechChunks(text), jobs = parts.map(p => { const j = ttsDown ? ttsKept(p) : ttsBuffer(p); j.catch(() => {}); return j; });
     let first = null, failed = null;
     if (!audioCache.has(parts[0])) cafeStatus('🗣 Lena is about to speak…');
     try { first = await withTimeout(jobs[0]); } catch (e) { failed = e; }
-    if (my !== speakSeq) return;                                  // the learner already started something else
+    if (my !== speakSeq) return;
+    if (!first && !ttsDown && failed && ['limit', 'busy'].includes(failed.message)) {
+      await sleep(1500); if (my !== speakSeq) return;
+      const again = ttsBuffer(parts[0]); again.catch(() => {}); jobs[0] = again;
+      try { first = await withTimeout(again); failed = null; } catch (e) { failed = e; }
+      if (my !== speakSeq) return;
+    }                                  // the learner already started something else
     if ($('#cStatus').textContent.startsWith('🗣')) cafeStatus('');
     if (first) {
       const ctx = audioCtx();
