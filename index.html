@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="theme-color" content="#E4ECEB">
-<script id="themeInit">try { if (localStorage.getItem('dq-design') === 'glass') document.documentElement.classList.add('glass'); } catch (e) {}
+<script id="themeInit">document.documentElement.classList.add('glass');   // the glass design is the app's look; light / dark below
+try { localStorage.removeItem('dq-design'); } catch (e) {}
 try { var t = localStorage.getItem('dq-theme'); if (t === 'dark' || (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark'); } catch (e) {}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Deutsch Quest – a 3D German grammar runner</title>
@@ -636,7 +637,7 @@ html.dark .fcard .back{background:#242C34}
 @media (prefers-reduced-motion:reduce){ .btn,.ctrl button{transition:none} }
 
 /* ---- dark theme (html.dark): dark surfaces, light text, soft shadows; the accent colours keep their grammar meaning ---- */
-/* ---- 🪟 glass design (switch: the window button on the menu) ----
+/* ---- 🪟 the glass design: the app's look (html.glass is always set; the rules above are its base) ----
    frosted, see-through panels with soft shadows and round corners; text areas stay fairly solid so everything is easy to read.
    Only the big panels blur what is behind them (blur is heavy work for tablets). */
 html.glass{--line:rgba(47,54,64,.16);--bwk:.4;--shk:1.4;--shb:5;--shadow:rgba(40,60,72,.16);--white:rgba(255,255,255,.66)}
@@ -655,8 +656,8 @@ html.glass :is(#scoreBox,#bPause,.ctrl button,.prompt,#streakBox,.toast,#toast,.
 html.glass :is(#bPause,.hudtheme){border-radius:999px}
 html.glass .btn.mode.on{background:rgba(79,124,172,.24);color:var(--black);border:2px solid var(--blue)}
 html.glass .btn.mode.on small{color:var(--grey)}
-html.glass :is(.btn,.tcard,.stat,.item,.tback,.themebtn,.designbtn,.coinpill,.trbal,.trch,.trseason,.coinwin,.scard,.cafe-top button,.askbox,.askfab,.b,.fb,.stnext,.topics button,.wlv button,.wtile,.tip,.empty,.fcard .face,.selpop button,.selpop span,.selpop .selmean,.lvlpick button,.tatog,.scnav button,.gtab,details,.gsvg,.pic,.chips span,input,textarea,select,.coinpop){border-radius:16px}
-html.glass :is(.tback,.themebtn,.designbtn,.cafe-top button,.coinpill,.trn,.sclv,.askfab){border-radius:999px}
+html.glass :is(.btn,.tcard,.stat,.item,.tback,.themebtn,.coinpill,.trbal,.trch,.trseason,.coinwin,.scard,.cafe-top button,.askbox,.askfab,.b,.fb,.stnext,.topics button,.wlv button,.wtile,.tip,.empty,.fcard .face,.selpop button,.selpop span,.selpop .selmean,.lvlpick button,.tatog,.scnav button,.gtab,details,.gsvg,.pic,.chips span,input,textarea,select,.coinpop){border-radius:16px}
+html.glass :is(.tback,.themebtn,.cafe-top button,.coinpill,.trn,.sclv,.askfab){border-radius:999px}
 html.glass .tabs{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:4px;gap:4px}
 html.glass .tabs button{border:0!important;border-radius:14px;background:transparent;box-shadow:none}
 html.glass .tabs button.on{background:rgba(255,255,255,.95);color:#2F3640;box-shadow:0 2px 10px rgba(40,60,72,.16)}
@@ -703,8 +704,6 @@ html.dark .wdiff{background:#192026}
 html.dark .wdiff del{background:#4A2724} html.dark .wdiff ins{background:#1F3A2B}
 html.dark .wdiff .dw,html.dark .dlegend .dw{background:#4A4023}
 html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dark .g.gC{background:#4A4023} html.dark .g.gD{background:#4A2724}
-.designbtn{margin-left:auto;flex:0 0 44px;width:44px;height:44px;border:calc(3px * var(--bwk)) solid var(--line);background:var(--white);box-shadow:calc(3px * var(--shk)) calc(3px * var(--shk)) calc(3px * var(--shb)) var(--shadow);font-size:20px;cursor:pointer}
-.designbtn + .themebtn{margin-left:0}
 .themebtn{margin-left:auto;flex:0 0 44px;width:44px;height:44px;border:calc(3px * var(--bwk)) solid var(--line);background:var(--white);box-shadow:calc(3px * var(--shk)) calc(3px * var(--shk)) calc(3px * var(--shb)) var(--shadow);font-size:22px;cursor:pointer}
 .panel{position:relative}
 .themebtn.tcorner{position:absolute;top:12px;right:12px;width:40px;height:40px;flex:none;margin:0;font-size:19px;box-shadow:calc(2px * var(--shk)) calc(2px * var(--shk)) calc(2px * var(--shb)) var(--shadow);z-index:1}
@@ -737,7 +736,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
       <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 29 grammar topics to run, write and speak, 41 real-life speaking scenes, telc B1 exam practice and a 12-week plan.</p>
-      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="mCoins" class="coinpill" type="button" aria-label="Coins: open the Tresor"></button><button id="acctBtn" type="button" hidden></button><button class="designbtn" id="designBtn" type="button" aria-label="Design: Klassisch oder Glas"></button><button class="themebtn" id="themeBtn" type="button"></button></div>
+      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="mCoins" class="coinpill" type="button" aria-label="Coins: open the Tresor"></button><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
       <p class="mcheer" id="mCheer" hidden></p>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button><button data-cefr="TR" class="trtab"><svg class="chest" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 10.5Q3 4.5 12 4.5Q21 4.5 21 10.5Z" fill="#C98E57" stroke="#2F3640" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="10" width="18" height="10" rx="1.2" fill="#B07A4A" stroke="#2F3640" stroke-width="1.6"/><rect x="3" y="9.2" width="18" height="2.6" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><path d="M7.5 5.4V20M16.5 5.4V20" stroke="#8A5A33" stroke-width="1.3"/><rect x="10" y="11" width="4" height="4.8" rx="1" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><circle cx="12" cy="13.2" r="0.85" fill="#2F3640"/></svg><span>Tresor</span></button></div>
       <div class="tcards" id="topicCards"></div>
@@ -3595,7 +3594,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.11-3';
+const APP_VERSION = 'v2026.10.11-4';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4467,12 +4466,8 @@ function show(id) {
   askVis(); acctRender(); renderGap(); $$('[data-lanepref]').forEach(c => { c.checked = S.lanePreview !== false; });
   if (PROFILE && SYNC && SYNC.pending && (id === 'menu' || id === 'prog')) cloudSoon(1500);
 }
-// 🪟 / ▣: the glass design or the classic one (this device only, like light / dark)
-function designBtn() { const g = document.documentElement.classList.contains('glass'), b = $('#designBtn'); if (!b) return; b.textContent = g ? '▣' : '🪟'; b.title = g ? 'Klassisches Design · classic look' : 'Glas-Design · glass look'; b.setAttribute('aria-pressed', g); }
-$('#designBtn').addEventListener('click', () => { const g = document.documentElement.classList.toggle('glass'); lsSet('dq-design', g ? 'glass' : ''); designBtn(); });
 function renderMenu() {
   $('#appVer').textContent = APP_VERSION;
-  designBtn();
   const n = currentStreak();
   $('#mStreak').textContent = n ? `${n}-day streak. Keep it going today.` : 'Play a round today to start a streak.';
   $('#dueBadge').textContent = reviewWords().length;
