@@ -113,6 +113,24 @@ html.dark .profpop{background:#1E252C}
 .profpop .pnote{font-size:12px;color:var(--grey);margin:10px 0 0;line-height:1.4}
 .profpop .pout{margin-top:10px;background:transparent}
 .gbig{font-size:40px}
+.gsearch{display:flex;align-items:center;gap:8px;border:calc(2px * var(--bwk)) solid var(--line);background:var(--white);border-radius:16px;padding:4px 12px;margin:0 0 10px}
+.gsearch input{flex:1;min-width:0;border:none;background:transparent;color:var(--black);font:inherit;font-size:17px;padding:8px 0;outline:none}
+.gsearch:focus-within{box-shadow:0 0 0 3px rgba(55,138,221,.35)}
+.ghits,.grows{display:grid;gap:8px;margin:0 0 12px}
+.grow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:var(--black);cursor:pointer;border:calc(1.5px * var(--bwk)) solid var(--line);background:var(--white);border-radius:14px;padding:9px 12px}
+.grow .ge{font-size:24px;flex:none}
+.grow .gtx{flex:1;min-width:0;display:flex;flex-direction:column}
+.grow .gtx b{font-size:16px}.grow .gtx small{color:var(--grey);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grow .gin{flex:none;font-size:12.5px;font-weight:700;color:var(--grey)}
+.grow.bloom,.ghit.on{border-color:#97C459 !important;background:rgba(151,196,89,.14)}
+.gnone{margin:0 0 12px}
+.gnext{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"s s" "e b" "e i";column-gap:12px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--black);cursor:pointer;border:calc(2px * var(--bwk)) solid #97C459;background:rgba(151,196,89,.12);border-radius:16px;padding:10px 14px;margin:0 0 10px}
+.gnext small{grid-area:s;font-size:12.5px;font-weight:700;color:#3B6D11}
+.gnext .ge{grid-area:e;font-size:34px}.gnext b{grid-area:b;font-size:18px}.gnext .gin{grid-area:i;font-size:13px;color:var(--grey);font-weight:600}
+html.dark .gnext small{color:#C0DD97}
+.gthead{display:flex;align-items:center;gap:10px;margin:6px 0 10px}.gthead h3{margin:0}
+.grow.glow,.gnext.glow,.gtile.glow{position:relative;animation:wgglow 1.8s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.grow.glow,.gnext.glow,.gtile.glow{animation:none;box-shadow:0 0 0 3px rgba(99,153,34,.8)}}
 .gcard .gstate{display:block;margin-top:6px;font-size:12.5px;font-weight:700;color:var(--grey)}
 .gcard.bloom{border-color:#97C459 !important;background:rgba(151,196,89,.14)}
 #cefrTabs button.glow,.gcard.glow{position:relative;animation:wgglow 1.8s ease-in-out infinite}
@@ -134,6 +152,11 @@ html.dark .gwword b{filter:brightness(1.35)}
 @keyframes gwgrow{to{stroke-dashoffset:0}}
 @keyframes gwpop{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.gwbr,.gwleaf,.gwbloom{animation:none;opacity:1;stroke-dashoffset:0}}
+.gwlink{opacity:0;animation:gwpop .45s ease-out forwards;animation-delay:var(--d)}
+@media (prefers-reduced-motion:reduce){.gwlink{animation:none;opacity:1}}
+.gwpart{display:block;width:100%;margin:8px 0 0;padding:8px 12px;border-radius:14px;border:2px dashed var(--line);background:transparent;color:var(--black);text-align:left;font-size:15px;cursor:pointer}
+.gwpart small{color:var(--grey)}
+.gwpart.gwo{border-color:#D9675B}.gwpart.gwn{border-color:#4F7CAC}
 .gwlegend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:13px;font-weight:700;margin:2px 0}
 .gwlegend span{display:inline-flex;align-items:center;gap:4px}
 .gwlegend small{font-weight:500;color:var(--grey);margin-left:3px}
@@ -3678,7 +3701,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.12-2';
+const APP_VERSION = 'v2026.10.12-4';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -9257,6 +9280,23 @@ function gwKind(t, de) {
 const GW_KIND = { s:['Stamm', 'the stem verb', '#5B6670'], t:['trennbar', 'separable', '#1D9E75'], f:['untrennbar', 'inseparable', '#7F77DD'], n:['Nomen', 'noun', '#2F3640'], a:['Adjektiv', 'adjective', '#BA7517'] };
 const gwCol = (k, de) => k === 'n' ? XART[gwArt(de)] : GW_KIND[k][2];
 const GW = [];
+// the trees grouped by life theme, the most useful tree first (no A1/A2/B1 split: one family mixes levels anyway)
+const G_THEMES = [
+  { id:'weg', e:'🚌', de:'Unterwegs', en:'on the way, travel', trees:['geh', 'komm', 'fahr', 'steig', 'lauf', 'halt', 'fall', 'fuehr'] },
+  { id:'haus', e:'🏠', de:'Zuhause', en:'at home', trees:['wohn', 'mach', 'schlaf', 'stell', 'leg', 'setz', 'schliess'] },
+  { id:'essen', e:'🛒', de:'Essen und Einkaufen', en:'food and shopping', trees:['ess', 'trink', 'kauf', 'zahl', 'brauch', 'such', 'biet'] },
+  { id:'reden', e:'💬', de:'Sprechen und Hören', en:'talking and listening', trees:['sprech', 'frag', 'hoer', 'ruf', 'stimm', 'rat', 'schlag'] },
+  { id:'lernen', e:'📚', de:'Lernen und Verstehen', en:'learning and understanding', trees:['lern', 'les', 'schreib', 'seh', 'steh', 'kenn', 'denk'] },
+  { id:'arbeit', e:'💼', de:'Arbeit und Freizeit', en:'work and free time', trees:['arbeit', 'spiel', 'trag', 'zieh', 'richt', 'teil', 'drueck'] },
+  { id:'geben', e:'🤲', de:'Geben, Nehmen, Helfen', en:'giving, taking, helping', trees:['nehm', 'geb', 'bring', 'lass', 'sorg', 'fass', 'bind'] }
+];
+{
+  const order = [], max = Math.max(...G_THEMES.map(x => x.trees.length));
+  for (let i = 0; i < max; i++) G_THEMES.forEach(x => { if (x.trees[i]) order.push(x.trees[i]); });
+  GARDEN.forEach(t => { if (!order.includes(t.id)) order.push(t.id); });
+  GARDEN.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+  G_THEMES.forEach(x => x.trees.forEach(id => { const t = GARDEN.find(y => y.id === id); if (t) t.theme = x.id; }));
+}
 GARDEN.forEach(t => {
   t.items = t.w.map(([de, en, ta, e, exDe, exEn], j) => {
     const k = gwKind(t, de);
@@ -9297,18 +9337,43 @@ function gardenDue() {
 }
 const nextTree = () => GARDEN.find(t => !gState().done[t.id]) || GARDEN[0];
 
-/* ---- the 🌳 tab ---- */
+/* ---- the 🌳 tab: search, the next tree, the themes (tap one: its trees) ---- */
+let GTHEME = null, GQUERY = '';
+const gFold = x => String(x).toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss').replace(/^(der|die|das)\s+/, '').trim();
+const gState1 = t => { const n = gTreeLearned(t), done = gState().done[t.id]; return done ? '🌸 blüht' : n ? `🌿 ${n} / ${t.w.length}` : `🌱 ${t.w.length} Wörter`; };
+function gSearchHTML(q) {
+  const f = gFold(q); if (f.length < 2) return '';
+  const hits = [];
+  GARDEN.forEach(t => t.items.forEach((x, j) => {
+    const de = gFold(x.a), en = String(x.en).toLowerCase(), ta = String(x.ta || '');
+    const score = de === f ? 0 : de.startsWith(f) ? 1 : de.includes(f) ? 2 : en.split(/[,;()]\s*|\s+/).includes(f) ? 3 : en.includes(f) || ta.includes(q.trim()) ? 4 : gFold(t.base) === f ? 5 : -1;
+    if (score >= 0) hits.push([score, t, j, x]);
+  }));
+  hits.sort((p, q2) => p[0] - q2[0] || p[3].a.length - q2[3].a.length);
+  if (!hits.length) return `<p class="note gnone">${bi(`Kein Wort gefunden: „${esc(q.trim())}“`, 'No word found. Try the German word or the English meaning.')}</p>`;
+  return `<div class="ghits">${hits.slice(0, 30).map(([, t, j, x]) => `<button class="grow ghit${gLearned(x) ? ' on' : ''}" type="button" data-gword="${t.id}|${j}"><span class="ge">${x.e}</span><span class="gtx"><b>${esc(x.a)}</b><small>${esc(x.en)}</small></span><span class="gin">${t.e} ${esc(t.st[0])}-</span></button>`).join('')}</div>${hits.length > 30 ? `<p class="note">${bi(`+ ${hits.length - 30} weitere: genauer suchen`, 'more results: type a bit more')}</p>` : ''}`;
+}
 function renderGarden() {
-  const g = gState(), doneN = Object.keys(g.done).length, words = GW.filter(gLearned).length, due = gardenDue();
-  const card = t => {
-    const n = gTreeLearned(t), done = g.done[t.id];
-    return `<button class="tcard gcard${done ? ' bloom' : ''}${due && t === nextTree() ? ' glow' : ''}" data-tree="${t.id}"><span class="te">${t.e}</span><b>${esc(t.st[0])}-</b><small>${esc(t.base)} · ${esc(t.en)}</small><span class="gstate">${done ? '🌸 blüht' : n ? `🌿 ${n} / ${t.w.length}` : `🌱 ${t.w.length} Wörter`}</span></button>`;
-  };
-  const enough = gLearnedItems().length >= 4;
-  $('#gardenBox').innerHTML = `<div class="trhead"><span class="gbig">🌳</span><div class="trti"><h3>Wortgarten<small class="en2">50 word families: one stem, all the words that grow from it</small></h3></div><div class="trbal">🌸 ${doneN} / ${GARDEN.length}</div></div>
-    <p class="note">Jeder Baum: Lena erzählt eine kleine Geschichte, Sie entdecken die Wörter mit Bildern und spielen das Bau-Spiel. Gelernte Wörter kommen in Karteikarten, Runner, Szenen und Schreiben wieder.<small class="en2">Each tree: Lena tells a little story, you explore the words with animated pictures and play the building game. Learned words come back in flashcards, the runner, Szenen and writing. ${words} words learned so far.</small></p>
-    <div class="row2 gacts"><button class="btn center" type="button" data-gact="run"${enough ? '' : ' disabled'}>🏃 Garten-Mix<small class="en2">Runner with your garden words</small></button><button class="btn center" type="button" data-gact="write"${enough ? '' : ' disabled'}>✍️ Tippen<small class="en2">Type your garden words</small></button></div>
-    ${['A1', 'A2', 'B1'].map(lv => `<h3 class="scath">${lv}<small class="en2">${GARDEN.filter(t => t.lv === lv && g.done[t.id]).length} / ${GARDEN.filter(t => t.lv === lv).length} trees in bloom</small></h3><div class="tcards">${GARDEN.filter(t => t.lv === lv).map(card).join('')}</div>`).join('')}`;
+  const g = gState(), doneN = Object.keys(g.done).length, words = GW.filter(gLearned).length, due = gardenDue(), nx = nextTree();
+  const box = $('#gardenBox'), had = document.activeElement && document.activeElement.id === 'gSearch';
+  const head = `<div class="trhead"><span class="gbig">🌳</span><div class="trti"><h3>Wortgarten<small class="en2">${GARDEN.length} word families in ${G_THEMES.length} themes: one stem, all the words that grow from it · ${words} words learned</small></h3></div><div class="trbal">🌸 ${doneN} / ${GARDEN.length}</div></div>
+    <div class="gsearch"><span aria-hidden="true">🔍</span><input id="gSearch" type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Wort suchen: öffnen, Fahrer, open …" aria-label="Search a word in the garden" value="${esc(GQUERY)}"></div>
+    <div id="gHits">${gSearchHTML(GQUERY)}</div>`;
+  const row = t => `<button class="grow${g.done[t.id] ? ' bloom' : ''}${due && t === nx ? ' glow' : ''}" type="button" data-tree="${t.id}"><span class="ge">${t.e}</span><span class="gtx"><b>${esc(t.st[0])}- · ${esc(t.base)}</b><small>${esc(t.w.slice(1, 4).map(w => w[0]).join(', '))} …</small></span><span class="gin">${gState1(t)}</span></button>`;
+  const th = GTHEME && G_THEMES.find(x => x.id === GTHEME);
+  if (th) {
+    const ts = th.trees.map(id => GBY[id]).filter(Boolean);
+    box.innerHTML = head + `<div class="gthead"><button class="tback" type="button" data-gtheme="" aria-label="Back to all themes"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h3>${th.e} ${esc(th.de)}<small class="en2">${esc(th.en)} · ${ts.filter(t => g.done[t.id]).length} / ${ts.length} trees in bloom · most useful first</small></h3></div>
+      <div class="grows">${ts.map(row).join('')}</div>`;
+  } else {
+    const tile = x => { const ts = x.trees.map(id => GBY[id]).filter(Boolean), d = ts.filter(t => g.done[t.id]).length;
+      return `<button class="tcard gtile${d === ts.length ? ' bloom' : ''}${due && x.trees.includes(nx.id) ? ' glow' : ''}" type="button" data-gtheme="${x.id}"><span class="te">${x.e}</span><b>${esc(x.de)}</b><small>${esc(x.en)}</small><span class="tbar"><i style="width:${Math.round(100 * d / ts.length)}%"></i></span><span class="gstate">🌸 ${d} / ${ts.length} Bäume</span></button>`; };
+    const nth = G_THEMES.find(x => x.trees.includes(nx.id));
+    box.innerHTML = head + (doneN < GARDEN.length ? `<button class="gnext${due ? ' glow' : ''}" type="button" data-tree="${nx.id}"><small>${doneN ? 'Weiter · next tree' : 'Start · your first tree'}</small><span class="ge">${nx.e}</span><b>${esc(nx.st[0])}- · ${esc(nx.base)}</b><span class="gin">${nth ? `${nth.e} ${esc(nth.de)} · ` : ''}${gState1(nx)}</span></button>` : '')
+      + `<div class="row2 gacts"><button class="btn center" type="button" data-gact="run">🏃 Garten-Mix<small class="en2">Runner round with all your learned garden words</small></button><button class="btn center" type="button" data-gact="write">✍️ Tippen<small class="en2">Type your learned garden words</small></button></div><div class="msg" id="gMsg" role="status"></div>
+      <h3 class="scath">Themen<small class="en2">Themes: tap one to see its trees</small></h3><div class="tcards">${G_THEMES.map(tile).join('')}</div>`;
+  }
+  if (had) { const i = $('#gSearch'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
 }
 function gardenRun(items) {
   const q = shuffle(items.slice()).slice(0, 10).map(xQ); if (q.length < 4) return;
@@ -9318,9 +9383,14 @@ function gardenWrite(items) {
   const w = shuffle(items.slice()).slice(0, 8).map(x => writeItem('l1', 'x', x.id)).filter(Boolean); if (w.length < 3) return;
   startWriting('l1', w);
 }
+$('#gardenBox').addEventListener('input', e => { if (e.target.id !== 'gSearch') return; GQUERY = e.target.value; $('#gHits').innerHTML = gSearchHTML(GQUERY); });
 $('#gardenBox').addEventListener('click', e => {
-  const t = e.target.closest('[data-tree]'); if (t) { openTree(t.dataset.tree); return; }
-  const a = e.target.closest('[data-gact]'); if (!a || a.disabled) return;
+  const w = e.target.closest('[data-gword]');
+  if (w) { const [id, j] = w.dataset.gword.split('|'); openTree(id, 'explore'); GT.leaf = +j; renderTree(); const l = $('#gtLeaf'); if (l) l.scrollIntoView({ block:'center' }); return; }
+  const th = e.target.closest('[data-gtheme]'); if (th) { GTHEME = th.dataset.gtheme || null; renderGarden(); $('#gardenBox').scrollIntoView({ block:'start' }); return; }
+  const t = e.target.closest('[data-tree]'); if (t) { const tr = GBY[t.dataset.tree]; if (tr && !GQUERY) GTHEME = tr.theme || GTHEME; openTree(t.dataset.tree); return; }
+  const a = e.target.closest('[data-gact]'); if (!a) return;
+  if (gLearnedItems().length < 4) { $('#gMsg').innerHTML = bi('Lernen Sie zuerst einen Baum (tippen Sie oben auf „Start“ oder auf ein Thema). Danach üben Sie hier alle gelernten Wörter.', 'First learn a tree (tap “Start” above or a theme). Then you practise all your learned words here.'); return; }
   if (a.dataset.gact === 'run') gardenRun(gLearnedItems()); else gardenWrite(gLearnedItems());
 });
 
@@ -9338,29 +9408,76 @@ function gwPic(t, x) {
   return `<svg class="gsvg gwpic" viewBox="0 0 320 180" role="img" aria-label="${esc(de)}">${bob(em(x.e, 160, 50, 46))}${verbRow(segs, y, 30)}${txt(esc(x.en), 160, 156, 13, '#5B6670', 600)}${badge(kindTxt, col)}</svg>`;
 }
 // the tree: trunk with the stem, branches growing out to the leaves (they grow once, one after another)
+
+/* ---- pairs in a tree: ↔ opposites, → a verb and its noun, · closely related. Chosen by hand (a rule would pair
+   aufhören / zuhören as "opposites"). Paired words sit next to each other in one row, with the label between them. ---- */
+const GW_PAIRS = {
+  mach:[['aufmachen', 'zumachen', 'o'], ['anmachen', 'ausmachen', 'o']], geh:[['der Eingang', 'der Ausgang', 'o'], ['weggehen', 'zurückgehen', 'o']],
+  komm:[['ankommen', 'die Ankunft', 'n'], ['kommen', 'mitkommen', 'r']], seh:[['fernsehen', 'der Fernseher', 'n']], steh:[['verstehen', 'das Verständnis', 'n']],
+  nehm:[['abnehmen', 'zunehmen', 'o'], ['unternehmen', 'das Unternehmen', 'n']], sprech:[['sprechen', 'die Sprache', 'n'], ['besprechen', 'die Besprechung', 'n'], ['aussprechen', 'die Aussprache', 'n']],
+  fahr:[['fahren', 'der Fahrer', 'n'], ['abfahren', 'die Abfahrt', 'n'], ['erfahren', 'die Erfahrung', 'n']], schreib:[['unterschreiben', 'die Unterschrift', 'n'], ['beschreiben', 'die Beschreibung', 'n']],
+  les:[['lesen', 'der Leser', 'n']], kauf:[['kaufen', 'verkaufen', 'o'], ['einkaufen', 'der Einkauf', 'n']], spiel:[['spielen', 'der Spieler', 'n']],
+  arbeit:[['arbeiten', 'die Arbeit', 'n']], wohn:[['wohnen', 'die Wohnung', 'n']], ess:[['essen', 'das Essen', 'n'], ['das Mittagessen', 'das Abendessen', 'r']],
+  trink:[['trinken', 'das Getränk', 'n']], ruf:[['anrufen', 'der Anruf', 'n']], lern:[['lernen', 'verlernen', 'o']],
+  zieh:[['anziehen', 'ausziehen', 'o'], ['umziehen', 'der Umzug', 'n']], stell:[['bestellen', 'die Bestellung', 'n'], ['vorstellen', 'die Vorstellung', 'n']],
+  leg:[['überlegen', 'die Überlegung', 'n']], halt:[['sich unterhalten', 'die Unterhaltung', 'n'], ['halten', 'die Haltestelle', 'n']], fall:[['gefallen', 'der Gefallen', 'r']],
+  lauf:[['laufen', 'der Läufer', 'n']], denk:[['denken', 'der Gedanke', 'n']], frag:[['fragen', 'die Frage', 'n']], zahl:[['zahlen', 'die Zahlung', 'n'], ['erzählen', 'die Erzählung', 'n']],
+  hoer:[['hören', 'der Hörer', 'n']], schliess:[['abschließen', 'der Abschluss', 'n'], ['anschließen', 'der Anschluss', 'n']], such:[['besuchen', 'der Besuch', 'n'], ['versuchen', 'der Versuch', 'n']],
+  steig:[['einsteigen', 'aussteigen', 'o']], biet:[['anbieten', 'das Angebot', 'n'], ['verbieten', 'das Verbot', 'n']], schlag:[['vorschlagen', 'der Vorschlag', 'n']],
+  richt:[['berichten', 'der Bericht', 'n'], ['einrichten', 'die Einrichtung', 'n']], sorg:[['versorgen', 'die Versorgung', 'n'], ['sorgen (für)', 'die Sorge', 'n']],
+  stimm:[['zustimmen', 'die Zustimmung', 'n']], teil:[['der Vorteil', 'der Nachteil', 'o'], ['mitteilen', 'die Mitteilung', 'n']], setz:[['übersetzen', 'die Übersetzung', 'n']],
+  brauch:[['verbrauchen', 'der Verbraucher', 'n'], ['gebrauchen', 'der Gebrauch', 'n']], fass:[['zusammenfassen', 'die Zusammenfassung', 'n']], rat:[['raten', 'der Rat', 'n'], ['beraten', 'die Beratung', 'n']],
+  fuehr:[['führen', 'die Führung', 'n'], ['einführen', 'die Einführung', 'n']], bind:[['verbinden', 'die Verbindung', 'n']], drueck:[['ausdrücken', 'der Ausdruck', 'n'], ['drucken', 'der Drucker', 'n']]
+};
+const GW_REL = { o:['↔ Gegenteil', 'opposite'], n:['→ Nomen', 'verb → noun'], r:['· verwandt', 'related'] };
+// the rows of a tree: pairs first (the one with the stem verb on top), then the other words two by two
+function gwRows(t) {
+  if (t.rows) return t.rows;
+  const idx = de => t.items.findIndex(x => x.a === de), used = new Set(), rows = [];
+  for (const [a, b, rel] of GW_PAIRS[t.id] || []) { const i = idx(a), j = idx(b); if (i < 0 || j < 0 || used.has(i) || used.has(j)) continue; used.add(i); used.add(j); rows.push([i, j, rel]); }
+  rows.sort((x, y) => (y.includes(0) ? 1 : 0) - (x.includes(0) ? 1 : 0));
+  const rest = t.items.map((x, i) => i).filter(i => !used.has(i));
+  if (rest[0] === 0) { rows.unshift([0, rest[1], null]); rest.splice(0, 2); }
+  for (let k = 0; k < rest.length; k += 2) rows.push([rest[k], rest[k + 1], null]);
+  t.partner = {}; rows.forEach(([i, j, rel]) => { if (rel && j !== undefined) { t.partner[i] = [j, rel, 0]; t.partner[j] = [i, rel, 1]; } });
+  return (t.rows = rows);
+}
 function gwTreeSVG(t, bloom) {
-  const n = t.items.length, rows = Math.ceil(n / 2), H = 70 + rows * 58 + 70, tx = 340, ty = H - 46;
-  let br = '', lv = '';
-  t.items.forEach((x, j) => {
-    const left = j % 2 === 0, r = Math.floor(j / 2), y = 30 + r * 58, lx = left ? 14 : 470, w = 196, cx = left ? lx + w : lx;
-    const col = gwCol(x.gk, x.a), learned = gLearned(x);
-    br += `<path class="gwbr" style="--d:${0.1 + j * 0.08}s" d="M${tx} ${ty - 30} C${tx} ${y + 30}, ${(tx + cx) / 2} ${y + 17}, ${cx} ${y + 17}" fill="none" stroke="#8B6B4A" stroke-width="4" stroke-linecap="round"/>`;
-    lv += `<g class="gwleaf${learned ? ' on' : ''}" style="--d:${0.3 + j * 0.08}s" data-leaf="${j}" role="button" tabindex="0" aria-label="${esc(x.a)}"><rect x="${lx}" y="${y}" width="${w}" height="40" rx="14" fill="${learned ? '#EAF3DE' : '#FFFFFF'}" stroke="${col}" stroke-width="3"/>`
+  const rows = gwRows(t), H = 70 + rows.length * 58 + 70, tx = 340, ty = H - 46;
+  let br = '', lv = '', links = '', n = 0;
+  const leaf = (j, left, y) => {
+    const x = t.items[j], lx = left ? 14 : 470, w = 196, cx = left ? lx + w : lx, col = gwCol(x.gk, x.a), learned = gLearned(x), d = n++;
+    br += `<path class="gwbr" style="--d:${0.1 + d * 0.08}s" d="M${tx} ${ty - 30} C${tx} ${y + 30}, ${(tx + cx) / 2} ${y + 17}, ${cx} ${y + 17}" fill="none" stroke="#8B6B4A" stroke-width="4" stroke-linecap="round"/>`;
+    lv += `<g class="gwleaf${learned ? ' on' : ''}" style="--d:${0.3 + d * 0.08}s" data-leaf="${j}" role="button" tabindex="0" aria-label="${esc(x.a)}"><rect x="${lx}" y="${y}" width="${w}" height="40" rx="14" fill="${learned ? '#EAF3DE' : '#FFFFFF'}" stroke="${col}" stroke-width="3"/>`
       + `<text x="${lx + w / 2}" y="${y + 16}" font-size="14.5" font-weight="800" fill="#2F3640" text-anchor="middle" font-family="Jost,Futura,Arial,sans-serif">${esc(x.a.replace(/\s*\(.*?\)$/, ''))}</text>`
       + `<text x="${lx + w / 2}" y="${y + 31}" font-size="11" font-weight="600" fill="#5B6670" text-anchor="middle" font-family="Jost,Futura,Arial,sans-serif">${esc(x.en.length > 30 ? x.en.slice(0, 29) + '…' : x.en)}</text>${learned ? em('🍃', lx + w - 12, y + 6, 14) : ''}</g>`;
+  };
+  rows.forEach(([i, j, rel], r) => {
+    const y = 30 + r * 58;
+    leaf(i, true, y); if (j !== undefined) leaf(j, false, y);
+    if (rel) {
+      const [de] = GW_REL[rel], c = rel === 'o' ? '#D9675B' : rel === 'n' ? '#4F7CAC' : '#5B6670';
+      links += `<g class="gwlink" style="--d:${0.5 + r * 0.1}s"><line x1="212" y1="${y + 20}" x2="468" y2="${y + 20}" stroke="${c}" stroke-width="2.5" stroke-dasharray="6 5"/>`
+        + `<rect x="${tx - 52}" y="${y + 8}" width="104" height="24" rx="12" fill="#FFFFFF" stroke="${c}" stroke-width="2"/>${txt(esc(de), tx, y + 20, 12, c, 800)}</g>`;
+    }
   });
   const trunk = `<path d="M${tx - 22} ${H - 8} Q${tx - 10} ${ty - 10} ${tx - 8} ${ty - 40} L${tx + 8} ${ty - 40} Q${tx + 10} ${ty - 10} ${tx + 22} ${H - 8} Z" fill="#8B6B4A"/>`
     + `<rect x="${tx - 78}" y="${ty - 18}" width="156" height="40" rx="14" fill="#2F3640"/>${txt(esc(t.st[0] + '-'), tx, ty - 3, 17, '#FFFFFF', 800)}${txt(esc(t.base), tx, ty + 13, 11, '#DDE3E8', 600)}`;
   const flowers = bloom ? [[300, 40], [380, 70], [330, 110], [250, 90], [420, 30]].map(([x, y], i) => `<g class="gwbloom" style="--d:${0.6 + i * 0.15}s">${em('🌸', x, y, 26)}</g>`).join('') : '';
-  return `<svg class="gwtree" viewBox="0 0 680 ${H}" role="img" aria-label="Wortbaum ${esc(t.base)}">${br}${trunk}${lv}${flowers}</svg>`;
+  return `<svg class="gwtree" viewBox="0 0 680 ${H}" role="img" aria-label="Wortbaum ${esc(t.base)}">${br}${trunk}${links}${lv}${flowers}</svg>`;
 }
 const gwLegend = () => `<div class="gwlegend">${Object.entries(GW_KIND).map(([k, [de, en, c]]) => k === 'n' ? `<span><i style="background:${XART.der}"></i><i style="background:${XART.die}"></i><i style="background:${XART.das}"></i>${de}<small>der · die · das</small></span>` : `<span><i style="background:${c}"></i>${de}<small>${en}</small></span>`).join('')}</div>`;
+function gwPartnerHTML(t, j) {
+  gwRows(t); const p = t.partner[j]; if (!p) return '';
+  const [k, rel, second] = p, y = t.items[k], lab = rel === 'n' ? (second ? '← Verb' : '→ Nomen') : GW_REL[rel][0];
+  return `<button class="gwpart gw${rel}" type="button" data-leaf="${k}">${esc(lab)}: <b>${esc(y.a)}</b> <small>${esc(y.en)}</small></button>`;
+}
 function gwLeafHTML(t, j) {
   const x = t.items[j]; if (!x) return '';
   const art = gwArt(x.a);
   return `<div class="gwcard">${gwPic(t, x)}
     <div class="gwword"><b style="color:${x.gk === 's' ? 'var(--black)' : gwCol(x.gk, x.a)}">${esc(x.a)}</b> <button class="linkbtn" type="button" data-say="${esc(x.a.replace(/\s*\(.*?\)$/, ''))}">🔊</button>${starBtn(x.id)}</div>
-    <div class="gwmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">🪷 ${esc(x.ta)}</div>` : ''}
+    <div class="gwmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">🪷 ${esc(x.ta)}</div>` : ''}${gwPartnerHTML(t, j)}
     <div class="s gwex">„${esc(x.ex)}“ <button class="linkbtn" type="button" data-say="${esc(x.ex)}">🔊</button><div class="tr">${esc(x.exen)}</div></div>
     ${art ? `<p class="note">${art === 'die' && /ung$/.test(gwClean(x.a)) ? 'Nomen auf -ung sind immer <b>die</b>.' : art === 'das' && /^Ge/.test(gwClean(x.a)) ? 'Nomen mit Ge- sind oft <b>das</b>.' : art === 'der' && /er$/.test(gwClean(x.a)) ? 'Personen auf -er sind meist <b>der</b>.' : ''}</p>` : ''}</div>`;
 }
@@ -9372,7 +9489,7 @@ function openTree(id, step) {
 function renderTree() {
   const { t, step } = GT, done = gState().done[t.id];
   $('#gtTitle').textContent = `${t.e} ${t.st[0]}- · ${t.base}`;
-  $('#gtSub').innerHTML = bi(`${t.lv} · ${t.w.length} Wörter · ${done ? '🌸 blüht' : `${gTreeLearned(t)} gelernt`}`, `${t.en}`);
+  $('#gtSub').innerHTML = bi(`${(G_THEMES.find(x => x.id === t.theme) || { e:'' }).e} ${(G_THEMES.find(x => x.id === t.theme) || { de:'' }).de} · ${t.w.length} Wörter · ${done ? '🌸 blüht' : `${gTreeLearned(t)} gelernt`}`, `${t.en}`);
   $$('#gtSteps button').forEach(b => b.classList.toggle('on', b.dataset.gstep === step));
   let h = '';
   if (step === 'tour') {
@@ -9396,6 +9513,12 @@ function gwGameStart() {
     if (kind === 'mean') return { x, kind, ask:x.a, opts:shuffle([x.en, ...others.slice(0, 2).map(y => y.en)]), ans:x.en };
     return { x, kind, ask:`„${x.en}“`, opts:shuffle([x.a, ...others.slice(0, 2).map(y => y.a)]), ans:x.a };
   });
+  gwRows(t);
+  for (const [i, j, rel] of t.rows) {
+    if (!rel || rel === 'r' || j === undefined) continue;
+    const from = t.items[i], to = t.items[j], others = shuffle(t.items.filter(y => y !== from && y !== to)).slice(0, 2).map(y => y.a);
+    qs.splice(Math.floor(Math.random() * (qs.length + 1)), 0, { x:to, kind:rel === 'o' ? 'opp' : 'noun', ask:from.a, opts:shuffle([to.a, ...others]), ans:to.a });
+  }
   GT.q = { list:qs, i:0, ok:0, coins:0, picked:null };
 }
 function gwGameHTML() {
@@ -9403,7 +9526,7 @@ function gwGameHTML() {
   const Q = GT.q, { t } = GT;
   if (Q.i >= Q.list.length) return gwDoneHTML();
   const q = Q.list[Q.i], ans = Q.picked;
-  const lead = q.kind === 'art' ? bi('Welcher Artikel?', 'Which article?') : q.kind === 'mean' ? bi('Was bedeutet das?', 'What does it mean?') : bi('Welches Wort passt?', 'Which word fits?');
+  const lead = q.kind === 'opp' ? bi('↔ Was ist das Gegenteil?', 'What is the opposite?') : q.kind === 'noun' ? bi('→ Welches Nomen gehört dazu?', 'Which noun belongs to it?') : q.kind === 'art' ? bi('Welcher Artikel?', 'Which article?') : q.kind === 'mean' ? bi('Was bedeutet das?', 'What does it mean?') : bi('Welches Wort passt?', 'Which word fits?');
   return `<div class="gwgame"><div class="gwprog"><i style="width:${Math.round(100 * Q.i / Q.list.length)}%"></i></div><div class="gwqn">${Q.i + 1} / ${Q.list.length}</div>
     <div class="gwask"><span class="gwemo">${q.x.e}</span><div class="wq">${esc(q.ask)}</div><div class="whead">${lead}</div></div>
     <div class="gwopts">${q.opts.map(o => `<button class="btn center${ans !== null ? (o === q.ans ? ' green' : o === ans ? ' red' : '') : ''}" type="button" data-gopt="${esc(o)}"${ans !== null ? ' disabled' : ''}>${esc(o)}</button>`).join('')}</div>
@@ -9426,7 +9549,7 @@ function gwDoneHTML() {
     const bonus = coinOnce('tree:' + t.id, 30); Q.coins += bonus + dailyBonus(); save();
     setTimeout(() => coinToast(Q.coins, 'cards'), 300);
   }
-  const nx = GARDEN.find(x => !g.done[x.id] && x !== t);
+  const nx = (G_THEMES.find(x => x.id === t.theme) || { trees:[] }).trees.map(id => GBY[id]).find(x => x && !g.done[x.id] && x !== t) || GARDEN.find(x => !g.done[x.id] && x !== t);
   return `<div class="gwdone">${gwTreeSVG(t, true)}<h3>🌸 ${esc(t.base)}: Der Baum blüht!<small class="en2">The tree is in bloom!</small></h3>
     <p class="wq">${Q.ok} / ${Q.list.length} richtig${Q.coins ? ` · 🪙 +${Q.coins}` : ''}</p>
     <div class="row2"><button class="btn center" type="button" data-gdo="run">🏃 Im Runner üben<small class="en2">Practise these words in the runner</small></button><button class="btn center" type="button" data-gdo="write">✍️ Tippen<small class="en2">Type these words</small></button></div>
