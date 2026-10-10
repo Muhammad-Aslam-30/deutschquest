@@ -210,6 +210,10 @@ button.trch:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shado
 .stwait{text-align:center;padding:30px 0;font-size:17px}
 .stwait .typing{margin:0 auto 10px}
 #hTabs{margin:10px 0 14px}
+.scats{flex-wrap:wrap;margin:6px 0 4px}
+.scath{margin:16px 0 6px;font-size:17px}
+.topics button .srole{display:block;margin-top:3px;font-size:12px;color:var(--grey)}
+.cafe-name span#cRole{white-space:normal}
 .fb .fbchk,.askchat .achk{font-size:13px;color:var(--grey);margin-top:5px;font-weight:600}
 .fb .fbre,.afix .fbre{font-weight:800;margin-bottom:3px}
 .fb .was{font-size:13px;color:var(--grey);margin-top:4px}
@@ -691,7 +695,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 29 grammar topics to run, write and speak, café role-plays, telc B1 exam practice and a 12-week plan.</p>
+      <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 29 grammar topics to run, write and speak, 41 real-life speaking scenes, telc B1 exam practice and a 12-week plan.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="mCoins" class="coinpill" type="button" aria-label="Coins: open the Tresor"></button><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
       <p class="mcheer" id="mCheer" hidden></p>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button><button data-cefr="TR" class="trtab"><svg class="chest" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 10.5Q3 4.5 12 4.5Q21 4.5 21 10.5Z" fill="#C98E57" stroke="#2F3640" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="10" width="18" height="10" rx="1.2" fill="#B07A4A" stroke="#2F3640" stroke-width="1.6"/><rect x="3" y="9.2" width="18" height="2.6" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><path d="M7.5 5.4V20M16.5 5.4V20" stroke="#8A5A33" stroke-width="1.3"/><rect x="10" y="11" width="4" height="4.8" rx="1" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><circle cx="12" cy="13.2" r="0.85" fill="#2F3640"/></svg><span>Tresor</span></button></div>
@@ -702,7 +706,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <p class="modeq" id="modeQ">Was möchten Sie machen?<small class="en2">What would you like to do?</small></p>
       <div class="row2 modes" id="modeRow">
         <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner-Spiel</b><small>Laufen Sie durch die richtigen Tore<small class="en2">Run through the right gates</small></small></span></button>
-        <button class="btn mode" data-mode="cafe"><span class="mi">☕</span><span><b>Sprach-Café</b><small>Sprechen Sie mit Lena<small class="en2">Talk with Lena by voice</small></small></span></button>
+        <button class="btn mode" data-mode="cafe"><span class="mi">🎬</span><span><b>Szenen</b><small>Sprechen Sie mit Lena in echten Situationen<small class="en2">Speak with Lena in real-life scenes</small></small></span></button>
         <button class="btn mode" data-mode="write"><span class="mi">✍️</span><span><b>Schreiben</b><small>Tippen, schreiben, korrigieren lassen<small class="en2">Type, write and get corrected</small></small></span></button>
       </div>
       <div class="levels" id="runBox" style="display:none">
@@ -747,11 +751,10 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <label class="gapset lanepref" id="genRow"><span class="l">🎲 New sentences from Lena<small>Gemini writes a fresh set for every round; each sentence is grammar-checked</small></span><input type="checkbox" id="genNew"></label>
       </div>
       <div id="cafeBox" style="display:none">
-        <p class="cafe-lead">Wählen Sie Ihr Niveau und ein Thema. Lena spricht mit Ihnen und übt dabei: <b id="cafeFocusName">weil / dass</b>.<small class="en2">Pick your level and a topic. Lena chats with you and practises this grammar.</small></p>
+        <p class="cafe-lead">Wählen Sie eine Szene. Lena spielt die passende Rolle und übt dabei mit Ihnen: <b id="cafeFocusName">weil / dass</b>.<small class="en2">Pick a real-life scene. Lena plays the person you would meet there and practises this grammar with you.</small></p>
         <div class="lvlpick" id="cafeLvl"><span>Niveau:</span><button data-lvl="A1">A1</button><button data-lvl="A2">A2</button><button data-lvl="B1">B1</button></div>
-        <div class="topics" id="cafeTopics"></div>
-        <h3>Rollenspiele<small class="en2">Role-plays: everyday situations – Lena plays the waiter, the doctor, the office …</small></h3>
-        <div class="topics" id="cafeRoles"></div>
+        <div class="wlv scats" id="sceneCats" aria-label="Kategorie"></div>
+        <div class="scenes" id="cafeTopics"></div>
       </div>
       <div id="writeBox" style="display:none">
         <p class="cafe-lead">Schreibtraining: <b id="wrFocusName">weil / dass</b> – von einzelnen Wörtern bis zu Briefen im telc-Stil.<small class="en2">Writing practice: from single words to telc-style letters.</small></p>
@@ -907,7 +910,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       </div>
       <div class="cafe-stage">
         <div id="lena" aria-hidden="true"></div>
-        <div class="cafe-name">Lena <span>Barista im Sprach-Café</span></div>
+        <div class="cafe-name">Lena <span id="cRole">Barista</span></div>
       </div>
       <div id="cSetup" class="csetup" style="display:none">
         <h3>Connect Lena to Gemini <small>(once per device)</small></h3>
@@ -3551,7 +3554,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.10-6';
+const APP_VERSION = 'v2026.10.10-7';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4517,7 +4520,58 @@ const CAFE_ROLES = [
   ['r_amt', '🏛️', 'Auf dem Bürgeramt', 'At the citizens’ office', 'Role-play: Lena works at the Bürgeramt. The learner wants to register their new address (Anmeldung). Ask for documents (Pass, Wohnungsgeberbestätigung), go through the form (Name, Geburtsdatum, alte und neue Adresse, Familienstand) and explain what happens next. Use polite, official language (Sie).'],
   ['r_laden', '🛍️', 'Im Geschäft: Reklamation', 'Returning an item in a shop', 'Role-play: Lena is a shop assistant. The learner bought something that is broken or does not fit and wants to exchange it or get the money back. Ask for the receipt (Kassenbon) and what the problem is; offer a repair, an exchange or a voucher (Gutschein) before agreeing to give the money back. Be friendly but follow the shop rules.']
 ];
-const cafeTopic = id => CAFE_TOPICS.find(x => x[0] === id) || CAFE_ROLES.find(x => x[0] === id) || EXAM_TALKS.find(x => x[0] === id);
+
+/* ---- 🎬 Szenen: real-life scenes; in each one Lena plays the person you would really talk to there ----
+   [category, id, emoji, German title, English title, Lena's role (German, shown under her picture), the situation for Gemini].
+   The old café topic and role-play ids are kept, so chats in Past rounds can be continued. */
+const SCENE_CATS = [['kennen', '👋', 'Kennenlernen', 'Getting to know people'], ['aemter', '🏛️', 'Ämter', 'Offices'], ['wohnen', '🏠', 'Wohnen', 'Home'], ['geld', '💶', 'Geld & Verträge', 'Money & contracts'],
+  ['gesund', '🩺', 'Gesundheit', 'Health'], ['alltag', '🛒', 'Alltag', 'Everyday life'], ['arbeit', '💼', 'Arbeit', 'Work'], ['frei', '💬', 'Frei', 'Free talk'], ['exam', '🎓', 'Prüfung', 'Exam']];
+const SCENES = [
+  ['kennen', 'familie', '👪', 'Familie', 'Family', 'deine neue Nachbarin', 'Lena is the learner’s new neighbour; she just moved in next door and meets them in the stairwell. Curious and friendly, she asks about their family: who they live with, brothers and sisters, where the family lives. Use du.'],
+  ['kennen', 'freizeit', '⚽', 'Freizeit & Hobbys', 'Free time & hobbies', 'eine neue Freundin beim Sprachtreff', 'Lena and the learner meet at a language exchange evening (Sprachtreff) in a bar. They talk about hobbies, sport and the weekend, and Lena suggests doing something together. Use du.'],
+  ['kennen', 'lernen', '📚', 'Im Deutschkurs', 'In the German course', 'deine Kurskollegin', 'Lena is a classmate in the learner’s German course, in the break: why they learn German, since when, what is difficult, homework, the exam. Use du.'],
+  ['kennen', 'freunde', '🤝', 'Freunde & Ausgehen', 'Friends & going out', 'eine Freundin', 'Lena is a friend planning an evening out with the learner: where to go (Kino, Restaurant, Konzert), when and where to meet, who else is coming. Use du.'],
+  ['kennen', 'k_geb', '🎂', 'Einladung zum Geburtstag', 'A birthday invitation', 'deine Kollegin mit Geburtstag', 'Lena invites the learner to her birthday party on Saturday: time, address, what to bring. The learner accepts or politely declines and asks questions; then talk about presents and plans. Use du.'],
+  ['kennen', 'wetter', '🌦️', 'Wetter & Jahreszeiten', 'Weather & seasons', 'eine Nachbarin an der Bushaltestelle', 'Lena waits at the bus stop next to the learner and starts small talk about the weather and the seasons, what they like to do in summer and winter, and the weather in the learner’s home country. Start with Sie; offer du later.'],
+  ['aemter', 'r_amt', '🏛️', 'Bürgeramt: Anmeldung', 'Registering your address', 'Sachbearbeiterin im Bürgeramt', 'Lena works at the Bürgeramt. The learner wants to register their new address (Anmeldung). Ask for documents (Pass, Wohnungsgeberbestätigung), go through the form (Name, Geburtsdatum, alte und neue Adresse, Familienstand) and explain what happens next. Polite, official language (Sie).'],
+  ['aemter', 'a_abh', '🛂', 'Ausländerbehörde', 'Immigration office', 'Sachbearbeiterin in der Ausländerbehörde', 'The learner wants to extend their residence permit (Aufenthaltstitel verlängern). Ask for documents (Pass, biometrisches Foto, Arbeitsvertrag, Mietvertrag, Krankenversicherung), the reason for the stay, and explain the next steps (Termin, Gebühr, Wartezeit). Polite, official (Sie).'],
+  ['aemter', 'a_fin', '🧾', 'Finanzamt: Steuer-ID', 'Tax office: tax ID', 'Mitarbeiterin im Finanzamt (Telefon)', 'A phone call: the learner has not received their tax ID (Steuer-Identifikationsnummer) or asks about the tax class (Steuerklasse) after starting a new job. Ask for name, date of birth and address and explain simply. Sie.'],
+  ['aemter', 'a_arb', '📋', 'Agentur für Arbeit', 'Employment agency', 'Beraterin bei der Agentur für Arbeit', 'The learner registers as looking for work (arbeitsuchend melden). Ask about their profession, experience, languages and the job they are looking for, and agree on next steps (Lebenslauf, nächster Termin). Sie.'],
+  ['wohnen', 'r_wohnung', '🔑', 'Wohnungsbesichtigung', 'Viewing a flat', 'Vermieterin', 'Lena is the landlady showing a flat; the learner wants to rent it. Answer questions about the rent (Kaltmiete, Nebenkosten, Kaution), size, rooms, floor and when it is free; ask the learner about their job, pets and smoking. Sie.'],
+  ['wohnen', 'w_verm', '🔥', 'Vermieterin: Heizung kaputt', 'The landlady: broken heating', 'deine Vermieterin (Telefon)', 'The learner calls their landlady because the heating in the flat has been broken for two days. Lena asks since when and in which room, is a bit busy and offers a date for the Handwerker; the learner has to insist politely. If the learner brings it up, also talk about the deposit (Kaution) or giving notice (Kündigung). Sie.'],
+  ['wohnen', 'w_haus', '🔧', 'Der Hausmeister', 'The caretaker', 'Hausmeisterin', 'Something in the building needs repairing (the light in the stairwell, the door of the bike cellar, a blocked drain). The learner explains the problem; Lena asks where and since when and arranges a time. Sie.'],
+  ['wohnen', 'w_nach', '🔊', 'Ärger mit den Nachbarn', 'Trouble with the neighbours', 'deine Nachbarin', 'Lena is the learner’s neighbour. Choose one and say it at the start: her music is too loud late at night, or she asks the learner to take in a parcel, or she explains the rubbish sorting (Mülltrennung: Gelber Sack, Papier, Bio, Restmüll). Friendly but realistic; the learner has to stay polite and find a solution. Start with Sie.'],
+  ['wohnen', 'wohnen', '🏠', 'Wo wohnst du?', 'Where do you live?', 'deine Kollegin in der Mittagspause', 'Lena, a colleague, chats in the lunch break about where the learner lives: the flat, the rooms, the area, the neighbours, how they found it, the rent. Use du.'],
+  ['geld', 'g_bank', '🏦', 'Bei der Bank', 'At the bank', 'Bankberaterin', 'The learner wants to open a current account (Girokonto), or has lost their bank card and needs it blocked (Karte sperren) – ask which at the start. Ask for ID and address, explain costs, online banking, the new card and the PIN. Sie.'],
+  ['geld', 'g_handy', '📱', 'Handy- & Internetvertrag', 'Phone & internet contract', 'Mitarbeiterin im Handyladen', 'The learner wants a new mobile contract, or wants to cancel (kündigen) their internet contract, or complains that the internet has not worked for days – ask which. Explain tariffs, contract length (Laufzeit) and notice period (Kündigungsfrist); for a complaint ask questions and offer a technician. Sie.'],
+  ['geld', 'g_vers', '🛡️', 'Krankenkasse & Versicherung', 'Health insurance', 'Beraterin bei der Krankenkasse', 'The learner has a question at their health insurance (Krankenkasse): the insurance card (Versichertenkarte) has not arrived, or what is paid for (dentist, glasses), or they changed job. Ask for the insurance number and explain simply. Sie.'],
+  ['gesund', 'r_arzt', '🩺', 'Beim Hausarzt', 'At the doctor’s', 'Ärztin in der Hausarztpraxis', 'Lena is the receptionist and then the doctor in a medical practice. Ask for the insurance card (Versichertenkarte), then: Was fehlt Ihnen? Seit wann? Haben Sie Fieber? Give simple advice, a prescription (Rezept) and, if needed, a sick note (Krankschreibung). Sie.'],
+  ['gesund', 'r_termin', '📞', 'Termin am Telefon', 'Making an appointment by phone', 'Mitarbeiterin am Telefon', 'A phone call. Lena works at a doctor’s practice or a hairdresser (choose one and say it at the start). The learner wants an appointment. Offer days and times, say once that a time is not possible, ask for the name (ask them to spell it) and a phone number, and confirm the appointment (am …, um … Uhr). Sie.'],
+  ['gesund', 'ge_apo', '💊', 'In der Apotheke', 'At the pharmacy', 'Apothekerin', 'The learner needs medicine for a cold, a headache or an allergy, or brings a prescription (Rezept). Ask about symptoms, allergies and other medicines; explain how to take it (dreimal täglich nach dem Essen). Sie.'],
+  ['gesund', 'ge_not', '🚑', 'Notfall: 112', 'Emergency call: 112', 'Leitstelle am Notruf 112', 'An emergency PRACTICE call: the learner calls 112 because someone fell and is hurt (or feels very ill). Lena asks the standard questions calmly and quickly: Wo ist der Notfall? Was ist passiert? Wie viele Personen? Ist die Person wach? Atmet sie? Wer ruft an? Keep the learner calm, give simple instructions and say that help is coming. Short and clear; never graphic. Sie.'],
+  ['gesund', 'gesundheit', '🫖', 'Wie geht es dir?', 'How are you feeling?', 'eine Freundin', 'Lena is a friend who notices the learner looks tired or ill. Talk about how they feel, tips (Tee, schlafen, Sport), healthy habits and when to see a doctor. Use du.'],
+  ['alltag', 'essen', '☕', 'Im Café', 'At the café', 'Barista', 'Lena is the barista in a small café in Berlin. The learner orders coffee and cake; Lena recommends something, asks about size and milk, hier oder zum Mitnehmen, and chats a little about food and drinks the learner likes. du is fine in a Berlin café.'],
+  ['alltag', 'r_rest', '🍽️', 'Im Restaurant', 'In a restaurant', 'Kellnerin', 'Lena is the waitress in a restaurant, the learner is the guest. Greet them, offer a table, tell them 4–5 dishes and drinks with prices (invent a small menu), take the order, react to special wishes (ohne Fleisch, scharf?), later bring the bill and ask "Zusammen oder getrennt?". Sie.'],
+  ['alltag', 'al_super', '🛒', 'Supermarkt: an der Kasse', 'At the supermarket checkout', 'Kassiererin', 'At the supermarket checkout: Lena scans the items and asks "Brauchen Sie eine Tüte?", "Haben Sie eine Payback-Karte?", "Mit Karte oder bar?". The learner asks about Pfand (bottle deposit) or something they could not find. Sie.'],
+  ['alltag', 'einkaufen', '🛍️', 'Kleidung kaufen', 'Buying clothes', 'Verkäuferin', 'Lena is a shop assistant in a clothes shop. The learner is looking for something (Jacke, Schuhe): size, colour, price, the fitting room (Umkleidekabine), a discount. Sie.'],
+  ['alltag', 'r_laden', '↩️', 'Umtausch & Reklamation', 'Returning an item', 'Verkäuferin', 'Lena is a shop assistant. The learner bought something that is broken or does not fit and wants to exchange it or get the money back. Ask for the receipt (Kassenbon) and the problem; offer a repair, an exchange or a voucher (Gutschein) before agreeing to give the money back. Friendly, but follow the shop rules. Sie.'],
+  ['alltag', 'al_post', '📦', 'Post & Paketshop', 'Post office & parcels', 'Mitarbeiterin in der Postfiliale', 'The learner got a slip (Benachrichtigungskarte) because a parcel was not delivered, or wants to send a parcel abroad (e.g. to India) – ask which. Ask for ID and the slip, or weigh the parcel and explain prices, the customs form (Zollerklärung) and delivery time. Sie.'],
+  ['alltag', 'r_bahn', '🚆', 'Bahnhof: Fahrkarte kaufen', 'Buying a train ticket', 'Mitarbeiterin am DB-Schalter', 'Lena works at the ticket counter of the Deutsche Bahn. The learner wants a ticket. Ask: wohin, wann, einfach oder hin und zurück, erste oder zweite Klasse, BahnCard? Give departure times, the platform (Gleis), changes (umsteigen in …) and the price. Sie.'],
+  ['alltag', 'al_versp', '⏰', 'Der Zug hat Verspätung', 'The train is late or cancelled', 'DB-Mitarbeiterin am Bahnsteig', 'The learner’s train is late (Verspätung) or cancelled (fällt aus). Lena from the Deutsche Bahn explains the alternatives (nächster Zug, umsteigen, anderes Gleis), whether the ticket is still valid and how to get money back (Fahrgastrechte-Formular). Sie.'],
+  ['alltag', 'al_kontr', '🎫', 'Fahrkartenkontrolle', 'Ticket check on the bus', 'Kontrolleurin im Bus', 'A ticket inspector on the bus: "Die Fahrkarten, bitte!" The learner shows a ticket that is not valid for this zone, or cannot show their Deutschlandticket on the phone. Lena explains the problem, the fine (erhöhtes Beförderungsentgelt, 60 Euro) and what can be done (a personal ticket can be shown later at the service centre). Friendly but firm. Sie.'],
+  ['alltag', 'al_fris', '✂️', 'Beim Friseur', 'At the hairdresser', 'Friseurin', 'At the hairdresser: Lena asks how the learner would like their hair (kürzer, nur die Spitzen, waschen?), makes small talk and tells the price. Sie.'],
+  ['alltag', 'r_weg', '🗺️', 'Nach dem Weg fragen', 'Asking for directions', 'eine Passantin', 'The learner is new in a German town and asks Lena, a passer-by, the way to the station, a pharmacy or the town hall. Give directions with geradeaus, links, rechts, an der Ampel, die zweite Straße, gegenüber, neben, über die Brücke. Ask the learner to repeat the way back to you, and correct it kindly. Sie.'],
+  ['alltag', 'stadt', '🏙️', 'Touristeninformation', 'At the tourist information', 'Mitarbeiterin in der Touristeninformation', 'The learner is at the tourist information: sights, opening hours, a city map, events this weekend, how to get there by bus or U-Bahn. Sie.'],
+  ['alltag', 'reisen', '✈️', 'Im Reisebüro', 'At the travel agency', 'Mitarbeiterin im Reisebüro', 'Lena works in a travel agency. The learner wants to plan a holiday: where, when, how long, hotel or apartment, budget; Lena makes offers and asks questions. Sie.'],
+  ['arbeit', 'j_int', '🤝', 'Vorstellungsgespräch', 'Job interview', 'Personalerin (Personalabteilung)', 'A job interview. Lena from the HR department (Personalabteilung) interviews the learner: introduce yourself, education and experience, why this job, strengths and weaknesses, when could you start, salary expectations. Formal (Sie); at the end the learner may ask questions.'],
+  ['arbeit', 'j_tag1', '🏢', 'Erster Arbeitstag', 'First day at work', 'deine neue Kollegin', 'It is the learner’s first day in a new job. Lena, a friendly colleague, welcomes them, shows them around (Büro, Küche, Kantine, Drucker), explains working hours and breaks and introduces the team. Use du (the team says du).'],
+  ['arbeit', 'arbeit', '💼', 'Kaffeepause', 'Coffee break with colleagues', 'eine Kollegin', 'Coffee break at work: Lena, a colleague, makes small talk about the job, what exactly the learner does, the weekend and holiday plans. Use du.'],
+  ['arbeit', 'j_krank', '🤒', 'Krankmeldung', 'Calling in sick', 'deine Chefin (Telefon)', 'Early in the morning the learner is ill and calls their boss (Lena) to say they cannot come to work. Lena asks what is wrong, for how long, whether they will get a sick note from the doctor (Krankschreibung) and who can take over today’s appointment; she wishes them a quick recovery. Sie.'],
+  ['frei', 'frei', '💬', 'Freies Gespräch', 'Anything you like', 'eine Freundin', 'Lena is a friend. Let the learner choose what to talk about. Use du.']
+];
+const SCENE_BY = Object.fromEntries(SCENES.map(([cat, id, e, de, en, role, sit]) => [id, [id, e, de, en, sit, role, cat]]));
+const cafeTopic = id => SCENE_BY[id] || CAFE_TOPICS.find(x => x[0] === id) || CAFE_ROLES.find(x => x[0] === id) || EXAM_TALKS.find(x => x[0] === id);
+const sceneRole = t => t[5] || (C.focus === 'exam' ? 'Partnerin in der telc-Prüfung' : 'Gesprächspartnerin');
 CAFE_FOCUS.exam = { name:'telc B1 Sprechen', prompt:'This is practice for the oral telc B1 exam (level B1). Act like a friendly exam partner, not a teacher: keep your own turns short (2–3 sentences) so the learner speaks more than you, and use the typical phrases of the exam (Wie wäre es, wenn …? Was hältst du davon? Meiner Meinung nach …). In the feedback, besides mistakes, say when an answer is too short for B1 and show a longer, connected answer (weil, dass, deshalb, zum Beispiel).' };
 const LENA_SVG = `<svg class="lena-svg" viewBox="0 0 200 222" xmlns="http://www.w3.org/2000/svg">
   <circle cx="100" cy="112" r="98" fill="#F3E6D3"/>
@@ -4605,12 +4659,12 @@ const REPLY_SCHEMA = { type:'OBJECT', properties:{
   required:['reply_de', 'reply_en', 'grammar_note', 'feedback_ok', 'feedback_corrected', 'feedback_explanation'] };
 function cafeSystem() {
   const t = cafeTopic(C.topic), lvl = S.cafeLevel || 'A2';
-  return `You are Lena, a warm, cheerful young barista in a "Sprach-Café" in Berlin. You chat in German with a language learner (CEFR level ${lvl}).
-Topic of the conversation: ${t[2]} (${t[3]}). ${t[0] === 'frei' ? 'Let the learner choose what to talk about.' : ''}
+  return `You are Lena. You help a language learner (CEFR level ${lvl}) practise speaking German in real-life scenes. In THIS scene you play this role: ${sceneRole(t)}. Stay in that role for the whole conversation and talk exactly like that person would in real life (you are NOT a barista unless that is your role).
+Scene: ${t[2]} (${t[3]}). ${t[0] === 'frei' ? 'Let the learner choose what to talk about.' : ''}
 ${CAFE_FOCUS[C.focus].prompt}${t[4] ? '\nThe situation: ' + t[4] : ''}
 Rules:
 - Be correct: before judging the learner's message, check its grammar step by step. Only call something wrong if it really is wrong, and make grammar_note and feedback_explanation accurate.
-- reply_de: natural, friendly spoken German at ${lvl} level, 1 to 3 short sentences. Use the grammar focus yourself, and always end with ONE question that stays on the topic and makes the learner use the grammar focus. Never use English in reply_de.
+- reply_de: natural spoken German at ${lvl} level, the way your role would speak (friendly, but formal or firm where the role needs it), 1 to 3 short sentences. Use the grammar focus yourself, and always end with ONE question that stays on the topic and makes the learner use the grammar focus. Never use English in reply_de.
 - reply_en: an accurate English translation of reply_de.
 - grammar_note: 1-2 short sentences in simple English explaining the grammar in reply_de, especially the grammar focus (e.g. why the verb is at the end after "weil", or why "dem" is Dativ after "mit").
 - feedback_*: judge ONLY the learner's last message. ${C.write ? 'The learner TYPES their messages (this is a writing chat): also check spelling, capital letters of nouns, umlauts and commas, and set feedback_category to the main mistake type, exactly one of: ' + ERR_CATS.join(', ') + ' (or "" if correct).' : 'Ignore missing capital letters and punctuation (it comes from speech recognition).'} If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
@@ -5222,7 +5276,7 @@ async function saveKey() {
     setTimeout(() => { showKeySetup(false); $('#cChat .b.sys').forEach(b => b.remove()); if (!C.started) cafeStart(); }, 700);
   } catch (e) { $('#cKeyMsg').textContent = (e.message === 'key' ? 'That key was not accepted. Copy it again from AI Studio.' : AI_MSG[e.message] || 'Could not connect.') + (e.detail ? ` (Google says: ${e.detail})` : ''); }
 }
-const CAFE_HELLO = '[Start of the conversation. Greet me warmly, introduce yourself in one short sentence and ask your first question about the topic.]';
+const CAFE_HELLO = '[Start of the scene. Greet me the way your role would, say who you are IN YOUR ROLE in one short sentence (e.g. your job or why you are here), and start the situation with your first question.]';
 function cafeGreet() { cafeTurn(CAFE_HELLO, null); }
 // a continued chat starts with Lena welcoming the learner back and picking up where they stopped
 function cafeStart() {
@@ -5252,6 +5306,7 @@ function openCafe(topicId, focus, lvl, write, resume) {
     resume.u = Date.now(); save();
   }
   $('#cTopic').textContent = `${C.write ? '✍️ ' : t[1] + ' '}${t[2]}`;
+  $('#cRole').textContent = '🎭 ' + sceneRole(t);
   $('#cFocus').textContent = `${C.write ? 'Writing chat · ' : ''}${t[3]} · grammar: ${CAFE_FOCUS[C.focus].name} · level ${S.cafeLevel || 'A2'}`;
   $('#cMic').style.display = C.write ? 'none' : '';
   $('#cUml').style.display = C.write ? '' : 'none';
@@ -5267,11 +5322,17 @@ function openCafe(topicId, focus, lvl, write, resume) {
   else { showKeySetup(false); cafeStart(); }
 }
 function closeCafe() { holding = false; vnStop(false); if (recOn && rec) { try { rec.abort(); } catch (e) {} } micUI(false); stopVoice(); show('menu'); }
+let sceneCat = 'alle';
 function renderCafeBox() {
   $('#cafeFocusName').textContent = CAFE_FOCUS[topicKey()].name;
   $$('#cafeLvl button').forEach(b => b.classList.toggle('on', b.dataset.lvl === (S.cafeLevel || 'A2')));
-  if (!$('#cafeTopics').children.length) $('#cafeTopics').innerHTML = CAFE_TOPICS.map(([id, e, de, en]) => `<button data-cafe="${id}"><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small></button>`).join('');
-  if (!$('#cafeRoles').children.length) $('#cafeRoles').innerHTML = CAFE_ROLES.map(([id, e, de, en]) => `<button data-cafe="${id}"><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small></button>`).join('');
+  $('#sceneCats').innerHTML = [['alle', '✨', 'Alle', 'All'], ...SCENE_CATS].map(([k, e, de]) => `<button data-scat="${k}" class="${k === sceneCat ? 'on' : ''}">${e} ${esc(de)}</button>`).join('');
+  const card = (id, e, de, en, role, exam) => `<button data-cafe="${id}"${exam ? ' data-exam="1"' : ''}><span class="te">${e}</span>${esc(de)}<small>${esc(en)}</small><small class="srole">🎭 Lena: ${esc(role)}</small></button>`;
+  const group = ([k, e, de, en]) => {
+    const list = k === 'exam' ? EXAM_TALKS.map(t => card(t[0], t[1], t[2], t[3], 'Partnerin in der telc-Prüfung', 1)) : SCENES.filter(x => x[0] === k).map(x => card(x[1], x[2], x[3], x[4], x[5]));
+    return `<h4 class="scath">${e} ${esc(de)}<small class="en2">${esc(en)}</small></h4><div class="topics">${list.join('')}</div>`;
+  };
+  $('#cafeTopics').innerHTML = SCENE_CATS.filter(c => sceneCat === 'alle' || c[0] === sceneCat).map(group).join('');
 }
 
 /* ================= animated grammar pictures for adjectives + rules pages ================= */
@@ -6355,7 +6416,7 @@ async function genRound(l) {
 function aiStatus(el, e, retry) {
   el.textContent = (AI_MSG[e.message] || 'Something went wrong. Please try again.') + (e.detail ? ` (Google says: ${e.detail})` : '');
   el.classList.add('err');
-  if (e.message === 'nokey' || e.message === 'key') { el.textContent = e.message === 'nokey' ? 'Lena needs your Gemini key to correct texts. Open the Sprach-Café once and connect it (⚙), then come back.' : el.textContent; return; }
+  if (e.message === 'nokey' || e.message === 'key') { el.textContent = e.message === 'nokey' ? 'Lena needs your Gemini key to correct texts. Open 🎬 Szenen once and connect it (⚙), then come back.' : el.textContent; return; }
   if (retry) { const b = document.createElement('button'); b.className = 'linkbtn'; b.textContent = '↻ Try again'; b.style.marginLeft = '8px'; b.onclick = () => { el.textContent = ''; el.classList.remove('err'); retry(); }; el.appendChild(b); }
 }
 
@@ -6652,7 +6713,7 @@ const cafeTopicOf = h => cafeTopic(h.tp) || [h.tp, '💬', h.tp, ''];
 const cafeCount = h => { const us = h.m.filter(x => x.r === 'u'); return [us.filter(x => x.ok).length, us.length]; };
 function cafeRow(h, i) {
   const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
-  return `<button class="hrow cafe" data-h="${i}"><b class="score">${ok}/${n}</b><b>${h.w ? '✍️ Writing chat' : '☕ Sprach-Café'}</b> · ${t[1]} ${esc(t[2])}<span>${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${n} sentence${n === 1 ? '' : 's'} ${h.w ? 'written' : 'spoken'} · ${when(h.u || h.t)}</span></button>`;
+  return `<button class="hrow cafe" data-h="${i}"><b class="score">${ok}/${n}</b><b>${h.w ? '✍️ Writing chat' : '🎬 Szene'}</b> · ${t[1]} ${esc(t[2])}<span>${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${n} sentence${n === 1 ? '' : 's'} ${h.w ? 'written' : 'spoken'} · ${when(h.u || h.t)}</span></button>`;
 }
 const cafeChatHTML = h => '<div class="chat hchat">' + cafeBubbles(h.m) + '</div>';
 function cafeBubbles(m) {
@@ -6696,7 +6757,7 @@ function openHist(i) {
   if (h.k === 'cafe') {
     const t = cafeTopicOf(h), [ok, n] = cafeCount(h);
     $('#hdTitle').textContent = `☕ ${t[2]}`;
-    $('#hdSub').textContent = `Sprach-Café with Lena · ${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${ok} of ${n} sentences correct · ${when(h.t)}. Tap 🌐 for translations.`;
+    $('#hdSub').textContent = `Szene with Lena · ${(CAFE_FOCUS[h.f] || CAFE_FOCUS.wd).name} · level ${h.lv} · ${ok} of ${n} sentences correct · ${when(h.t)}. Tap 🌐 for translations.`;
     $('#hdList').innerHTML = cafeChatHTML(h); $('#hdPlay').textContent = 'Continue this chat';
     show('histD'); $('#histD').scrollTop = 0; return;
   }
@@ -7639,9 +7700,9 @@ function planStep([ty, a, n]) {
   if (ty === 'lv') return { done:levelPassed(a), label:LEVEL_NAME[a] || xLevelName(a), go:() => startLevel(a) };
   if (ty === 'wz') { const i = WZT.findIndex(t => t[0] === a); return { done:!!(S.pass || {})[101 + i] || (S.history || []).some(h => h.l === 101 + i && !h.q), label:`Wortschatz · ${wzName(a)}`, go:() => startLevel(101 + i) }; }
   if (ty === 'ex') return { done:exDone(a) >= n, label:`${EX_MOD[a][0]}: ${n} ${n > 1 ? 'tasks' : 'task'} (${Math.min(exDone(a), n)}/${n})`, go:() => { S.exTab = a.startsWith('sb') ? 'sb' : a; save(); renderMenu(); $('#examBox').scrollIntoView({ block:'start' }); } };
-  if (ty === 'cafe') return { done:chatsDone() >= a, label:`☕ Talk with Lena in the Sprach-Café (${Math.min(chatsDone(), a)}/${a})`, go:() => { S.cefr = topicTab(S.topic); cafeMode = 'cafe'; save(); renderMenu(); } };
+  if (ty === 'cafe') return { done:chatsDone() >= a, label:`🎬 Talk with Lena in a Szene (${Math.min(chatsDone(), a)}/${a})`, go:() => { S.cefr = topicTab(S.topic); cafeMode = 'cafe'; save(); renderMenu(); } };
   if (ty === 'telc') return { done:telcDone() >= a, label:`✍️ Write a TELC letter (${Math.min(telcDone(), a)}/${a})`, go:() => { S.exTab = 'sch'; save(); renderMenu(); } };
-  if (ty === 'role') { const t = CAFE_ROLES.find(x => x[0] === a); return { done:chatsDone(a) > 0, label:`☕ Rollenspiel: ${t[2]}`, go:() => openCafe(a) }; }
+  if (ty === 'role') { const t = CAFE_ROLES.find(x => x[0] === a); return { done:chatsDone(a) > 0, label:`🎬 Szene: ${t[2]}`, go:() => openCafe(a) }; }
   const p = SPR.find(x => x.id === a);
   return { done:chatsDone(a) > 0, label:`🗣️ Sprechen ${p.part}`, go:() => { S.exTab = 'spr'; save(); renderMenu(); } };
 }
@@ -7656,7 +7717,7 @@ function planHTML() {
   }).join('');
 }
 const taskBtn = (mod, t) => { const r = exScore(t.id); return `<button data-exam="${mod}" data-task="${t.id}"><span class="te">${t.icon || EX_MOD[mod][2]}</span>${esc(t.title)}<small>${r ? `zuletzt ${r.l} % · beste ${r.b} %` : 'noch nicht geübt'}</small></button>`; };
-const genBtn = (mod, label) => lsGet(AI_KEY) ? `<button class="btn center exgen" data-exgen="${mod}">🎲 ${label}</button>` : '<p class="note">🎲 With a Gemini key (connect it once in the Sprach-Café), Lena can write new tasks for you.</p>';
+const genBtn = (mod, label) => lsGet(AI_KEY) ? `<button class="btn center exgen" data-exgen="${mod}">🎲 ${label}</button>` : '<p class="note">🎲 With a Gemini key (connect it once in 🎬 Szenen), Lena can write new tasks for you.</p>';
 function renderExamBox() {
   const tab = S.exTab || 'plan';
   let h = `<div class="extabs">${EX_TABS.map(([k, e, n]) => `<button data-extab="${k}" class="${k === tab ? 'on' : ''}"><span>${e}</span>${n}</button>`).join('')}</div>`;
@@ -8012,7 +8073,7 @@ async function askSend(text, wav) {
   text = (text || '').trim(); if ((!text && !wav) || ASK.busy) return;
   $('#askText').value = '';
   const mine = { r:'u', t:text || '🎤 …' };
-  if (!lsGet(AI_KEY)) { ASK.msgs.push(mine, { r:'l', t:'Ich brauche zuerst deinen Gemini-Schlüssel (⚙ im Sprach-Café). / I need your Gemini key first (⚙ in the Sprach-Café).' }); askRender(); return; }
+  if (!lsGet(AI_KEY)) { ASK.msgs.push(mine, { r:'l', t:'Ich brauche zuerst deinen Gemini-Schlüssel (⚙ in 🎬 Szenen). / I need your Gemini key first (⚙ in 🎬 Szenen).' }); askRender(); return; }
   ASK.msgs.push(mine); ASK.busy = true; askRender();
   const turns = ASK.msgs.slice(-12, wav ? -1 : undefined).map(m => `${m.r === 'u' ? 'Learner' : 'Lena'}: ${m.t}`).join('\n');
   try {
@@ -8334,7 +8395,7 @@ function renderTresor() {
     return `<div class="trch lock"><span class="trn">${i + 1}</span><span class="trt"><b>🔒 Kapitel ${i + 1}</b></span></div>`;
   }).join('');
   const how = [['Runner: jede richtige Antwort', 'each correct answer', '1'], ['Runde ohne Fehler · neuer Rekord', 'perfect round · new best', '+5 · +5'], ['Level zum ersten Mal bestanden', 'level passed for the first time', '+20'], ['Schreiben: jede richtige Antwort', 'writing: each correct answer', '2'], ['Karteikarten: jede Karte', 'flashcards: each card (40 a day)', '1'],
-    ['Sprach-Café: jede Antwort an Lena', 'café: each answer to Lena (30 per chat)', '3'], ['Freies Schreiben · telc-Aufgabe', 'free writing · exam task', '10 · 15'], ['Erste Übung des Tages', 'first activity of the day: 5 + streak days', 'bis 25'], ['Erster Boss · Thema geschafft', 'first boss · whole topic finished', '25 · 50']];
+    ['Szenen: jede Antwort an Lena', 'scenes: each answer to Lena (30 per scene)', '3'], ['Freies Schreiben · telc-Aufgabe', 'free writing · exam task', '10 · 15'], ['Erste Übung des Tages', 'first activity of the day: 5 + streak days', 'bis 25'], ['Erster Boss · Thema geschafft', 'first boss · whole topic finished', '25 · 50']];
   $('#tresorBox').innerHTML = `<div class="trhead">${CHEST(46)}<div class="trti"><h3>Tresor<small class="en2">The vault: spend your coins on rewards</small></h3></div><div class="trbal">🪙 ${bal}</div></div>
     <div class="trseason"><div class="trst">📖 Lenas Geschichte · Staffel 1: „${esc(STORY.title)}“<small class="en2">A thriller in 8 chapters, written in the German you already know. Each chapter: 🪙 ${price}.</small></div>${rows}</div>
     <details class="trhow"><summary>🪙 So verdienst du Münzen<small class="en2">How to earn coins</small></summary><table class="gtab">${how.map(([de, en, n]) => `<tr><td>${esc(de)}<small class="en2">${esc(en)}</small></td><td><b>${esc(n)}</b></td></tr>`).join('')}</table>
@@ -8564,7 +8625,7 @@ function renderWords() {
   $('#wLevels').innerHTML = WLEVELS.map(([k, n]) => `<button data-wl="${k}" class="${k === wLevel ? 'on' : ''}">${n} <small>${cnt(k)}</small></button>`).join('');
   $('#wTiles').innerHTML = wLevel === 'all' ? '' : groups.filter(g => g.lv === wLevel).map(g => `<button class="wtile${g.key === wTopic ? ' on' : ''}${g.list.length ? '' : ' empty'}" data-wt="${g.key}"><span class="te">${g.icon}</span><b>${esc(g.name)}</b><small>${g.list.length}</small></button>`).join('');
   const shown = wShown(groups), total = shown.reduce((n, g) => n + g.list.length, 0), single = wTopic !== 'all';
-  const none = wTab === 'star' ? 'No starred words here yet. Tap ★ next to any word in a round, on the new-word cards, or select a word in Lena’s messages in the Sprach-Café.' : 'No words seen here yet. Play a round of this topic to meet your first words.';
+  const none = wTab === 'star' ? 'No starred words here yet. Tap ★ next to any word in a round, on the new-word cards, or select a word in Lena’s messages in 🎬 Szenen.' : 'No words seen here yet. Play a round of this topic to meet your first words.';
   $('#wList').innerHTML = total ? shown.filter(g => g.list.length).map(g => `${single ? '' : `<h3 class="wgroup">${g.icon} ${esc(g.name)} <small>· ${g.list.length}</small></h3>`}${g.list.map(wordItemHTML).join('')}`).join('') : `<div class="empty">${none}</div>`;
   const nn = notesFor(shown).length;
   $('#wCards').textContent = total + nn ? `🃏 Karteikarten (${total + nn})` : '🃏 Karteikarten';
@@ -8719,7 +8780,8 @@ document.addEventListener('change', e => { if (!e.target.matches('[data-lanepref
 $('#genNew').addEventListener('change', e => { S.genNew = e.target.checked; save(); });
 $$('#menu .btn.mode').forEach(b => b.addEventListener('click', () => { cafeMode = b.dataset.mode; $('#menuMsg').textContent = ''; renderMenu(); }));
 $('#cafeLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderCafeBox(); } });
-['#cafeTopics', '#cafeRoles'].forEach(id => $(id).addEventListener('click', e => { const b = e.target.closest('[data-cafe]'); if (b) openCafe(b.dataset.cafe); }));
+$('#cafeTopics').addEventListener('click', e => { const b = e.target.closest('[data-cafe]'); if (b) b.dataset.exam ? openCafe(b.dataset.cafe, 'exam', 'B1') : openCafe(b.dataset.cafe); });
+$('#sceneCats').addEventListener('click', e => { const b = e.target.closest('[data-scat]'); if (b) { sceneCat = b.dataset.scat; renderCafeBox(); } });
 $('#cafe').addEventListener('pointerdown', unlockAudio, true); $('#cafe').addEventListener('keydown', unlockAudio, true);
 $('#cBack').addEventListener('click', closeCafe);
 $('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setAttribute('aria-pressed', C.slow); });
