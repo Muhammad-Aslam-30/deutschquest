@@ -112,6 +112,48 @@ html.dark .profpop{background:#1E252C}
 .profpop .plist .pbtn .pav{width:32px;height:32px;flex:0 0 32px;font-size:15px}
 .profpop .pnote{font-size:12px;color:var(--grey);margin:10px 0 0;line-height:1.4}
 .profpop .pout{margin-top:10px;background:transparent}
+.gbig{font-size:40px}
+.gcard .gstate{display:block;margin-top:6px;font-size:12.5px;font-weight:700;color:var(--grey)}
+.gcard.bloom{border-color:#97C459 !important;background:rgba(151,196,89,.14)}
+#cefrTabs button.glow,.gcard.glow{position:relative;animation:wgglow 1.8s ease-in-out infinite}
+@keyframes wgglow{0%,100%{box-shadow:0 0 0 2px rgba(99,153,34,.55),0 0 6px rgba(99,153,34,.35)}50%{box-shadow:0 0 0 3px rgba(99,153,34,.9),0 0 18px rgba(151,196,89,.9)}}
+@media (prefers-reduced-motion:reduce){#cefrTabs button.glow,.gcard.glow{animation:none;box-shadow:0 0 0 3px rgba(99,153,34,.8)}}
+.gacts{margin:6px 0 4px}
+.gtsteps{margin:10px 0 12px;flex-wrap:wrap}
+.gtour .gtlena{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.gtour .gtav{font-size:34px}
+.gtour .stp{font-size:19px;line-height:1.6}
+.gwhl{color:#0F6E56}
+html.dark .gwhl{color:#5DCAA5}
+html.dark .gwword b{filter:brightness(1.35)}
+.gwtree{display:block;width:100%;max-width:640px;margin:4px auto 6px;overflow:visible}
+.gwbr{stroke-dasharray:600;stroke-dashoffset:600;animation:gwgrow .9s ease-out forwards;animation-delay:var(--d)}
+.gwleaf{cursor:pointer;opacity:0;animation:gwpop .45s ease-out forwards;animation-delay:var(--d)}
+.gwleaf:focus{outline:none}.gwleaf:focus rect,.gwleaf:hover rect{stroke-width:5}
+.gwbloom{opacity:0;animation:gwpop .6s ease-out forwards;animation-delay:var(--d)}
+@keyframes gwgrow{to{stroke-dashoffset:0}}
+@keyframes gwpop{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.gwbr,.gwleaf,.gwbloom{animation:none;opacity:1;stroke-dashoffset:0}}
+.gwlegend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:13px;font-weight:700;margin:2px 0}
+.gwlegend span{display:inline-flex;align-items:center;gap:4px}
+.gwlegend small{font-weight:500;color:var(--grey);margin-left:3px}
+.gwlegend i{display:inline-block;width:12px;height:12px;border-radius:4px}
+.gwcard{border:1px solid var(--line);border-radius:18px;padding:12px;background:var(--white)}
+.gwcard .gwpic{max-width:360px;margin:0 auto 8px}
+.gwword{font-size:24px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gwword .star{margin-left:auto}
+.gwmean{font-size:17px;font-weight:600;margin:2px 0 4px}
+.gwex{margin-top:8px}
+.gwgame .gwprog{height:6px;border-radius:9px;background:rgba(47,54,64,.12);overflow:hidden}
+.gwgame .gwprog i{display:block;height:100%;background:var(--blue)}
+.gwqn{text-align:right;font-size:13px;color:var(--grey);margin:4px 0}
+.gwask{text-align:center;margin:8px 0 12px}
+.gwemo{font-size:46px;display:block}
+.gwopts{display:grid;gap:8px}
+.gwopts .btn{margin:0;width:100%}
+.gwfb{margin:12px 0 8px;font-size:17px;padding:10px 12px;border-radius:14px}
+.gwfb.ok{background:rgba(62,142,99,.14)}.gwfb.bad{background:rgba(217,103,91,.14)}
+.gwdone{text-align:center}
 .appfoot{margin:22px 0 0;text-align:center;font-size:12px;color:var(--grey)}   /* the version, at the very bottom of the menu */
 .menu .streakline .sq{width:14px;height:14px;background:var(--yellow);border:calc(2px * var(--bwk)) solid var(--line)}
 .menu .levels{display:grid;gap:12px}
@@ -764,11 +806,12 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       <p class="tag">German from A1 to B1: 29 grammar topics to run, write and speak, 41 real-life speaking scenes, telc B1 exam practice and a 12-week plan.</p>
       <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="mCoins" class="coinpill" type="button" aria-label="Coins: open the Tresor"></button></div>
       <p class="mcheer" id="mCheer" hidden></p>
-      <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button><button data-cefr="TR" class="trtab"><svg class="chest" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 10.5Q3 4.5 12 4.5Q21 4.5 21 10.5Z" fill="#C98E57" stroke="#2F3640" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="10" width="18" height="10" rx="1.2" fill="#B07A4A" stroke="#2F3640" stroke-width="1.6"/><rect x="3" y="9.2" width="18" height="2.6" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><path d="M7.5 5.4V20M16.5 5.4V20" stroke="#8A5A33" stroke-width="1.3"/><rect x="10" y="11" width="4" height="4.8" rx="1" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><circle cx="12" cy="13.2" r="0.85" fill="#2F3640"/></svg><span>Tresor</span></button></div>
+      <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button><button data-cefr="TR" class="trtab"><svg class="chest" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 10.5Q3 4.5 12 4.5Q21 4.5 21 10.5Z" fill="#C98E57" stroke="#2F3640" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="10" width="18" height="10" rx="1.2" fill="#B07A4A" stroke="#2F3640" stroke-width="1.6"/><rect x="3" y="9.2" width="18" height="2.6" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><path d="M7.5 5.4V20M16.5 5.4V20" stroke="#8A5A33" stroke-width="1.3"/><rect x="10" y="11" width="4" height="4.8" rx="1" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><circle cx="12" cy="13.2" r="0.85" fill="#2F3640"/></svg><span>Tresor</span></button><button data-cefr="WG" class="trtab">🌳<span>Wortgarten</span></button></div>
       <div class="tcards" id="topicCards"></div>
       <p class="modeq" id="pickTopic" style="display:none">👆 Wählen Sie ein Thema.<small class="en2">Pick a topic above.</small></p>
       <div id="examBox" style="display:none"></div>
       <div id="tresorBox" style="display:none"></div>
+      <div id="gardenBox" style="display:none"></div>
       <p class="modeq" id="modeQ">Was möchten Sie machen?<small class="en2">What would you like to do?</small></p>
       <div class="row2 modes" id="modeRow">
         <button class="btn mode" data-mode="run"><span class="mi">🏃</span><span><b>Runner-Spiel</b><small>Laufen Sie durch die richtigen Tore<small class="en2">Run through the right gates</small></small></span></button>
@@ -827,6 +870,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <div class="levels">
           <button class="btn blue" data-wl="l1"><span class="shape"></span><span><b>Level 1: Lücke ergänzen</b><small>Die Sätze aus dem Spiel – Sie schreiben die Antwort<small class="en2">The runner sentences, but you type the answer</small></small></span></button>
           <button class="btn red" data-wl="l2"><span class="shape circle"></span><span><b>Level 2: Satz bauen</b><small>Schreiben Sie ganze Satzteile und Sätze selbst<small class="en2">Write whole phrases and clauses yourself</small></small></span></button>
+          <button class="btn green" id="wGarden" type="button"><span class="shape mag">🌳</span><span><b>Wortgarten-Wörter</b><small>Tippen Sie die Wörter aus Ihrem Wortgarten<small class="en2">Type the words you learned in the word garden</small></small></span></button>
           <button class="btn black" data-wl="dik"><span class="shape tri"></span><span><b>🎧 Diktat</b><small>Hören Sie Lena zu und schreiben Sie, was Sie hören<small class="en2">Listen to Lena and write what you hear</small></small></span></button>
         </div>
         <h3>Level 3 · Freies Schreiben <small class="tr">Lena korrigiert · tippen oder mit der Hand schreiben</small><small class="en2">Free writing: Lena corrects it · type or write by hand</small></h3>
@@ -947,6 +991,19 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       </div>
       <div class="sttools"><button class="btn center" id="stRead">🔊 Vorlesen<small class="en2">Read aloud</small></button><button class="btn center" id="stEn" aria-pressed="false">🌐 English<small class="en2">Show the translation</small></button></div>
       <div id="stBody"></div>
+    </div>
+  </section>
+
+  <!-- WORTGARTEN: one tree (word family) -->
+  <section id="gtree" class="screen dim">
+    <div class="panel wpanel">
+      <div class="wtop">
+        <button class="tback" id="gtBack" aria-label="Back to the Wortgarten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="ct"><b id="gtTitle"></b><small id="gtSub"></small></div>
+        <button class="themebtn" type="button"></button>
+      </div>
+      <div class="wlv gtsteps" id="gtSteps"><button data-gstep="tour">🎧 Lenas Tour</button><button data-gstep="explore">🌳 Entdecken</button><button data-gstep="game">🧩 Bau-Spiel</button></div>
+      <div id="gtBody"></div>
     </div>
   </section>
 
@@ -3621,7 +3678,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.11-6';
+const APP_VERSION = 'v2026.10.12-2';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4515,7 +4572,7 @@ function renderMenu() {
   $('#l22s').innerHTML = bi((S.unlockedM || 1) >= 2 ? 'muss nicht oder darf nicht?' : 'Gesperrt: 6 von 8 richtig in Level 1');
   $('#l23s').innerHTML = bi((S.unlockedM || 1) >= 3 ? 'Schneller, plus Nebensatz: …, weil ich arbeiten muss' : 'Gesperrt: 6 von 8 richtig in Level 2');
   [10, 11, 12, 16, 20, 24].forEach(l => { $('#l' + l + 's').innerHTML = bi(isLocked(l) ? 'Gesperrt: öffnet zusammen mit Level 3' : 'Ein Wort ist falsch. Finden Sie es!'); });
-  const tab = renderTopicNav(), exam = tab === 'EX', tres = tab === 'TR', here = !exam && !tres && topicTab(S.topic) === tab;
+  const tab = renderTopicNav(), exam = tab === 'EX', tres = tab === 'TR', gard = tab === 'WG', here = !exam && !tres && !gard && topicTab(S.topic) === tab;
   renderCoins();
   const tp = topicKey();
   $('#lvWd').style.display = tp === 'wd' ? '' : 'none';
@@ -4532,7 +4589,9 @@ function renderMenu() {
   $('#modeQ').style.display = here && !cafeMode ? '' : 'none';
   $('#modeRow').style.display = here ? '' : 'none';
   $('#guide').style.display = here ? '' : 'none';
-  $('#pickTopic').style.display = !exam && !tres && !here ? '' : 'none';
+  $('#pickTopic').style.display = !exam && !tres && !gard && !here ? '' : 'none';
+  $('#gardenBox').style.display = gard ? '' : 'none';
+  if (gard) renderGarden();
   $('#tresorBox').style.display = tres ? '' : 'none';
   if (tres) renderTresor();
   $('#examBox').style.display = exam ? '' : 'none';
@@ -4729,7 +4788,7 @@ function cafeSystem() {
   const t = cafeTopic(C.topic), lvl = S.cafeLevel || 'A2';
   return `You are Lena. You help a language learner (CEFR level ${lvl}) practise speaking German in real-life scenes. In THIS scene you play this role: ${sceneRole(t)}. Stay in that role for the whole conversation and talk exactly like that person would in real life (you are NOT a barista unless that is your role).
 Scene: ${t[2]} (${t[3]}). ${t[0] === 'frei' ? 'Let the learner choose what to talk about.' : ''}
-${CAFE_FOCUS[C.focus].prompt}${t[4] ? '\nThe situation: ' + t[4] : ''}
+${CAFE_FOCUS[C.focus].prompt}${t[4] ? '\nThe situation: ' + t[4] : ''}${gardenPrompt()}
 Rules:
 - Be correct: before judging the learner's message, check its grammar step by step. Only call something wrong if it really is wrong, and make grammar_note and feedback_explanation accurate.
 - reply_de: natural spoken German at ${lvl} level, the way your role would speak (friendly, but formal or firm where the role needs it), 1 to 3 short sentences. Use the grammar focus yourself, and always end with ONE question that stays on the topic and makes the learner use the grammar focus. Never use English in reply_de.
@@ -6499,7 +6558,7 @@ const FREE_PROMPTS = {
 };
 const FOCUS_TASK = { wd:'Use at least three different Nebensätze (weil, dass, wenn, obwohl, ob or a relative clause) and one sentence with denn or deshalb.', mv:'Use at least four different modal verbs (können, müssen, dürfen, wollen, sollen, möchten) and one in a weil / dass clause (…, weil ich arbeiten muss).', pl:'Use at least five nouns in the plural (e.g. zwei Kinder, viele Freunde, die Häuser) and one Dativ plural (e.g. mit meinen Freunden).', tv:'Use at least four separable verbs (e.g. aufstehen, einkaufen, anrufen) and at least one in the Perfekt (e.g. ich habe … eingekauft).', prep:'Use at least four prepositions (e.g. mit, für, in, auf, zu).', adj:'Use at least four adjectives in front of nouns (e.g. ein netter Kollege, die alte Wohnung).' };
 const freeTask = topic => { const t = CAFE_TOPICS.find(x => x[0] === topic) || CAFE_TOPICS[0];
-  return { kind:'free', tp:t[0], lvl:S.cafeLevel || 'A2', title:`${t[1]} ${t[2]}`, situation:FREE_PROMPTS[t[0]], points:[FOCUS_TASK[topicKey()] || `Use the grammar of this topic (${(CAFE_FOCUS[topicKey()] || {}).name || topicInfo(topicKey()).name}) in at least three of your sentences.`, 'Write 4–6 sentences.'], words:[40, 90], minutes:0 }; };
+  return { kind:'free', tp:t[0], lvl:S.cafeLevel || 'A2', title:`${t[1]} ${t[2]}`, situation:FREE_PROMPTS[t[0]], points:[FOCUS_TASK[topicKey()] || `Use the grammar of this topic (${(CAFE_FOCUS[topicKey()] || {}).name || topicInfo(topicKey()).name}) in at least three of your sentences.`, 'Write 4–6 sentences.', ...gardenTaskPoint()], words:[40, 90], minutes:0 }; };
 // TELC practice tasks (exam style; not official exam material)
 const TELC = [
   { id:'a2_geburtstag', lvl:'A2', reg:'informal', title:'Einladung zum Geburtstag', situation:'Deine Freundin Anna schreibt dir: „Hallo! Am Samstag feiere ich meinen Geburtstag. Kommst du? Liebe Grüße, Anna“',
@@ -6907,7 +6966,7 @@ WZT.forEach(([th, name], i) => { XLV[101 + i] = { wz:th, name, n:0 }; });
 const xTopicOf = x => XBY[x.xt];
 const xKindIdx = x => x.xt === 'wz' ? 0 : Math.max(0, xTopicOf(x).ki.indexOf(x.k));
 const xCol = x => XCOL[xKindIdx(x) % XCOL.length];
-const wzName = th => (WZT.find(t => t[0] === th) || [th, 'Wortschatz'])[1];
+const wzName = th => th === 'garten' ? 'Wortgarten' : (WZT.find(t => t[0] === th) || [th, 'Wortschatz'])[1];
 const xKindName = x => x.xt === 'wz' ? wzName(x.k) : (xTopicOf(x).kinds[x.k] || ['']) [0];
 const xRule = x => x.xt === 'wz' ? `<b>${esc(x.w || '')}</b>` : (xTopicOf(x).kinds[x.k] || ['', ''])[1];
 const xTip = x => x.xt === 'wz' ? ['', ''] : [(xTopicOf(x).kinds[x.k] || [])[1], (xTopicOf(x).kinds[x.k] || [])[2]];
@@ -6916,6 +6975,7 @@ const xPrompt = x => esc(x.q).replace('___', '<span class="gap">?</span>');
 // the word cue in grey (arbeiten = to work) and the English sentence below it, so the learner knows which word is meant.
 // If the cue holds the answer itself, it becomes … (warten … = to wait for); a bare infinitive stays (kochen: the task is the form).
 function xCue(x) {
+  if (x.k === 'garten') return '';   // garden words: the prompt already gives the meaning, the cue would give the answer
   const tr = x.t ? `<span class="whint">“${esc(x.t)}”</span>` : '';
   if (!x.w) return tr ? '<br>' + tr : '';
   let w = x.w;
@@ -7726,9 +7786,10 @@ function topicLearned(k) {
 function renderTopicNav() {
   const tab = S.cefr || topicTab(S.topic);
   $$('#cefrTabs button').forEach(b => b.classList.toggle('on', b.dataset.cefr === tab));
+  const wg = $('#cefrTabs [data-cefr="WG"]'); if (wg) { const due = gardenDue(); wg.classList.toggle('glow', !!due); wg.title = due ? 'Zeit für einen neuen Baum! · Time for a new tree' : ''; }
   const next = (TOPICS.find(([k]) => topicStars(k) < 3) || [])[0];
-  $('#topicCards').style.display = tab === 'EX' || tab === 'TR' ? 'none' : '';
-  if (tab !== 'EX' && tab !== 'TR') $('#topicCards').innerHTML = TOPICS.filter(t => t[1] === tab).map(([k]) => {
+  $('#topicCards').style.display = tab === 'EX' || tab === 'TR' || tab === 'WG' ? 'none' : '';
+  if (tab !== 'EX' && tab !== 'TR' && tab !== 'WG') $('#topicCards').innerHTML = TOPICS.filter(t => t[1] === tab).map(([k]) => {
     const t = topicInfo(k), st = topicStars(k), pc = topicLearned(k);
     return `<button class="tcard${k === S.topic ? ' on' : ''}" data-topic="${k}">${k === next ? '<span class="nexttag">NEXT</span>' : ''}<span class="te">${t.icon}</span><b>${esc(t.name)}</b><small>${t.cefr}</small>`
       + `<span class="stars" aria-label="${st} of 3 levels passed">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span><span class="tbar" title="${pc}% learned"><i style="width:${pc}%"></i></span></button>`;
@@ -8463,7 +8524,7 @@ function renderTresor() {
     return `<div class="trch lock"><span class="trn">${i + 1}</span><span class="trt"><b>🔒 Kapitel ${i + 1}</b></span></div>`;
   }).join('');
   const how = [['Runner: jede richtige Antwort', 'each correct answer', '1'], ['Runde ohne Fehler · neuer Rekord', 'perfect round · new best', '+5 · +5'], ['Level zum ersten Mal bestanden', 'level passed for the first time', '+20'], ['Schreiben: jede richtige Antwort', 'writing: each correct answer', '2'], ['Karteikarten: jede Karte', 'flashcards: each card (40 a day)', '1'],
-    ['Szenen: jede Antwort an Lena', 'scenes: each answer to Lena (30 per scene)', '3'], ['Freies Schreiben · telc-Aufgabe', 'free writing · exam task', '10 · 15'], ['Erste Übung des Tages', 'first activity of the day: 5 + streak days', 'bis 25'], ['Erster Boss · Thema geschafft', 'first boss · whole topic finished', '25 · 50']];
+    ['Szenen: jede Antwort an Lena', 'scenes: each answer to Lena (30 per scene)', '3'], ['Freies Schreiben · telc-Aufgabe', 'free writing · exam task', '10 · 15'], ['Wortgarten: Baum fertig · jedes neue Wort', 'word garden: tree finished · each new word', '30 · 2'], ['Erste Übung des Tages', 'first activity of the day: 5 + streak days', 'bis 25'], ['Erster Boss · Thema geschafft', 'first boss · whole topic finished', '25 · 50']];
   $('#tresorBox').innerHTML = `<div class="trhead">${CHEST(46)}<div class="trti"><h3>Tresor<small class="en2">The vault: spend your coins on rewards</small></h3></div><div class="trbal">🪙 ${bal}</div></div>
     <div class="trseason"><div class="trst">📖 Lenas Geschichte · Staffel 1: „${esc(STORY.title)}“<small class="en2">A thriller in 8 chapters, written in the German you already know. Each chapter: 🪙 ${price}.</small></div>${rows}</div>
     <details class="trhow"><summary>🪙 So verdienst du Münzen<small class="en2">How to earn coins</small></summary><table class="gtab">${how.map(([de, en, n]) => `<tr><td>${esc(de)}<small class="en2">${esc(en)}</small></td><td><b>${esc(n)}</b></td></tr>`).join('')}</table>
@@ -8670,10 +8731,727 @@ async function noteSave(k) {
   a.saving = false; askRender();
 }
 
+
+/* ---- 🌳 Wortgarten: 50 word families (one stem, all the words built from it) ----
+   { id, st:[the stem and its other vowel forms], lv, e, base, en, ta, tour:[[German, English] …] (Lena's little story),
+     w:[[word, English, Tamil, emoji, example, example in English] …] }. The building pieces (prefix · stem · ending) are found from st. */
+const GARDEN = [
+  { id:'mach', st:['mach'], lv:'A1', e:'🛠️', base:'machen', en:'to do, to make', ta:'செய்',
+    tour:[['Es ist warm. Lena macht das Fenster auf.', 'It is warm. Lena opens the window.'], ['Am Abend macht sie das Fenster wieder zu und macht das Licht an.', 'In the evening she closes the window again and switches on the light.'], ['„Machst du mit? Wir machen zusammen Kaffee!“', '“Will you join in? We are making coffee together!”']],
+    w:[['machen', 'to do, to make', 'செய்', '🛠️', 'Was machst du heute?', 'What are you doing today?'],
+      ['aufmachen', 'to open', 'திற', '🚪', 'Mach bitte die Tür auf.', 'Please open the door.'],
+      ['zumachen', 'to close', 'மூடு', '🔒', 'Ich mache das Fenster zu.', 'I close the window.'],
+      ['anmachen', 'to switch on', 'இயக்கு (ஆன் செய்)', '💡', 'Kannst du das Licht anmachen?', 'Can you switch on the light?'],
+      ['ausmachen', 'to switch off', 'அணை (ஆஃப் செய்)', '🌙', 'Mach bitte den Fernseher aus.', 'Please switch off the TV.'],
+      ['mitmachen', 'to join in', 'சேர்ந்து பங்கேற்பது', '🙋', 'Machst du beim Spiel mit?', 'Are you joining in the game?'],
+      ['nachmachen', 'to copy, to imitate', 'பார்த்துச் செய்', '🦜', 'Das Kind macht alles nach.', 'The child copies everything.'],
+      ['sauber machen', 'to clean', 'சுத்தம் செய்', '🧽', 'Am Samstag mache ich die Küche sauber.', 'On Saturday I clean the kitchen.']] },
+  { id:'geh', st:['geh', 'gang', 'gäng', 'ging'], lv:'A1', e:'🚶', base:'gehen', en:'to go, to walk', ta:'போ, நட',
+    tour:[['Am Samstag geht Lena aus.', 'On Saturday Lena goes out.'], ['Sie geht durch den Eingang ins Kino. Nach dem Film sucht sie den Ausgang.', 'She goes into the cinema through the entrance. After the film she looks for the exit.'], ['Dann geht sie zu Fuß nach Hause zurück.', 'Then she walks back home.']],
+    w:[['gehen', 'to go, to walk', 'போ, நட', '🚶', 'Ich gehe jeden Tag zur Arbeit.', 'I walk to work every day.'],
+      ['ausgehen', 'to go out', 'வெளியே செல்', '🌃', 'Am Samstag gehen wir aus.', 'On Saturday we go out.'],
+      ['weggehen', 'to leave, to go away', 'விட்டுச் செல்', '👋', 'Wann gehst du weg?', 'When are you leaving?'],
+      ['mitgehen', 'to go along', 'கூடச் செல்', '🤝', 'Gehst du mit ins Kino?', 'Are you coming to the cinema with me?'],
+      ['zurückgehen', 'to go back', 'திரும்பிச் செல்', '↩️', 'Wir gehen jetzt nach Hause zurück.', 'We are going back home now.'],
+      ['vorbeigehen', 'to pass by, to drop in', 'வழியில் சென்று வா', '🥐', 'Ich gehe noch beim Bäcker vorbei.', 'I am dropping in at the baker’s.'],
+      ['der Eingang', 'the entrance', 'நுழைவாயில்', '🚪', 'Der Eingang ist links.', 'The entrance is on the left.'],
+      ['der Ausgang', 'the exit', 'வெளியேறும் வழி', '🏃', 'Wo ist der Ausgang?', 'Where is the exit?'],
+      ['der Fußgänger', 'the pedestrian', 'பாதசாரி', '🚸', 'Der Fußgänger wartet an der Ampel.', 'The pedestrian waits at the traffic light.']] },
+  { id:'komm', st:['komm', 'kam', 'kunft', 'künft'], lv:'A1', e:'🚪', base:'kommen', en:'to come', ta:'வா',
+    tour:[['Heute kommt Lenas Freundin an. Der Zug kommt um acht Uhr an.', 'Lena’s friend arrives today. The train arrives at eight.'], ['„Herzlich willkommen!“, sagt Lena. Die Freundin bekommt Blumen.', '“Welcome!” says Lena. Her friend gets flowers.'], ['„Kommst du morgen mit ins Museum?“', '“Are you coming to the museum with me tomorrow?”']],
+    w:[['kommen', 'to come', 'வா', '🚪', 'Woher kommst du?', 'Where do you come from?'],
+      ['ankommen', 'to arrive', 'வந்து சேர்', '🚉', 'Der Zug kommt um acht Uhr an.', 'The train arrives at eight.'],
+      ['die Ankunft', 'the arrival', 'வருகை', '🛬', 'Die Ankunft ist um zehn Uhr.', 'The arrival is at ten.'],
+      ['mitkommen', 'to come along', 'கூட வா', '🙌', 'Kommst du mit?', 'Are you coming along?'],
+      ['zurückkommen', 'to come back', 'திரும்பி வா', '🔙', 'Wann kommst du zurück?', 'When are you coming back?'],
+      ['bekommen', 'to get, to receive (not “become”!)', 'பெறு', '🎁', 'Ich bekomme ein Geschenk.', 'I get a present.'],
+      ['vorkommen', 'to happen, to occur', 'நடக்கும் (ஏற்படும்)', '❗', 'Das kommt oft vor.', 'That happens often.'],
+      ['die Zukunft', 'the future', 'எதிர்காலம்', '🔮', 'In der Zukunft möchte ich in Berlin wohnen.', 'In the future I would like to live in Berlin.'],
+      ['willkommen', 'welcome', 'வரவேற்பு', '🤗', 'Herzlich willkommen!', 'A warm welcome!']] },
+  { id:'seh', st:['seh', 'sieh', 'sah', 'seh'], lv:'A1', e:'👀', base:'sehen', en:'to see', ta:'பார்',
+    tour:[['Lena sieht aus dem Fenster. Draußen ist eine Sehenswürdigkeit: das alte Schloss.', 'Lena looks out of the window. Outside there is a sight: the old castle.'], ['Am Abend sieht sie fern. „Du siehst müde aus“, sagt ihr Bruder.', 'In the evening she watches TV. “You look tired,” says her brother.']],
+    w:[['sehen', 'to see', 'பார்', '👀', 'Ich sehe das Meer.', 'I can see the sea.'],
+      ['fernsehen', 'to watch TV', 'தொலைக்காட்சி பார்', '📺', 'Abends sehe ich fern.', 'In the evening I watch TV.'],
+      ['der Fernseher', 'the TV set', 'தொலைக்காட்சிப் பெட்டி', '🖥️', 'Der Fernseher ist neu.', 'The TV is new.'],
+      ['aussehen', 'to look (like)', 'தோற்றமளி', '🪞', 'Du siehst müde aus.', 'You look tired.'],
+      ['ansehen', 'to look at', 'கவனித்துப் பார்', '🖼️', 'Sieh dir das Foto an!', 'Look at the photo!'],
+      ['nachsehen', 'to check, to look up', 'சரிபார்', '🔍', 'Ich sehe im Kalender nach.', 'I check in my calendar.'],
+      ['das Wiedersehen', 'the seeing again', 'மீண்டும் சந்திப்பு', '👋', 'Auf Wiedersehen!', 'Goodbye! (until we see again)'],
+      ['die Sehenswürdigkeit', 'the sight, the attraction', 'காண வேண்டிய இடம்', '🏰', 'Das Schloss ist eine Sehenswürdigkeit.', 'The castle is a sight worth seeing.']] },
+  { id:'steh', st:['steh', 'stand', 'ständ', 'stan'], lv:'A1', e:'🧍', base:'stehen', en:'to stand', ta:'நில்',
+    tour:[['Lena steht jeden Morgen um sechs Uhr auf.', 'Lena gets up at six every morning.'], ['Heute hat sie eine Prüfung. Sie versteht alle Fragen – und sie besteht die Prüfung!', 'Today she has an exam. She understands all the questions – and she passes the exam!']],
+    w:[['stehen', 'to stand', 'நில்', '🧍', 'Ich stehe an der Haltestelle.', 'I am standing at the stop.'],
+      ['aufstehen', 'to get up', 'எழுந்திரு', '⏰', 'Ich stehe um sieben Uhr auf.', 'I get up at seven.'],
+      ['verstehen', 'to understand', 'புரிந்துகொள்', '💡', 'Ich verstehe dich nicht.', 'I do not understand you.'],
+      ['das Verständnis', 'the understanding', 'புரிதல்', '🤝', 'Danke für dein Verständnis.', 'Thank you for your understanding.'],
+      ['bestehen', 'to pass (an exam)', 'தேர்ச்சி பெறு', '🎓', 'Ich will die Prüfung bestehen.', 'I want to pass the exam.'],
+      ['entstehen', 'to come into being, to arise', 'உருவாகு', '🌱', 'Hier entsteht ein neues Haus.', 'A new house is being built here.'],
+      ['der Stand', 'the stall, the stand', 'கடை (சந்தைக் கூடம்)', '🍎', 'Am Markt gibt es einen Obststand.', 'There is a fruit stall at the market.'],
+      ['selbstständig', 'independent, self-employed', 'சுயமாக', '💪', 'Sie arbeitet selbstständig.', 'She is self-employed.']] },
+  { id:'nehm', st:['nehm', 'nimm', 'nahm', 'nomm'], lv:'A1', e:'✋', base:'nehmen', en:'to take', ta:'எடு',
+    tour:[['Es regnet. „Nimm einen Schirm mit!“, sagt Lenas Mutter.', 'It is raining. “Take an umbrella with you!” says Lena’s mother.'], ['Lena nimmt am Deutschkurs teil. Am Wochenende unternehmen alle etwas zusammen.', 'Lena takes part in the German course. At the weekend they all do something together.']],
+    w:[['nehmen', 'to take', 'எடு', '✋', 'Ich nehme den Bus.', 'I take the bus.'],
+      ['mitnehmen', 'to take along', 'கூட எடுத்துச் செல்', '🎒', 'Nimm einen Schirm mit!', 'Take an umbrella with you!'],
+      ['teilnehmen', 'to take part', 'பங்கேற்று', '🙋', 'Ich nehme am Kurs teil.', 'I take part in the course.'],
+      ['abnehmen', 'to lose weight; to pick up (the phone)', 'எடை குறை', '⚖️', 'Er hat fünf Kilo abgenommen.', 'He has lost five kilos.'],
+      ['zunehmen', 'to gain weight; to increase', 'எடை கூடு', '🍰', 'Im Winter nehme ich immer zu.', 'In winter I always gain weight.'],
+      ['unternehmen', 'to do (an activity)', 'ஏதாவது செய்', '🎡', 'Was unternehmen wir am Wochenende?', 'What shall we do at the weekend?'],
+      ['das Unternehmen', 'the company', 'நிறுவனம்', '🏢', 'Das Unternehmen hat 200 Mitarbeiter.', 'The company has 200 employees.'],
+      ['die Ausnahme', 'the exception', 'விதிவிலக்கு', '⭐', 'Das ist eine Ausnahme.', 'That is an exception.']] },
+  { id:'geb', st:['geb', 'gib', 'gab'], lv:'A1', e:'🤲', base:'geben', en:'to give', ta:'கொடு',
+    tour:[['Lena hat eine Aufgabe für den Kurs. Sie gibt sie morgen ab.', 'Lena has a task for the course. She hands it in tomorrow.'], ['Sie gibt nicht auf – auch wenn die Aufgabe schwer ist.', 'She does not give up – even if the task is hard.']],
+    w:[['geben', 'to give', 'கொடு', '🤲', 'Gib mir bitte das Salz.', 'Please give me the salt.'],
+      ['abgeben', 'to hand in', 'ஒப்படை', '📨', 'Ich gebe die Hausaufgabe morgen ab.', 'I hand in the homework tomorrow.'],
+      ['ausgeben', 'to spend (money)', 'பணம் செலவழி', '💸', 'Ich gebe zu viel Geld aus.', 'I spend too much money.'],
+      ['aufgeben', 'to give up', 'கைவிடு', '🏳️', 'Gib nicht auf!', 'Don’t give up!'],
+      ['zugeben', 'to admit', 'ஒப்புக்கொள்', '😳', 'Er gibt den Fehler zu.', 'He admits the mistake.'],
+      ['die Aufgabe', 'the task, the exercise', 'பணி, பயிற்சி', '✏️', 'Die Aufgabe ist leicht.', 'The exercise is easy.'],
+      ['die Angabe', 'the detail, the information', 'தகவல்', '📝', 'Bitte prüfen Sie Ihre Angaben.', 'Please check your details.'],
+      ['die Umgebung', 'the surroundings, the area', 'சுற்றுப்புறம்', '🏞️', 'Die Umgebung ist sehr schön.', 'The surroundings are very beautiful.']] },
+  { id:'sprech', st:['sprech', 'sprich', 'sprach', 'spräch', 'sproch'], lv:'A1', e:'🗣️', base:'sprechen', en:'to speak', ta:'பேசு',
+    tour:[['Lena spricht drei Sprachen.', 'Lena speaks three languages.'], ['Heute hat sie eine Besprechung im Büro. Nach dem Gespräch verspricht sie: „Ich rufe Sie morgen an.“', 'Today she has a meeting at the office. After the conversation she promises: “I will call you tomorrow.”']],
+    w:[['sprechen', 'to speak', 'பேசு', '🗣️', 'Sprichst du Deutsch?', 'Do you speak German?'],
+      ['die Sprache', 'the language', 'மொழி', '🌍', 'Deutsch ist eine schöne Sprache.', 'German is a beautiful language.'],
+      ['das Gespräch', 'the conversation', 'உரையாடல்', '💬', 'Das Gespräch war sehr nett.', 'The conversation was very nice.'],
+      ['besprechen', 'to discuss', 'கலந்துரையாடு', '🧑‍🤝‍🧑', 'Wir besprechen das morgen.', 'We will discuss that tomorrow.'],
+      ['die Besprechung', 'the meeting', 'கூட்டம்', '📋', 'Die Besprechung beginnt um neun.', 'The meeting starts at nine.'],
+      ['versprechen', 'to promise', 'வாக்குறுதி கொடு', '🤞', 'Ich verspreche es dir.', 'I promise you.'],
+      ['aussprechen', 'to pronounce', 'உச்சரி', '👄', 'Wie spricht man das aus?', 'How do you pronounce that?'],
+      ['die Aussprache', 'the pronunciation', 'உச்சரிப்பு', '🔊', 'Deine Aussprache ist gut.', 'Your pronunciation is good.'],
+      ['ansprechen', 'to speak to, to address', 'பேசத் தொடங்கு', '🙋', 'Er spricht mich auf Deutsch an.', 'He speaks to me in German.']] },
+  { id:'fahr', st:['fahr', 'fähr', 'fuhr'], lv:'A1', e:'🚗', base:'fahren', en:'to drive, to travel', ta:'(வாகனத்தில்) பயணம் செய்',
+    tour:[['Lena fährt mit dem Fahrrad zum Bahnhof.', 'Lena rides her bike to the station.'], ['Auf dem Fahrplan steht: Abfahrt 8:15 Uhr. Ihr Freund fährt mit. „Gute Fahrt!“', 'The timetable says: departure 8:15. Her friend rides along. “Have a good journey!”']],
+    w:[['fahren', 'to drive, to travel', 'பயணம் செய்', '🚗', 'Ich fahre mit dem Bus.', 'I go by bus.'],
+      ['abfahren', 'to depart', 'புறப்படு', '🚆', 'Der Bus fährt um neun Uhr ab.', 'The bus leaves at nine.'],
+      ['die Abfahrt', 'the departure', 'புறப்பாடு', '🕘', 'Die Abfahrt ist um 8:15 Uhr.', 'Departure is at 8:15.'],
+      ['mitfahren', 'to ride along', 'கூடப் பயணம் செய்', '🚙', 'Fährst du mit?', 'Are you coming along (in the car)?'],
+      ['die Fahrt', 'the journey, the ride', 'பயணம்', '🛣️', 'Gute Fahrt!', 'Have a good journey!'],
+      ['der Fahrer', 'the driver', 'ஓட்டுநர்', '🚕', 'Der Fahrer ist sehr nett.', 'The driver is very nice.'],
+      ['das Fahrrad', 'the bicycle', 'மிதிவண்டி', '🚲', 'Ich fahre gern Fahrrad.', 'I like riding my bike.'],
+      ['der Fahrplan', 'the timetable', 'கால அட்டவணை', '🗓️', 'Wo hängt der Fahrplan?', 'Where is the timetable?'],
+      ['erfahren', 'to find out, to learn about', 'அறிந்துகொள்', '📰', 'Ich habe es gestern erfahren.', 'I found out yesterday.'],
+      ['die Erfahrung', 'the experience', 'அனுபவம்', '🧠', 'Ich habe viel Erfahrung.', 'I have a lot of experience.']] },
+  { id:'schreib', st:['schreib', 'schrieb', 'schrift'], lv:'A1', e:'✍️', base:'schreiben', en:'to write', ta:'எழுது',
+    tour:[['Lena sitzt am Schreibtisch und schreibt eine E-Mail.', 'Lena sits at her desk and writes an email.'], ['Dann unterschreibt sie den Vertrag. „Deine Unterschrift ist schön!“, sagt ihre Kollegin.', 'Then she signs the contract. “Your signature is nice!” says her colleague.']],
+    w:[['schreiben', 'to write', 'எழுது', '✍️', 'Ich schreibe eine E-Mail.', 'I am writing an email.'],
+      ['aufschreiben', 'to write down', 'குறித்துக்கொள்', '📝', 'Schreib die Nummer auf!', 'Write the number down!'],
+      ['abschreiben', 'to copy (from someone)', 'பார்த்து எழுது', '📄', 'Er schreibt die Hausaufgaben ab.', 'He copies the homework.'],
+      ['unterschreiben', 'to sign', 'கையொப்பமிடு', '✒️', 'Bitte unterschreiben Sie hier.', 'Please sign here.'],
+      ['die Unterschrift', 'the signature', 'கையொப்பம்', '🖋️', 'Hier fehlt deine Unterschrift.', 'Your signature is missing here.'],
+      ['beschreiben', 'to describe', 'விவரி', '🖼️', 'Beschreib das Bild!', 'Describe the picture!'],
+      ['die Beschreibung', 'the description', 'விவரணை', '📃', 'Die Beschreibung ist sehr genau.', 'The description is very exact.'],
+      ['der Schreibtisch', 'the desk', 'எழுதும் மேசை', '🪑', 'Der Laptop liegt auf dem Schreibtisch.', 'The laptop is on the desk.']] },
+  { id:'les', st:['les', 'lies', 'las'], lv:'A1', e:'📖', base:'lesen', en:'to read', ta:'படி',
+    tour:[['Am Abend liest Lena ihrem Bruder eine Geschichte vor.', 'In the evening Lena reads a story to her brother.'], ['Danach liest sie ihre E-Mails durch. Die Schrift ist klein, aber lesbar.', 'Then she reads through her emails. The writing is small but readable.']],
+    w:[['lesen', 'to read', 'படி', '📖', 'Ich lese gern Bücher.', 'I like reading books.'],
+      ['vorlesen', 'to read aloud (to someone)', 'சத்தமாக வாசித்துக் காட்டு', '👩‍👧', 'Die Mutter liest eine Geschichte vor.', 'The mother reads a story aloud.'],
+      ['durchlesen', 'to read through', 'முழுவதும் படி', '📑', 'Lies den Text bitte durch.', 'Please read the text through.'],
+      ['ablesen', 'to read off (a meter)', 'அளவைப் படி', '🔢', 'Ich lese den Stromzähler ab.', 'I read the electricity meter.'],
+      ['der Leser', 'the reader', 'வாசகர்', '🤓', 'Die Zeitung hat viele Leser.', 'The newspaper has many readers.'],
+      ['die Lesung', 'the reading (event)', 'வாசிப்பு நிகழ்ச்சி', '🎤', 'Heute Abend gibt es eine Lesung.', 'There is a reading this evening.'],
+      ['lesbar', 'readable', 'படிக்கக்கூடிய', '👁️', 'Die Schrift ist kaum lesbar.', 'The writing is hardly readable.']] },
+  { id:'kauf', st:['kauf', 'käuf'], lv:'A1', e:'🛒', base:'kaufen', en:'to buy', ta:'வாங்கு',
+    tour:[['Lena kauft im Supermarkt ein.', 'Lena does her shopping in the supermarket.'], ['Die Verkäuferin sagt: „Die Tomaten sind leider ausverkauft.“', 'The shop assistant says: “Sorry, the tomatoes are sold out.”']],
+    w:[['kaufen', 'to buy', 'வாங்கு', '🛒', 'Ich kaufe Brot.', 'I buy bread.'],
+      ['einkaufen', 'to go shopping', 'கடைக்குச் சென்று வாங்கு', '🛍️', 'Ich kaufe im Supermarkt ein.', 'I go shopping at the supermarket.'],
+      ['der Einkauf', 'the shopping, the purchase', 'கொள்முதல்', '🧺', 'Der Einkauf war teuer.', 'The shopping was expensive.'],
+      ['verkaufen', 'to sell', 'விற்பனை செய்', '🏷️', 'Er verkauft sein Auto.', 'He is selling his car.'],
+      ['die Verkäuferin', 'the shop assistant (female)', 'விற்பனைப் பெண்', '🧑‍💼', 'Die Verkäuferin ist freundlich.', 'The shop assistant is friendly.'],
+      ['ausverkauft', 'sold out', 'விற்றுத் தீர்ந்தது', '🚫', 'Die Karten sind ausverkauft.', 'The tickets are sold out.'],
+      ['das Kaufhaus', 'the department store', 'பல்பொருள் அங்காடி', '🏬', 'Das Kaufhaus ist im Zentrum.', 'The department store is in the centre.']] },
+  { id:'spiel', st:['spiel'], lv:'A1', e:'⚽', base:'spielen', en:'to play', ta:'விளையாடு',
+    tour:[['Die Kinder spielen auf dem Spielplatz.', 'The children play at the playground.'], ['„Spielst du mit?“, fragt ein Junge. Lena lacht: „Zum Beispiel Fußball?“', '“Are you playing too?” a boy asks. Lena laughs: “Football, for example?”']],
+    w:[['spielen', 'to play', 'விளையாடு', '⚽', 'Wir spielen Fußball.', 'We play football.'],
+      ['das Spiel', 'the game', 'விளையாட்டு', '🎲', 'Das Spiel beginnt um drei.', 'The game starts at three.'],
+      ['der Spieler', 'the player', 'விளையாட்டு வீரர்', '🏃', 'Der Spieler ist sehr schnell.', 'The player is very fast.'],
+      ['mitspielen', 'to play along, to join the game', 'சேர்ந்து விளையாடு', '🙌', 'Darf ich mitspielen?', 'May I play too?'],
+      ['vorspielen', 'to play (music) for someone', 'வாசித்துக் காட்டு', '🎻', 'Sie spielt uns ein Lied vor.', 'She plays a song for us.'],
+      ['das Beispiel', 'the example', 'உதாரணம்', '💡', 'Zum Beispiel: der Apfel.', 'For example: the apple.'],
+      ['das Spielzeug', 'the toy', 'பொம்மை', '🧸', 'Das Kind hat viel Spielzeug.', 'The child has lots of toys.'],
+      ['der Spielplatz', 'the playground', 'விளையாட்டு மைதானம்', '🛝', 'Der Spielplatz ist im Park.', 'The playground is in the park.']] },
+  { id:'arbeit', st:['arbeit'], lv:'A1', e:'💼', base:'arbeiten', en:'to work', ta:'வேலை செய்',
+    tour:[['Lena arbeitet in einem Café. Ihr Arbeitsplatz ist hinter der Theke.', 'Lena works in a café. Her workplace is behind the counter.'], ['Mit ihrer Mitarbeiterin Sara arbeitet sie gut zusammen.', 'She works well together with her colleague Sara.']],
+    w:[['arbeiten', 'to work', 'வேலை செய்', '💼', 'Ich arbeite in einem Büro.', 'I work in an office.'],
+      ['die Arbeit', 'the work, the job', 'வேலை', '🏢', 'Die Arbeit macht mir Spaß.', 'I enjoy the work.'],
+      ['der Arbeiter', 'the worker', 'தொழிலாளி', '👷', 'Die Arbeiter bauen ein Haus.', 'The workers are building a house.'],
+      ['die Mitarbeiterin', 'the colleague, the employee (female)', 'சக பணியாளர் (பெண்)', '👩‍💼', 'Meine Mitarbeiterin heißt Sara.', 'My colleague is called Sara.'],
+      ['zusammenarbeiten', 'to work together', 'சேர்ந்து வேலை செய்', '🤝', 'Wir arbeiten gut zusammen.', 'We work well together.'],
+      ['der Arbeitsplatz', 'the workplace, the job', 'பணியிடம்', '🖥️', 'Mein Arbeitsplatz ist sehr ruhig.', 'My workplace is very quiet.'],
+      ['arbeitslos', 'unemployed', 'வேலையில்லாத', '😔', 'Er ist seit Mai arbeitslos.', 'He has been unemployed since May.'],
+      ['bearbeiten', 'to process, to edit', 'செயலாக்கு', '🖊️', 'Wir bearbeiten Ihren Antrag.', 'We are processing your application.']] },
+  { id:'wohn', st:['wohn', 'wöhn'], lv:'A1', e:'🏠', base:'wohnen', en:'to live (somewhere)', ta:'வசி',
+    tour:[['Lena wohnt in einer kleinen Wohnung in Berlin.', 'Lena lives in a small flat in Berlin.'], ['Das Wohnzimmer ist hell. Berlin hat viele Einwohner – Lena gewöhnt sich langsam an die große Stadt.', 'The living room is bright. Berlin has many inhabitants – Lena is slowly getting used to the big city.']],
+    w:[['wohnen', 'to live (somewhere)', 'வசி', '🏠', 'Ich wohne in Berlin.', 'I live in Berlin.'],
+      ['die Wohnung', 'the flat, the apartment', 'குடியிருப்பு', '🏢', 'Die Wohnung hat drei Zimmer.', 'The flat has three rooms.'],
+      ['das Wohnzimmer', 'the living room', 'வரவேற்பறை', '🛋️', 'Wir sitzen im Wohnzimmer.', 'We are sitting in the living room.'],
+      ['der Wohnort', 'the place of residence', 'வசிக்கும் இடம்', '📍', 'Bitte schreiben Sie Ihren Wohnort.', 'Please write your place of residence.'],
+      ['der Einwohner', 'the inhabitant', 'குடியிருப்பாளர்', '🧑‍🤝‍🧑', 'Berlin hat 3,7 Millionen Einwohner.', 'Berlin has 3.7 million inhabitants.'],
+      ['der Bewohner', 'the resident', 'வசிப்பவர்', '👨‍👩‍👧', 'Alle Bewohner haben einen Schlüssel.', 'All residents have a key.'],
+      ['die Wohngemeinschaft', 'the flat share (WG)', 'பகிர்ந்து வசிக்கும் வீடு', '🏘️', 'Ich wohne in einer Wohngemeinschaft.', 'I live in a flat share.'],
+      ['sich gewöhnen (an)', 'to get used to', 'பழகிக்கொள்', '🔄', 'Ich gewöhne mich an das Wetter.', 'I am getting used to the weather.']] },
+  { id:'ess', st:['ess', 'iss', 'aß', 'gess'], lv:'A1', e:'🍽️', base:'essen', en:'to eat', ta:'சாப்பிடு',
+    tour:[['Zum Mittagessen gibt es Suppe.', 'There is soup for lunch.'], ['Lenas kleiner Bruder isst nicht gern Gemüse. „Iss bitte deinen Teller auf!“', 'Lena’s little brother does not like vegetables. “Please eat up your plate!”']],
+    w:[['essen', 'to eat', 'சாப்பிடு', '🍽️', 'Was isst du gern?', 'What do you like to eat?'],
+      ['das Essen', 'the food, the meal', 'உணவு', '🍲', 'Das Essen ist fertig.', 'The food is ready.'],
+      ['das Mittagessen', 'the lunch', 'மதிய உணவு', '🥗', 'Das Mittagessen ist um zwölf.', 'Lunch is at twelve.'],
+      ['das Abendessen', 'the dinner', 'இரவு உணவு', '🍝', 'Zum Abendessen gibt es Nudeln.', 'There is pasta for dinner.'],
+      ['aufessen', 'to eat up', 'முழுவதும் சாப்பிடு', '😋', 'Iss deinen Teller auf!', 'Eat up your plate!'],
+      ['der Esstisch', 'the dining table', 'சாப்பாட்டு மேசை', '🪑', 'Der Esstisch ist aus Holz.', 'The dining table is made of wood.'],
+      ['essbar', 'edible', 'சாப்பிடக்கூடிய', '🍄', 'Ist dieser Pilz essbar?', 'Is this mushroom edible?']] },
+  { id:'trink', st:['trink', 'tränk', 'trunk', 'trank'], lv:'A1', e:'🥤', base:'trinken', en:'to drink', ta:'குடி',
+    tour:[['Im Restaurant bestellt Lena ein Getränk.', 'In the restaurant Lena orders a drink.'], ['Sie trinkt ihren Tee aus und gibt dem Kellner Trinkgeld.', 'She finishes her tea and gives the waiter a tip.']],
+    w:[['trinken', 'to drink', 'குடி', '🥤', 'Ich trinke gern Tee.', 'I like drinking tea.'],
+      ['das Getränk', 'the drink', 'பானம்', '🧃', 'Welches Getränk möchtest du?', 'Which drink would you like?'],
+      ['austrinken', 'to drink up', 'முழுவதும் குடி', '🥛', 'Trink deine Milch aus!', 'Drink up your milk!'],
+      ['das Trinkgeld', 'the tip', 'டிப்ஸ் (அன்பளிப்புப் பணம்)', '💰', 'Ich gebe zehn Prozent Trinkgeld.', 'I give a ten percent tip.'],
+      ['das Trinkwasser', 'the drinking water', 'குடிநீர்', '🚰', 'Das ist kein Trinkwasser.', 'This is not drinking water.'],
+      ['betrunken', 'drunk', 'போதையில்', '🥴', 'Er ist betrunken.', 'He is drunk.']] },
+  { id:'schlaf', st:['schlaf', 'schläf', 'schlief'], lv:'A1', e:'😴', base:'schlafen', en:'to sleep', ta:'தூங்கு',
+    tour:[['Lena ist müde. Im Schlafzimmer schläft sie schnell ein.', 'Lena is tired. In the bedroom she falls asleep quickly.'], ['Am Montag verschläft sie fast – am Sonntag kann sie wieder ausschlafen.', 'On Monday she almost oversleeps – on Sunday she can sleep in again.']],
+    w:[['schlafen', 'to sleep', 'தூங்கு', '😴', 'Ich schlafe acht Stunden.', 'I sleep eight hours.'],
+      ['einschlafen', 'to fall asleep', 'உறங்கிவிடு', '🛌', 'Ich schlafe schnell ein.', 'I fall asleep quickly.'],
+      ['ausschlafen', 'to sleep in', 'நன்றாகத் தூங்கி எழு', '☀️', 'Am Sonntag schlafe ich aus.', 'On Sunday I sleep in.'],
+      ['verschlafen', 'to oversleep', 'அதிகமாகத் தூங்கிவிடு', '⏰', 'Ich habe heute verschlafen!', 'I overslept today!'],
+      ['das Schlafzimmer', 'the bedroom', 'படுக்கையறை', '🛏️', 'Das Schlafzimmer ist klein.', 'The bedroom is small.'],
+      ['der Schlafsack', 'the sleeping bag', 'தூக்கப் பை', '🏕️', 'Ich nehme meinen Schlafsack mit.', 'I am taking my sleeping bag.'],
+      ['schläfrig', 'sleepy', 'தூக்கக் கலக்கமான', '🥱', 'Nach dem Essen bin ich schläfrig.', 'After eating I am sleepy.']] },
+  { id:'ruf', st:['ruf', 'rief'], lv:'A1', e:'📣', base:'rufen', en:'to call, to shout', ta:'கூப்பிடு',
+    tour:[['Lenas Handy klingelt: ein Anruf von der Firma.', 'Lena’s phone rings: a call from the company.'], ['„Ich rufe Sie später zurück“, sagt sie. Die Firma sucht jemanden für einen neuen Beruf.', '“I will call you back later,” she says. The company is looking for someone for a new job.']],
+    w:[['rufen', 'to call, to shout', 'கூப்பிடு', '📣', 'Die Mutter ruft die Kinder.', 'The mother calls the children.'],
+      ['anrufen', 'to phone, to call', 'தொலைபேசியில் அழை', '📞', 'Ich rufe dich morgen an.', 'I will call you tomorrow.'],
+      ['der Anruf', 'the phone call', 'அழைப்பு', '☎️', 'Danke für deinen Anruf.', 'Thanks for your call.'],
+      ['zurückrufen', 'to call back', 'திரும்ப அழை', '🔁', 'Ich rufe später zurück.', 'I will call back later.'],
+      ['aufrufen', 'to call up (a name or number)', 'பெயர் சொல்லி அழை', '🎫', 'Ihre Nummer wird aufgerufen.', 'Your number is called.'],
+      ['der Beruf', 'the profession, the job', 'தொழில்', '👩‍⚕️', 'Was sind Sie von Beruf?', 'What do you do for a living?'],
+      ['berufstätig', 'working, employed', 'வேலையில் உள்ள', '💼', 'Meine Eltern sind beide berufstätig.', 'My parents both work.']] },
+  { id:'lern', st:['lern'], lv:'A1', e:'📚', base:'lernen', en:'to learn', ta:'கற்றுக்கொள்',
+    tour:[['Lena lernt jeden Tag zehn neue Wörter mit Lernkarten.', 'Lena learns ten new words with flashcards every day.'], ['Im Kurs lernt sie viele nette Leute kennen. Man lernt jeden Tag dazu!', 'In the course she gets to know many nice people. You learn something new every day!']],
+    w:[['lernen', 'to learn', 'கற்றுக்கொள்', '📚', 'Ich lerne Deutsch.', 'I am learning German.'],
+      ['kennenlernen', 'to get to know, to meet', 'அறிமுகமாகு', '🤝', 'Ich lerne neue Leute kennen.', 'I am getting to know new people.'],
+      ['dazulernen', 'to learn something new', 'புதிதாகக் கற்றுக்கொள்', '➕', 'Man lernt jeden Tag dazu.', 'You learn something new every day.'],
+      ['verlernen', 'to forget (a skill)', 'மறந்துவிடு', '🫥', 'Ich habe Französisch verlernt.', 'I have forgotten my French.'],
+      ['erlernen', 'to learn (a skill, a trade)', 'திறமையைக் கற்றுக்கொள்', '🎹', 'Sie erlernt einen Beruf.', 'She is learning a trade.'],
+      ['die Lernkarte', 'the flashcard', 'கற்றல் அட்டை', '🃏', 'Ich lerne mit Lernkarten.', 'I learn with flashcards.'],
+      ['auswendig lernen', 'to learn by heart', 'மனப்பாடம் செய்', '🧠', 'Ich lerne das Gedicht auswendig.', 'I am learning the poem by heart.']] }
+];
+
+
+GARDEN.push(
+  { id:'zieh', st:['zieh', 'zog', 'zug', 'züg'], lv:'A2', e:'🧲', base:'ziehen', en:'to pull; to move', ta:'இழு',
+    tour:[['Lena zieht nächste Woche um. Der Umzug ist am Samstag.', 'Lena is moving house next week. The move is on Saturday.'], ['Es ist kalt: Sie zieht eine warme Jacke an und fährt mit dem Zug zur neuen Wohnung.', 'It is cold: she puts on a warm jacket and takes the train to the new flat.']],
+    w:[['ziehen', 'to pull; to move', 'இழு', '🧲', 'Bitte ziehen! steht an der Tür.', '“Pull” is written on the door.'],
+      ['umziehen', 'to move (house)', 'வீடு மாறு', '📦', 'Wir ziehen nächste Woche um.', 'We are moving next week.'],
+      ['der Umzug', 'the move (house)', 'வீடு மாற்றம்', '🚚', 'Der Umzug war anstrengend.', 'The move was tiring.'],
+      ['anziehen', 'to put on (clothes)', 'அணிந்துகொள்', '🧥', 'Zieh eine Jacke an!', 'Put on a jacket!'],
+      ['ausziehen', 'to take off; to move out', 'கழற்று', '👟', 'Zieh bitte die Schuhe aus.', 'Please take off your shoes.'],
+      ['sich umziehen', 'to change (clothes)', 'உடை மாற்று', '👗', 'Ich ziehe mich schnell um.', 'I quickly change my clothes.'],
+      ['der Anzug', 'the suit', 'முழு உடை (சூட்)', '🤵', 'Er trägt einen Anzug.', 'He is wearing a suit.'],
+      ['der Zug', 'the train', 'ரயில்', '🚆', 'Der Zug hat Verspätung.', 'The train is late.'],
+      ['die Erziehung', 'the upbringing', 'வளர்ப்பு', '👨‍👩‍👦', 'Die Erziehung der Kinder ist wichtig.', 'Bringing up children is important.']] },
+  { id:'stell', st:['stell'], lv:'A2', e:'📦', base:'stellen', en:'to put (upright)', ta:'(நிமிர்த்தி) வை',
+    tour:[['Lena bestellt im Restaurant eine Pizza.', 'Lena orders a pizza in the restaurant.'], ['Dann stellt sie sich ihrem neuen Chef vor. Die Firma stellt sie ein – sie hat eine neue Stelle!', 'Then she introduces herself to her new boss. The company hires her – she has a new job!']],
+    w:[['stellen', 'to put (upright)', 'வை', '📦', 'Ich stelle die Flasche auf den Tisch.', 'I put the bottle on the table.'],
+      ['bestellen', 'to order', 'ஆர்டர் செய்', '🍕', 'Ich bestelle eine Pizza.', 'I order a pizza.'],
+      ['die Bestellung', 'the order', 'ஆர்டர்', '🧾', 'Ihre Bestellung kommt morgen.', 'Your order arrives tomorrow.'],
+      ['vorstellen', 'to introduce; to imagine (sich)', 'அறிமுகப்படுத்து', '🙋', 'Darf ich mich vorstellen?', 'May I introduce myself?'],
+      ['die Vorstellung', 'the performance; the idea', 'நிகழ்ச்சி; கற்பனை', '🎭', 'Die Vorstellung beginnt um acht.', 'The show starts at eight.'],
+      ['einstellen', 'to hire; to adjust', 'வேலைக்கு அமர்த்து', '⚙️', 'Die Firma stellt neue Leute ein.', 'The company is hiring new people.'],
+      ['abstellen', 'to put down, to park', 'நிறுத்தி வை', '🚲', 'Stell dein Fahrrad hier ab.', 'Park your bike here.'],
+      ['die Stelle', 'the job, the position; the place', 'பதவி; இடம்', '📌', 'Ich suche eine neue Stelle.', 'I am looking for a new job.'],
+      ['die Ausstellung', 'the exhibition', 'கண்காட்சி', '🖼️', 'Die Ausstellung ist im Museum.', 'The exhibition is in the museum.']] },
+  { id:'leg', st:['leg', 'lag'], lv:'A2', e:'🫳', base:'legen', en:'to lay, to put (flat)', ta:'(படுக்க) வை',
+    tour:[['Lena legt die Unterlagen auf den Tisch.', 'Lena puts the documents on the table.'], ['Sie überlegt lange. Dann legt sie sich kurz hin – der Termin wird auf morgen verlegt.', 'She thinks for a long time. Then she lies down for a moment – the appointment is moved to tomorrow.']],
+    w:[['legen', 'to lay, to put (flat)', 'வை', '🫳', 'Ich lege das Buch auf den Tisch.', 'I put the book on the table.'],
+      ['sich hinlegen', 'to lie down', 'படுத்துக்கொள்', '🛌', 'Ich lege mich kurz hin.', 'I lie down for a moment.'],
+      ['ablegen', 'to take off (a coat); to file', 'கழற்றி வை', '🧥', 'Möchten Sie Ihren Mantel ablegen?', 'Would you like to take off your coat?'],
+      ['überlegen', 'to think about, to consider', 'யோசி', '🤔', 'Ich überlege noch.', 'I am still thinking about it.'],
+      ['die Überlegung', 'the consideration', 'சிந்தனை', '💭', 'Das ist eine gute Überlegung.', 'That is a good thought.'],
+      ['verlegen', 'to move (a date)', 'தேதியை மாற்று', '📅', 'Der Termin wird verlegt.', 'The appointment is being moved.'],
+      ['die Unterlagen', 'the documents', 'ஆவணங்கள்', '📂', 'Bringen Sie alle Unterlagen mit.', 'Bring all the documents.']] },
+  { id:'halt', st:['halt', 'hält', 'hielt'], lv:'A2', e:'🚏', base:'halten', en:'to hold; to stop', ta:'பிடி; நிறுத்து',
+    tour:[['Der Bus hält an der Haltestelle an.', 'The bus stops at the bus stop.'], ['Im Bus unterhält sich Lena mit einer Freundin. Später erhält sie eine Nachricht.', 'On the bus Lena chats with a friend. Later she receives a message.']],
+    w:[['halten', 'to hold; to stop', 'பிடி; நிறுத்து', '✋', 'Halt bitte meine Tasche.', 'Please hold my bag.'],
+      ['die Haltestelle', 'the (bus) stop', 'பேருந்து நிறுத்தம்', '🚏', 'Die Haltestelle ist vor der Schule.', 'The bus stop is in front of the school.'],
+      ['anhalten', 'to stop', 'நிறுத்து', '🛑', 'Das Auto hält an.', 'The car stops.'],
+      ['erhalten', 'to receive', 'பெறு', '📬', 'Sie erhalten eine E-Mail.', 'You will receive an email.'],
+      ['enthalten', 'to contain', 'கொண்டிருக்கும்', '🧪', 'Das Getränk enthält Zucker.', 'The drink contains sugar.'],
+      ['behalten', 'to keep', 'வைத்துக்கொள்', '🎁', 'Du kannst das Buch behalten.', 'You can keep the book.'],
+      ['sich unterhalten', 'to chat, to talk', 'உரையாடு', '💬', 'Wir unterhalten uns lange.', 'We talk for a long time.'],
+      ['die Unterhaltung', 'the conversation; entertainment', 'உரையாடல்; பொழுதுபோக்கு', '🎬', 'Danke für die nette Unterhaltung.', 'Thanks for the nice chat.'],
+      ['der Inhalt', 'the content', 'உள்ளடக்கம்', '📦', 'Was ist der Inhalt des Pakets?', 'What is in the parcel?']] },
+  { id:'fall', st:['fall', 'fäll', 'fiel'], lv:'A2', e:'🍂', base:'fallen', en:'to fall', ta:'விழு',
+    tour:[['Heute fällt der Deutschkurs aus.', 'The German course is cancelled today.'], ['Lena geht spazieren. Plötzlich fällt ihr ein: Der Film heute gefällt ihr bestimmt!', 'Lena goes for a walk. Suddenly she remembers: she will surely like today’s film!']],
+    w:[['fallen', 'to fall', 'விழு', '🍂', 'Im Herbst fallen die Blätter.', 'In autumn the leaves fall.'],
+      ['gefallen', 'to please (I like it)', 'பிடிக்கும்', '😍', 'Das Kleid gefällt mir.', 'I like the dress.'],
+      ['einfallen', 'to come to mind', 'நினைவுக்கு வா', '💡', 'Mir fällt nichts ein.', 'I can’t think of anything.'],
+      ['ausfallen', 'to be cancelled', 'ரத்தாகு', '❌', 'Der Kurs fällt heute aus.', 'The course is cancelled today.'],
+      ['auffallen', 'to be noticeable, to notice', 'கவனத்தை ஈர்', '👀', 'Das fällt mir sofort auf.', 'I notice that at once.'],
+      ['der Unfall', 'the accident', 'விபத்து', '🚑', 'Es gab einen Unfall.', 'There was an accident.'],
+      ['der Gefallen', 'the favour', 'உதவி (தயவு)', '🙏', 'Kannst du mir einen Gefallen tun?', 'Can you do me a favour?'],
+      ['zufällig', 'by chance', 'தற்செயலாக', '🎲', 'Ich habe ihn zufällig getroffen.', 'I met him by chance.']] },
+  { id:'lauf', st:['lauf', 'läuf', 'lief'], lv:'A2', e:'🏃', base:'laufen', en:'to run, to walk', ta:'ஓடு',
+    tour:[['Lena läuft jeden Morgen im Park.', 'Lena runs in the park every morning.'], ['Heute verläuft sie sich. Zu Hause merkt sie: Ihr Pass läuft bald ab!', 'Today she gets lost. At home she notices: her passport expires soon!']],
+    w:[['laufen', 'to run, to walk', 'ஓடு', '🏃', 'Ich laufe jeden Morgen.', 'I run every morning.'],
+      ['der Läufer', 'the runner', 'ஓட்டப்பந்தய வீரர்', '🏅', 'Der Läufer ist sehr schnell.', 'The runner is very fast.'],
+      ['ablaufen', 'to expire', 'காலாவதியாகு', '⌛', 'Mein Pass läuft bald ab.', 'My passport expires soon.'],
+      ['sich verlaufen', 'to get lost (on foot)', 'வழி தவறு', '🗺️', 'Ich habe mich verlaufen.', 'I have got lost.'],
+      ['weglaufen', 'to run away', 'ஓடிவிடு', '💨', 'Der Hund ist weggelaufen.', 'The dog has run away.'],
+      ['der Lebenslauf', 'the CV', 'சுயவிவரக் குறிப்பு', '📄', 'Schicken Sie uns Ihren Lebenslauf.', 'Send us your CV.'],
+      ['laufend', 'ongoing, constantly', 'தொடர்ந்து', '🔄', 'Er ruft laufend an.', 'He keeps calling.']] },
+  { id:'bring', st:['bring', 'brach'], lv:'A2', e:'🎁', base:'bringen', en:'to bring', ta:'கொண்டு வா',
+    tour:[['Zur Party bringt Lena einen Kuchen mit.', 'Lena brings a cake to the party.'], ['Ihre Freundin bringt ihr Gitarre bei. Sie verbringen einen schönen Abend.', 'Her friend teaches her the guitar. They spend a lovely evening.']],
+    w:[['bringen', 'to bring', 'கொண்டு வா', '🎁', 'Bring mir bitte ein Glas Wasser.', 'Please bring me a glass of water.'],
+      ['mitbringen', 'to bring along', 'கூடக் கொண்டு வா', '🍰', 'Ich bringe einen Kuchen mit.', 'I am bringing a cake.'],
+      ['beibringen', 'to teach', 'கற்றுக்கொடு', '👩‍🏫', 'Sie bringt mir Deutsch bei.', 'She teaches me German.'],
+      ['verbringen', 'to spend (time)', 'நேரம் செலவிடு', '⏳', 'Wir verbringen den Urlaub am Meer.', 'We spend the holiday by the sea.'],
+      ['zurückbringen', 'to bring back', 'திருப்பிக் கொடு', '📚', 'Ich bringe das Buch morgen zurück.', 'I will bring the book back tomorrow.'],
+      ['vorbeibringen', 'to drop off', 'வந்து கொடுத்துவிட்டுப் போ', '🚪', 'Ich bringe dir die Schlüssel vorbei.', 'I will drop the keys off at yours.']] },
+  { id:'denk', st:['denk', 'dacht', 'dank'], lv:'A2', e:'🤔', base:'denken', en:'to think', ta:'யோசி',
+    tour:[['Lena denkt lange über die Frage nach.', 'Lena thinks about the question for a long time.'], ['Dann hat sie einen Gedanken. Sie bedankt sich bei ihrer Lehrerin.', 'Then she has an idea. She thanks her teacher.']],
+    w:[['denken', 'to think', 'யோசி', '🤔', 'Ich denke oft an dich.', 'I often think of you.'],
+      ['nachdenken', 'to think about, to reflect', 'ஆழமாக யோசி', '💭', 'Ich denke über die Frage nach.', 'I am thinking about the question.'],
+      ['der Gedanke', 'the thought', 'எண்ணம்', '💡', 'Das ist ein guter Gedanke.', 'That is a good thought.'],
+      ['sich ausdenken', 'to think up, to invent', 'கற்பனை செய்', '🧩', 'Er denkt sich eine Geschichte aus.', 'He makes up a story.'],
+      ['das Denkmal', 'the monument', 'நினைவுச்சின்னம்', '🗿', 'Das Denkmal ist sehr alt.', 'The monument is very old.'],
+      ['sich bedanken', 'to say thank you', 'நன்றி சொல்', '🙏', 'Ich bedanke mich für die Hilfe.', 'Thank you for your help.'],
+      ['das Andenken', 'the souvenir', 'நினைவுப் பரிசு', '🎁', 'Das ist ein Andenken aus Rom.', 'This is a souvenir from Rome.']] },
+  { id:'frag', st:['frag'], lv:'A2', e:'❓', base:'fragen', en:'to ask', ta:'கேள்',
+    tour:[['Lena hat eine Frage zum Kurs.', 'Lena has a question about the course.'], ['Sie fragt bei der Sprachschule nach und füllt einen Fragebogen aus.', 'She checks with the language school and fills in a questionnaire.']],
+    w:[['fragen', 'to ask', 'கேள்', '❓', 'Darf ich etwas fragen?', 'May I ask something?'],
+      ['die Frage', 'the question', 'கேள்வி', '❔', 'Ich habe eine Frage.', 'I have a question.'],
+      ['nachfragen', 'to ask again, to check', 'மீண்டும் கேட்டுத் தெரிந்துகொள்', '🔁', 'Frag bitte beim Arzt nach.', 'Please check with the doctor.'],
+      ['die Anfrage', 'the inquiry', 'விசாரணைக் கோரிக்கை', '📨', 'Danke für Ihre Anfrage.', 'Thank you for your inquiry.'],
+      ['befragen', 'to question, to survey', 'கேள்விகள் கேள்', '🎤', 'Die Polizei befragt die Zeugen.', 'The police question the witnesses.'],
+      ['die Umfrage', 'the survey', 'கருத்துக்கணிப்பு', '📊', 'Die Umfrage ist online.', 'The survey is online.'],
+      ['der Fragebogen', 'the questionnaire', 'கேள்வித்தாள்', '📝', 'Bitte füllen Sie den Fragebogen aus.', 'Please fill in the questionnaire.']] },
+  { id:'zahl', st:['zahl', 'zähl'], lv:'A2', e:'💳', base:'zahlen', en:'to pay', ta:'பணம் செலுத்து',
+    tour:[['Im Café bezahlt Lena mit Karte.', 'In the café Lena pays by card.'], ['Dann erzählt sie von ihrem Urlaub. Ihr kleiner Bruder zählt die Fotos: zwanzig!', 'Then she talks about her holiday. Her little brother counts the photos: twenty!']],
+    w:[['zahlen', 'to pay', 'பணம் செலுத்து', '💳', 'Wir möchten zahlen, bitte.', 'We would like to pay, please.'],
+      ['bezahlen', 'to pay (for)', 'கட்டணம் செலுத்து', '💶', 'Ich bezahle mit Karte.', 'I pay by card.'],
+      ['die Zahl', 'the number', 'எண்', '🔢', 'Sieben ist meine Lieblingszahl.', 'Seven is my favourite number.'],
+      ['zählen', 'to count', 'எண்ணு', '🧮', 'Das Kind zählt bis zehn.', 'The child counts to ten.'],
+      ['die Anzahl', 'the number, the quantity', 'எண்ணிக்கை', '📊', 'Die Anzahl der Plätze ist begrenzt.', 'The number of places is limited.'],
+      ['die Zahlung', 'the payment', 'கட்டணம்', '🧾', 'Die Zahlung ist eingegangen.', 'The payment has arrived.'],
+      ['erzählen', 'to tell (a story)', 'சொல் (கதை)', '📖', 'Erzähl mir von deinem Urlaub!', 'Tell me about your holiday!'],
+      ['die Erzählung', 'the story', 'கதை', '📚', 'Die Erzählung ist spannend.', 'The story is exciting.']] },
+  { id:'hoer', st:['hör'], lv:'A2', e:'👂', base:'hören', en:'to hear, to listen', ta:'கேள் (காதால்)',
+    tour:[['Lena hört gern Musik. „Hör mal zu!“, sagt sie zu ihrem Bruder.', 'Lena likes listening to music. “Listen!” she says to her brother.'], ['Er hört nicht auf zu reden. „Gehört das Handy dir?“, fragt Lena.', 'He doesn’t stop talking. “Does the phone belong to you?” asks Lena.']],
+    w:[['hören', 'to hear, to listen to', 'கேள்', '👂', 'Ich höre gern Musik.', 'I like listening to music.'],
+      ['zuhören', 'to listen (to someone)', 'கவனித்துக் கேள்', '🎧', 'Hör mir bitte zu!', 'Please listen to me!'],
+      ['aufhören', 'to stop (doing)', 'நிறுத்து', '🛑', 'Hör auf zu rauchen!', 'Stop smoking!'],
+      ['gehören', 'to belong to', 'சொந்தமாக இரு', '🏷️', 'Das Buch gehört mir.', 'The book belongs to me.'],
+      ['anhören', 'to listen to (sich)', 'கேட்டுப் பார்', '🎵', 'Ich höre mir das Lied an.', 'I listen to the song.'],
+      ['der Hörer', 'the listener; the receiver', 'கேட்பவர்', '📞', 'Liebe Hörerinnen und Hörer!', 'Dear listeners!'],
+      ['das Gehör', 'the hearing', 'கேட்கும் திறன்', '🦻', 'Mein Gehör ist sehr gut.', 'My hearing is very good.']] },
+  { id:'schliess', st:['schließ', 'schloss', 'schluss', 'schlüss'], lv:'A2', e:'🔐', base:'schließen', en:'to close, to shut', ta:'மூடு, பூட்டு',
+    tour:[['Lena schließt die Tür ab. Wo ist der Schlüssel?', 'Lena locks the door. Where is the key?'], ['Sie hat ihren Abschluss gemacht! Zum Schluss beschließt sie: Heute wird gefeiert.', 'She has finished her degree! In the end she decides: today we celebrate.']],
+    w:[['schließen', 'to close, to shut', 'மூடு', '🔐', 'Bitte schließen Sie das Fenster.', 'Please close the window.'],
+      ['abschließen', 'to lock; to finish', 'பூட்டு; முடி', '🔑', 'Schließ die Tür ab!', 'Lock the door!'],
+      ['der Schlüssel', 'the key', 'சாவி', '🗝️', 'Ich finde meinen Schlüssel nicht.', 'I can’t find my key.'],
+      ['der Abschluss', 'the qualification, the degree', 'பட்டம்', '🎓', 'Ich habe meinen Abschluss gemacht.', 'I have got my qualification.'],
+      ['der Schluss', 'the end', 'முடிவு', '🔚', 'Zum Schluss sagt er danke.', 'At the end he says thank you.'],
+      ['beschließen', 'to decide', 'தீர்மானி', '⚖️', 'Wir beschließen eine Pause.', 'We decide to take a break.'],
+      ['anschließen', 'to connect, to plug in', 'இணை', '🔌', 'Schließ das Kabel an.', 'Plug in the cable.'],
+      ['der Anschluss', 'the connection (train)', 'இணைப்பு ரயில்', '🚉', 'Ich habe meinen Anschluss verpasst.', 'I missed my connection.'],
+      ['geschlossen', 'closed', 'மூடப்பட்டது', '🚫', 'Das Geschäft ist heute geschlossen.', 'The shop is closed today.']] },
+  { id:'trag', st:['trag', 'träg', 'trug'], lv:'A2', e:'🎒', base:'tragen', en:'to carry; to wear', ta:'சுமந்து செல்; அணி',
+    tour:[['Lena trägt eine schwere Tasche zum Amt.', 'Lena carries a heavy bag to the office.'], ['Dort stellt sie einen Antrag und trägt ihren Namen ein. Dann unterschreibt sie den Vertrag.', 'There she makes an application and enters her name. Then she signs the contract.']],
+    w:[['tragen', 'to carry; to wear', 'சுமந்து செல்; அணி', '🎒', 'Sie trägt eine rote Jacke.', 'She is wearing a red jacket.'],
+      ['eintragen', 'to enter, to write in', 'பதிவு செய்', '📝', 'Tragen Sie Ihren Namen ein.', 'Enter your name.'],
+      ['der Antrag', 'the application', 'விண்ணப்பம்', '🗂️', 'Ich stelle einen Antrag.', 'I make an application.'],
+      ['der Vertrag', 'the contract', 'ஒப்பந்தம்', '📜', 'Bitte lesen Sie den Vertrag genau.', 'Please read the contract carefully.'],
+      ['der Beitrag', 'the contribution, the fee', 'கட்டணம்; பங்களிப்பு', '💶', 'Der Beitrag kostet 20 Euro im Monat.', 'The fee is 20 euros a month.'],
+      ['übertragen', 'to broadcast; to transfer', 'ஒளிபரப்பு', '📡', 'Das Spiel wird live übertragen.', 'The game is broadcast live.'],
+      ['ertragen', 'to bear, to stand', 'சகித்துக்கொள்', '😣', 'Ich kann den Lärm nicht ertragen.', 'I can’t stand the noise.']] },
+  { id:'such', st:['such'], lv:'A2', e:'🔍', base:'suchen', en:'to search, to look for', ta:'தேடு',
+    tour:[['Am Sonntag besucht Lena ihre Oma.', 'On Sunday Lena visits her grandma.'], ['Die Oma sucht ihre Brille. Lena versucht zu helfen – und findet sie im Kühlschrank!', 'Grandma is looking for her glasses. Lena tries to help – and finds them in the fridge!']],
+    w:[['suchen', 'to look for', 'தேடு', '🔍', 'Ich suche meine Brille.', 'I am looking for my glasses.'],
+      ['besuchen', 'to visit', 'சென்று பார்', '🏡', 'Ich besuche meine Oma.', 'I visit my grandma.'],
+      ['der Besuch', 'the visit; the visitors', 'வருகை', '👨‍👩‍👧', 'Wir bekommen heute Besuch.', 'We are having visitors today.'],
+      ['aussuchen', 'to choose, to pick', 'தேர்ந்தெடு', '👉', 'Such dir ein Eis aus!', 'Pick an ice cream!'],
+      ['versuchen', 'to try', 'முயற்சி செய்', '🎯', 'Ich versuche es noch einmal.', 'I will try again.'],
+      ['der Versuch', 'the attempt', 'முயற்சி', '🔁', 'Das war ein guter Versuch.', 'That was a good try.'],
+      ['untersuchen', 'to examine', 'பரிசோதி', '🩺', 'Der Arzt untersucht mich.', 'The doctor examines me.'],
+      ['die Suche', 'the search', 'தேடல்', '🔎', 'Die Suche nach einer Wohnung ist schwer.', 'Looking for a flat is hard.']] },
+  { id:'steig', st:['steig', 'stieg'], lv:'A2', e:'🪜', base:'steigen', en:'to climb, to rise', ta:'ஏறு',
+    tour:[['Lena steigt in den Bus ein.', 'Lena gets on the bus.'], ['In Köln steigt sie um und am Bahnhof steigt sie aus. Die Preise steigen leider auch.', 'In Cologne she changes and at the station she gets off. Unfortunately prices are going up too.']],
+    w:[['steigen', 'to climb, to rise', 'ஏறு; உயர்', '🪜', 'Die Preise steigen.', 'Prices are rising.'],
+      ['einsteigen', 'to get on (a bus, a train)', 'ஏறிக்கொள்', '🚌', 'Bitte einsteigen!', 'All aboard, please!'],
+      ['aussteigen', 'to get off', 'இறங்கு', '🚏', 'Ich steige an der nächsten Haltestelle aus.', 'I get off at the next stop.'],
+      ['umsteigen', 'to change (trains)', 'வண்டி மாறு', '🔀', 'Wir steigen in Köln um.', 'We change in Cologne.'],
+      ['der Einstieg', 'the entry, the start', 'நுழைவு', '🚪', 'Der Einstieg ist vorne.', 'The entrance is at the front.'],
+      ['aufsteigen', 'to rise; to be promoted', 'உயர்வு பெறு', '📈', 'Die Mannschaft steigt auf.', 'The team is promoted.'],
+      ['die Steigung', 'the slope, the incline', 'சாய்வு', '⛰️', 'Die Steigung ist sehr steil.', 'The slope is very steep.']] }
+);
+
+
+GARDEN.push(
+  { id:'biet', st:['biet', 'bot'], lv:'B1', e:'🏷️', base:'bieten', en:'to offer', ta:'வழங்கு',
+    tour:[['Im Supermarkt gibt es ein Angebot: Kaffee für zwei Euro.', 'There is an offer in the supermarket: coffee for two euros.'], ['Lena bietet ihrer Kollegin einen Kaffee an. Im Büro ist Rauchen verboten – das Verbot gilt überall.', 'Lena offers her colleague a coffee. Smoking is forbidden in the office – the ban applies everywhere.']],
+    w:[['bieten', 'to offer', 'வழங்கு', '🎁', 'Die Stadt bietet viele Kurse.', 'The city offers many courses.'],
+      ['anbieten', 'to offer (something to someone)', 'முன்வந்து கொடு', '☕', 'Darf ich Ihnen einen Kaffee anbieten?', 'May I offer you a coffee?'],
+      ['das Angebot', 'the offer, the deal', 'சலுகை', '🏷️', 'Das Angebot gilt bis Freitag.', 'The offer is valid until Friday.'],
+      ['der Anbieter', 'the provider', 'சேவை வழங்குநர்', '📶', 'Ich wechsle meinen Handyanbieter.', 'I am changing my phone provider.'],
+      ['verbieten', 'to forbid', 'தடை செய்', '🚫', 'Rauchen ist hier verboten.', 'Smoking is forbidden here.'],
+      ['das Verbot', 'the ban', 'தடை', '⛔', 'Hier gilt ein Parkverbot.', 'Parking is not allowed here.'],
+      ['das Gebiet', 'the area, the region', 'பகுதி', '🗺️', 'Das Gebiet ist sehr ruhig.', 'The area is very quiet.']] },
+  { id:'schlag', st:['schlag', 'schläg', 'schlug'], lv:'B1', e:'💡', base:'schlagen', en:'to hit, to beat', ta:'அடி',
+    tour:[['„Ich schlage vor, wir gehen ins Kino“, sagt Lena.', '“I suggest we go to the cinema,” says Lena.'], ['Ihr Freund schlägt das Programm in der Zeitung nach. Ein guter Vorschlag!', 'Her friend looks up the programme in the newspaper. A good suggestion!']],
+    w:[['schlagen', 'to hit, to beat', 'அடி', '🥊', 'Unser Team hat Berlin geschlagen.', 'Our team beat Berlin.'],
+      ['vorschlagen', 'to suggest', 'பரிந்துரை செய்', '💡', 'Ich schlage vor, wir machen eine Pause.', 'I suggest we take a break.'],
+      ['der Vorschlag', 'the suggestion', 'பரிந்துரை', '💬', 'Das ist ein guter Vorschlag.', 'That is a good suggestion.'],
+      ['nachschlagen', 'to look up', 'அகராதியில் தேடு', '🔍', 'Ich schlage das Wort im Wörterbuch nach.', 'I look the word up in the dictionary.'],
+      ['aufschlagen', 'to open (a book)', 'புத்தகத்தைத் திற', '📖', 'Schlagt das Buch auf Seite zehn auf.', 'Open your books at page ten.'],
+      ['der Umschlag', 'the envelope', 'உறை', '✉️', 'Der Brief ist im Umschlag.', 'The letter is in the envelope.'],
+      ['der Zuschlag', 'the surcharge', 'கூடுதல் கட்டணம்', '💶', 'Für den ICE zahlt man einen Zuschlag.', 'You pay a surcharge for the ICE.']] },
+  { id:'richt', st:['richt'], lv:'B1', e:'🧭', base:'richten', en:'to direct, to arrange', ta:'சரிசெய், திசை காட்டு',
+    tour:[['Lena richtet ihre neue Wohnung ein.', 'Lena furnishes her new flat.'], ['Im Radio kommen die Nachrichten. Ein Reporter berichtet über das Wetter – die Richtung des Sturms ist Norden.', 'The news is on the radio. A reporter reports on the weather – the storm is heading north.']],
+    w:[['richten', 'to direct; to arrange', 'திசைப்படுத்து', '🎯', 'Die Frage richtet sich an alle.', 'The question is addressed to everyone.'],
+      ['richtig', 'right, correct', 'சரி', '✅', 'Das ist richtig.', 'That is correct.'],
+      ['die Richtung', 'the direction', 'திசை', '🧭', 'In welche Richtung musst du?', 'Which direction do you have to go?'],
+      ['einrichten', 'to furnish, to set up', 'அலங்கரி (வீட்டை அமை)', '🛋️', 'Ich richte meine Wohnung ein.', 'I am furnishing my flat.'],
+      ['die Einrichtung', 'the furniture; the institution', 'அமைப்பு; நிறுவனம்', '🏛️', 'Die Einrichtung ist modern.', 'The furnishings are modern.'],
+      ['die Nachricht', 'the message, the news', 'செய்தி', '📰', 'Hast du meine Nachricht bekommen?', 'Did you get my message?'],
+      ['berichten', 'to report', 'அறிக்கை கொடு', '🎙️', 'Die Zeitung berichtet über den Unfall.', 'The newspaper reports on the accident.'],
+      ['der Bericht', 'the report', 'அறிக்கை', '📄', 'Ich schreibe einen Bericht.', 'I am writing a report.'],
+      ['der Unterricht', 'the lessons, the class', 'வகுப்பு', '🏫', 'Der Unterricht beginnt um acht.', 'Lessons start at eight.']] },
+  { id:'sorg', st:['sorg'], lv:'B1', e:'🤗', base:'sorgen', en:'to care for; to worry', ta:'கவனி; கவலைப்படு',
+    tour:[['Lenas Oma ist krank. „Mach dir keine Sorgen“, sagt der Arzt.', 'Lena’s grandma is ill. “Don’t worry,” says the doctor.'], ['Lena besorgt Medikamente und versorgt die Oma sorgfältig.', 'Lena gets medicine and looks after her grandma carefully.']],
+    w:[['sorgen (für)', 'to take care of', 'கவனித்துக்கொள்', '🤗', 'Ich sorge für meine Katze.', 'I take care of my cat.'],
+      ['die Sorge', 'the worry', 'கவலை', '😟', 'Mach dir keine Sorgen!', 'Don’t worry!'],
+      ['besorgen', 'to get, to buy', 'வாங்கி வா', '🛍️', 'Ich besorge noch Brot.', 'I will get some bread.'],
+      ['versorgen', 'to look after, to supply', 'பராமரி', '🏥', 'Die Krankenschwester versorgt die Patienten.', 'The nurse looks after the patients.'],
+      ['die Versorgung', 'the care, the supply', 'வழங்கல்; பராமரிப்பு', '💊', 'Die medizinische Versorgung ist gut.', 'The medical care is good.'],
+      ['sorgfältig', 'careful', 'கவனமாக', '🔎', 'Lies den Text sorgfältig.', 'Read the text carefully.'],
+      ['die Vorsorge', 'the prevention, the check-up', 'முன்னெச்சரிக்கை', '🩺', 'Vorsorge ist besser als Nachsorge.', 'Prevention is better than cure.']] },
+  { id:'stimm', st:['stimm'], lv:'B1', e:'✔️', base:'stimmen', en:'to be right; to vote', ta:'சரியாக இரு',
+    tour:[['„Stimmt das?“, fragt Lena. „Ja, ich stimme dir zu“, sagt ihre Freundin.', '“Is that right?” asks Lena. “Yes, I agree with you,” says her friend.'], ['Auf der Party ist die Stimmung super – Lena kommt bestimmt wieder.', 'The atmosphere at the party is great – Lena will definitely come again.']],
+    w:[['stimmen', 'to be right; to vote', 'சரியாக இரு', '✔️', 'Das stimmt!', 'That’s right!'],
+      ['die Stimme', 'the voice; the vote', 'குரல்; வாக்கு', '🎤', 'Sie hat eine schöne Stimme.', 'She has a beautiful voice.'],
+      ['zustimmen', 'to agree', 'ஒப்புக்கொள்', '👍', 'Ich stimme dir zu.', 'I agree with you.'],
+      ['die Zustimmung', 'the agreement, the approval', 'ஒப்புதல்', '✅', 'Wir brauchen Ihre Zustimmung.', 'We need your approval.'],
+      ['bestimmt', 'certainly; certain', 'நிச்சயமாக', '💯', 'Er kommt bestimmt.', 'He will certainly come.'],
+      ['die Stimmung', 'the mood, the atmosphere', 'மனநிலை; சூழல்', '🎉', 'Die Stimmung ist super.', 'The atmosphere is great.'],
+      ['abstimmen', 'to vote', 'வாக்களி', '🗳️', 'Wir stimmen über den Plan ab.', 'We vote on the plan.']] },
+  { id:'teil', st:['teil'], lv:'B1', e:'🧩', base:'teilen', en:'to share, to divide', ta:'பகிர்',
+    tour:[['Lena teilt eine Pizza mit ihrer Freundin.', 'Lena shares a pizza with her friend.'], ['Später teilt sie ihrem Chef den Termin mit. Der Vorteil: Sie hat jetzt Zeit. Der Nachteil: Es ist schon spät.', 'Later she tells her boss the date. The advantage: she has time now. The disadvantage: it is already late.']],
+    w:[['teilen', 'to share, to divide', 'பகிர்', '➗', 'Wir teilen die Pizza.', 'We share the pizza.'],
+      ['der Teil', 'the part', 'பகுதி', '🧩', 'Der erste Teil ist leicht.', 'The first part is easy.'],
+      ['mitteilen', 'to inform, to tell', 'தெரிவி', '📢', 'Bitte teilen Sie mir den Termin mit.', 'Please let me know the date.'],
+      ['die Mitteilung', 'the message, the notice', 'அறிவிப்பு', '📩', 'Ich habe eine Mitteilung bekommen.', 'I have received a notice.'],
+      ['verteilen', 'to hand out, to distribute', 'விநியோகி', '📦', 'Die Lehrerin verteilt die Bücher.', 'The teacher hands out the books.'],
+      ['der Vorteil', 'the advantage', 'நன்மை', '👍', 'Ein Vorteil ist der Preis.', 'One advantage is the price.'],
+      ['der Nachteil', 'the disadvantage', 'தீமை', '👎', 'Der Nachteil ist der lange Weg.', 'The disadvantage is the long way.'],
+      ['teilweise', 'partly', 'ஓரளவு', '◐', 'Das ist teilweise richtig.', 'That is partly right.']] },
+  { id:'kenn', st:['kenn', 'kann', 'kannt'], lv:'B1', e:'🤝', base:'kennen', en:'to know (a person, a place)', ta:'அறிந்திரு',
+    tour:[['Auf der Straße erkennt Lena eine alte Bekannte.', 'In the street Lena recognises an old acquaintance.'], ['Die Bekannte ist jetzt Ärztin – ihr Abschluss wurde in Deutschland anerkannt. Ihre Deutschkenntnisse sind sehr gut.', 'The acquaintance is now a doctor – her degree was recognised in Germany. Her German is very good.']],
+    w:[['kennen', 'to know (a person, a place)', 'அறிந்திரு', '🤝', 'Kennst du Berlin?', 'Do you know Berlin?'],
+      ['erkennen', 'to recognise', 'அடையாளம் கண்டுகொள்', '👁️', 'Ich habe dich nicht erkannt.', 'I didn’t recognise you.'],
+      ['bekannt', 'known, famous', 'பிரபலமான', '⭐', 'Das Lied ist sehr bekannt.', 'The song is very well known.'],
+      ['die Bekannte', 'the acquaintance (female)', 'அறிமுகமானவர்', '👥', 'Sie ist eine Bekannte von mir.', 'She is an acquaintance of mine.'],
+      ['anerkennen', 'to recognise (officially)', 'அங்கீகரி', '📜', 'Mein Abschluss wird anerkannt.', 'My degree is being recognised.'],
+      ['die Kenntnisse', 'the knowledge, the skills', 'அறிவு', '🧠', 'Sie hat gute Deutschkenntnisse.', 'She has good German skills.'],
+      ['das Kennzeichen', 'the number plate; the feature', 'வாகன எண்', '🚗', 'Das Auto hat ein Berliner Kennzeichen.', 'The car has a Berlin number plate.']] },
+  { id:'setz', st:['setz'], lv:'B1', e:'🪑', base:'setzen', en:'to put, to set', ta:'அமர வை',
+    tour:[['„Setzen Sie sich bitte“, sagt die Beamtin.', '“Please sit down,” says the official.'], ['Lena übersetzt ein Dokument. Deutschkenntnisse sind eine Voraussetzung für die Stelle.', 'Lena translates a document. German skills are a requirement for the job.']],
+    w:[['setzen', 'to put, to set', 'அமர வை', '🪑', 'Ich setze das Kind auf den Stuhl.', 'I put the child on the chair.'],
+      ['sich setzen', 'to sit down', 'உட்கார்', '🧘', 'Setzen Sie sich bitte!', 'Please sit down!'],
+      ['übersetzen', 'to translate', 'மொழிபெயர்', '🔤', 'Kannst du das übersetzen?', 'Can you translate that?'],
+      ['die Übersetzung', 'the translation', 'மொழிபெயர்ப்பு', '📖', 'Die Übersetzung ist sehr gut.', 'The translation is very good.'],
+      ['besetzt', 'occupied, taken', 'ஆளுள்ள (காலியில்லை)', '🚻', 'Der Platz ist besetzt.', 'The seat is taken.'],
+      ['fortsetzen', 'to continue', 'தொடர்', '⏩', 'Wir setzen das Gespräch morgen fort.', 'We will continue the conversation tomorrow.'],
+      ['die Voraussetzung', 'the requirement', 'முன்நிபந்தனை', '✔️', 'Deutschkenntnisse sind eine Voraussetzung.', 'German skills are a requirement.'],
+      ['ersetzen', 'to replace', 'மாற்றீடு செய்', '🔄', 'Kann man den Akku ersetzen?', 'Can the battery be replaced?'],
+      ['das Gesetz', 'the law', 'சட்டம்', '⚖️', 'Das ist gegen das Gesetz.', 'That is against the law.']] },
+  { id:'lass', st:['lass', 'läss', 'ließ'], lv:'B1', e:'🎈', base:'lassen', en:'to let, to leave', ta:'விடு',
+    tour:[['Lena verlässt das Haus um acht Uhr.', 'Lena leaves the house at eight.'], ['Der Regen lässt nach. Ihre Kollegin ist zuverlässig – sie wartet schon an der Haltestelle.', 'The rain is easing. Her colleague is reliable – she is already waiting at the stop.']],
+    w:[['lassen', 'to let; to leave; to have done', 'விடு', '🎈', 'Ich lasse mein Auto reparieren.', 'I am having my car repaired.'],
+      ['verlassen', 'to leave (a place)', 'விட்டு வெளியேறு', '🚪', 'Er verlässt das Haus um acht.', 'He leaves the house at eight.'],
+      ['zuverlässig', 'reliable', 'நம்பகமான', '💯', 'Sie ist sehr zuverlässig.', 'She is very reliable.'],
+      ['nachlassen', 'to ease off, to decrease', 'குறை', '📉', 'Der Regen lässt nach.', 'The rain is easing off.'],
+      ['zulassen', 'to allow; to register (a car)', 'அனுமதி', '✅', 'Das lasse ich nicht zu.', 'I won’t allow that.'],
+      ['entlassen', 'to dismiss; to discharge', 'பணிநீக்கம் செய்', '🏥', 'Der Patient wird morgen entlassen.', 'The patient is discharged tomorrow.'],
+      ['der Anlass', 'the occasion', 'சந்தர்ப்பம்', '🎉', 'Zu welchem Anlass?', 'For what occasion?'],
+      ['loslassen', 'to let go', 'விட்டுவிடு', '🖐️', 'Lass das Seil nicht los!', 'Don’t let go of the rope!']] },
+  { id:'brauch', st:['brauch'], lv:'B1', e:'🧰', base:'brauchen', en:'to need', ta:'தேவைப்படு',
+    tour:[['Lena braucht ein Auto. Sie kauft ein gebrauchtes.', 'Lena needs a car. She buys a used one.'], ['Das Auto verbraucht nicht viel Benzin. „Hast du die Bedienungsanleitung gebraucht?“', 'The car does not use much petrol. “Did you need the manual?”']],
+    w:[['brauchen', 'to need', 'தேவைப்படு', '🧰', 'Ich brauche mehr Zeit.', 'I need more time.'],
+      ['gebrauchen', 'to use', 'பயன்படுத்து', '🔧', 'Das kann ich gut gebrauchen.', 'I can make good use of that.'],
+      ['der Gebrauch', 'the use', 'பயன்பாடு', '📘', 'Vor Gebrauch schütteln!', 'Shake before use!'],
+      ['gebraucht', 'used, second-hand', 'பழைய (பயன்படுத்தப்பட்ட)', '♻️', 'Ich kaufe ein gebrauchtes Auto.', 'I am buying a used car.'],
+      ['verbrauchen', 'to consume, to use up', 'உபயோகித்துத் தீர்', '⛽', 'Das Auto verbraucht wenig Benzin.', 'The car uses little petrol.'],
+      ['der Verbraucher', 'the consumer', 'நுகர்வோர்', '🛒', 'Die Preise sind für Verbraucher hoch.', 'Prices are high for consumers.'],
+      ['der Brauch', 'the custom, the tradition', 'வழக்கம்', '🎄', 'Das ist ein alter Brauch.', 'That is an old custom.']] },
+  { id:'fass', st:['fass'], lv:'B1', e:'✊', base:'fassen', en:'to grasp, to hold', ta:'பிடி',
+    tour:[['Im Museum steht: „Bitte nicht anfassen!“', 'The sign in the museum says: “Please do not touch!”'], ['In der Prüfung fasst Lena den Text zusammen. Ihre Zusammenfassung ist kurz und klar.', 'In the exam Lena summarises the text. Her summary is short and clear.']],
+    w:[['fassen', 'to grasp, to hold', 'பிடி', '✊', 'Ich kann es nicht fassen!', 'I can’t believe it!'],
+      ['anfassen', 'to touch', 'தொடு', '✋', 'Bitte nicht anfassen!', 'Please do not touch!'],
+      ['zusammenfassen', 'to summarise', 'சுருக்கமாகக் கூறு', '📝', 'Fassen Sie den Text zusammen.', 'Summarise the text.'],
+      ['die Zusammenfassung', 'the summary', 'சுருக்கம்', '📄', 'Die Zusammenfassung ist kurz.', 'The summary is short.'],
+      ['verfassen', 'to write (a text)', 'எழுது (இயற்று)', '✍️', 'Sie verfasst einen Brief.', 'She writes a letter.'],
+      ['erfassen', 'to record, to register', 'பதிவு செய்', '💻', 'Die Daten werden erfasst.', 'The data is recorded.'],
+      ['umfassen', 'to include, to cover', 'உள்ளடக்கு', '⭕', 'Der Kurs umfasst zehn Termine.', 'The course includes ten sessions.']] },
+  { id:'rat', st:['rat', 'rät', 'riet'], lv:'B1', e:'🧩', base:'raten', en:'to advise; to guess', ta:'அறிவுரை கூறு; ஊகி',
+    tour:[['Lena braucht einen Rat. Die Ärztin berät sie gut.', 'Lena needs advice. The doctor advises her well.'], ['Am Abend löst Lena ein Rätsel. „Verrat mir die Antwort nicht!“', 'In the evening Lena solves a riddle. “Don’t tell me the answer!”']],
+    w:[['raten', 'to advise; to guess', 'அறிவுரை கூறு; ஊகி', '🤔', 'Rate mal, wer kommt!', 'Guess who is coming!'],
+      ['der Rat', 'the advice', 'அறிவுரை', '💡', 'Kannst du mir einen Rat geben?', 'Can you give me some advice?'],
+      ['beraten', 'to advise (professionally)', 'ஆலோசனை வழங்கு', '🧑‍💼', 'Die Ärztin berät mich.', 'The doctor advises me.'],
+      ['die Beratung', 'the consultation, the advice service', 'ஆலோசனை', '🗣️', 'Die Beratung ist kostenlos.', 'The advice is free.'],
+      ['verraten', 'to give away (a secret); to betray', 'காட்டிக்கொடு', '🤫', 'Verrat es niemandem!', 'Don’t tell anyone!'],
+      ['das Rätsel', 'the riddle, the puzzle', 'புதிர்', '🧩', 'Das Rätsel ist schwer.', 'The puzzle is hard.'],
+      ['der Vorrat', 'the supply, the stock', 'கையிருப்பு', '🥫', 'Wir haben einen Vorrat an Wasser.', 'We have a supply of water.']] },
+  { id:'fuehr', st:['führ'], lv:'B1', e:'🪪', base:'führen', en:'to lead, to guide', ta:'வழிநடத்து',
+    tour:[['Lena macht den Führerschein.', 'Lena is taking her driving test.'], ['Am Wochenende führt eine Frau sie durch das Museum. Die Führung ist sehr ausführlich.', 'At the weekend a woman shows her round the museum. The tour is very detailed.']],
+    w:[['führen', 'to lead, to guide', 'வழிநடத்து', '🧭', 'Der Weg führt zum See.', 'The path leads to the lake.'],
+      ['der Führerschein', 'the driving licence', 'ஓட்டுநர் உரிமம்', '🪪', 'Ich mache den Führerschein.', 'I am learning to drive.'],
+      ['die Führung', 'the guided tour; the lead', 'வழிகாட்டிச் சுற்றுலா', '🏛️', 'Die Führung beginnt um zwei.', 'The guided tour starts at two.'],
+      ['einführen', 'to introduce', 'அறிமுகப்படுத்து', '🆕', 'Die Firma führt ein neues System ein.', 'The company is introducing a new system.'],
+      ['die Einführung', 'the introduction', 'அறிமுகம்', '📘', 'Heute gibt es eine Einführung.', 'There is an introduction today.'],
+      ['ausführlich', 'detailed', 'விரிவான', '📜', 'Die Antwort ist sehr ausführlich.', 'The answer is very detailed.'],
+      ['durchführen', 'to carry out', 'நடத்து (செயல்படுத்து)', '🛠️', 'Wir führen eine Umfrage durch.', 'We are carrying out a survey.']] },
+  { id:'bind', st:['bind', 'band', 'bund'], lv:'B1', e:'🔗', base:'binden', en:'to tie, to bind', ta:'கட்டு',
+    tour:[['Lena ruft bei der Firma an. „Ich verbinde Sie mit Frau Weber.“', 'Lena calls the company. “I’ll put you through to Ms Weber.”'], ['Leider ist die Verbindung schlecht. Die Anmeldung ist übrigens verbindlich.', 'Unfortunately the line is bad. By the way, the registration is binding.']],
+    w:[['binden', 'to tie, to bind', 'கட்டு', '🎀', 'Ich binde die Schuhe zu.', 'I tie my shoes.'],
+      ['verbinden', 'to connect; to put through', 'இணை', '🔗', 'Ich verbinde Sie mit Frau Weber.', 'I’ll put you through to Ms Weber.'],
+      ['die Verbindung', 'the connection', 'இணைப்பு', '📶', 'Die Verbindung ist schlecht.', 'The connection is bad.'],
+      ['verbindlich', 'binding, obligatory', 'கட்டாயமான', '📜', 'Die Anmeldung ist verbindlich.', 'The registration is binding.'],
+      ['anbinden', 'to tie up', 'கட்டி வை', '🐕', 'Bitte binden Sie den Hund an.', 'Please tie up the dog.'],
+      ['die Binde', 'the bandage', 'கட்டுத்துணி', '🩹', 'Die Ärztin legt eine Binde an.', 'The doctor puts on a bandage.']] },
+  { id:'drueck', st:['drück', 'druck'], lv:'B1', e:'👆', base:'drücken', en:'to press, to push', ta:'அழுத்து',
+    tour:[['„Drücken Sie bitte den grünen Knopf“, sagt der Mann.', '“Please press the green button,” says the man.'], ['Lena druckt den Brief aus. Ihr erster Eindruck von der Firma ist gut – sie drückt das auch so aus.', 'Lena prints out the letter. Her first impression of the company is good – and she says so.']],
+    w:[['drücken', 'to press, to push', 'அழுத்து', '👆', 'Drücken Sie den Knopf.', 'Press the button.'],
+      ['ausdrücken', 'to express', 'வெளிப்படுத்து', '💬', 'Wie drückt man das auf Deutsch aus?', 'How do you say that in German?'],
+      ['der Ausdruck', 'the expression; the printout', 'வெளிப்பாடு; அச்சுப் பிரதி', '🗨️', 'Das ist ein schöner Ausdruck.', 'That is a nice expression.'],
+      ['der Eindruck', 'the impression', 'அபிப்பிராயம்', '✨', 'Mein erster Eindruck war gut.', 'My first impression was good.'],
+      ['beeindruckend', 'impressive', 'வியக்கவைக்கும்', '😮', 'Die Stadt ist beeindruckend.', 'The city is impressive.'],
+      ['der Druck', 'the pressure; the print', 'அழுத்தம்', '🗜️', 'Ich habe viel Druck bei der Arbeit.', 'I am under a lot of pressure at work.'],
+      ['drucken', 'to print', 'அச்சிடு', '🖨️', 'Ich drucke das Ticket aus.', 'I print out the ticket.'],
+      ['der Drucker', 'the printer', 'அச்சுப்பொறி', '🖨️', 'Der Drucker ist kaputt.', 'The printer is broken.']] }
+);
+
+
+/* ---- the garden's words become items of the app, like the Wortschatz words (xt 'wz', theme 'garten'):
+   so Karteikarten, the daily review, the runner, Schreiben, Mein Heft and the story all know them ---- */
+const GW_ADJ = new Set(['ausverkauft', 'arbeitslos', 'essbar', 'betrunken', 'schläfrig', 'berufstätig', 'lesbar', 'selbstständig', 'willkommen', 'zufällig', 'laufend', 'geschlossen', 'richtig', 'sorgfältig', 'bestimmt', 'teilweise', 'bekannt', 'besetzt', 'zuverlässig', 'gebraucht', 'ausführlich', 'verbindlich', 'beeindruckend']);
+const GW_INSEP = ['be', 'ver', 'er', 'ent', 'emp', 'ge', 'zer', 'miss'];
+const GW_INSEP_WORDS = new Set(['übersetzen', 'unterschreiben', 'unterhalten', 'untersuchen', 'übertragen', 'überlegen', 'umfassen', 'unternehmen', 'wiedersehen']);
+const gwClean = de => de.replace(/^(der|die|das)\s+/, '').replace(/^sich\s+/, '').replace(/\s*\(.*?\)\s*$/, '');
+const gwArt = de => (de.match(/^(der|die|das)\s/) || [])[1] || '';
+function gwParts(de, st) {
+  const w = gwClean(de), lw = w.toLowerCase(); let best = null;
+  for (const s of st) { const i = lw.indexOf(s.toLowerCase()); if (i >= 0 && (!best || i < best[0] || (i === best[0] && s.length > best[1]))) best = [i, s.length]; }
+  if (!best) return { pre:'', stem:w, suf:'' };
+  return { pre:w.slice(0, best[0]), stem:w.slice(best[0], best[0] + best[1]), suf:w.slice(best[0] + best[1]) };
+}
+// what kind of word: the stem verb, separable, inseparable, a noun (with its article) or an adjective
+function gwKind(t, de) {
+  const art = gwArt(de); if (art) return 'n';
+  const w = gwClean(de);
+  if (GW_ADJ.has(w)) return 'a';
+  if (w === t.base) return 's';
+  const { pre } = gwParts(de, t.st);
+  if (!pre) return 's';
+  if (GW_INSEP_WORDS.has(w) || GW_INSEP.includes(pre.toLowerCase())) return 'f';
+  return 't';
+}
+const GW_KIND = { s:['Stamm', 'the stem verb', '#5B6670'], t:['trennbar', 'separable', '#1D9E75'], f:['untrennbar', 'inseparable', '#7F77DD'], n:['Nomen', 'noun', '#2F3640'], a:['Adjektiv', 'adjective', '#BA7517'] };
+const gwCol = (k, de) => k === 'n' ? XART[gwArt(de)] : GW_KIND[k][2];
+const GW = [];
+GARDEN.forEach(t => {
+  t.items = t.w.map(([de, en, ta, e, exDe, exEn], j) => {
+    const k = gwKind(t, de);
+    const sib = t.w.map(x => x[0]).filter((x, i) => i !== j), same = sib.filter(x => gwKind(t, x) === k);
+    const wrong = (same.length ? same : sib)[j % (same.length || sib.length || 1)] || de;
+    const x = { id:`gw_${t.id}_${j}`, xt:'wz', k:'garten', tree:t.id, gk:k, q:`„${en}“ = ___`, a:de, o:[de, wrong], t:'', e, w:`${de} = ${en}`, why:`${exDe} – ${exEn}`, ex:exDe, exen:exEn, ta, en };
+    GW.push(x); BYID[x.id] = x; return x;
+  });
+});
+const GBY = Object.fromEntries(GARDEN.map(t => [t.id, t]));
+WTOPICS.push(['garten', 'Wortgarten', () => GW, '🌳']);
+
+/* ---- state: S.garden = { done:{tree:time}, last:time of the last finished tree } ---- */
+const gState = () => (S.garden = S.garden || { done:{}, last:0 });
+const gLearned = x => ((S.srs[x.id] || {}).box || 0) >= 1;
+const gTreeLearned = t => t.items.filter(gLearned).length;
+const gLearnedItems = () => GW.filter(x => gLearned(x) || (gState().done[x.tree]));
+function mergeGarden(a, b) {
+  if (!a && !b) return undefined; a = a || {}; b = b || {};
+  const done = Object.assign({}, b.done || {});
+  for (const [k, v] of Object.entries(a.done || {})) done[k] = done[k] ? Math.min(done[k], v) : v;
+  return { done, last:Math.max(a.last || 0, b.last || 0) };
+}
+// the words of the trees finished most recently (for Lena in the scenes and for writing tasks)
+function gardenRecent(n = 18) {
+  const done = Object.entries(gState().done).sort((x, y) => y[1] - x[1]).map(([id]) => GBY[id]).filter(Boolean);
+  return done.flatMap(t => t.w.map(w => w[0])).slice(0, n);
+}
+const gardenPrompt = () => { const r = gardenRecent(); return r.length ? `\nThe learner recently learned these words in the app's Wortgarten (word families): ${r.join(', ')}. Use two or three of them naturally when they fit the scene (never force them). When the learner uses one correctly, say so briefly in feedback_explanation.` : ''; };
+const gardenTaskPoint = () => { const r = shuffle(gardenRecent(12)).slice(0, 3); return r.length >= 3 ? [`Use 3 of your new Wortgarten words: ${r.join(', ')}.`] : []; };
+
+/* ---- the reminder: no texts, no calendar – the 🌳 tab simply glows when it is time for a new tree ---- */
+// 5 hours after the last finished tree the 🌳 Wortgarten tab glows (and the next tree in the garden): time for a new tree
+const G_GLOW_H = 5;
+function gardenDue() {
+  const g = gState(); if (!g.last || Object.keys(g.done).length >= GARDEN.length) return 0;
+  const h = (Date.now() - g.last) / 3600000; return h >= G_GLOW_H ? Math.floor(h) : 0;
+}
+const nextTree = () => GARDEN.find(t => !gState().done[t.id]) || GARDEN[0];
+
+/* ---- the 🌳 tab ---- */
+function renderGarden() {
+  const g = gState(), doneN = Object.keys(g.done).length, words = GW.filter(gLearned).length, due = gardenDue();
+  const card = t => {
+    const n = gTreeLearned(t), done = g.done[t.id];
+    return `<button class="tcard gcard${done ? ' bloom' : ''}${due && t === nextTree() ? ' glow' : ''}" data-tree="${t.id}"><span class="te">${t.e}</span><b>${esc(t.st[0])}-</b><small>${esc(t.base)} · ${esc(t.en)}</small><span class="gstate">${done ? '🌸 blüht' : n ? `🌿 ${n} / ${t.w.length}` : `🌱 ${t.w.length} Wörter`}</span></button>`;
+  };
+  const enough = gLearnedItems().length >= 4;
+  $('#gardenBox').innerHTML = `<div class="trhead"><span class="gbig">🌳</span><div class="trti"><h3>Wortgarten<small class="en2">50 word families: one stem, all the words that grow from it</small></h3></div><div class="trbal">🌸 ${doneN} / ${GARDEN.length}</div></div>
+    <p class="note">Jeder Baum: Lena erzählt eine kleine Geschichte, Sie entdecken die Wörter mit Bildern und spielen das Bau-Spiel. Gelernte Wörter kommen in Karteikarten, Runner, Szenen und Schreiben wieder.<small class="en2">Each tree: Lena tells a little story, you explore the words with animated pictures and play the building game. Learned words come back in flashcards, the runner, Szenen and writing. ${words} words learned so far.</small></p>
+    <div class="row2 gacts"><button class="btn center" type="button" data-gact="run"${enough ? '' : ' disabled'}>🏃 Garten-Mix<small class="en2">Runner with your garden words</small></button><button class="btn center" type="button" data-gact="write"${enough ? '' : ' disabled'}>✍️ Tippen<small class="en2">Type your garden words</small></button></div>
+    ${['A1', 'A2', 'B1'].map(lv => `<h3 class="scath">${lv}<small class="en2">${GARDEN.filter(t => t.lv === lv && g.done[t.id]).length} / ${GARDEN.filter(t => t.lv === lv).length} trees in bloom</small></h3><div class="tcards">${GARDEN.filter(t => t.lv === lv).map(card).join('')}</div>`).join('')}`;
+}
+function gardenRun(items) {
+  const q = shuffle(items.slice()).slice(0, 10).map(xQ); if (q.length < 4) return;
+  startLevel(0, q);
+}
+function gardenWrite(items) {
+  const w = shuffle(items.slice()).slice(0, 8).map(x => writeItem('l1', 'x', x.id)).filter(Boolean); if (w.length < 3) return;
+  startWriting('l1', w);
+}
+$('#gardenBox').addEventListener('click', e => {
+  const t = e.target.closest('[data-tree]'); if (t) { openTree(t.dataset.tree); return; }
+  const a = e.target.closest('[data-gact]'); if (!a || a.disabled) return;
+  if (a.dataset.gact === 'run') gardenRun(gLearnedItems()); else gardenWrite(gLearnedItems());
+});
+
+/* ---- one tree: 🎧 tour · 🌳 explore · 🧩 game ---- */
+let GT = null;
+// the animated picture of a word: the pieces fly together (prefix from the left, ending from the right), the article in its colour
+function gwPic(t, x) {
+  const de = x.a, k = x.gk, col = gwCol(k, de), p = gwParts(de, t.st), art = gwArt(de), y = 122, segs = [];
+  if (art) segs.push({ t:art, c:XART[art], wt:800, sp:1 });
+  if (/^sich\s/.test(de)) segs.push({ t:'sich', c:'#8F9BA5', wt:700, sp:1 });
+  if (p.pre) segs.push({ t:p.pre.trim(), c:col, wt:800, sp:/\s$/.test(p.pre) ? 1 : 0, from:[24, y - 34] });
+  segs.push({ t:p.stem, c:'#2F3640', wt:800 });
+  if (p.suf) segs.push({ t:p.suf, c:col, wt:800, from:[296, y - 34] });
+  const kindTxt = k === 'n' ? `${art} · Nomen` : GW_KIND[k][0];
+  return `<svg class="gsvg gwpic" viewBox="0 0 320 180" role="img" aria-label="${esc(de)}">${bob(em(x.e, 160, 50, 46))}${verbRow(segs, y, 30)}${txt(esc(x.en), 160, 156, 13, '#5B6670', 600)}${badge(kindTxt, col)}</svg>`;
+}
+// the tree: trunk with the stem, branches growing out to the leaves (they grow once, one after another)
+function gwTreeSVG(t, bloom) {
+  const n = t.items.length, rows = Math.ceil(n / 2), H = 70 + rows * 58 + 70, tx = 340, ty = H - 46;
+  let br = '', lv = '';
+  t.items.forEach((x, j) => {
+    const left = j % 2 === 0, r = Math.floor(j / 2), y = 30 + r * 58, lx = left ? 14 : 470, w = 196, cx = left ? lx + w : lx;
+    const col = gwCol(x.gk, x.a), learned = gLearned(x);
+    br += `<path class="gwbr" style="--d:${0.1 + j * 0.08}s" d="M${tx} ${ty - 30} C${tx} ${y + 30}, ${(tx + cx) / 2} ${y + 17}, ${cx} ${y + 17}" fill="none" stroke="#8B6B4A" stroke-width="4" stroke-linecap="round"/>`;
+    lv += `<g class="gwleaf${learned ? ' on' : ''}" style="--d:${0.3 + j * 0.08}s" data-leaf="${j}" role="button" tabindex="0" aria-label="${esc(x.a)}"><rect x="${lx}" y="${y}" width="${w}" height="40" rx="14" fill="${learned ? '#EAF3DE' : '#FFFFFF'}" stroke="${col}" stroke-width="3"/>`
+      + `<text x="${lx + w / 2}" y="${y + 16}" font-size="14.5" font-weight="800" fill="#2F3640" text-anchor="middle" font-family="Jost,Futura,Arial,sans-serif">${esc(x.a.replace(/\s*\(.*?\)$/, ''))}</text>`
+      + `<text x="${lx + w / 2}" y="${y + 31}" font-size="11" font-weight="600" fill="#5B6670" text-anchor="middle" font-family="Jost,Futura,Arial,sans-serif">${esc(x.en.length > 30 ? x.en.slice(0, 29) + '…' : x.en)}</text>${learned ? em('🍃', lx + w - 12, y + 6, 14) : ''}</g>`;
+  });
+  const trunk = `<path d="M${tx - 22} ${H - 8} Q${tx - 10} ${ty - 10} ${tx - 8} ${ty - 40} L${tx + 8} ${ty - 40} Q${tx + 10} ${ty - 10} ${tx + 22} ${H - 8} Z" fill="#8B6B4A"/>`
+    + `<rect x="${tx - 78}" y="${ty - 18}" width="156" height="40" rx="14" fill="#2F3640"/>${txt(esc(t.st[0] + '-'), tx, ty - 3, 17, '#FFFFFF', 800)}${txt(esc(t.base), tx, ty + 13, 11, '#DDE3E8', 600)}`;
+  const flowers = bloom ? [[300, 40], [380, 70], [330, 110], [250, 90], [420, 30]].map(([x, y], i) => `<g class="gwbloom" style="--d:${0.6 + i * 0.15}s">${em('🌸', x, y, 26)}</g>`).join('') : '';
+  return `<svg class="gwtree" viewBox="0 0 680 ${H}" role="img" aria-label="Wortbaum ${esc(t.base)}">${br}${trunk}${lv}${flowers}</svg>`;
+}
+const gwLegend = () => `<div class="gwlegend">${Object.entries(GW_KIND).map(([k, [de, en, c]]) => k === 'n' ? `<span><i style="background:${XART.der}"></i><i style="background:${XART.die}"></i><i style="background:${XART.das}"></i>${de}<small>der · die · das</small></span>` : `<span><i style="background:${c}"></i>${de}<small>${en}</small></span>`).join('')}</div>`;
+function gwLeafHTML(t, j) {
+  const x = t.items[j]; if (!x) return '';
+  const art = gwArt(x.a);
+  return `<div class="gwcard">${gwPic(t, x)}
+    <div class="gwword"><b style="color:${x.gk === 's' ? 'var(--black)' : gwCol(x.gk, x.a)}">${esc(x.a)}</b> <button class="linkbtn" type="button" data-say="${esc(x.a.replace(/\s*\(.*?\)$/, ''))}">🔊</button>${starBtn(x.id)}</div>
+    <div class="gwmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">🪷 ${esc(x.ta)}</div>` : ''}
+    <div class="s gwex">„${esc(x.ex)}“ <button class="linkbtn" type="button" data-say="${esc(x.ex)}">🔊</button><div class="tr">${esc(x.exen)}</div></div>
+    ${art ? `<p class="note">${art === 'die' && /ung$/.test(gwClean(x.a)) ? 'Nomen auf -ung sind immer <b>die</b>.' : art === 'das' && /^Ge/.test(gwClean(x.a)) ? 'Nomen mit Ge- sind oft <b>das</b>.' : art === 'der' && /er$/.test(gwClean(x.a)) ? 'Personen auf -er sind meist <b>der</b>.' : ''}</p>` : ''}</div>`;
+}
+const gwHL = (t, s) => esc(s).replace(new RegExp(`([A-Za-zÄÖÜäöüß]*(?:${t.st.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})[A-Za-zÄÖÜäöüß]*)`, 'gi'), '<b class="gwhl">$1</b>');
+function openTree(id, step) {
+  const t = GBY[id]; if (!t) return;
+  stopVoice(); GT = { t, step:step || 'tour', leaf:0, en:false, q:null }; show('gtree'); $('#gtree').scrollTop = 0; renderTree();
+}
+function renderTree() {
+  const { t, step } = GT, done = gState().done[t.id];
+  $('#gtTitle').textContent = `${t.e} ${t.st[0]}- · ${t.base}`;
+  $('#gtSub').innerHTML = bi(`${t.lv} · ${t.w.length} Wörter · ${done ? '🌸 blüht' : `${gTreeLearned(t)} gelernt`}`, `${t.en}`);
+  $$('#gtSteps button').forEach(b => b.classList.toggle('on', b.dataset.gstep === step));
+  let h = '';
+  if (step === 'tour') {
+    h = `<div class="gtour"><div class="gtlena"><span class="gtav">👩🏽‍🦰</span><div><b>Lena erzählt</b><small class="en2">Lena tells a little story with the word family</small></div></div>
+      ${t.tour.map(([de, en]) => `<p class="stp"><span class="stde">${gwHL(t, de)}</span>${GT.en ? `<span class="sten" style="display:block">${esc(en)}</span>` : ''}</p>`).join('')}
+      <div class="row2"><button class="btn center" type="button" data-gt="read">🔊 Vorlesen<small class="en2">Read aloud</small></button><button class="btn center" type="button" data-gt="en" aria-pressed="${GT.en}">🌐 English</button></div>
+      <button class="btn blue center" type="button" data-gstep="explore" style="width:100%;margin-top:10px">🌳 Weiter: die Wörter entdecken →<small class="en2">Next: explore the words</small></button></div>`;
+  } else if (step === 'explore') {
+    h = `${gwTreeSVG(t, !!done)}${gwLegend()}<p class="note" style="text-align:center">Tippen Sie auf ein Blatt.<small class="en2">Tap a leaf to see its picture, meaning and example.</small></p><div id="gtLeaf">${gwLeafHTML(t, GT.leaf)}</div>
+      <button class="btn blue center" type="button" data-gstep="game" style="width:100%;margin-top:12px">🧩 Weiter: das Bau-Spiel →<small class="en2">Next: the building game</small></button>`;
+  } else if (step === 'game') h = gwGameHTML();
+  $('#gtBody').innerHTML = h;
+}
+/* ---- 🧩 the game: three kinds of questions, mixed: meaning → word, word → meaning, and der / die / das for the nouns ---- */
+function gwGameStart() {
+  const { t } = GT;
+  const qs = shuffle(t.items.slice()).map((x, i) => {
+    const others = shuffle(t.items.filter(y => y !== x));
+    const kind = x.gk === 'n' && i % 3 === 2 ? 'art' : i % 2 ? 'mean' : 'word';
+    if (kind === 'art') { const a = gwArt(x.a); return { x, kind, ask:`___ ${gwClean(x.a)}`, opts:['der', 'die', 'das'], ans:a }; }
+    if (kind === 'mean') return { x, kind, ask:x.a, opts:shuffle([x.en, ...others.slice(0, 2).map(y => y.en)]), ans:x.en };
+    return { x, kind, ask:`„${x.en}“`, opts:shuffle([x.a, ...others.slice(0, 2).map(y => y.a)]), ans:x.a };
+  });
+  GT.q = { list:qs, i:0, ok:0, coins:0, picked:null };
+}
+function gwGameHTML() {
+  if (!GT.q) gwGameStart();
+  const Q = GT.q, { t } = GT;
+  if (Q.i >= Q.list.length) return gwDoneHTML();
+  const q = Q.list[Q.i], ans = Q.picked;
+  const lead = q.kind === 'art' ? bi('Welcher Artikel?', 'Which article?') : q.kind === 'mean' ? bi('Was bedeutet das?', 'What does it mean?') : bi('Welches Wort passt?', 'Which word fits?');
+  return `<div class="gwgame"><div class="gwprog"><i style="width:${Math.round(100 * Q.i / Q.list.length)}%"></i></div><div class="gwqn">${Q.i + 1} / ${Q.list.length}</div>
+    <div class="gwask"><span class="gwemo">${q.x.e}</span><div class="wq">${esc(q.ask)}</div><div class="whead">${lead}</div></div>
+    <div class="gwopts">${q.opts.map(o => `<button class="btn center${ans !== null ? (o === q.ans ? ' green' : o === ans ? ' red' : '') : ''}" type="button" data-gopt="${esc(o)}"${ans !== null ? ' disabled' : ''}>${esc(o)}</button>`).join('')}</div>
+    ${ans !== null ? `<div class="gwfb ${ans === q.ans ? 'ok' : 'bad'}">${ans === q.ans ? '✓ Richtig!' : '✗ Richtig ist:'} <b>${esc(q.x.a)}</b> = ${esc(q.x.en)}<div class="tr">„${esc(q.x.ex)}“</div></div><button class="btn blue center" type="button" data-gnext style="width:100%">Weiter →</button>` : ''}</div>`;
+}
+function gwAnswer(o) {
+  const Q = GT.q, q = Q.list[Q.i]; if (Q.picked !== null) return;
+  Q.picked = o; const ok = o === q.ans;
+  grade(q.x.id, ok);
+  if (ok) { Q.ok++; Q.coins += coinOnce('gw:' + q.x.id, 2); }
+  save(); audioCtx(); say(q.x.a.replace(/^sich\s+/, 'sich ').replace(/\s*\(.*?\)$/, ''));
+  renderTree();
+}
+function gwDoneHTML() {
+  const Q = GT.q, { t } = GT, g = gState();
+  if (!Q.finished) {
+    Q.finished = true;
+    const first = !g.done[t.id]; if (first) g.done[t.id] = Date.now();
+    g.last = Date.now();
+    const bonus = coinOnce('tree:' + t.id, 30); Q.coins += bonus + dailyBonus(); save();
+    setTimeout(() => coinToast(Q.coins, 'cards'), 300);
+  }
+  const nx = GARDEN.find(x => !g.done[x.id] && x !== t);
+  return `<div class="gwdone">${gwTreeSVG(t, true)}<h3>🌸 ${esc(t.base)}: Der Baum blüht!<small class="en2">The tree is in bloom!</small></h3>
+    <p class="wq">${Q.ok} / ${Q.list.length} richtig${Q.coins ? ` · 🪙 +${Q.coins}` : ''}</p>
+    <div class="row2"><button class="btn center" type="button" data-gdo="run">🏃 Im Runner üben<small class="en2">Practise these words in the runner</small></button><button class="btn center" type="button" data-gdo="write">✍️ Tippen<small class="en2">Type these words</small></button></div>
+    <div class="row2"><button class="btn center" type="button" data-gdo="again">↻ Noch einmal spielen<small class="en2">Play again</small></button>${nx ? `<button class="btn blue center" type="button" data-tree="${nx.id}">${nx.e} Nächster Baum: ${esc(nx.base)} →<small class="en2">Next tree</small></button>` : ''}</div></div>`;
+}
+$('#gtSteps').addEventListener('click', e => { const b = e.target.closest('[data-gstep]'); if (b && GT) { GT.step = b.dataset.gstep; if (GT.step === 'game') GT.q = null; stopVoice(); renderTree(); $('#gtree').scrollTop = 0; } });
+$('#gtBody').addEventListener('click', e => {
+  if (!GT) return;
+  const st = e.target.closest('[data-gstep]'); if (st) { GT.step = st.dataset.gstep; if (GT.step === 'game') GT.q = null; stopVoice(); renderTree(); $('#gtree').scrollTop = 0; return; }
+  const lf = e.target.closest('[data-leaf]'); if (lf) { GT.leaf = +lf.dataset.leaf; $('#gtLeaf').innerHTML = gwLeafHTML(GT.t, GT.leaf); const x = GT.t.items[GT.leaf]; audioCtx(); say(x.a.replace(/\s*\(.*?\)$/, '')); $('#gtLeaf').scrollIntoView({ block:'nearest', behavior:'smooth' }); return; }
+  const g = e.target.closest('[data-gt]');
+  if (g) { if (g.dataset.gt === 'en') { GT.en = !GT.en; renderTree(); } else { audioCtx(); say(GT.t.tour.map(p => p[0]).join(' ')); } return; }
+  const o = e.target.closest('[data-gopt]'); if (o && !o.disabled) { gwAnswer(o.dataset.gopt); return; }
+  if (e.target.closest('[data-gnext]')) { GT.q.i++; GT.q.picked = null; renderTree(); return; }
+  const d = e.target.closest('[data-gdo]');
+  if (d) { const k = d.dataset.gdo; if (k === 'again') { GT.q = null; renderTree(); } else if (k === 'run') gardenRun(GT.t.items); else gardenWrite(GT.t.items); return; }
+  const tr = e.target.closest('[data-tree]'); if (tr) openTree(tr.dataset.tree);
+});
+$('#gtBody').addEventListener('keydown', e => { const lf = e.target.closest && e.target.closest('[data-leaf]'); if (lf && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); lf.dispatchEvent(new MouseEvent('click', { bubbles:true })); } });
+$('#gtBack').addEventListener('click', () => { stopVoice(); GT = null; S.cefr = 'WG'; show('menu'); });
+
 /* ================= My words: pick a topic with level tabs + topic tiles ================= */
 let wLevel = 'all';
 const WLEVELS = [['all', 'Alle'], ['A1', 'A1'], ['A2', 'A2'], ['B1', 'B1'], ['X', '✨ Mehr']];
-const wLevelOf = k => k === 'wz' ? 'X' : k === 'exam' ? 'B1' : topicTab(k);
+const wLevelOf = k => k === 'wz' || k === 'garten' ? 'X' : k === 'exam' ? 'B1' : topicTab(k);
 function wGroups() {
   const has = wTab === 'star' ? (x => S.bm[x.id]) : (x => S.srs[x.id] || S.intro[x.id]);
   return WTOPICS.map(([key, name, pool, icon]) => ({ key, name, icon, lv:wLevelOf(key), list:pool().filter(has) }));
@@ -8883,6 +9661,7 @@ $('#cChat').addEventListener('click', chatTools);
 $('#hdList').addEventListener('click', chatTools);
 // ---- Schreiben: events ----
 $$('[data-wl]').forEach(b => b.addEventListener('click', () => startWriting(b.dataset.wl)));
+$('#wGarden').addEventListener('click', () => { const it = gLearnedItems(); if (it.length < 3) { $('#menuMsg').textContent = 'Lernen Sie zuerst einen Baum im 🌳 Wortgarten. / First learn a tree in the word garden.'; return; } gardenWrite(it); });
 $('#wLvl').addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { S.cafeLevel = b.dataset.lvl; save(); renderWriteBox(); } });
 $('#wfStart').addEventListener('click', () => openFree(freeTask($('#wfTopic').value)));
 $('#wcStart').addEventListener('click', () => openCafe($('#wcTopic').value, topicKey(), null, true));
@@ -8978,6 +9757,7 @@ function mergeSaves(a, b) {
   m.lib = Object.assign({}, b.lib || {}, a.lib || {});   // Lena's sentences from both devices
   m.notesDel = [...new Set([...(a.notesDel || []), ...(b.notesDel || [])])].slice(-300);
   m.notes = Object.assign({}, b.notes || {}, a.notes || {}); m.notesDel.forEach(id => delete m.notes[id]);
+  m.garden = mergeGarden(a.garden, b.garden); if (!m.garden) delete m.garden;
   m.coins = mergeCoins(a.coins, b.coins); if (!m.coins) delete m.coins;   // coins: see the Tresor section
   m.story = mergeStory(a.story, b.story); if (!m.story) delete m.story;
   return m;
