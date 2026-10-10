@@ -75,7 +75,7 @@ p{line-height:1.5}
 .geo .d2{width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-bottom:38px solid var(--red)}
 .menu .tag{font-size:17px;color:var(--grey);margin:14px 0 18px}
 .menu .streakline{display:flex;gap:10px;align-items:center;font-weight:600;margin-bottom:16px}
-#acctBtn{margin-left:auto;height:44px;max-width:52%;border:calc(3px * var(--bwk)) solid var(--line);background:var(--white);color:var(--black);box-shadow:calc(3px * var(--shk)) calc(3px * var(--shk)) calc(3px * var(--shb)) var(--shadow);font:inherit;font-weight:700;padding:0 10px 0 6px;cursor:pointer;display:flex;align-items:center;gap:7px;text-align:left}
+#acctBtn.old{margin-left:auto;height:44px;max-width:52%;border:calc(3px * var(--bwk)) solid var(--line);background:var(--white);color:var(--black);box-shadow:calc(3px * var(--shk)) calc(3px * var(--shk)) calc(3px * var(--shb)) var(--shadow);font:inherit;font-weight:700;padding:0 10px 0 6px;cursor:pointer;display:flex;align-items:center;gap:7px;text-align:left}
 #acctBtn[hidden]{display:none}
 #cVoice[hidden]{display:none}
 #acctBtn + .themebtn{margin-left:0}
@@ -88,7 +88,31 @@ p{line-height:1.5}
 #acctMsg{min-height:20px;margin-top:8px;font-weight:600}
 details.bkp{margin-top:14px}
 details.bkp summary{cursor:pointer;font-weight:700}
-.ver{float:right;margin-left:8px;font-size:11px;font-weight:700;color:var(--grey);opacity:.8}
+.topbtns{position:relative;display:flex;justify-content:flex-end;gap:8px;margin:-8px -8px 4px 0}
+.topbtns .themebtn{margin-left:0}
+.profbtn{position:relative;width:44px;height:44px;border-radius:999px;border:calc(3px * var(--bwk)) solid var(--line);background:var(--white);color:var(--black);box-shadow:calc(3px * var(--shk)) calc(3px * var(--shk)) calc(3px * var(--shb)) var(--shadow);font-weight:800;font-size:18px;cursor:pointer;padding:0}
+.profbtn[hidden]{display:none}
+.profbtn .av{display:flex;width:100%;height:100%;align-items:center;justify-content:center;border-radius:999px}
+.profbtn .dot{position:absolute;right:-3px;bottom:-3px;font-size:12px;line-height:1;background:var(--white);border-radius:999px;padding:2px}
+.profpop{position:absolute;top:54px;right:0;z-index:20;width:min(340px,86vw);background:#FFFFFF;border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 40px rgba(40,60,72,.22);padding:16px;text-align:left}
+html.dark .profpop{background:#1E252C}
+.profpop[hidden]{display:none}
+.profpop .phead{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.profpop .pav{width:46px;height:46px;flex:0 0 46px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;background:var(--blue);color:#fff}
+.profpop .pav.guest{background:rgba(47,54,64,.14);color:var(--black)}
+.profpop .pname{font-weight:800;font-size:17px}
+.profpop .pmail,.profpop .psync{font-size:13px;color:var(--grey)}
+.profpop .pbtn{display:flex;align-items:center;gap:10px;width:100%;margin:6px 0 0;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(47,54,64,.04);color:var(--black);font-weight:700;font-size:15px;text-align:left;cursor:pointer}
+.profpop .pbtn small{display:block;font-weight:500;font-size:12px;color:var(--grey)}
+.profpop .pbtn.main{background:var(--blue);color:#fff;border-color:transparent}
+.profpop .pbtn.main small{color:rgba(255,255,255,.85)}
+.profpop .prow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.profpop .prow .pbtn{justify-content:center;text-align:center;flex-direction:column;gap:2px}
+.profpop .plist{margin-top:8px;border-top:1px dashed var(--line);padding-top:4px}
+.profpop .plist .pbtn .pav{width:32px;height:32px;flex:0 0 32px;font-size:15px}
+.profpop .pnote{font-size:12px;color:var(--grey);margin:10px 0 0;line-height:1.4}
+.profpop .pout{margin-top:10px;background:transparent}
+.appfoot{margin:22px 0 0;text-align:center;font-size:12px;color:var(--grey)}   /* the version, at the very bottom of the menu */
 .menu .streakline .sq{width:14px;height:14px;background:var(--yellow);border:calc(2px * var(--bwk)) solid var(--line)}
 .menu .levels{display:grid;gap:12px}
 .gapset{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600}
@@ -731,12 +755,14 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
   <!-- MENU -->
   <section id="menu" class="screen">
     <div class="panel menu">
+      <div class="topbtns"><button class="themebtn" id="themeBtn" type="button"></button><button id="acctBtn" class="profbtn" type="button" aria-haspopup="dialog" aria-expanded="false" hidden></button>
+        <div class="profpop" id="profPop" role="dialog" aria-label="Profil" hidden></div></div>
       <div class="brand">
         <h1 aria-label="Deutsch Quest"><span class="w">Deutsch</span><span class="d">Quest</span></h1>
         <div class="geo" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d2"></i></div>
       </div>
-      <p class="tag"><span class="ver" id="appVer"></span>German from A1 to B1: 29 grammar topics to run, write and speak, 41 real-life speaking scenes, telc B1 exam practice and a 12-week plan.</p>
-      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="mCoins" class="coinpill" type="button" aria-label="Coins: open the Tresor"></button><button id="acctBtn" type="button" hidden></button><button class="themebtn" id="themeBtn" type="button"></button></div>
+      <p class="tag">German from A1 to B1: 29 grammar topics to run, write and speak, 41 real-life speaking scenes, telc B1 exam practice and a 12-week plan.</p>
+      <div class="streakline"><span class="sq"></span><span id="mStreak"></span><button id="mCoins" class="coinpill" type="button" aria-label="Coins: open the Tresor"></button></div>
       <p class="mcheer" id="mCheer" hidden></p>
       <div class="tabs" id="cefrTabs"><button data-cefr="A1">A1</button><button data-cefr="A2">A2</button><button data-cefr="B1">B1</button><button data-cefr="EX">🎓 Exam</button><button data-cefr="TR" class="trtab"><svg class="chest" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 10.5Q3 4.5 12 4.5Q21 4.5 21 10.5Z" fill="#C98E57" stroke="#2F3640" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="10" width="18" height="10" rx="1.2" fill="#B07A4A" stroke="#2F3640" stroke-width="1.6"/><rect x="3" y="9.2" width="18" height="2.6" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><path d="M7.5 5.4V20M16.5 5.4V20" stroke="#8A5A33" stroke-width="1.3"/><rect x="10" y="11" width="4" height="4.8" rx="1" fill="#E7C15A" stroke="#2F3640" stroke-width="1.2"/><circle cx="12" cy="13.2" r="0.85" fill="#2F3640"/></svg><span>Tresor</span></button></div>
       <div class="tcards" id="topicCards"></div>
@@ -821,6 +847,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
       </div>
       <button class="btn center" id="bHist" style="margin-top:14px">📖 Frühere Runden<small class="en2">Past rounds</small></button>
       <div class="msg" id="menuMsg" role="status"></div>
+      <p class="appfoot">Deutsch Quest · <span id="appVer"></span></p>
     </div>
   </section>
 
@@ -3594,7 +3621,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.11-4';
+const APP_VERSION = 'v2026.10.11-6';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -9009,7 +9036,7 @@ async function gotToken(r) {
   let me;
   try { me = await (await gFetch('https://www.googleapis.com/oauth2/v3/userinfo')).json(); }
   catch (e) { acctMsg('Die Anmeldung hat nicht geklappt. Bitte noch einmal.<small class="en2">Sign-in did not work. Please try again.</small>'); return; }
-  if (PROFILE && PROFILE.sub === me.sub) { syncNow(); return; }   // the same account: access renewed
+  if (PROFILE && PROFILE.sub === me.sub) { devProfileAdd(PROFILE); syncNow(); return; }   // the same account: access renewed
   // first sign-in or another account: this device switches to that account's copy
   clearTimeout(saveT); await Store.save(S);                         // keep what is on screen now in the current copy
   const key = `${KEY}:${me.sub}`;
@@ -9023,6 +9050,7 @@ async function gotToken(r) {
     }
   }
   lsSet('dq-profile', JSON.stringify({ sub:me.sub, email:me.email || '', name:me.given_name || me.name || me.email || 'Google' }));
+  devProfileAdd({ sub:me.sub, email:me.email || '', name:me.given_name || me.name || me.email || 'Google' });
   location.reload();   // start again with that account's progress; it syncs right after loading
 }
 async function signOut() {
@@ -9094,13 +9122,68 @@ function syncState(st) { SYNC.state = st; acctRender(); }
 const agoText = t => { const m = Math.round((Date.now() - t) / 60000); return !t ? 'noch nie / never' : m < 1 ? 'gerade eben / just now' : m < 60 ? `vor ${m} Min. / ${m} min ago` : `vor ${Math.round(m / 60)} Std. / ${Math.round(m / 60)} h ago`; };
 const SYNC_TXT = { ok:['☁️', 'Synchronisiert', 'Synced'], busy:['⏳', 'Synchronisiere …', 'Syncing …'], tap:['↻', 'Tippen zum Synchronisieren', 'Tap to sync'],
   offline:['📴', 'Offline – später', 'Offline – syncs later'], err:['⚠️', 'Sync fehlgeschlagen – tippen', 'Sync failed – tap to retry'], '':['☁️', '', ''] };
-function acctMsg(h) { const m = $('#acctMsg'); if (m) m.innerHTML = h; }
+function acctMsg(h) { const m = $('#acctMsg'); if (m) m.innerHTML = h; const p = $('#profMsg'); if (p) p.innerHTML = h; }
+/* ---- profiles on this device: every Google account that signed in here keeps its own copy (KEY:<sub>); the guest copy is KEY.
+   The profile button (top right) opens a panel: sync, "Profil wechseln" (only the accounts already on this device),
+   "Konto hinzufügen" (Google sign-in with another account) and sign out (continue as guest). ---- */
+const devProfiles = () => { try { const a = JSON.parse(localStorage.getItem('dq-profiles') || '[]'); return Array.isArray(a) ? a.filter(p => p && p.sub) : []; } catch (e) { return []; } };
+function devProfileAdd(p) {
+  const list = devProfiles().filter(x => x.sub !== p.sub);
+  list.unshift({ sub:p.sub, email:p.email || '', name:p.name || p.email || 'Google', t:Date.now() });
+  try { localStorage.setItem('dq-profiles', JSON.stringify(list.slice(0, 12))); } catch (e) {}
+}
+if (PROFILE && !devProfiles().some(p => p.sub === PROFILE.sub)) devProfileAdd(PROFILE);   // accounts that signed in before this list existed
+const hasGuest = () => { try { return !!localStorage.getItem(KEY); } catch (e) { return false; } };
+const initial = n => esc(((n || '?').trim()[0] || '?').toUpperCase());
+let profList = false;
+function profRender() {
+  const pop = $('#profPop'); if (!pop || pop.hidden) return;
+  const [ic, de] = SYNC_TXT[SYNC.state] || SYNC_TXT[''];
+  const others = devProfiles().filter(p => !PROFILE || p.sub !== PROFILE.sub);
+  const head = PROFILE
+    ? `<div class="phead"><span class="pav">${initial(PROFILE.name)}</span><div><div class="pname">${esc(PROFILE.name)}</div><div class="pmail">${esc(PROFILE.email)}</div><div class="psync">${ic} ${esc(SYNC.state === 'ok' ? 'Synchronisiert · ' + agoText(SYNC.last).split(' / ')[0] : de || 'Synchronisiert')}</div></div></div>`
+    : `<div class="phead"><span class="pav guest">👤</span><div><div class="pname">Gast</div><div class="pmail">Nur auf diesem Gerät gespeichert<small class="en2">Saved on this device only</small></div></div></div>`;
+  const list = profList ? `<div class="plist">${others.map(p => `<button class="pbtn" type="button" data-prof="${esc(p.sub)}"><span class="pav">${initial(p.name)}</span><span>${esc(p.name)}<small>${esc(p.email)}</small></span></button>`).join('')}
+      ${PROFILE && hasGuest() ? '<button class="pbtn" type="button" data-prof="guest"><span class="pav guest">👤</span><span>Gast<small>Fortschritt ohne Konto · progress without an account</small></span></button>' : ''}
+      ${others.length || (PROFILE && hasGuest()) ? '' : '<p class="pnote">Auf diesem Gerät gibt es noch kein anderes Profil. Tippen Sie auf „Konto hinzufügen“.<small class="en2">No other profile on this device yet: tap “Add account”.</small></p>'}</div>` : '';
+  pop.innerHTML = head
+    + (PROFILE ? '<button class="pbtn main" type="button" data-pa="sync">🔄 Jetzt synchronisieren<small>Sync now</small></button>' : '<button class="pbtn main" type="button" data-pa="add">G&nbsp; Mit Google anmelden<small>Sign in: your progress on tablet and laptop</small></button>')
+    + `<div class="prow"${PROFILE ? '' : ' style="grid-template-columns:1fr"'}><button class="pbtn" type="button" data-pa="switch" aria-expanded="${profList}">👥 Profil wechseln<small>Switch profile</small></button>${PROFILE ? '<button class="pbtn" type="button" data-pa="add">➕ Konto hinzufügen<small>Add account</small></button>' : ''}</div>`
+    + list
+    + (PROFILE ? '<button class="pbtn pout" type="button" data-pa="out">↩️ Abmelden<small>Sign out: continue as guest on this device</small></button>' : '')
+    + '<p class="pnote">Funktioniert mit jedem Google-Konto – auch Workspace oder eine eigene E-Mail-Adresse, die bei Google registriert ist. Ihr Fortschritt liegt in Ihrem Google Drive.<small class="en2">Works with any Google account, also Workspace or your own email address registered with Google. Your progress is stored in your Google Drive.</small></p><div class="msg" id="profMsg" role="status"></div>';
+}
+function profOpen(on) {
+  const pop = $('#profPop'), b = $('#acctBtn'); if (!pop) return;
+  pop.hidden = !on; b.setAttribute('aria-expanded', on); if (on) { profList = false; profRender(); }
+}
+// switch to a profile that is already on this device: keep what is on screen, then load that copy (it syncs after a tap)
+async function profSwitch(sub) {
+  if (PROFILE && gToken()) { try { await syncNow(true); } catch (e) {} }
+  clearTimeout(saveT); await Store.save(S);
+  lsSet(G_TOKEN, '');
+  if (sub === 'guest') lsSet('dq-profile', '');
+  else { const p = devProfiles().find(x => x.sub === sub); if (!p) return; lsSet('dq-profile', JSON.stringify({ sub:p.sub, email:p.email, name:p.name })); }
+  location.reload();
+}
+$('#profPop').addEventListener('click', e => {
+  const p = e.target.closest('[data-prof]'); if (p) { profSwitch(p.dataset.prof); return; }
+  const a = e.target.closest('[data-pa]'); if (!a) return;
+  const k = a.dataset.pa;
+  if (k === 'sync') { if (gToken()) syncNow(true); else gAuth(); }
+  else if (k === 'add') gAuth(true);
+  else if (k === 'switch') { profList = !profList; profRender(); }
+  else if (k === 'out') { a.dataset.idle = '↩️ Abmelden'; if (!armDelete(a, 'Noch einmal tippen / Tap again')) return; signOut(); }
+});
+document.addEventListener('pointerdown', e => { const pop = $('#profPop'); if (pop && !pop.hidden && !e.target.closest('#profPop, #acctBtn')) profOpen(false); }, true);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') profOpen(false); });
 function acctRender() {
   const b = $('#acctBtn'); if (!b || !SYNC) return;
   b.hidden = !GOOGLE_CLIENT_ID;
   const [ic, de, en] = SYNC_TXT[SYNC.state] || SYNC_TXT[''];
-  if (!PROFILE) { b.innerHTML = '<span class="av">G</span><span class="an">Anmelden<small>Sign in</small></span>'; b.title = 'Mit Google anmelden: Fortschritt auf allen Geräten / Sign in with Google: progress on all devices'; }
-  else { b.innerHTML = `<span class="av">${esc((PROFILE.name || '?')[0].toUpperCase())}</span><span class="an">${esc(PROFILE.name)}<small>${ic} ${esc(SYNC.state === 'ok' ? agoText(SYNC.last).split(' / ')[0] : de)}</small></span>`; b.title = `${PROFILE.email} · ${de} / ${en}`; }
+  profRender();
+  if (!PROFILE) { b.innerHTML = '<span class="av">👤</span>'; b.title = 'Profil · Gast / Profile · guest'; }
+  else { b.innerHTML = `<span class="av">${initial(PROFILE.name)}</span>${['tap', 'err', 'offline', 'busy'].includes(SYNC.state) ? `<span class="dot">${ic}</span>` : ''}`; b.title = `${PROFILE.name} · ${PROFILE.email} · ${de || 'Synchronisiert'}`; }
   const box = $('#acctBox'); if (!box) return;
   if (!GOOGLE_CLIENT_ID) { box.innerHTML = '<p class="note">Google-Anmeldung ist noch nicht eingerichtet (GOOGLE_CLIENT_ID in index.html).<small class="en2">Google sign-in is not set up yet (GOOGLE_CLIENT_ID in index.html).</small></p>'; return; }
   box.innerHTML = PROFILE
@@ -9110,10 +9193,7 @@ function acctRender() {
     : `<p class="note">Melden Sie sich mit Google an: Ihr Fortschritt wird dann automatisch in Ihrem Google Drive gespeichert und ist auf Tablet und Laptop gleich – ohne Export und Import. Jede Person hat ihr eigenes Konto.<small class="en2">Sign in with Google and your progress is saved to your Google Drive automatically, the same on tablet and laptop – no export or import. Everyone has their own account.</small></p>
       <button class="btn blue center" id="acctIn" style="width:100%">G&nbsp; Mit Google anmelden<small class="en2">Sign in with Google</small></button><div class="msg" id="acctMsg" role="status"></div>`;
 }
-$('#acctBtn').addEventListener('click', () => {
-  if (PROFILE && (SYNC.state === 'tap' || SYNC.state === 'err') ) { if (gToken()) syncNow(true); else gAuth(); return; }
-  renderProg(); show('prog'); $('#acctBox').scrollIntoView({ block:'center' });
-});
+$('#acctBtn').addEventListener('click', () => profOpen($('#profPop').hidden));
 $('#acctBox').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.id === 'acctIn') gAuth(true);
