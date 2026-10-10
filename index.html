@@ -919,6 +919,8 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <div class="keyrow"><input id="cKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Gemini API key"><button class="btn blue center" id="cKeySave">Save &amp; test</button></div>
         <p class="note" id="cKeyMsg"></p>
         <p class="note">Free keys: Google may use these chats to improve its services, so don't share private details with Lena. <button class="linkbtn" id="cKeyDel">Remove key from this device</button></p>
+        <button class="btn center" id="cVTest" style="width:100%;margin-top:10px">🔊 Stimme testen<small class="en2">Test the voice: Lena says one sentence; send a screenshot if you hear nothing</small></button>
+        <div id="cVTestOut" class="note" style="font-family:monospace;font-size:12px;word-break:break-word"></div>
       </div>
       <div id="cChat" class="chat" aria-live="polite"></div>
       <div class="uml" id="cUml" data-target="cText" style="display:none"><button type="button" data-ch="ä">ä</button><button type="button" data-ch="ö">ö</button><button type="button" data-ch="ü">ü</button><button type="button" data-ch="ß">ß</button><button type="button" data-ch="Ä">Ä</button><button type="button" data-ch="Ö">Ö</button><button type="button" data-ch="Ü">Ü</button></div>
@@ -3549,7 +3551,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.10-5';
+const APP_VERSION = 'v2026.10.10-6';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4716,14 +4718,17 @@ function audioCtx() {
 }
 // browsers only allow sound that follows a tap; every tap/key in the café re-unlocks audio (a silent blip does it on Android)
 let audioUnlocked = false;
+let ttsPrimed = false;
 function unlockAudio() {
+  if (!ttsPrimed && window.speechSynthesis) { ttsPrimed = true; try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; u.lang = 'de-DE'; speechSynthesis.speak(u); } catch (e) {} }
   const ctx = audioCtx(); if (!ctx || audioUnlocked && ctx.state === 'running') return;
   try { const src = ctx.createBufferSource(); src.buffer = ctx.createBuffer(1, 1, 22050); src.connect(ctx.destination); src.start(0); audioUnlocked = true; } catch (e) {}
 }
 function talking(on) { const f = $('#lena .lena-svg'); if (f) f.classList.toggle('talk', on); }
+let lastCancel = 0;
 function stopVoice() {
   speakSeq++;
-  if (window.speechSynthesis) speechSynthesis.cancel();
+  if (window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)) { speechSynthesis.cancel(); lastCancel = Date.now(); }
   if (curSrc) { try { curSrc.stop(); } catch (e) {} curSrc = null; }
   talking(false);
 }
@@ -4866,23 +4871,33 @@ function loadVoice() {
 if (window.speechSynthesis) { loadVoice(); speechSynthesis.onvoiceschanged = loadVoice; }
 // returns when the sentence has been spoken (so nothing else talks over it). Android tablets drop an utterance that is
 // started right after cancel(), so after a cancel there is a short pause; if the voice never starts, the learner is told why.
-let devHint = false;
+let devHint = false, devPlain = false, devLog = [];
 function sayDevice(text) {
   if (!window.speechSynthesis || !text) return Promise.resolve();
-  const my = speakSeq, busy = speechSynthesis.speaking || speechSynthesis.pending;
-  speechSynthesis.cancel();
+  const my = speakSeq;
+  if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); lastCancel = Date.now(); }
   return new Promise(done => {
-    const u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; if (deVoice) u.voice = deVoice; u.rate = C.slow ? 0.72 : 0.95; u.pitch = 1.1;
-    let started = false;
-    const end = () => { talking(false); clearTimeout(guard); done(); };
-    u.onstart = () => { started = true; talking(true); };
-    u.onend = u.onerror = end;
-    const guard = setTimeout(() => {
-      if (started) return;
-      end();
-      if (!devHint && my === speakSeq) { devHint = true; cafeStatus('Die Gerätestimme ist stumm. Android: Einstellungen → Sprachausgabe (Text-in-Sprache) → Google, Deutsch installieren. / The tablet voice did not start: in Android settings → Text-to-speech, choose Google and install German.', true); }
-    }, 3500);
-    setTimeout(() => { if (my === speakSeq) speechSynthesis.speak(u); else end(); }, busy ? 250 : 0);
+    let started = false, finished = false, tries = 0, guard = null;
+    const end = () => { if (finished) return; finished = true; talking(false); clearTimeout(guard); done(); };
+    const speak = plain => {
+      tries++;
+      const u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; if (deVoice && !plain) u.voice = deVoice; u.rate = C.slow ? 0.72 : 0.95; u.pitch = 1.1;
+      u.onstart = () => { started = true; talking(true); devLog.push('start' + (plain ? ' (plain)' : '')); };
+      u.onend = () => { devLog.push('end'); end(); };
+      u.onerror = e => { devLog.push('error: ' + (e && e.error)); if (!started && tries < 2) { setTimeout(() => speak(true), 300); return; } end(); };
+      try { speechSynthesis.resume(); } catch (e) {}
+      speechSynthesis.speak(u);
+      clearTimeout(guard);
+      guard = setTimeout(() => {
+        if (started || finished) return;
+        if (tries < 2) { devLog.push('no start: again without voice'); speechSynthesis.cancel(); lastCancel = Date.now(); setTimeout(() => { if (my === speakSeq) speak(true); else end(); }, 350); return; }
+        devLog.push('no start'); end();
+        if (!devHint && my === speakSeq) { devHint = true; cafeStatus('Die Gerätestimme startet nicht. Tippen Sie auf ⚙ → „🔊 Stimme testen“. / The tablet voice does not start: tap ⚙ → “Test the voice”.', true); }
+      }, 2500);
+      if (plain) devPlain = true;
+    };
+    const wait = Math.max(0, 350 - (Date.now() - lastCancel));
+    setTimeout(() => { if (my === speakSeq) speak(devPlain); else end(); }, wait);
   });
 }
 const VOICE_WAIT = 10000;   // if the natural voice takes longer than this, Lena uses the device voice instead
@@ -8711,6 +8726,12 @@ $('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setA
 $('#cKeyBtn').addEventListener('click', () => showKeySetup($('#cSetup').style.display === 'none'));
 $('#cKeySave').addEventListener('click', saveKey);
 $('#cKey').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
+$('#cVTest').addEventListener('click', () => {
+  const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [], de = vs.filter(v => /^de/i.test(v.lang));
+  devLog = []; stopVoice();
+  const out = () => { $('#cVTestOut').textContent = `speechSynthesis: ${window.speechSynthesis ? 'yes' : 'NO'} · voices: ${vs.length} · German: ${de.length} (${de.slice(0, 4).map(v => v.name + (v.localService ? '' : ' [online]')).join(', ')}) · chosen: ${deVoice ? deVoice.name : 'none'} · events: ${devLog.join(' → ') || '…'}`; };
+  sayDevice('Hallo! Ich bin Lena. Hörst du mich?').then(out); out(); setTimeout(out, 1500);
+});
 $('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); modelCache = null; C.model = null; $('#cKeyMsg').textContent = 'Key removed from this device.'; });
 const mic = $('#cMic');
 // one tap starts listening, the next tap sends
