@@ -113,6 +113,41 @@ html.dark .profpop{background:#1E252C}
 .profpop .pnote{font-size:12px;color:var(--grey);margin:10px 0 0;line-height:1.4}
 .profpop .pout{margin-top:10px;background:transparent}
 .gbig{font-size:40px}
+.gwuse{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(29,158,117,.07)}
+.gwhead{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--grey);margin-bottom:4px}
+.gwinf{font-size:17px;font-weight:700;margin:2px 0 6px}
+.gwline{display:flex;align-items:baseline;gap:8px;margin:5px 0;flex-wrap:wrap}
+.gwline .gl{flex:none;min-width:58px;font-size:12px;font-weight:700;color:var(--grey)}
+.gwline .gs{font-size:19px;font-weight:600}
+.gwpre{color:#14805E;font-weight:800}html.dark .gwpre{color:#5DCAA5}
+.gwfly{display:inline-block;color:#14805E;font-weight:800;will-change:transform}html.dark .gwfly{color:#5DCAA5}
+.gwfix{display:inline-block;color:#14805E;font-weight:800;border-bottom:2px solid currentColor}html.dark .gwfix{color:#5DCAA5}
+.gwge{display:inline-block;color:#B4483D;font-weight:800}html.dark .gwge{color:#F09595}
+.gwsein{color:#2E5F96;font-weight:800}html.dark .gwsein{color:#85B7EB}
+.gwhab{font-weight:700}
+.gwppw{position:relative;display:inline-block}
+.gwnoge{position:absolute;left:-2px;top:-17px;font-size:13px;font-weight:800;color:#B4483D;text-decoration:line-through;opacity:0;pointer-events:none}html.dark .gwnoge{color:#F09595}
+.gdots{color:var(--grey)}
+.gwwhy{margin:6px 0 0}.gwseinnote{margin-top:3px}
+.play .gwge{animation:gwdrop .7s 1.2s both}
+.play .gwnoge{animation:gwnoge 2s 1.1s both}
+.play .gwfix{animation:gwwiggle .5s .5s 2}
+@keyframes gwdrop{0%{opacity:0;transform:translateY(-20px)}60%{opacity:1;transform:translateY(3px)}100%{opacity:1;transform:none}}
+@keyframes gwnoge{0%{opacity:0;transform:translateY(-10px)}30%{opacity:1;transform:none}70%{opacity:1;transform:none}100%{opacity:0;transform:translate(16px,-8px) rotate(25deg)}}
+@keyframes gwwiggle{0%,100%{transform:none}30%{transform:translateX(-3px)}70%{transform:translateX(3px)}}
+.gwnoun{display:flex;align-items:center;gap:14px;margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-radius:14px}
+.gwstamp{flex:none;display:inline-block;border:3px solid var(--c);color:var(--c);border-radius:10px;padding:2px 12px;font-size:26px;font-weight:900;letter-spacing:1px;transform:rotate(-6deg)}
+html.dark .gwstamp{filter:brightness(1.45)}
+.play .gwstamp{animation:gwstamp .55s ease-out both}
+@keyframes gwstamp{0%{opacity:0;transform:scale(1.8) rotate(-16deg)}70%{opacity:1;transform:scale(.94) rotate(-5deg)}100%{opacity:1;transform:rotate(-6deg)}}
+.gwnt{flex:1;min-width:0}
+.gwpl{font-size:17px;font-weight:600}.gwpl b{color:#B4483D}html.dark .gwpl b{color:#F09595}.gwpl small{color:var(--grey);font-weight:500}
+.gwrule{font-size:14.5px;margin-top:4px}
+.gwprefix{margin:10px 0;padding:8px 12px;border:1px dashed var(--line);border-radius:14px;font-size:15px}
+.gwalso{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.gwalso small{color:var(--grey)}
+.gwchip{border:1px solid var(--line);background:var(--white);color:var(--black);border-radius:99px;padding:4px 11px;font:inherit;font-size:14px;cursor:pointer}
+.gwhow{text-align:center}
+@media (prefers-reduced-motion:reduce){.gwnoge{opacity:1;position:static;font-size:inherit;margin-right:2px}}
 .gsearch{display:flex;align-items:center;gap:8px;border:calc(2px * var(--bwk)) solid var(--line);background:var(--white);border-radius:16px;padding:4px 12px;margin:0 0 10px}
 .gsearch input{flex:1;min-width:0;border:none;background:transparent;color:var(--black);font:inherit;font-size:17px;padding:8px 0;outline:none}
 .gsearch:focus-within{box-shadow:0 0 0 3px rgba(55,138,221,.35)}
@@ -3701,7 +3736,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.12-5';
+const APP_VERSION = 'v2026.10.12-6';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -9277,7 +9312,7 @@ function gwKind(t, de) {
   if (GW_INSEP_WORDS.has(w) || GW_INSEP.includes(pre.toLowerCase())) return 'f';
   return 't';
 }
-const GW_KIND = { s:['Stamm', 'the stem verb', '#5B6670'], t:['trennbar', 'separable', '#1D9E75'], f:['untrennbar', 'inseparable', '#7F77DD'], n:['Nomen', 'noun', '#2F3640'], a:['Adjektiv', 'adjective', '#BA7517'] };
+const GW_KIND = { s:['Stamm', 'the stem verb', '#5B6670'], t:['trennbar', 'separable', '#1D9E75'], f:['untrennbar', 'inseparable', '#1D9E75'], n:['Nomen', 'noun', '#2F3640'], a:['Adjektiv', 'adjective', '#1D9E75'] };
 const gwCol = (k, de) => k === 'n' ? XART[gwArt(de)] : GW_KIND[k][2];
 const GW = [];
 // the trees grouped by life theme, the most useful tree first (no A1/A2/B1 split: one family mixes levels anyway)
@@ -9446,11 +9481,11 @@ function gwTreeSVG(t, bloom) {
   const rows = gwRows(t), H = 70 + rows.length * 58 + 70, tx = 340, ty = H - 46;
   let br = '', lv = '', links = '', n = 0;
   const leaf = (j, left, y) => {
-    const x = t.items[j], lx = left ? 14 : 470, w = 196, cx = left ? lx + w : lx, col = gwCol(x.gk, x.a), learned = gLearned(x), d = n++;
+    const x = t.items[j], lx = left ? 14 : 470, w = 196, cx = left ? lx + w : lx, col = x.gk === 'n' ? gwCol(x.gk, x.a) : '#8F9BA5', learned = gLearned(x), d = n++;
     br += `<path class="gwbr" style="--d:${0.1 + d * 0.08}s" d="M${tx} ${ty - 30} C${tx} ${y + 30}, ${(tx + cx) / 2} ${y + 17}, ${cx} ${y + 17}" fill="none" stroke="#8B6B4A" stroke-width="4" stroke-linecap="round"/>`;
     lv += `<g class="gwleaf${learned ? ' on' : ''}" style="--d:${0.3 + d * 0.08}s" data-leaf="${j}" role="button" tabindex="0" aria-label="${esc(x.a)}"><rect x="${lx}" y="${y}" width="${w}" height="40" rx="14" fill="${learned ? '#EAF3DE' : '#FFFFFF'}" stroke="${col}" stroke-width="3"/>`
       + `<text x="${lx + w / 2}" y="${y + 16}" font-size="14.5" font-weight="800" fill="#2F3640" text-anchor="middle" font-family="Jost,Futura,Arial,sans-serif">${esc(x.a.replace(/\s*\(.*?\)$/, ''))}</text>`
-      + `<text x="${lx + w / 2}" y="${y + 31}" font-size="11" font-weight="600" fill="#5B6670" text-anchor="middle" font-family="Jost,Futura,Arial,sans-serif">${esc(x.en.length > 30 ? x.en.slice(0, 29) + '…' : x.en)}</text>${learned ? em('🍃', lx + w - 12, y + 6, 14) : ''}</g>`;
+      + `<text x="${lx + w / 2}" y="${y + 31}" font-size="11" font-weight="600" fill="#5B6670" text-anchor="middle" font-family="Jost,Futura,Arial,sans-serif">${esc(x.en.length > 30 ? x.en.slice(0, 29) + '…' : x.en)}</text>${bloom ? `<g class="gwbloom" style="--d:${0.6 + d * 0.05}s">${em('🌸', left ? lx + 1 : lx + w - 1, y - 3, 16)}</g>` : learned ? em('🍃', lx + w - 12, y + 6, 14) : ''}</g>`;
   };
   rows.forEach(([i, j, rel], r) => {
     const y = 30 + r * 58;
@@ -9463,7 +9498,7 @@ function gwTreeSVG(t, bloom) {
   });
   const trunk = `<path d="M${tx - 22} ${H - 8} Q${tx - 10} ${ty - 10} ${tx - 8} ${ty - 40} L${tx + 8} ${ty - 40} Q${tx + 10} ${ty - 10} ${tx + 22} ${H - 8} Z" fill="#8B6B4A"/>`
     + `<rect x="${tx - 78}" y="${ty - 18}" width="156" height="40" rx="14" fill="#2F3640"/>${txt(esc(t.st[0] + '-'), tx, ty - 3, 17, '#FFFFFF', 800)}${txt(esc(t.base), tx, ty + 13, 11, '#DDE3E8', 600)}`;
-  const flowers = bloom ? [[300, 40], [380, 70], [330, 110], [250, 90], [420, 30]].map(([x, y], i) => `<g class="gwbloom" style="--d:${0.6 + i * 0.15}s">${em('🌸', x, y, 26)}</g>`).join('') : '';
+  const flowers = bloom ? [[60, H - 16], [130, H - 22], [200, H - 14], [480, H - 14], [550, H - 22], [620, H - 16]].map(([x, y], i) => `<g class="gwbloom" style="--d:${0.6 + i * 0.15}s">${em('🌸', x, y, 26)}</g>`).join('') : '';
   return `<svg class="gwtree" viewBox="0 0 680 ${H}" role="img" aria-label="Wortbaum ${esc(t.base)}">${br}${trunk}${links}${lv}${flowers}</svg>`;
 }
 const gwLegend = () => `<div class="gwlegend">${Object.entries(GW_KIND).map(([k, [de, en, c]]) => k === 'n' ? `<span><i style="background:${XART.der}"></i><i style="background:${XART.die}"></i><i style="background:${XART.das}"></i>${de}<small>der · die · das</small></span>` : `<span><i style="background:${c}"></i>${de}<small>${en}</small></span>`).join('')}</div>`;
@@ -9472,14 +9507,208 @@ function gwPartnerHTML(t, j) {
   const [k, rel, second] = p, y = t.items[k], lab = rel === 'n' ? (second ? '← Verb' : '→ Nomen') : GW_REL[rel][0];
   return `<button class="gwpart gw${rel}" type="button" data-leaf="${k}">${esc(lab)}: <b>${esc(y.a)}</b> <small>${esc(y.en)}</small></button>`;
 }
+
+/* ---- the word card: how the word is used (prefix jumps / stays, Perfekt with ge-), the noun stamp, what the prefix means ---- */
+// how each garden verb is used: [present (ich …), Perfekt]. Written by hand (no rules: aux and ge- have too many exceptions). … = the rest of the sentence
+const GW_FORMS = {
+  'gehen':['ich gehe', 'ich bin gegangen'], 'ausgehen':['ich gehe aus', 'ich bin ausgegangen'], 'weggehen':['ich gehe weg', 'ich bin weggegangen'], 'mitgehen':['ich gehe mit', 'ich bin mitgegangen'],
+  'zurückgehen':['ich gehe zurück', 'ich bin zurückgegangen'], 'vorbeigehen':['ich gehe an … vorbei', 'ich bin an … vorbeigegangen'],
+  'wohnen':['ich wohne in …', 'ich habe in … gewohnt'], 'sich gewöhnen (an)':['ich gewöhne mich an …', 'ich habe mich an … gewöhnt'],
+  'essen':['ich esse …', 'ich habe … gegessen'], 'aufessen':['ich esse … auf', 'ich habe … aufgegessen'],
+  'sprechen':['ich spreche …', 'ich habe … gesprochen'], 'besprechen':['ich bespreche …', 'ich habe … besprochen'], 'versprechen':['ich verspreche …', 'ich habe … versprochen'],
+  'aussprechen':['ich spreche … aus', 'ich habe … ausgesprochen'], 'ansprechen':['ich spreche … an', 'ich habe … angesprochen'],
+  'lernen':['ich lerne …', 'ich habe … gelernt'], 'kennenlernen':['ich lerne … kennen', 'ich habe … kennengelernt'], 'dazulernen':['ich lerne … dazu', 'ich habe … dazugelernt'],
+  'verlernen':['ich verlerne …', 'ich habe … verlernt'], 'erlernen':['ich erlerne …', 'ich habe … erlernt'], 'auswendig lernen':['ich lerne … auswendig', 'ich habe … auswendig gelernt'],
+  'arbeiten':['ich arbeite', 'ich habe gearbeitet'], 'zusammenarbeiten':['ich arbeite mit … zusammen', 'ich habe mit … zusammengearbeitet'], 'bearbeiten':['ich bearbeite …', 'ich habe … bearbeitet'],
+  'nehmen':['ich nehme …', 'ich habe … genommen'], 'mitnehmen':['ich nehme … mit', 'ich habe … mitgenommen'], 'teilnehmen':['ich nehme an … teil', 'ich habe an … teilgenommen'],
+  'abnehmen':['ich nehme ab', 'ich habe abgenommen'], 'zunehmen':['ich nehme zu', 'ich habe zugenommen'], 'unternehmen':['ich unternehme …', 'ich habe … unternommen'],
+  'kommen':['ich komme', 'ich bin gekommen'], 'ankommen':['ich komme an', 'ich bin angekommen'], 'mitkommen':['ich komme mit', 'ich bin mitgekommen'],
+  'zurückkommen':['ich komme zurück', 'ich bin zurückgekommen'], 'bekommen':['ich bekomme …', 'ich habe … bekommen'], 'vorkommen':['es kommt oft vor', 'es ist oft vorgekommen'],
+  'machen':['ich mache …', 'ich habe … gemacht'], 'aufmachen':['ich mache … auf', 'ich habe … aufgemacht'], 'zumachen':['ich mache … zu', 'ich habe … zugemacht'],
+  'anmachen':['ich mache … an', 'ich habe … angemacht'], 'ausmachen':['ich mache … aus', 'ich habe … ausgemacht'], 'mitmachen':['ich mache mit', 'ich habe mitgemacht'],
+  'nachmachen':['ich mache … nach', 'ich habe … nachgemacht'], 'sauber machen':['ich mache … sauber', 'ich habe … sauber gemacht'],
+  'trinken':['ich trinke …', 'ich habe … getrunken'], 'austrinken':['ich trinke … aus', 'ich habe … ausgetrunken'],
+  'fragen':['ich frage …', 'ich habe … gefragt'], 'nachfragen':['ich frage nach', 'ich habe nachgefragt'], 'befragen':['ich befrage …', 'ich habe … befragt'],
+  'lesen':['ich lese …', 'ich habe … gelesen'], 'vorlesen':['ich lese … vor', 'ich habe … vorgelesen'], 'durchlesen':['ich lese … durch', 'ich habe … durchgelesen'], 'ablesen':['ich lese … ab', 'ich habe … abgelesen'],
+  'spielen':['ich spiele …', 'ich habe … gespielt'], 'mitspielen':['ich spiele mit', 'ich habe mitgespielt'], 'vorspielen':['ich spiele … vor', 'ich habe … vorgespielt'],
+  'geben':['ich gebe …', 'ich habe … gegeben'], 'abgeben':['ich gebe … ab', 'ich habe … abgegeben'], 'ausgeben':['ich gebe … aus', 'ich habe … ausgegeben'],
+  'aufgeben':['ich gebe … auf', 'ich habe … aufgegeben'], 'zugeben':['ich gebe … zu', 'ich habe … zugegeben'],
+  'fahren':['ich fahre', 'ich bin gefahren'], 'abfahren':['ich fahre ab', 'ich bin abgefahren'], 'mitfahren':['ich fahre mit', 'ich bin mitgefahren'], 'erfahren':['ich erfahre …', 'ich habe … erfahren'],
+  'schlafen':['ich schlafe', 'ich habe geschlafen'], 'einschlafen':['ich schlafe ein', 'ich bin eingeschlafen'], 'ausschlafen':['ich schlafe aus', 'ich habe ausgeschlafen'], 'verschlafen':['ich verschlafe', 'ich habe verschlafen'],
+  'kaufen':['ich kaufe …', 'ich habe … gekauft'], 'einkaufen':['ich kaufe ein', 'ich habe eingekauft'], 'verkaufen':['ich verkaufe …', 'ich habe … verkauft'],
+  'hören':['ich höre …', 'ich habe … gehört'], 'zuhören':['ich höre … zu', 'ich habe … zugehört'], 'aufhören':['ich höre auf', 'ich habe aufgehört'],
+  'gehören':['es gehört mir', 'es hat mir gehört'], 'anhören':['ich höre mir … an', 'ich habe mir … angehört'],
+  'schreiben':['ich schreibe …', 'ich habe … geschrieben'], 'aufschreiben':['ich schreibe … auf', 'ich habe … aufgeschrieben'], 'abschreiben':['ich schreibe … ab', 'ich habe … abgeschrieben'],
+  'unterschreiben':['ich unterschreibe …', 'ich habe … unterschrieben'], 'beschreiben':['ich beschreibe …', 'ich habe … beschrieben'],
+  'tragen':['ich trage …', 'ich habe … getragen'], 'eintragen':['ich trage … ein', 'ich habe … eingetragen'], 'übertragen':['ich übertrage …', 'ich habe … übertragen'], 'ertragen':['ich ertrage …', 'ich habe … ertragen'],
+  'bringen':['ich bringe …', 'ich habe … gebracht'], 'mitbringen':['ich bringe … mit', 'ich habe … mitgebracht'], 'beibringen':['ich bringe dir … bei', 'ich habe dir … beigebracht'],
+  'verbringen':['ich verbringe …', 'ich habe … verbracht'], 'zurückbringen':['ich bringe … zurück', 'ich habe … zurückgebracht'], 'vorbeibringen':['ich bringe … vorbei', 'ich habe … vorbeigebracht'],
+  'steigen':['ich steige', 'ich bin gestiegen'], 'einsteigen':['ich steige ein', 'ich bin eingestiegen'], 'aussteigen':['ich steige aus', 'ich bin ausgestiegen'],
+  'umsteigen':['ich steige um', 'ich bin umgestiegen'], 'aufsteigen':['ich steige auf', 'ich bin aufgestiegen'],
+  'stellen':['ich stelle …', 'ich habe … gestellt'], 'bestellen':['ich bestelle …', 'ich habe … bestellt'], 'vorstellen':['ich stelle … vor', 'ich habe … vorgestellt'],
+  'einstellen':['ich stelle … ein', 'ich habe … eingestellt'], 'abstellen':['ich stelle … ab', 'ich habe … abgestellt'],
+  'zahlen':['ich zahle …', 'ich habe … gezahlt'], 'bezahlen':['ich bezahle …', 'ich habe … bezahlt'], 'zählen':['ich zähle …', 'ich habe … gezählt'], 'erzählen':['ich erzähle …', 'ich habe … erzählt'],
+  'rufen':['ich rufe …', 'ich habe … gerufen'], 'anrufen':['ich rufe … an', 'ich habe … angerufen'], 'zurückrufen':['ich rufe … zurück', 'ich habe … zurückgerufen'], 'aufrufen':['ich rufe … auf', 'ich habe … aufgerufen'],
+  'sehen':['ich sehe …', 'ich habe … gesehen'], 'fernsehen':['ich sehe fern', 'ich habe ferngesehen'], 'aussehen':['ich sehe … aus', 'ich habe … ausgesehen'],
+  'ansehen':['ich sehe mir … an', 'ich habe mir … angesehen'], 'nachsehen':['ich sehe nach', 'ich habe nachgesehen'],
+  'ziehen':['ich ziehe …', 'ich habe … gezogen'], 'umziehen':['ich ziehe um', 'ich bin umgezogen'], 'anziehen':['ich ziehe … an', 'ich habe … angezogen'],
+  'ausziehen':['ich ziehe … aus', 'ich habe … ausgezogen'], 'sich umziehen':['ich ziehe mich um', 'ich habe mich umgezogen'],
+  'lassen':['ich lasse …', 'ich habe … gelassen'], 'verlassen':['ich verlasse …', 'ich habe … verlassen'], 'nachlassen':['es lässt nach', 'es hat nachgelassen'],
+  'zulassen':['ich lasse … zu', 'ich habe … zugelassen'], 'entlassen':['ich entlasse …', 'ich habe … entlassen'], 'loslassen':['ich lasse … los', 'ich habe … losgelassen'],
+  'laufen':['ich laufe', 'ich bin gelaufen'], 'ablaufen':['es läuft ab', 'es ist abgelaufen'], 'sich verlaufen':['ich verlaufe mich', 'ich habe mich verlaufen'], 'weglaufen':['ich laufe weg', 'ich bin weggelaufen'],
+  'legen':['ich lege …', 'ich habe … gelegt'], 'sich hinlegen':['ich lege mich hin', 'ich habe mich hingelegt'], 'ablegen':['ich lege … ab', 'ich habe … abgelegt'],
+  'überlegen':['ich überlege …', 'ich habe … überlegt'], 'verlegen':['ich verlege …', 'ich habe … verlegt'],
+  'brauchen':['ich brauche …', 'ich habe … gebraucht'], 'gebrauchen':['ich gebrauche …', 'ich habe … gebraucht'], 'verbrauchen':['ich verbrauche …', 'ich habe … verbraucht'],
+  'stimmen':['es stimmt', 'es hat gestimmt'], 'zustimmen':['ich stimme … zu', 'ich habe … zugestimmt'], 'abstimmen':['ich stimme ab', 'ich habe abgestimmt'],
+  'stehen':['ich stehe', 'ich habe gestanden'], 'aufstehen':['ich stehe auf', 'ich bin aufgestanden'], 'verstehen':['ich verstehe …', 'ich habe … verstanden'],
+  'bestehen':['ich bestehe …', 'ich habe … bestanden'], 'entstehen':['es entsteht', 'es ist entstanden'],
+  'richten':['ich richte …', 'ich habe … gerichtet'], 'einrichten':['ich richte … ein', 'ich habe … eingerichtet'], 'berichten':['ich berichte über …', 'ich habe über … berichtet'],
+  'sorgen (für)':['ich sorge für …', 'ich habe für … gesorgt'], 'besorgen':['ich besorge …', 'ich habe … besorgt'], 'versorgen':['ich versorge …', 'ich habe … versorgt'],
+  'halten':['ich halte …', 'ich habe … gehalten'], 'anhalten':['ich halte an', 'ich habe angehalten'], 'erhalten':['ich erhalte …', 'ich habe … erhalten'],
+  'enthalten':['es enthält …', 'es hat … enthalten'], 'behalten':['ich behalte …', 'ich habe … behalten'], 'sich unterhalten':['ich unterhalte mich mit …', 'ich habe mich mit … unterhalten'],
+  'setzen':['ich setze …', 'ich habe … gesetzt'], 'sich setzen':['ich setze mich', 'ich habe mich gesetzt'], 'übersetzen':['ich übersetze …', 'ich habe … übersetzt'],
+  'fortsetzen':['ich setze … fort', 'ich habe … fortgesetzt'], 'ersetzen':['ich ersetze …', 'ich habe … ersetzt'],
+  'suchen':['ich suche …', 'ich habe … gesucht'], 'besuchen':['ich besuche …', 'ich habe … besucht'], 'aussuchen':['ich suche … aus', 'ich habe … ausgesucht'],
+  'versuchen':['ich versuche …', 'ich habe … versucht'], 'untersuchen':['ich untersuche …', 'ich habe … untersucht'],
+  'raten':['ich rate …', 'ich habe … geraten'], 'beraten':['ich berate …', 'ich habe … beraten'], 'verraten':['ich verrate …', 'ich habe … verraten'],
+  'kennen':['ich kenne …', 'ich habe … gekannt'], 'erkennen':['ich erkenne …', 'ich habe … erkannt'], 'anerkennen':['ich erkenne … an', 'ich habe … anerkannt'],
+  'teilen':['ich teile …', 'ich habe … geteilt'], 'mitteilen':['ich teile … mit', 'ich habe … mitgeteilt'], 'verteilen':['ich verteile …', 'ich habe … verteilt'],
+  'fassen':['ich fasse …', 'ich habe … gefasst'], 'anfassen':['ich fasse … an', 'ich habe … angefasst'], 'zusammenfassen':['ich fasse … zusammen', 'ich habe … zusammengefasst'],
+  'verfassen':['ich verfasse …', 'ich habe … verfasst'], 'erfassen':['ich erfasse …', 'ich habe … erfasst'], 'umfassen':['es umfasst …', 'es hat … umfasst'],
+  'fallen':['ich falle', 'ich bin gefallen'], 'gefallen':['es gefällt mir', 'es hat mir gefallen'], 'einfallen':['es fällt mir ein', 'es ist mir eingefallen'],
+  'ausfallen':['es fällt aus', 'es ist ausgefallen'], 'auffallen':['es fällt mir auf', 'es ist mir aufgefallen'],
+  'schließen':['ich schließe …', 'ich habe … geschlossen'], 'abschließen':['ich schließe … ab', 'ich habe … abgeschlossen'], 'beschließen':['ich beschließe …', 'ich habe … beschlossen'], 'anschließen':['ich schließe … an', 'ich habe … angeschlossen'],
+  'bieten':['ich biete …', 'ich habe … geboten'], 'anbieten':['ich biete … an', 'ich habe … angeboten'], 'verbieten':['ich verbiete …', 'ich habe … verboten'],
+  'schlagen':['ich schlage …', 'ich habe … geschlagen'], 'vorschlagen':['ich schlage … vor', 'ich habe … vorgeschlagen'], 'nachschlagen':['ich schlage … nach', 'ich habe … nachgeschlagen'], 'aufschlagen':['ich schlage … auf', 'ich habe … aufgeschlagen'],
+  'denken':['ich denke an …', 'ich habe an … gedacht'], 'nachdenken':['ich denke über … nach', 'ich habe über … nachgedacht'], 'sich ausdenken':['ich denke mir … aus', 'ich habe mir … ausgedacht'], 'sich bedanken':['ich bedanke mich', 'ich habe mich bedankt'],
+  'drücken':['ich drücke …', 'ich habe … gedrückt'], 'ausdrücken':['ich drücke … aus', 'ich habe … ausgedrückt'], 'drucken':['ich drucke …', 'ich habe … gedruckt'],
+  'binden':['ich binde …', 'ich habe … gebunden'], 'verbinden':['ich verbinde …', 'ich habe … verbunden'], 'anbinden':['ich binde … an', 'ich habe … angebunden'],
+  'führen':['ich führe …', 'ich habe … geführt'], 'einführen':['ich führe … ein', 'ich habe … eingeführt'], 'durchführen':['ich führe … durch', 'ich habe … durchgeführt']
+};
+// noun plurals (null = usually no plural, 'P' = the word is already plural)
+const GW_PL = {
+  'der Eingang':'die Eingänge', 'der Ausgang':'die Ausgänge', 'der Fußgänger':'die Fußgänger', 'die Wohnung':'die Wohnungen', 'das Wohnzimmer':'die Wohnzimmer', 'der Wohnort':'die Wohnorte',
+  'der Einwohner':'die Einwohner', 'der Bewohner':'die Bewohner', 'die Wohngemeinschaft':'die Wohngemeinschaften', 'das Essen':null, 'das Mittagessen':'die Mittagessen', 'das Abendessen':'die Abendessen',
+  'der Esstisch':'die Esstische', 'die Sprache':'die Sprachen', 'das Gespräch':'die Gespräche', 'die Besprechung':'die Besprechungen', 'die Aussprache':null, 'die Lernkarte':'die Lernkarten',
+  'die Arbeit':'die Arbeiten', 'der Arbeiter':'die Arbeiter', 'die Mitarbeiterin':'die Mitarbeiterinnen', 'der Arbeitsplatz':'die Arbeitsplätze', 'das Unternehmen':'die Unternehmen', 'die Ausnahme':'die Ausnahmen',
+  'die Ankunft':'die Ankünfte', 'die Zukunft':null, 'das Getränk':'die Getränke', 'das Trinkgeld':'die Trinkgelder', 'das Trinkwasser':null, 'die Frage':'die Fragen', 'die Anfrage':'die Anfragen',
+  'die Umfrage':'die Umfragen', 'der Fragebogen':'die Fragebogen', 'der Leser':'die Leser', 'die Lesung':'die Lesungen', 'das Spiel':'die Spiele', 'der Spieler':'die Spieler', 'das Beispiel':'die Beispiele',
+  'das Spielzeug':'die Spielzeuge', 'der Spielplatz':'die Spielplätze', 'die Aufgabe':'die Aufgaben', 'die Angabe':'die Angaben', 'die Umgebung':null, 'die Abfahrt':'die Abfahrten', 'die Fahrt':'die Fahrten',
+  'der Fahrer':'die Fahrer', 'das Fahrrad':'die Fahrräder', 'der Fahrplan':'die Fahrpläne', 'die Erfahrung':'die Erfahrungen', 'das Schlafzimmer':'die Schlafzimmer', 'der Schlafsack':'die Schlafsäcke',
+  'der Einkauf':'die Einkäufe', 'die Verkäuferin':'die Verkäuferinnen', 'das Kaufhaus':'die Kaufhäuser', 'der Hörer':'die Hörer', 'das Gehör':null, 'die Unterschrift':'die Unterschriften',
+  'die Beschreibung':'die Beschreibungen', 'der Schreibtisch':'die Schreibtische', 'der Antrag':'die Anträge', 'der Vertrag':'die Verträge', 'der Beitrag':'die Beiträge', 'der Einstieg':'die Einstiege',
+  'die Steigung':'die Steigungen', 'die Bestellung':'die Bestellungen', 'die Vorstellung':'die Vorstellungen', 'die Stelle':'die Stellen', 'die Ausstellung':'die Ausstellungen', 'die Zahl':'die Zahlen',
+  'die Anzahl':null, 'die Zahlung':'die Zahlungen', 'die Erzählung':'die Erzählungen', 'der Anruf':'die Anrufe', 'der Beruf':'die Berufe', 'der Fernseher':'die Fernseher', 'das Wiedersehen':null,
+  'die Sehenswürdigkeit':'die Sehenswürdigkeiten', 'der Umzug':'die Umzüge', 'der Anzug':'die Anzüge', 'der Zug':'die Züge', 'die Erziehung':null, 'der Anlass':'die Anlässe', 'der Läufer':'die Läufer',
+  'der Lebenslauf':'die Lebensläufe', 'die Überlegung':'die Überlegungen', 'die Unterlagen':'P', 'der Gebrauch':null, 'der Verbraucher':'die Verbraucher', 'der Brauch':'die Bräuche', 'die Stimme':'die Stimmen',
+  'die Zustimmung':null, 'die Stimmung':'die Stimmungen', 'das Verständnis':null, 'der Stand':'die Stände', 'die Richtung':'die Richtungen', 'die Einrichtung':'die Einrichtungen', 'die Nachricht':'die Nachrichten',
+  'der Bericht':'die Berichte', 'der Unterricht':null, 'die Sorge':'die Sorgen', 'die Versorgung':null, 'die Vorsorge':null, 'die Haltestelle':'die Haltestellen', 'die Unterhaltung':'die Unterhaltungen',
+  'der Inhalt':'die Inhalte', 'die Übersetzung':'die Übersetzungen', 'die Voraussetzung':'die Voraussetzungen', 'das Gesetz':'die Gesetze', 'der Besuch':'die Besuche', 'der Versuch':'die Versuche',
+  'die Suche':null, 'der Rat':'die Ratschläge', 'die Beratung':'die Beratungen', 'das Rätsel':'die Rätsel', 'der Vorrat':'die Vorräte', 'die Bekannte':'die Bekannten', 'die Kenntnisse':'P',
+  'das Kennzeichen':'die Kennzeichen', 'der Teil':'die Teile', 'die Mitteilung':'die Mitteilungen', 'der Vorteil':'die Vorteile', 'der Nachteil':'die Nachteile', 'die Zusammenfassung':'die Zusammenfassungen',
+  'der Unfall':'die Unfälle', 'der Gefallen':'die Gefallen', 'der Schlüssel':'die Schlüssel', 'der Abschluss':'die Abschlüsse', 'der Schluss':'die Schlüsse', 'der Anschluss':'die Anschlüsse',
+  'das Angebot':'die Angebote', 'der Anbieter':'die Anbieter', 'das Verbot':'die Verbote', 'das Gebiet':'die Gebiete', 'der Vorschlag':'die Vorschläge', 'der Umschlag':'die Umschläge', 'der Zuschlag':'die Zuschläge',
+  'der Gedanke':'die Gedanken', 'das Denkmal':'die Denkmäler', 'das Andenken':'die Andenken', 'der Ausdruck':'die Ausdrücke', 'der Eindruck':'die Eindrücke', 'der Druck':null, 'der Drucker':'die Drucker',
+  'die Verbindung':'die Verbindungen', 'die Binde':'die Binden', 'der Führerschein':'die Führerscheine', 'die Führung':'die Führungen', 'die Einführung':'die Einführungen'
+};
+// what a prefix often means (prefixes have several meanings: this is the most common one, said as "often")
+const GW_PRE = {
+  auf:['offen, nach oben', 'open, up'], zu:['zu, geschlossen; hin zu', 'closed; towards'], an:['an, Kontakt, Start', 'on, contact, start'], aus:['heraus, aus, bis zum Ende', 'out, off, to the end'],
+  ab:['weg, los, nach unten', 'away, off, down'], ein:['hinein', 'in, into'], mit:['zusammen mit', 'along, with'], weg:['weg', 'away'], 'zurück':['zurück', 'back'], vorbei:['vorbei', 'past, by'],
+  vor:['vorne, vorher, für andere', 'in front, before, for others'], nach:['danach; noch einmal prüfen', 'after; to check'], um:['um, herum; wechseln', 'around; to change'], durch:['durch, bis zum Ende', 'through, to the end'],
+  zusammen:['zusammen', 'together'], los:['los, frei', 'off, free'], fort:['weiter', 'on, continuing'], hin:['dorthin, nach unten', 'there, down'], bei:['bei, dazu', 'with, to someone'],
+  dazu:['dazu, extra', 'in addition'], fern:['weit weg', 'far'], teil:['ein Teil', 'a part'],
+  be:['oft: das Verb bekommt ein Objekt (jemanden besuchen)', 'often: the verb takes a direct object (besuchen + someone)'], ver:['oft: falsch, weg oder anders', 'often: wrong, away or changed (verschlafen, verkaufen)'],
+  er:['oft: ein Ergebnis erreichen', 'often: reaching a result (erlernen, erkennen)'], ent:['oft: weg, heraus; neu beginnen', 'often: away, out of; coming into being'],
+  unter:['unter; zwischen', 'under; between'], 'über':['über, hinüber', 'over, across'], ge:['keine feste Bedeutung', 'no fixed meaning']
+};
+// compound nouns: the LAST word decides the article
+const GW_TAIL = { zimmer:'das', platz:'der', tisch:'der', karte:'die', geld:'das', wasser:'das', sack:'der', haus:'das', plan:'der', rad:'das', stelle:'die', schein:'der', bogen:'der', zeug:'das', ort:'der', lauf:'der', gemeinschaft:'die', essen:'das', mal:'das', zeichen:'das' };
+
+const gwPreKey = (t, x) => {
+  if (x.gk !== 't' && x.gk !== 'f') return '';
+  const p = gwParts(x.a, t.st).pre.trim().toLowerCase(); if (!p) return '';
+  if (GW_PRE[p]) return p;
+  // two prefixes in a row (an+er-kennen): the first one; never a whole word like auswendig
+  return Object.keys(GW_PRE).find(k => p.startsWith(k) && GW_PRE[p.slice(k.length)]) || '';
+};
+let GW_PRE_IDX = null;
+const gwPreIdx = () => GW_PRE_IDX || (GW_PRE_IDX = GARDEN.reduce((m, t) => { t.items.forEach((x, j) => { const k = gwPreKey(t, x); if (k) (m[k] = m[k] || []).push([t, j, x]); }); return m; }, {}));
+function gwUseHTML(t, x) {
+  const f = GW_FORMS[x.a]; if (!f) return '';
+  const k = x.gk, inf = gwClean(x.a), [pr, pf] = f, pt = pr.split(' '), ft = pf.split(' ');
+  const part = k === 't' ? pt[pt.length - 1] : '', fpre = k === 'f' ? gwParts(x.a, t.st).pre : '';
+  const tok = w => w === '…' ? '<span class="gdots">…</span>' : esc(w);
+  // the infinitive, split: the prefix flies from here
+  const infH = k === 't' && inf.startsWith(part) ? `<span class="gwpre gwsrc">${esc(part)}</span>${esc(inf.slice(part.length))}`
+    : k === 'f' && fpre && inf.startsWith(fpre) ? `<span class="gwpre">${esc(fpre)}</span>${esc(inf.slice(fpre.length))}` : esc(inf);
+  // present: the separable prefix lands at the end; the inseparable one stays on the verb
+  const prH = pt.map((w, i) => k === 't' && i === pt.length - 1 ? `<span class="gwfly">${esc(w)}</span>`
+    : k === 'f' && i === 1 && fpre && w.toLowerCase().startsWith(fpre.toLowerCase()) ? `<span class="gwfix">${esc(w.slice(0, fpre.length))}</span>${esc(w.slice(fpre.length))}` : tok(w)).join(' ');
+  // Perfekt: haben / sein, and where ge- goes (none for the inseparable verbs)
+  const sein = /^(bin|ist)$/.test(ft[1]), last = ft.length - 1;
+  const ppH = w => {
+    if (k === 'f') return `<span class="gwppw"><span class="gwnoge" aria-hidden="true">ge</span>${esc(w)}</span>`;
+    if (k === 't' && w.startsWith(part + 'ge')) return `<span class="gwpre">${esc(part)}</span><span class="gwge">ge</span>${esc(w.slice(part.length + 2))}`;
+    if (w.startsWith('ge')) return `<span class="gwge">ge</span>${esc(w.slice(2))}`;
+    return esc(w);
+  };
+  const pfH = ft.map((w, i) => i === 1 ? `<span class="${sein ? 'gwsein' : 'gwhab'}">${esc(w)}</span>` : i === last ? ppH(w) : k === 't' && i === last - 1 && w === part ? `<span class="gwpre">${esc(w)}</span>` : tok(w)).join(' ');
+  const say1 = pr.replace(/\s*…\s*/g, ' ').trim(), say2 = pf.replace(/\s*…\s*/g, ' ').trim();
+  const why = k === 't' ? bi(`<b>trennbar</b>: <b class="gwpre">${esc(part)}</b> springt ans Satzende. Im Perfekt steht <b class="gwge">ge</b> in der Mitte.`, 'separable: the prefix jumps to the end of the sentence; in the Perfekt, ge- goes in the middle.')
+    : k === 'f' ? bi(`<b>untrennbar</b>: <b class="gwpre">${esc(fpre)}-</b> bleibt immer am Verb. Im Perfekt: <b>kein ge-</b>.`, 'inseparable: the prefix always stays on the verb; no ge- in the Perfekt.')
+    : bi('Im Perfekt kommt <b class="gwge">ge-</b> nach vorne.', 'In the Perfekt, ge- goes at the front.');
+  return `<div class="gwuse gwanim">
+    <div class="gwhead"><b>So benutzt man es</b><button class="linkbtn" type="button" data-gwplay>▶ nochmal</button></div>
+    ${k === 't' || k === 'f' ? `<div class="gwinf">${infH}</div>` : ''}
+    <div class="gwline"><span class="gl">jetzt</span><span class="gs">${prH}</span><button class="linkbtn" type="button" data-say="${esc(say1)}" aria-label="Anhören">🔊</button></div>
+    <div class="gwline"><span class="gl">Perfekt</span><span class="gs">${pfH}</span><button class="linkbtn" type="button" data-say="${esc(say2)}" aria-label="Anhören">🔊</button></div>
+    <p class="note gwwhy">${why}${sein ? `<small class="en2 gwseinnote">${esc(ft[1])} = sein: Perfekt mit <b>sein</b>, meist bei Bewegung oder Veränderung · with sein, usually for movement or change</small>` : ''}</p></div>`;
+}
+// a plural with the changes marked (umlaut, new ending)
+function gwPlHTML(sg, pl) {
+  const a = gwClean(sg), b = pl.replace(/^die\s+/, '');
+  if (a === b) return `die ${esc(b)} <small>(wie Singular · same as singular)</small>`;
+  let h = ''; for (let i = 0; i < b.length; i++) h += i < a.length && a[i] === b[i] ? esc(b[i]) : `<b>${esc(b[i])}</b>`;
+  return 'die ' + h;
+}
+function gwNounHTML(x) {
+  const art = gwArt(x.a); if (!art || x.gk !== 'n') return '';
+  const w = gwClean(x.a), pl = GW_PL[x.a];
+  const tail = Object.keys(GW_TAIL).sort((p, q) => q.length - p.length).find(e => w.toLowerCase().endsWith(e) && w.length > e.length + 2 && GW_TAIL[e] === art);
+  const rule = pl === 'P' ? '' : art === 'die' && /ung$/.test(w) ? 'Nomen auf <b>-ung</b> sind immer <b>die</b>.' : art === 'die' && /(heit|keit|schaft|ion)$/.test(w) ? 'Nomen auf <b>-heit, -keit, -schaft, -ion</b> sind immer <b>die</b>.'
+    : art === 'die' && /in$/.test(w) && /er/.test(w) ? 'Frauen auf <b>-in</b> sind immer <b>die</b>.' : tail ? `Das <b>letzte</b> Wort entscheidet: ${esc(w.slice(0, w.length - tail.length))} + <b>${art} ${esc(tail[0].toUpperCase() + tail.slice(1))}</b>.`
+    : art === 'das' && /^Ge/.test(w) ? 'Nomen mit <b>Ge-</b> sind oft <b>das</b>.' : art === 'der' && /er$/.test(w) ? 'Personen und Geräte auf <b>-er</b> sind meist <b>der</b>.' : art === 'die' && /e$/.test(w) ? 'Nomen auf <b>-e</b> sind oft <b>die</b>.' : '';
+  return `<div class="gwnoun gwanim"><span class="gwstamp" style="--c:${XART[art]}">${art}</span><div class="gwnt">
+    <div class="gwpl">${pl === 'P' ? bi('Das Wort ist schon Plural.', 'This word is already plural.') : pl ? `Plural: ${gwPlHTML(x.a, pl)} <button class="linkbtn" type="button" data-say="${esc(pl)}" aria-label="Anhören">🔊</button>` : bi('Meist ohne Plural.', 'Usually no plural.')}</div>
+    ${rule ? `<div class="gwrule">💡 ${rule}</div>` : ''}</div></div>`;
+}
+function gwPrefixHTML(t, x) {
+  const k = gwPreKey(t, x); if (!k) return '';
+  const [de, en] = GW_PRE[k], also = gwPreIdx()[k].filter(([, , y]) => y !== x).sort(([a], [b]) => (a === t ? 1 : 0) - (b === t ? 1 : 0)).slice(0, 6);
+  return `<div class="gwprefix"><div><b class="gwpre">${esc(k)}-</b> ≈ ${esc(de)}<small class="en2">${esc(en)}</small></div>
+    ${also.length ? `<div class="gwalso"><small>auch · also:</small>${also.map(([u, j, y]) => `<button class="gwchip" type="button" data-gword="${u.id}|${j}">${esc(gwClean(y.a))}</button>`).join('')}</div>` : ''}</div>`;
+}
+// play the little animations on the card: the prefix flies from the infinitive to the end of the sentence, ge- drops in
+function gwPlay() {
+  const box = $('#gtLeaf'); if (!box || !box.offsetParent) return;
+  const still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  box.querySelectorAll('.gwanim').forEach(el => { el.classList.remove('play'); void el.offsetWidth; if (!still) el.classList.add('play'); });
+  if (still) return;
+  box.querySelectorAll('.gwfly').forEach(f => {
+    const src = f.closest('.gwuse').querySelector('.gwsrc'); if (!src) return;
+    const a = src.getBoundingClientRect(), b = f.getBoundingClientRect();
+    f.style.transition = 'none'; f.style.transform = `translate(${Math.round(a.left - b.left)}px, ${Math.round(a.top - b.top)}px)`; void f.offsetWidth;
+    setTimeout(() => { f.style.transition = 'transform 1s cubic-bezier(.45,-0.25,.3,1.25)'; f.style.transform = ''; }, 450);
+  });
+}
 function gwLeafHTML(t, j) {
   const x = t.items[j]; if (!x) return '';
-  const art = gwArt(x.a);
   return `<div class="gwcard">${gwPic(t, x)}
-    <div class="gwword"><b style="color:${x.gk === 's' ? 'var(--black)' : gwCol(x.gk, x.a)}">${esc(x.a)}</b> <button class="linkbtn" type="button" data-say="${esc(x.a.replace(/\s*\(.*?\)$/, ''))}">🔊</button>${starBtn(x.id)}</div>
-    <div class="gwmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">🪷 ${esc(x.ta)}</div>` : ''}${gwPartnerHTML(t, j)}
+    <div class="gwword"><b style="color:${x.gk === 'n' ? gwCol(x.gk, x.a) : 'var(--black)'}">${esc(x.a)}</b> <button class="linkbtn" type="button" data-say="${esc(x.a.replace(/\s*\(.*?\)$/, ''))}">🔊</button>${starBtn(x.id)}</div>
+    <div class="gwmean">${esc(x.en)}</div>${x.ta ? `<div class="ta">🪷 ${esc(x.ta)}</div>` : ''}${gwUseHTML(t, x)}${gwNounHTML(x)}${gwPartnerHTML(t, j)}${gwPrefixHTML(t, x)}
     <div class="s gwex">„${esc(x.ex)}“ <button class="linkbtn" type="button" data-say="${esc(x.ex)}">🔊</button><div class="tr">${esc(x.exen)}</div></div>
-    ${art ? `<p class="note">${art === 'die' && /ung$/.test(gwClean(x.a)) ? 'Nomen auf -ung sind immer <b>die</b>.' : art === 'das' && /^Ge/.test(gwClean(x.a)) ? 'Nomen mit Ge- sind oft <b>das</b>.' : art === 'der' && /er$/.test(gwClean(x.a)) ? 'Personen auf -er sind meist <b>der</b>.' : ''}</p>` : ''}</div>`;
+  </div>`;
 }
 const gwHL = (t, s) => esc(s).replace(new RegExp(`([A-Za-zÄÖÜäöüß]*(?:${t.st.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})[A-Za-zÄÖÜäöüß]*)`, 'gi'), '<b class="gwhl">$1</b>');
 function openTree(id, step) {
@@ -9498,10 +9727,11 @@ function renderTree() {
       <div class="row2"><button class="btn center" type="button" data-gt="read">🔊 Vorlesen<small class="en2">Read aloud</small></button><button class="btn center" type="button" data-gt="en" aria-pressed="${GT.en}">🌐 English</button></div>
       <button class="btn blue center" type="button" data-gstep="explore" style="width:100%;margin-top:10px">🌳 Weiter: die Wörter entdecken →<small class="en2">Next: explore the words</small></button></div>`;
   } else if (step === 'explore') {
-    h = `${gwTreeSVG(t, !!done)}<p class="note" style="text-align:center">Tippen Sie auf ein Blatt.<small class="en2">Tap a leaf to see its picture, meaning and example.</small></p><div id="gtLeaf">${gwLeafHTML(t, GT.leaf)}</div>
+    h = `${gwTreeSVG(t, !!done)}<p class="note" style="text-align:center">Tippen Sie auf ein Blatt.<small class="en2">Tap a leaf to see its picture, how it is used and an example.</small></p>${done ? '' : `<p class="note gwhow">${bi('🌸 Spielen Sie das 🧩 Bau-Spiel bis zum Ende: Dann blüht der Baum (+30 🪙).', 'Play the building game to the end and the tree blooms: +30 coins, and its words come back in the scenes and in writing.')}</p>`}<div id="gtLeaf">${gwLeafHTML(t, GT.leaf)}</div>
       <button class="btn blue center" type="button" data-gstep="game" style="width:100%;margin-top:12px">🧩 Weiter: das Bau-Spiel →<small class="en2">Next: the building game</small></button>`;
   } else if (step === 'game') h = gwGameHTML();
   $('#gtBody').innerHTML = h;
+  if (step === 'explore') requestAnimationFrame(gwPlay);
 }
 /* ---- 🧩 the game: three kinds of questions, mixed: meaning → word, word → meaning, and der / die / das for the nouns ---- */
 function gwGameStart() {
@@ -9559,7 +9789,9 @@ $('#gtSteps').addEventListener('click', e => { const b = e.target.closest('[data
 $('#gtBody').addEventListener('click', e => {
   if (!GT) return;
   const st = e.target.closest('[data-gstep]'); if (st) { GT.step = st.dataset.gstep; if (GT.step === 'game') GT.q = null; stopVoice(); renderTree(); $('#gtree').scrollTop = 0; return; }
-  const lf = e.target.closest('[data-leaf]'); if (lf) { GT.leaf = +lf.dataset.leaf; $('#gtLeaf').innerHTML = gwLeafHTML(GT.t, GT.leaf); const x = GT.t.items[GT.leaf]; audioCtx(); say(x.a.replace(/\s*\(.*?\)$/, '')); $('#gtLeaf').scrollIntoView({ block:'nearest', behavior:'smooth' }); return; }
+  if (e.target.closest('[data-gwplay]')) { gwPlay(); return; }
+  const gw = e.target.closest('[data-gword]'); if (gw) { const [id, j] = gw.dataset.gword.split('|'); if (id !== GT.t.id) openTree(id, 'explore'); else { GT.step = 'explore'; } GT.leaf = +j; stopVoice(); renderTree(); const l = $('#gtLeaf'); if (l) l.scrollIntoView({ block:'start' }); return; }
+  const lf = e.target.closest('[data-leaf]'); if (lf) { GT.leaf = +lf.dataset.leaf; $('#gtLeaf').innerHTML = gwLeafHTML(GT.t, GT.leaf); requestAnimationFrame(gwPlay); const x = GT.t.items[GT.leaf]; audioCtx(); say(x.a.replace(/\s*\(.*?\)$/, '')); $('#gtLeaf').scrollIntoView({ block:'nearest', behavior:'smooth' }); return; }
   const g = e.target.closest('[data-gt]');
   if (g) { if (g.dataset.gt === 'en') { GT.en = !GT.en; renderTree(); } else { audioCtx(); say(GT.t.tour.map(p => p[0]).join(' ')); } return; }
   const o = e.target.closest('[data-gopt]'); if (o && !o.disabled) { gwAnswer(o.dataset.gopt); return; }
