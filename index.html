@@ -3701,7 +3701,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.12-4';
+const APP_VERSION = 'v2026.10.12-5';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -9498,7 +9498,7 @@ function renderTree() {
       <div class="row2"><button class="btn center" type="button" data-gt="read">🔊 Vorlesen<small class="en2">Read aloud</small></button><button class="btn center" type="button" data-gt="en" aria-pressed="${GT.en}">🌐 English</button></div>
       <button class="btn blue center" type="button" data-gstep="explore" style="width:100%;margin-top:10px">🌳 Weiter: die Wörter entdecken →<small class="en2">Next: explore the words</small></button></div>`;
   } else if (step === 'explore') {
-    h = `${gwTreeSVG(t, !!done)}${gwLegend()}<p class="note" style="text-align:center">Tippen Sie auf ein Blatt.<small class="en2">Tap a leaf to see its picture, meaning and example.</small></p><div id="gtLeaf">${gwLeafHTML(t, GT.leaf)}</div>
+    h = `${gwTreeSVG(t, !!done)}<p class="note" style="text-align:center">Tippen Sie auf ein Blatt.<small class="en2">Tap a leaf to see its picture, meaning and example.</small></p><div id="gtLeaf">${gwLeafHTML(t, GT.leaf)}</div>
       <button class="btn blue center" type="button" data-gstep="game" style="width:100%;margin-top:12px">🧩 Weiter: das Bau-Spiel →<small class="en2">Next: the building game</small></button>`;
   } else if (step === 'game') h = gwGameHTML();
   $('#gtBody').innerHTML = h;
