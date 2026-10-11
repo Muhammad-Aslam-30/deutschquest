@@ -121,8 +121,7 @@ html.dark .profpop{background:#1E252C}
 .gt{position:relative;margin:6px auto 12px;color:#2C2C2A;font-size:16px}
 .gt button{font:inherit;color:inherit;cursor:pointer;text-align:left;background:none;border:none;padding:0}
 .gt small{display:block;font-size:12.5px;font-weight:500;opacity:.78}
-.gt .gq{letter-spacing:2px;opacity:.75}
-.gt .gok{font-style:normal;font-weight:800;color:#3B6D11;margin-left:auto}.gt .gnew{font-style:normal;font-size:11px;font-weight:800;color:#185FA5;margin-left:auto}
+.gt .gok{font-style:normal;font-weight:800;color:#3B6D11;margin-left:auto}
 .gt .gline{margin-top:10px;font-size:15px;line-height:1.45}.gt .gline small{margin-top:2px}
 .gt .gwhl,html.dark .gt .gwhl{color:inherit;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .gsay{font-size:15px;margin-left:4px}
@@ -182,7 +181,7 @@ html.dark .profpop{background:#1E252C}
 .gt-mail{background:#FFFFFF;border:1px solid #D3D1C7;border-radius:12px;overflow:hidden;max-width:620px}
 .gt-mail .gih{background:#185FA5;color:#FFFFFF;font-weight:800;padding:10px 12px}.gt-mail .gih small{display:inline;color:#FFFFFF;opacity:.9}
 .gt-mail .gmail{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-bottom:1px solid #EDEBE4}
-.gt-mail .gmail.new b{color:#0C447C}.gt-mail .gmail.new::before{content:'';flex:none;width:8px;height:8px;border-radius:50%;background:#378ADD}
+.gt-mail .gmail:not(.ok):not(.top) b{color:#0C447C}.gt-mail .gmail:not(.ok):not(.top)::before{content:'';flex:none;width:8px;height:8px;border-radius:50%;background:#378ADD}
 .gt-mail .gmail.top{background:#F1F6FC}
 .gt-mail .gav{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#FFFFFF;background:#534AB7}
 .gt-mail .gav.c0{background:#D85A30}.gt-mail .gav.c1{background:#1D9E75}.gt-mail .gav.c2{background:#185FA5}.gt-mail .gav.c3{background:#993556}
@@ -194,7 +193,7 @@ html.dark .profpop{background:#1E252C}
 .gt-chalk .gci{display:flex;flex-direction:column;padding:4px 0;border-bottom:2px solid rgba(244,241,232,.35)}
 .gt-chalk .gci b{font-size:18px}.gt-chalk small{font-family:Jost,Futura,Arial,sans-serif;color:#DCE6DF;opacity:1}
 .gt-chalk .gline{margin:0 0 12px;font-size:17px;border-bottom:2px dashed rgba(244,241,232,.4);padding-bottom:8px}
-.gt-chalk .gok{color:#C0DD97}.gt-chalk .gnew{color:#FAC775}
+.gt-chalk .gok{color:#C0DD97}
 .gt-chalk .gchalk{position:absolute;right:16px;bottom:-4px;width:40px;height:8px;background:#F4F1E8;border-radius:3px}
 /* chat */
 .gt-chat{background:#E9E4DA;border-radius:18px;padding:0 10px 12px;max-width:520px;overflow:hidden}
@@ -3853,7 +3852,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.13-3';
+const APP_VERSION = 'v2026.10.13-4';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -9755,9 +9754,9 @@ function gwMapSVG(t, bloom) {
   return `<svg class="gmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Die Orte der Wortfamilie ${esc(t.base)}"><rect x="4" y="4" width="${W - 8}" height="${H - 8}" rx="22" fill="#EEF5E6"/>
     <path d="${path}" fill="none" stroke="#B4B2A9" stroke-width="9" stroke-linecap="round" stroke-dasharray="1 16"/>${nodes}${flowers}</svg>`;
 }
-// one word inside a real thing: hidden words show only their picture and meaning
-const gwW = (x, st) => st === 'new' ? `<b class="gq">? ? ?</b>` : `<b>${esc(x.a)}</b>`;
-const gwMark = st => st === 'ok' ? '<i class="gok">✓</i>' : st === 'new' ? '<i class="gnew">neu</i>' : '';
+// one word inside a real thing; learned words get a ✓
+const gwW = x => `<b>${esc(x.a)}</b>`;
+const gwMark = st => st === 'ok' ? '<i class="gok">✓</i>' : '';
 function gwThingHTML(t, pl) {
   const P = G_PLACES[pl.id], line = gwPlaceLine(t, pl.id), done = gwPlaceDone(t, pl);
   const L = line ? gwHL(t, line[0]) : '', LE = line ? esc(line[1]) : '';
@@ -9767,7 +9766,7 @@ function gwThingHTML(t, pl) {
   const stamp = done ? `<div class="gstamp">${esc(P.done)}</div>` : '';
   switch (pl.id) {
     case 'bahnhof': return `<div class="gt gt-board">${stamp}<div class="gbh"><span>Zeit</span><span>Wort</span><span>Gleis</span></div>
-      ${items.map((it, i) => btn(it, 'gbr', `<span>${String(8 + Math.floor((10 + i * 7) / 60)).padStart(2, '0')}:${String((10 + i * 7) % 60).padStart(2, '0')}</span><span>${it.st === 'new' ? `<b class="gq">▒▒▒▒▒▒</b> <small>${esc(it.x.en)}</small>` : `<b>${esc(it.x.a)}</b> <small>${esc(it.x.en)}</small>`}</span><span>${it.st === 'ok' ? '✓' : (i % 9) + 1}</span>`)).join('')}
+      ${items.map((it, i) => btn(it, 'gbr', `<span>${String(8 + Math.floor((10 + i * 7) / 60)).padStart(2, '0')}:${String((10 + i * 7) % 60).padStart(2, '0')}</span><span><b>${esc(it.x.a)}</b> <small>${esc(it.x.en)}</small></span><span>${it.st === 'ok' ? '✓' : (i % 9) + 1}</span>`)).join('')}
       ${line ? `<div class="gline">🔊 Durchsage: „${L}“${say}<small>${LE}</small></div>` : ''}</div>`;
     case 'stadt': return `<div class="gt gt-sign">${stamp}<div class="gpole"></div>${items.map((it, i) => btn(it, 'garrow ' + (i % 2 ? 'l' : 'r'), `${gwW(it.x, it.st)}<small>${it.x.e} ${esc(it.x.en)}</small>${gwMark(it.st)}`)).join('')}
       ${line ? `<div class="gline gbubble">🧍 „${L}“${say}<small>${LE}</small></div>` : ''}</div>`;
@@ -9809,7 +9808,7 @@ function gwPlaceHTML(t, id) {
   return `<div class="gphead"><button class="tback" type="button" data-gplace="" aria-label="Zurück zur Karte"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="gpt"><b>${P.e} ${esc(P.de)}</b><small class="en2">${esc(P.en)} · ${k} / ${pl.js.length} Wörter gelernt</small></div></div>
     ${gwThingHTML(t, pl)}
-    <p class="note" style="text-align:center">${bi('Tippen Sie auf ein Wort. „? ? ?“ = noch nicht entdeckt.', 'Tap a word to open its card. “? ? ?” = not discovered yet.')}</p>
+    <p class="note" style="text-align:center">${bi('Tippen Sie auf ein Wort: Bild, Bedeutung und Beispiel.', 'Tap a word to open its card.')}</p>
     <div class="row2"><button class="btn blue center" type="button" data-gpract="${id}">🧩 Üben: ${pl.js.length} Wörter<small class="en2">Practise these words</small></button>${nx ? `<button class="btn center" type="button" data-gplace="${nx.id}">${G_PLACES[nx.id].e} Weiter: ${esc(G_PLACES[nx.id].de)} →<small class="en2">Next place</small></button>` : `<button class="btn center" type="button" data-gplace="">🗺️ Zur Karte<small class="en2">Back to the map</small></button>`}</div>`;
 }
 // the word card slides up from the bottom
