@@ -3852,7 +3852,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.13-4';
+const APP_VERSION = 'v2026.10.13-5';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -5440,9 +5440,9 @@ function micUp() {
 function cafeStatus(t, err) { const s = $('#cStatus'); s.textContent = t; s.classList.toggle('err', !!err); }
 const chatEl = () => $('#cChat');
 function addBubble(cls, html) { const d = document.createElement('div'); d.className = 'b ' + cls; d.innerHTML = html; chatEl().appendChild(d); chatEl().scrollTop = chatEl().scrollHeight; return d; }
-const lenaInner = (de, en, gn) => `<div class="de">${esc(de)}</div>
-    <div class="tools"><button data-c="tr">🌐 Translate</button><button data-c="say">🔊</button></div>
-    <div class="trbox" hidden><div class="en">${esc(en)}</div><div class="gr"><b>Grammar:</b> ${esc(gn)}</div></div>`;
+const lenaInner = (de, en, gn) => `<div class="de" data-en="${esc(en || '')}">${esc(de)}</div>
+    <div class="tools">${gn ? '<button data-c="tr">💡 Grammatik</button>' : ''}<button data-c="say">🔊</button></div>
+    ${gn ? `<div class="trbox" hidden><div class="gr"><b>Grammatik:</b> ${esc(gn)}</div></div>` : ''}`;
 function lenaBubble(a) {
   const d = addBubble(C.write ? 'lena' : 'lena hid', lenaInner(a.reply_de, a.reply_en, a.grammar_note) + (C.write ? '' : '<div class="tools hidbar"><span class="hidtxt">🎧 Hör gut zu …<small class="en2">Listen first</small></span><button data-c="say">🔊 Nochmal</button><button data-c="reveal">👁 Text</button></div>'));
   d.dataset.de = a.reply_de; C.speaking = C.write ? null : say(a.reply_de);
@@ -8259,7 +8259,7 @@ function hideSelPop() { selPop.hidden = true; selState = null; }
 function showSelPop() {
   if (selState && (selState.busy || selState.done)) return;
   const i = selInfo(); if (!i) { hideSelPop(); return; }
-  const b = i.el.closest('.b'), bubbleEn = b ? ((b.querySelector('.trbox .en') || {}).textContent || '') : '';
+  const b = i.el.closest('.b'), bubbleEn = b ? ((b.querySelector('.de') || { dataset:{} }).dataset.en || '') : '';
   selState = { text:i.text, sent:i.sent, en:bubbleEn, tp:selTopic(i.el), rect:i.rect };
   const nw = i.el.closest('.nw'), mean = nw && nw.dataset.en ? { de:nw.textContent, en:nw.dataset.en } : dictFind(i.text), ask = !mean && lsGet(AI_KEY) && navigator.onLine;
   selPop.innerHTML = (mean ? meanHTML(mean) : ask ? '<div class="selmean wait">⏳ Bedeutung …<small class="en2">Looking up the meaning</small></div>' : '<div class="selmean wait">Bedeutung kommt beim Speichern<small class="en2">Save it: Lena adds the meaning when you are online</small></div>') + `<button type="button" data-selsave>☆ „${esc(i.text)}“ speichern<small class="en2">Save to My words</small></button>`;
@@ -10348,7 +10348,7 @@ $('#cHelp').addEventListener('click', () => { audioCtx(); cafeTurn('[I am stuck.
 function chatTools(e) {
   const b = e.target.closest('[data-c]'); if (!b) return; audioCtx();
   const bub = b.closest('.b');
-  if (b.dataset.c === 'tr') { const box = bub.querySelector('.trbox'); box.hidden = !box.hidden; b.textContent = box.hidden ? '🌐 Translate' : '🌐 Hide'; }
+  if (b.dataset.c === 'tr') { const box = bub.querySelector('.trbox'); box.hidden = !box.hidden; b.textContent = box.hidden ? '💡 Grammatik' : '💡 Ausblenden'; }
   else if (b.dataset.c === 'say') say(bub.dataset.de);
   else if (b.dataset.c === 'sayfix') say(bub.querySelector('.fix').textContent);
   else if (b.dataset.c === 'reveal') bub.classList.remove('hid');
