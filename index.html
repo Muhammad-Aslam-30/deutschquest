@@ -3927,7 +3927,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.14-1';
+const APP_VERSION = 'v2026.10.14-3';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -8443,9 +8443,24 @@ function askVis() {
   $('#askFab').hidden = playing || cur === 'cafe' || !$('#askBox').hidden;
   if (playing && !$('#askBox').hidden) $('#askBox').hidden = true;
 }
+// what Lena sees: first an open card / pop-up, then the part of the screen that is visible right now, then the rest (up to ~5000 characters)
+const ASK_MAX = 5000;
 function askScreen() {
-  const sc = $('.screen.show'), el = sc || ($('#hud').classList.contains('show') ? $('#hud .prompt') : null);
-  return el ? el.innerText.replace(/\s+/g, ' ').trim().slice(0, 1600) : '';
+  const sc = $('.screen.show');
+  if (!sc) return $('#hud').classList.contains('show') ? ($('#hud .prompt') || { innerText:'' }).innerText.replace(/\s+/g, ' ').trim().slice(0, ASK_MAX) : '';
+  const clean = t => t.replace(/\s+/g, ' ').trim();
+  const shown = el => !!(el && el.getClientRects().length) && getComputedStyle(el).visibility !== 'hidden';
+  // an open word card, dialog or pop-up is what the learner is looking at
+  const overlays = [...document.querySelectorAll('.gsheet, [role="dialog"], .modal')].filter(o => o.id !== 'askBox' && !o.closest('#askBox') && shown(o));
+  const top = clean(overlays.map(o => o.innerText).join(' \n '));
+  const box = sc.getBoundingClientRect(), vTop = Math.max(box.top, 0), vBot = Math.min(box.bottom, window.innerHeight || box.bottom), seen = [], rest = [];
+  const w = document.createTreeWalker(sc, NodeFilter.SHOW_TEXT, { acceptNode:n => n.nodeValue.trim() && !overlays.some(o => o.contains(n)) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+  for (let n = w.nextNode(); n; n = w.nextNode()) {
+    const p = n.parentElement; if (!shown(p) || p.closest('script, style, [hidden]')) continue;
+    const b = p.getBoundingClientRect(); (b.bottom > vTop && b.top < vBot ? seen : rest).push(n.nodeValue);
+  }
+  const parts = [top && '[Open card / pop-up] ' + top, seen.length && '[Visible on the screen] ' + clean(seen.join(' ')), rest.length && '[Further up or down on this screen] ' + clean(rest.join(' '))].filter(Boolean);
+  return parts.join('\n').slice(0, ASK_MAX);
 }
 async function askSend(text, wav) {
   text = (text || '').trim(); if ((!text && !wav) || ASK.busy) return;
@@ -8463,7 +8478,7 @@ async function askSend(text, wav) {
 - The learner may ask about what is on their screen right now (an exercise, a mistake, a rule). Use the screen text to understand the question, explain WHY the answer is what it is, and correct the app politely if it is really wrong.
 - Before you explain, work out the structure of the sentence: which word each part belongs to and why (e.g. in "Lena schaut nach draußen", nach belongs to draußen = a direction, Wohin?; it is not the verb pair "schauen nach"). Never call something a fixed combination or a rule unless you are sure.
 - Never invent rules; if you are not sure, say so. If a question is not about German, answer briefly and kindly.`,
-      parts:[{ text:`What the learner sees on the screen right now:\n"""${askScreen()}"""\n\nThe conversation so far:\n${turns || '(none)'}\n\n${wav ? 'The learner\'s last message is the voice recording attached. Write down what they said in "heard" and answer it.' : 'Answer the learner\'s last message.'}` },
+      parts:[{ text:`What the learner sees on the screen right now (an open card or pop-up first, then what is visible, then the rest of the screen):\n"""${askScreen()}"""\n\nThe conversation so far:\n${turns || '(none)'}\n\n${wav ? 'The learner\'s last message is the voice recording attached. Write down what they said in "heard" and answer it.' : 'Answer the learner\'s last message.'}` },
         ...(wav ? [{ inline_data:{ mime_type:'audio/wav', data:wav } }] : [])] });
     if (wav) mine.t = gS(d.heard) || '🎤';
     const ak = ASK.msgs.push({ r:'l', t:gS(d.answer) || '…' }) - 1; setTimeout(() => askCheck(ak), 0);
@@ -10664,6 +10679,8 @@ function gisInit() {   // load Google's sign-in script early: the popup must ope
 }
 function gAuth(fresh) {   // fresh = choose an account (sign in); otherwise renew access for the signed-in account
   if (!SYNC.client) { gisInit(); acctMsg('Google wird geladen … bitte gleich noch einmal tippen.<small class="en2">Loading Google … tap again in a moment.</small>'); return; }
+  if (!fresh && Date.now() - (SYNC.authAt || 0) < 3000) return;
+  SYNC.authAt = Date.now();
   SYNC.client.requestAccessToken(fresh || !PROFILE ? { prompt:'select_account' } : { prompt:'', login_hint:PROFILE.email });
 }
 async function gFetch(url, opt = {}) {
@@ -10843,10 +10860,22 @@ $('#acctBox').addEventListener('click', e => {
   else if (b.id === 'acctSync') { if (gToken()) syncNow(true); else gAuth(); }
   else if (b.id === 'acctOut') { b.dataset.idle = 'Abmelden'; if (!armDelete(b, 'Noch einmal tippen / Tap again')) return; signOut(); }
 });
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && PROFILE && gToken()) cloudSoon(800); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && PROFILE && gToken()) cloudSoon(800); hourCheck(); });
+const SYNC_EVERY = 60 * 60 * 1000;
+function hourCheck() {
+  if (!PROFILE || SYNC.busy || document.hidden || Date.now() - SYNC.last < SYNC_EVERY) return;
+  if (gToken()) syncNow(); else { SYNC.renew = true; syncState('tap'); }
+}
+setInterval(hourCheck, 5 * 60 * 1000);
+// the next tap in the menu renews Google's access (once per hour at most) — only there, never in the middle of a round or a chat
+document.addEventListener('click', () => {
+  if (!SYNC.renew || !PROFILE || gToken() || !SYNC.client || !navigator.onLine || !syncSafe()) return;
+  if (Date.now() - (SYNC.renewAt || 0) < SYNC_EVERY) return;
+  SYNC.renew = false; SYNC.renewAt = Date.now(); gAuth();
+}, true);
 window.addEventListener('online', () => cloudSoon(1500));
 gisInit();
-if (PROFILE) { if (gToken()) cloudSoon(1200); else syncState('tap'); } else acctRender();
+if (PROFILE) { if (gToken()) cloudSoon(1200); else { syncState('tap'); SYNC.renew = true; } } else acctRender();
 
 let resetArmed = false;
 $('#pReset').addEventListener('click', e => {
