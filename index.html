@@ -4003,7 +4003,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.15-4';
+const APP_VERSION = 'v2026.10.15-6';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -5082,8 +5082,15 @@ let limitUntil = 0;   // when the free daily quota is back (from Google's "retry
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let modelCache = null;
 let modelPending = null;   // shares one model-list request between callers that start at the same time
+const AI_MODELS = 'dq-ai-models', keyTag = k => { let h = 5381; for (let i = 0; i < k.length; i++) h = (h * 33 + k.charCodeAt(i)) >>> 0; return h.toString(36); };
 function rankModels(key) {
   if (modelCache && modelCache.key === key) return Promise.resolve(modelCache.list);
+  try { const c = JSON.parse(lsGet(AI_MODELS) || 'null');   // only a short tag of the key is kept with the list, never the key itself
+    if (c && c.k === keyTag(key) && Array.isArray(c.list) && c.list.length) {
+      modelCache = { key, list:c.list, tts:c.tts || [] };
+      if (Date.now() - (c.t || 0) > 86400000 && !modelPending) { modelPending = { key, p:fetchModels(key).catch(() => {}).finally(() => { modelPending = null; }) }; }
+      return Promise.resolve(c.list);
+    } } catch (e) {}
   if (!modelPending || modelPending.key !== key) modelPending = { key, p:fetchModels(key).finally(() => { modelPending = null; }) };
   return modelPending.p;
 }
@@ -5103,7 +5110,8 @@ async function fetchModels(key) {
   const fast = usable.filter(n => !/pro/.test(n));
   const list = fast.length ? fast : usable.length ? usable : ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
   const tts = names.filter(n => /tts/.test(n)).sort((x, y) => (/flash/.test(x) ? 0 : 1) - (/flash/.test(y) ? 0 : 1) || ver(y) - ver(x) || (/preview/.test(x) ? 1 : 0) - (/preview/.test(y) ? 1 : 0));
-  modelCache = { key, list, tts }; return list;
+  modelCache = { key, list, tts }; try { lsSet(AI_MODELS, JSON.stringify({ k:keyTag(key), t:Date.now(), list, tts })); } catch (e) {}
+  return list;
 }
 const pickModel = async key => (await rankModels(key))[0];
 const REPLY_SCHEMA = { type:'OBJECT', properties:{
@@ -5134,7 +5142,7 @@ const THINK = {
   deep:m => /gemini-[3-9]/.test(m) ? [{ thinkingLevel:'medium' }, { thinkingLevel:'low' }, null] : [{ thinkingBudget:2048 }, { thinkingBudget:512 }, null]
 }, THINK_N = 3, thinkIdx = {};
 const ACCURACY = '\nAccuracy matters most: the learner trusts you and learns from what you say. Think before you answer, check the German grammar step by step, and never invent a rule. If you are not sure, say so.';
-const CHAT_WAIT = 15000, CHAT_BUDGET = 35000, REST_MS = 120000;   // per-request limit, overall limit, how long a busy model is skipped
+const CHAT_WAIT = 15000, CHAT_BUDGET = 35000, REST_MS = 120000, HEDGE_MS = 3500;   // … and after how long a slow model gets a second model racing it   // per-request limit, overall limit, how long a busy model is skipped
 // a busy or used-up model "rests": kept on this device (localStorage), so a new chat or a restart does not try it again
 const AI_REST = 'dq-ai-rest', AI_USE = 'dq-ai-use';
 const resting = new Proxy((() => { try { const o = JSON.parse(lsGet(AI_REST) || '{}'), now = Date.now(); Object.keys(o).forEach(k => { if (!(o[k] > now)) delete o[k]; }); return o; } catch (e) { return {}; } })(), {
@@ -5196,28 +5204,40 @@ async function askLena(userText, wav) {
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
     body:JSON.stringify(gBody(model, cafeSystem() + (wav ? VN_RULE : '') + (schema ? '' : `\nThe JSON object has the keys ${wav ? 'heard, ' : ''}reply_de, reply_en, grammar_note, feedback_ok, feedback_corrected, feedback_explanation.`), ctxTurns, { temperature:0.8, maxOutputTokens:3072, think:'fast' }, wav ? REPLY_SCHEMA_V : REPLY_SCHEMA, schema)) }, wav ? CHAT_WAIT + 8000 : CHAT_WAIT);
   const attempt = async model => { try { return await call(model); } catch (e) { if (e.message === 'timeout') return null; throw e; } };
+  // one model, with its own fallbacks for settings it refuses (400): { r, model } when it answered, null when busy / limited (it rests), throws on key problems
+  const tryModel = async model => {
+    let r1 = await attempt(model);
+    if (!r1) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer within ${CHAT_WAIT / 1000} s`); return null; }
+    if (r1.ok) return { r:r1, model };
+    let err = await apiError(r1);
+    while (r1.status === 400 && err.message !== 'key' && !isGemma(model) && ((thinkIdx[tk(model)] || 0) < THINK_N - 1 || schema)) {
+      if ((thinkIdx[tk(model)] || 0) < THINK_N - 1 && !(schema && /schema|response_?mime|json|enum/i.test(err.detail))) thinkIdx[tk(model)] = (thinkIdx[tk(model)] || 0) + 1; else schema = false;
+      r1 = await attempt(model); if (!r1 || r1.ok) break; err = await apiError(r1);
+    }
+    if (!r1) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); return null; }
+    if (r1.ok) return { r:r1, model };
+    if (r1.status === 404 || r1.status === 429 || r1.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r1.status === 404 ? 3600000 : REST_MS)); lastErr = err; return null; }
+    if (r1.status === 400 && err.message !== 'key') { lastErr = err; return null; }
+    throw err;
+  };
+  const race = list => new Promise((resolve, reject) => {
+    let idx = 0, pending = 0, done = false;
+    const next = () => {
+      if (done || idx >= list.length || Date.now() > deadline) return false;
+      const model = list[idx++]; pending++;
+      if (idx > 1) cafeStatus(`Lena is thinking… (trying model ${idx} of ${list.length})`);
+      tryModel(model).then(res => { pending--; if (done) return; if (res) { done = true; resolve(res); } else if (!pending && !next()) { done = true; resolve(null); } },
+        e => { pending--; if (done) return; done = true; reject(e); });
+      return true;
+    };
+    next();
+    setTimeout(() => { if (!done && pending === 1) next(); }, HEDGE_MS);   // the first model is slow: let the next one race
+  });
   try {
-    outer: for (let round = 0; round < 2 && !used; round++) {
+    for (let round = 0; round < 2 && !used; round++) {
       if (round) { if (Date.now() + 2500 > deadline) break; cafeStatus('Gemini is busy, trying again…'); await sleep(2500); }
-      for (const [i, model] of order.entries()) {
-        if (Date.now() > deadline) break outer;
-        if (i || round) cafeStatus(`Lena is thinking… (Gemini is busy, trying model ${i + 1} of ${order.length})`);
-        r = await attempt(model);
-        if (!r) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer within ${CHAT_WAIT / 1000} s`); continue; }
-        if (r.ok) { used = model; break; }
-        let err = await apiError(r);
-        // adapt to what this model accepts: thinking switched off → lighter thinking → default; then plain JSON without schema
-        // any 400 = a setting this model does not accept (Google does not always say which): first lighter / no thinking, then no schema
-        while (r.status === 400 && err.message !== 'key' && !isGemma(model) && ((thinkIdx[tk(model)] || 0) < THINK_N - 1 || schema)) {
-          if ((thinkIdx[tk(model)] || 0) < THINK_N - 1 && !(schema && /schema|response_?mime|json|enum/i.test(err.detail))) thinkIdx[tk(model)] = (thinkIdx[tk(model)] || 0) + 1; else schema = false;
-          r = await attempt(model); if (!r || r.ok) break; err = await apiError(r);
-        }
-        if (!r) { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); continue; }
-        if (r.ok) { used = model; break; }
-        if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; continue; }
-        if (r.status === 400 && err.message !== 'key') { lastErr = err; continue; }   // this model cannot handle the request at all: the next model
-        throw err;                                                            // key problems or other refusals: no point trying other models
-      }
+      const res = await race(round ? modelOrder(ranked, null, Date.now(), !!wav) : order);
+      if (res) { r = res.r; used = res.model; }
     }
     if (!used) throw lastErr || new AIError('busy');
   } catch (e) { C.hist.pop(); throw e; }
@@ -5760,8 +5780,74 @@ async function saveKey() {
 const CAFE_HELLO = '[Start of the scene. Greet me the way your role would, say who you are IN YOUR ROLE in one short sentence (e.g. your job or why you are here), and start the situation with your first question.]';
 function cafeGreet() { cafeTurn(CAFE_HELLO, null); }
 // a continued chat starts with Lena welcoming the learner back and picking up where they stopped
+// the first thing Lena says in each scene, written into the app so the chat starts at once (Gemini takes over from the first answer)
+// [German, English, key words for the listening hint]
+const CAFE_OPEN = {
+  familie:['Hallo! Ich bin Lena, deine neue Nachbarin. Ich bin gestern hier eingezogen. Wohnst du schon lange hier?', 'Hello! I’m Lena, your new neighbour. I moved in yesterday. Have you lived here long?', ['Nachbarin', 'lange']],
+  freizeit:['Hallo, ich bin Lena! Schön, dich beim Sprachtreff zu treffen. Was machst du gern in deiner Freizeit?', 'Hi, I’m Lena! Nice to meet you at the language meetup. What do you like doing in your free time?', ['Freizeit', 'gern']],
+  lernen:['Hallo! Ich bin Lena, ich sitze im Kurs neben dir. Endlich Pause! Seit wann lernst du schon Deutsch?', 'Hi! I’m Lena, I sit next to you in the course. Break at last! How long have you been learning German?', ['seit wann', 'Deutsch']],
+  freunde:['Hey, schön dich zu sehen! Ich habe am Freitagabend Zeit. Hast du Lust, mit mir auszugehen?', 'Hey, good to see you! I’m free on Friday evening. Do you feel like going out with me?', ['Freitagabend', 'Lust']],
+  k_geb:['Hallo! Du weißt ja, ich habe am Samstag Geburtstag. Ich mache eine kleine Party bei mir. Hast du Zeit und Lust zu kommen?', 'Hi! You know my birthday is on Saturday. I’m having a small party at my place. Do you have time and want to come?', ['Geburtstag', 'Samstag']],
+  wetter:['Puh, ist das heute kalt! Der Bus kommt auch zu spät. Wie findest du das Wetter hier in Deutschland?', 'Phew, it’s cold today! And the bus is late. What do you think of the weather here in Germany?', ['Wetter', 'Deutschland']],
+  r_amt:['Guten Tag! Ich bin Frau Lena Schmidt vom Bürgeramt. Was kann ich für Sie tun?', 'Good day! I’m Ms Lena Schmidt from the citizens’ office. What can I do for you?', ['Bürgeramt', 'tun']],
+  a_abh:['Guten Tag, ich bin Frau Lena Weber. Nehmen Sie bitte Platz. Worum geht es heute bei Ihnen?', 'Good day, I’m Ms Lena Weber. Please take a seat. What is your visit about today?', ['Platz', 'worum']],
+  a_fin:['Finanzamt, guten Tag, hier spricht Lena Krause. Was kann ich für Sie tun?', 'Tax office, good day, Lena Krause speaking. What can I do for you?', ['Finanzamt', 'tun']],
+  a_arb:['Guten Tag, ich bin Frau Lena Fischer, Ihre Beraterin. Erzählen Sie mal: Was für eine Arbeit suchen Sie?', 'Good day, I’m Ms Lena Fischer, your adviser. Tell me: what kind of work are you looking for?', ['Arbeit', 'suchen']],
+  r_wohnung:['Guten Tag! Ich bin Frau Lena Becker, die Vermieterin. Kommen Sie herein! Das ist die Wohnung. Wie gefällt sie Ihnen auf den ersten Blick?', 'Good day! I’m Ms Lena Becker, the landlady. Come in! This is the flat. How do you like it at first sight?', ['Wohnung', 'gefällt']],
+  w_verm:['Becker, hallo? Hier ist Ihre Vermieterin. Sie haben angerufen – was ist denn los?', 'Becker, hello? This is your landlady. You called – what’s the matter?', ['Vermieterin', 'los']],
+  w_haus:['Guten Tag! Ich bin Lena, die Hausmeisterin. Sie haben geklingelt. Wie kann ich Ihnen helfen?', 'Good day! I’m Lena, the caretaker. You rang the bell. How can I help you?', ['Hausmeisterin', 'helfen']],
+  w_nach:['Ah, hallo! Ich bin Lena von oben. Gut, dass ich Sie treffe. Kann ich kurz mit Ihnen sprechen?', 'Ah, hello! I’m Lena from upstairs. Good that I’m meeting you. Can I talk to you for a moment?', ['von oben', 'sprechen']],
+  wohnen:['Mahlzeit! Ich bin Lena aus dem Büro nebenan. Sag mal, wohnst du hier in der Stadt oder außerhalb?', 'Enjoy your lunch! I’m Lena from the office next door. Tell me, do you live in town or outside?', ['wohnst', 'Stadt']],
+  g_bank:['Guten Tag, ich bin Frau Lena Hoffmann, Ihre Bankberaterin. Bitte setzen Sie sich. Was kann ich heute für Sie tun?', 'Good day, I’m Ms Lena Hoffmann, your bank adviser. Please sit down. What can I do for you today?', ['Bankberaterin', 'tun']],
+  g_handy:['Hallo und herzlich willkommen! Ich bin Lena. Suchen Sie einen neuen Handyvertrag oder Internet für zu Hause?', 'Hello and welcome! I’m Lena. Are you looking for a new phone contract or internet for your home?', ['Handyvertrag', 'Internet']],
+  g_vers:['Guten Tag, ich bin Frau Lena Wagner von der Krankenkasse. Wie kann ich Ihnen heute helfen?', 'Good day, I’m Ms Lena Wagner from the health insurance. How can I help you today?', ['Krankenkasse', 'helfen']],
+  r_arzt:['Guten Tag, ich bin Dr. Lena Neumann. Bitte setzen Sie sich. Was fehlt Ihnen denn?', 'Good day, I’m Dr Lena Neumann. Please sit down. What seems to be the problem?', ['setzen', 'fehlt']],
+  r_termin:['Praxis Dr. Neumann, Sie sprechen mit Lena. Guten Tag! Was kann ich für Sie tun?', 'Dr Neumann’s practice, you’re speaking to Lena. Good day! What can I do for you?', ['Praxis', 'tun']],
+  ge_apo:['Guten Tag! Ich bin Lena, die Apothekerin. Was darf es sein?', 'Good day! I’m Lena, the pharmacist. What can I get you?', ['Apothekerin', 'darf']],
+  ge_not:['Notruf, Feuerwehr und Rettungsdienst. Wo genau ist der Notfall?', 'Emergency line, fire and ambulance service. Where exactly is the emergency?', ['Notfall', 'wo']],
+  gesundheit:['Hey, du siehst ein bisschen müde aus. Wie geht es dir heute?', 'Hey, you look a bit tired. How are you today?', ['müde', 'geht']],
+  essen:['Hallo und willkommen im Café! Ich bin Lena. Was möchtest du trinken?', 'Hello and welcome to the café! I’m Lena. What would you like to drink?', ['möchtest', 'trinken']],
+  r_rest:['Guten Abend und herzlich willkommen! Ich bin Lena, Ihre Kellnerin. Für wie viele Personen ist der Tisch?', 'Good evening and welcome! I’m Lena, your waitress. How many people is the table for?', ['wie viele', 'Personen']],
+  al_super:['Hallo! Ich bin Lena an der Kasse. Haben Sie eine Payback-Karte?', 'Hello! I’m Lena at the till. Do you have a Payback card?', ['Kasse', 'Karte']],
+  einkaufen:['Guten Tag! Ich bin Lena. Kann ich Ihnen helfen? Suchen Sie etwas Bestimmtes?', 'Good day! I’m Lena. Can I help you? Are you looking for something special?', ['helfen', 'suchen']],
+  r_laden:['Guten Tag! Ich bin Lena. Sie haben eine Tüte dabei – möchten Sie etwas umtauschen?', 'Good day! I’m Lena. You’ve brought a bag – would you like to exchange something?', ['umtauschen', 'Tüte']],
+  al_post:['Guten Tag! Ich bin Lena von der Post. Möchten Sie ein Paket abschicken oder abholen?', 'Good day! I’m Lena from the post office. Would you like to send or collect a parcel?', ['Paket', 'abschicken']],
+  r_bahn:['Guten Tag! Ich bin Lena von der Deutschen Bahn. Wohin möchten Sie fahren?', 'Good day! I’m Lena from Deutsche Bahn. Where would you like to travel to?', ['wohin', 'fahren']],
+  al_versp:['Hallo! Ich bin Lena von der Bahn. Ja, Ihr Zug hat leider 40 Minuten Verspätung. Wohin wollen Sie denn heute fahren?', 'Hello! I’m Lena from the railway. Yes, your train is unfortunately 40 minutes late. Where do you want to go today?', ['Verspätung', 'wohin']],
+  al_kontr:['Guten Tag, Fahrkartenkontrolle! Ich bin Lena von den Verkehrsbetrieben. Ihre Fahrkarte, bitte!', 'Good day, ticket check! I’m Lena from the transport company. Your ticket, please!', ['Fahrkarte', 'bitte']],
+  al_fris:['Hallo, herzlich willkommen! Ich bin Lena, Ihre Friseurin. Was machen wir heute mit Ihren Haaren?', 'Hello, welcome! I’m Lena, your hairdresser. What shall we do with your hair today?', ['Haaren', 'machen']],
+  r_weg:['Hallo! Ich bin Lena, ich wohne hier. Suchen Sie etwas? Wohin möchten Sie denn?', 'Hi! I’m Lena, I live here. Are you looking for something? Where do you want to go?', ['suchen', 'wohin']],
+  stadt:['Guten Tag und willkommen in der Touristeninformation! Ich bin Lena. Was möchten Sie in unserer Stadt sehen?', 'Good day and welcome to the tourist information! I’m Lena. What would you like to see in our town?', ['Stadt', 'sehen']],
+  reisen:['Guten Tag! Ich bin Lena vom Reisebüro. Bitte nehmen Sie Platz. Wohin möchten Sie gern reisen?', 'Good day! I’m Lena from the travel agency. Please take a seat. Where would you like to travel?', ['reisen', 'wohin']],
+  j_int:['Guten Tag, schön, dass Sie da sind! Ich bin Lena Schulz aus der Personalabteilung. Erzählen Sie doch bitte kurz etwas über sich.', 'Good day, nice that you’re here! I’m Lena Schulz from Human Resources. Please tell me a little about yourself.', ['erzählen', 'über sich']],
+  j_tag1:['Hallo, du bist bestimmt der Neue oder die Neue! Ich bin Lena und arbeite auch hier im Team. Herzlich willkommen! Wie war dein Weg zur Arbeit heute?', 'Hi, you must be the new colleague! I’m Lena and I work in this team too. Welcome! How was your way to work today?', ['willkommen', 'Weg']],
+  arbeit:['Hallo! Kaffeepause, endlich! Ich bin Lena aus der Buchhaltung. Na, wie läuft dein Tag bis jetzt?', 'Hi! Coffee break, at last! I’m Lena from accounting. So, how’s your day going so far?', ['Kaffeepause', 'Tag']],
+  j_krank:['Hallo, hier ist Lena, deine Chefin. Du rufst so früh an – ist alles in Ordnung?', 'Hello, this is Lena, your boss. You’re calling so early – is everything OK?', ['früh', 'Ordnung']],
+  frei:['Hallo, schön, dass du da bist! Ich bin Lena. Worüber möchtest du heute sprechen?', 'Hi, nice that you’re here! I’m Lena. What would you like to talk about today?', ['worüber', 'sprechen']],
+  // telc B1 oral exam practice
+  sp1:['Hallo, ich bin Lena, Ihre Partnerin in der Prüfung. Ich komme aus Hamburg und arbeite als Grafikerin. Erzählen Sie mal: Wie heißen Sie und woher kommen Sie?', 'Hello, I’m Lena, your partner in the exam. I’m from Hamburg and work as a graphic designer. Tell me: what’s your name and where are you from?', ['heißen', 'woher']],
+  sp2_home:['Hallo! In meinem Text geht es um das Homeoffice. Immer mehr Menschen arbeiten von zu Hause. Sie sparen Zeit, aber manche fühlen sich allein. Und worum geht es in Ihrem Text?', 'Hi! My text is about working from home. More and more people work from home. They save time, but some feel lonely. And what is your text about?', ['Homeoffice', 'Text']],
+  sp2_handy:['Hallo! Mein Text sagt: Viele Kinder haben schon mit neun Jahren ein Smartphone. Eltern finden das praktisch, aber Ärzte warnen. Was haben Sie in Ihrem Text gelesen?', 'Hi! My text says many children have a smartphone at nine. Parents find it practical, but doctors warn. What did you read in your text?', ['Kinder', 'Smartphone']],
+  sp2_stadt:['Hallo! In meinem Text geht es um junge Familien. Viele ziehen aufs Land, weil die Mieten in der Stadt so teuer sind. Wo wohnen Sie lieber: in der Stadt oder auf dem Land?', 'Hi! My text is about young families. Many move to the countryside because rents in the city are so expensive. Where do you prefer to live: in the city or the country?', ['Stadt', 'Land']],
+  sp2_essen:['Hallo! Mein Text sagt: Viele Menschen kochen kaum noch selbst und essen oft Fast Food. Kochen Sie selbst, oder essen Sie oft unterwegs?', 'Hi! My text says many people hardly cook any more and often eat fast food. Do you cook yourself, or do you often eat out?', ['kochen', 'Fast Food']],
+  sp3_feier:['Hallo! Wir wollen zusammen eine Geburtstagsfeier für unsere Freundin Anna planen. Wann sollen wir die Feier machen – hast du eine Idee?', 'Hi! We want to plan a birthday party for our friend Anna together. When should we have the party – do you have an idea?', ['Geburtstagsfeier', 'wann']],
+  sp3_ausflug:['Hallo! Wir planen zusammen einen Ausflug für unseren Deutschkurs. Wohin könnten wir fahren – was meinst du?', 'Hi! We’re planning a trip for our German course together. Where could we go – what do you think?', ['Ausflug', 'wohin']],
+  sp3_umzug:['Hallo! Unser Freund Tom zieht am Samstag um, und wir wollen ihm helfen. Was müssen wir alles organisieren?', 'Hi! Our friend Tom is moving on Saturday, and we want to help him. What do we need to organise?', ['Samstag', 'organisieren']]
+};
+const VHS_HELLO = { reply_de:'Guten Tag! Ich bin Frau Berger, Kursleiterin hier an der VHS Buchloe. Wir machen jetzt ein kleines Gespräch. Wie heißen Sie, und woher kommen Sie?',
+  reply_en:'Good day! I am Frau Berger, a course teacher here at the VHS Buchloe. We will now have a short conversation. What is your name, and where do you come from?', grammar_note:'„Wie heißen Sie?“ – the formal „Sie“: verb + Sie.', reply_keywords:['heißen', 'woher'] };
 function cafeStart() {
   C.started = true;
+  if (!C.entry && C.topic === 'vhs_einstufung') {   // no waiting for Gemini: the first question is always the same; Gemini takes over from the first answer
+    C.hist.push({ role:'user', parts:[{ text:CAFE_HELLO }] }, { role:'model', parts:[{ text:VHS_HELLO.reply_de }] });
+    lenaBubble(Object.assign({}, VHS_HELLO)); cafeLog(null, VHS_HELLO); return;
+  }
+  const op = !C.entry && CAFE_OPEN[C.topic];
+  if (op) {   // every scene: Lena's first line comes from the app at once; Gemini continues from the learner's first answer
+    const a = { reply_de:op[0], reply_en:op[1], grammar_note:'', reply_keywords:op[2] };
+    C.hist.push({ role:'user', parts:[{ text:CAFE_HELLO }] }, { role:'model', parts:[{ text:a.reply_de }] });
+    lenaBubble(a); cafeLog(null, a); return;
+  }
   if (C.entry) cafeTurn('[We are continuing our earlier conversation (above) after a break. Welcome me back in one short sentence and ask a new question that naturally continues it. Do not repeat a question you already asked.]', null);
   else cafeGreet();
 }
@@ -6478,6 +6564,20 @@ const writeItemFromKey = key => { const [lv, kind, id] = key.split(':'); return 
 
 
 // ---- Gemini for writing: one structured request with the same timeouts / backup models as the café ----
+// start the first model; if it has not answered after `hedge` ms, the next one races it; the first good answer wins
+function raceModels(list, tryFn, hedge, deadline) {
+  return new Promise((resolve, reject) => {
+    let idx = 0, pending = 0, done = false;
+    const next = () => {
+      if (done || idx >= list.length || Date.now() > deadline) return false;
+      const m = list[idx++]; pending++;
+      tryFn(m).then(res => { pending--; if (done) return; if (res) { done = true; resolve(res); } else if (!pending && !next()) { done = true; resolve(null); } },
+        e => { pending--; if (done) return; done = true; reject(e); });
+      return true;
+    };
+    next(); setTimeout(() => { if (!done && pending === 1) next(); }, hedge);
+  });
+}
 async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000, temperature = 0.4, think = 'deep', gemini = false }) {
   const tk = m => m + '|' + think;
   const key = lsGet(AI_KEY); if (!key) throw new AIError('nokey');
@@ -6486,25 +6586,29 @@ async function geminiJSON({ system, parts, schema, wait = 30000, budget = 75000,
   const deadline = now + budget; let useSchema = true, lastErr = null;
   const call = model => gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
     body:JSON.stringify(gBody(model, system, [{ role:'user', parts }], { temperature, maxOutputTokens:8192, think }, schema, useSchema)) }, wait);
-  for (const model of order) {
+  // one model with its own fallbacks; { v } when it answered, null when it is busy / limited (it rests), throws on key problems
+  const tryJ = async model => {
     for (let k = 0; k < 5; k++) {
-      if (Date.now() > deadline) throw lastErr || new AIError('busy');
-      let r; try { r = await call(model); } catch (e) { if (e.message === 'timeout') { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); break; } throw e; }
+      if (Date.now() > deadline) return null;
+      let r; try { r = await call(model); } catch (e) { if (e.message === 'timeout') { resting[model] = Date.now() + REST_MS; lastErr = new AIError('busy', `${model} did not answer in time`); return null; } throw e; }
       if (r.ok) {
         const d = await r.json(), cand = (d.candidates || [])[0] || {};
         const txt = ((cand.content || {}).parts || []).filter(p => !p.thought).map(p => p.text || '').join('').replace(/^```(json)?\s*|\s*```$/g, '');
-        try { return gJSON(txt); } catch (e) { lastErr = new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); break; }
+        try { return { v:gJSON(txt) }; } catch (e) { lastErr = new AIError('parse', (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || ''); return null; }
       }
       const err = await apiError(r);
       // any 400 = a setting this model does not accept: first lighter / no thinking, then no schema (the error does not always say which)
       if (r.status === 400 && err.message !== 'key' && !isGemma(model) && useSchema && /schema|response_?mime|json|enum/i.test(err.detail)) { useSchema = false; continue; }
       if (r.status === 400 && err.message !== 'key' && !isGemma(model) && (thinkIdx[tk(model)] || 0) < THINK_N - 1) { thinkIdx[tk(model)] = (thinkIdx[tk(model)] || 0) + 1; continue; }
       if (r.status === 400 && err.message !== 'key' && !isGemma(model) && useSchema) { useSchema = false; continue; }
-      if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; break; }
-      if (r.status === 400 && err.message !== 'key') { lastErr = err; break; }   // this model cannot handle the request at all: the next model
+      if (r.status === 404 || r.status === 429 || r.status >= 500) { resting[model] = Math.max(resting[model] || 0, err.message === 'limitday' && limitUntil > Date.now() ? limitUntil : Date.now() + (r.status === 404 ? 3600000 : REST_MS)); lastErr = err; return null; }
+      if (r.status === 400 && err.message !== 'key') { lastErr = err; return null; }   // this model cannot handle the request at all: the next model
       throw err;
     }
-  }
+    return null;
+  };
+  const res = await raceModels(order, tryJ, 8000, deadline);   // a slow model gets a second one racing it after 8 s (these requests think longer)
+  if (res) return res.v;
   throw lastErr || new AIError('busy');
 }
 /* ================= 🎲 New sentences from Lena =================
@@ -11206,7 +11310,7 @@ $('#cVTest').addEventListener('click', () => {
   const out = () => { $('#cVTestOut').textContent = `speechSynthesis: ${window.speechSynthesis ? 'yes' : 'NO'} · voices: ${vs.length} · German: ${de.length} (${de.slice(0, 4).map(v => v.name + (v.localService ? '' : ' [online]')).join(', ')}) · chosen: ${deVoice ? deVoice.name : 'none'} · events: ${devLog.join(' → ') || '…'}`; };
   sayDevice('Hallo! Ich bin Lena. Hörst du mich?').then(out); out(); setTimeout(out, 1500);
 });
-$('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); modelCache = null; C.model = null; $('#cKeyMsg').textContent = 'Key removed from this device.'; });
+$('#cKeyDel').addEventListener('click', () => { lsSet(AI_KEY, ''); lsSet(AI_MODEL, ''); lsSet(AI_MODELS, ''); modelCache = null; C.model = null; $('#cKeyMsg').textContent = 'Key removed from this device.'; });
 const mic = $('#cMic');
 // one tap starts listening, the next tap sends
 mic.addEventListener('click', e => { e.preventDefault(); if (holding) micUp(); else micDown(e); });
