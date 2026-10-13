@@ -746,6 +746,9 @@ button.trch:active{transform:translate(2px,2px);box-shadow:calc(1px * var(--shk)
 .b.lena.hid>.de,.b.lena.hid>.tools:not(.hidbar),.b.lena.hid>.trbox{display:none}
 .b.lena:not(.hid)>.hidbar{display:none}
 .b .hidbar{margin-top:0;align-items:center;flex-wrap:wrap}
+.b .hidbar .locked{opacity:.55;cursor:not-allowed}
+.b .hidbar .kw{flex-basis:100%;font-size:15px;margin-top:4px}
+.b .fbq{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-size:15px}.b .fbq .ok{color:var(--good)}
 .b .hidtxt{font-weight:700;margin-right:4px}
 .b .tools button{border:calc(2px * var(--bwk)) solid var(--line);background:var(--white);padding:3px 9px;font-size:14px;cursor:pointer}
 .b .trbox{margin-top:8px;border-top:2px dashed var(--grey);padding-top:8px;font-size:15.5px}
@@ -1367,6 +1370,7 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <p class="note" id="cKeyMsg"></p>
         <p class="note">Free keys: Google may use these chats to improve its services, so don't share private details with Lena. <button class="linkbtn" id="cKeyDel">Remove key from this device</button></p>
         <button class="btn center" id="cVTest" style="width:100%;margin-top:10px">🔊 Stimme testen<small class="en2">Test the voice: Lena says one sentence; send a screenshot if you hear nothing</small></button>
+        <div id="cAiUse" class="note"></div>
         <div id="cVTestOut" class="note" style="font-family:monospace;font-size:12px;word-break:break-word"></div>
       </div>
       <div id="cChat" class="chat" aria-live="polite"></div>
@@ -3999,7 +4003,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.15-3';
+const APP_VERSION = 'v2026.10.15-4';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -5052,7 +5056,7 @@ const C = { topic:null, focus:'wd', hist:[], busy:false, slow:false };
 class AIError extends Error { constructor(kind, detail) { super(kind); this.detail = detail || ''; } }
 async function gfetch(url, opt, ms = 15000) {
   const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), ms);
-  try { return await fetch(url, Object.assign({}, opt, { signal:ctl.signal })); }
+  try { const r = await fetch(url, Object.assign({}, opt, { signal:ctl.signal })); if (r.ok) { const m = (url.match(/\/models\/([^:/]+):generateContent/) || [])[1]; if (m) aiCount(m); } return r; }
   catch (e) { throw new AIError(ctl.signal.aborted ? 'timeout' : 'blocked'); }   // timeout, or never reached Google (offline, firewall / work network, blocker)
   finally { clearTimeout(timer); }
 }
@@ -5066,9 +5070,10 @@ async function apiError(r) {
   // Models with "limit: 0" are not free for this key at all: they are skipped for a few hours.
   if (r.status === 429) {
     const m = msg.match(/retry in (?:(\d+)h)?(?:(\d+)m)?([\d.]+)s/), secs = m ? (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0) : 0;
-    (msg.match(/limit: 0, model: [\w.-]+/g) || []).forEach(x => { const md = x.split('model: ')[1]; resting[md] = Math.max(resting[md] || 0, Date.now() + 6 * 3600000); });
+    (msg.match(/limit: 0, model: [\w.-]+/g) || []).forEach(x => { const md = x.split('model: ')[1].replace(/\.+$/, ''); resting[md] = Math.max(resting[md] || 0, Date.now() + 6 * 3600000); });
     const day = /PerDay/i.test(det + msg) || secs > 600;
     if (day && secs) limitUntil = Math.max(limitUntil, Date.now() + secs * 1000);
+    if (day) { const md = ((msg.match(/model: ([\w.-]+)/) || [])[1] || '').replace(/\.+$/, ''); if (md) resting[md] = Math.max(resting[md] || 0, secs ? Date.now() + secs * 1000 : ptMidnight()); }
     return new AIError(day ? 'limitday' : 'limit', `${r.status}${msg ? ': ' + msg : ''}`);
   }
   return new AIError(keyish ? 'key' : r.status >= 500 ? 'busy' : 'api', `${r.status}${msg ? ': ' + msg : ''}`);
@@ -5103,7 +5108,8 @@ async function fetchModels(key) {
 const pickModel = async key => (await rankModels(key))[0];
 const REPLY_SCHEMA = { type:'OBJECT', properties:{
   reply_de:{ type:'STRING' }, reply_en:{ type:'STRING' }, grammar_note:{ type:'STRING' },
-  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' }, feedback_category:{ type:'STRING' } },
+  feedback_ok:{ type:'BOOLEAN' }, feedback_corrected:{ type:'STRING' }, feedback_explanation:{ type:'STRING' }, feedback_category:{ type:'STRING' },
+  reply_keywords:{ type:'ARRAY', items:{ type:'STRING' } }, feedback_understood:{ type:'BOOLEAN' }, feedback_understood_note:{ type:'STRING' } },
   required:['reply_de', 'reply_en', 'grammar_note', 'feedback_ok', 'feedback_corrected', 'feedback_explanation'] };
 function cafeSystem() {
   const t = cafeTopic(C.topic), lvl = S.cafeLevel || 'A2';
@@ -5116,7 +5122,9 @@ Rules:
 - reply_en: an accurate English translation of reply_de.
 - grammar_note: 1-2 short sentences in simple English explaining the grammar in reply_de, especially the grammar focus (e.g. why the verb is at the end after "weil", or why "dem" is Dativ after "mit").
 - feedback_*: judge ONLY the learner's last message. ${C.write ? 'The learner TYPES their messages (this is a writing chat): also check spelling, capital letters of nouns, umlauts and commas, and set feedback_category to the main mistake type, exactly one of: ' + ERR_CATS.join(', ') + ' (or "" if correct).' : 'Ignore missing capital letters and punctuation (it comes from speech recognition).'} If it is correct, feedback_ok = true, feedback_corrected = "", feedback_explanation = a few words of praise. If there are mistakes, feedback_ok = false, feedback_corrected = the corrected German sentence, feedback_explanation = a short, kind explanation in simple English. If there is no learner message yet, or the learner only asked for help, feedback_ok = true and both other feedback fields "".
-- If the learner writes English or seems lost, help with a simple German sentence they could say.`;
+- If the learner writes English or seems lost, help with a simple German sentence they could say.
+- reply_keywords: the 2–3 most important words of your question in reply_de, exactly as they appear there (a listening hint).
+- feedback_understood: true if the learner's last message answers the question you asked before it (they understood you), false if it answers something else or misses the point. feedback_understood_note: if false, one short simple English sentence saying what you had asked; otherwise "".`;
 }
 // Lena always thinks before she answers, so what the learner learns is correct. "fast" = a short think (café chat, look-ups:
 // about a second more), "deep" = more thinking for explanations, corrections and notes. Gemini 3 models take a thinking level,
@@ -5127,7 +5135,22 @@ const THINK = {
 }, THINK_N = 3, thinkIdx = {};
 const ACCURACY = '\nAccuracy matters most: the learner trusts you and learns from what you say. Think before you answer, check the German grammar step by step, and never invent a rule. If you are not sure, say so.';
 const CHAT_WAIT = 15000, CHAT_BUDGET = 35000, REST_MS = 120000;   // per-request limit, overall limit, how long a busy model is skipped
-const resting = {};
+// a busy or used-up model "rests": kept on this device (localStorage), so a new chat or a restart does not try it again
+const AI_REST = 'dq-ai-rest', AI_USE = 'dq-ai-use';
+const resting = new Proxy((() => { try { const o = JSON.parse(lsGet(AI_REST) || '{}'), now = Date.now(); Object.keys(o).forEach(k => { if (!(o[k] > now)) delete o[k]; }); return o; } catch (e) { return {}; } })(), {
+  set(o, k, v) { o[k] = v; try { lsSet(AI_REST, JSON.stringify(o)); } catch (e) {} return true; } });
+// Google's free allowance per model and day (AI Studio → Rate limit); Google does not tell the app these numbers
+const aiVer = n => parseFloat((n.match(/gemini-(\d+(\.\d+)?)/) || [0, 0])[1]);
+const rpdOf = n => /^gemma/.test(n) ? 14400 : /flash-lite/.test(n) ? (aiVer(n) >= 3 ? 500 : 20) : /flash/.test(n) ? 20 : 0;
+// the free quotas restart at midnight Pacific time: count successful requests per model for that "Google day"
+const ptDay = () => new Date().toLocaleDateString('en-CA', { timeZone:'America/Los_Angeles' });
+const ptMidnight = () => { const p = new Date(new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles' })); return Date.now() + 86400000 - ((p.getHours() * 60 + p.getMinutes()) * 60 + p.getSeconds()) * 1000; };
+function aiUse() { try { const u = JSON.parse(lsGet(AI_USE) || 'null'); if (u && u.d === ptDay()) return u; } catch (e) {} return { d:ptDay(), m:{} }; }
+function aiCount(model) {
+  const u = aiUse(); u.m[model] = (u.m[model] || 0) + 1; try { lsSet(AI_USE, JSON.stringify(u)); } catch (e) {}
+  const lim = rpdOf(model); if (lim && u.m[model] >= lim) resting[model] = Math.max(resting[model] || 0, ptMidnight());   // used up today: skip until the quota is back
+}
+const aiTired = (m, now) => resting[m] > now || (rpdOf(m) && (aiUse().m[m] || 0) >= rpdOf(m));
 const isGemma = m => /^gemma/.test(m);
 function gBody(model, system, contents, gen, schema, strict) {
   if (isGemma(model)) {
@@ -5153,7 +5176,7 @@ function gJSON(txt) {
 // try every usable model (not just four): "limit reached" answers come back at once, so trying more costs no time
 const modelOrder = (ranked, first, now, media) => {
   const all = [first, ...ranked].filter((m, i, arr) => m && arr.indexOf(m) === i && !(media && isGemma(m)));   // pictures / voice: Gemini only
-  return [...all.filter(m => !(resting[m] > now)), ...all.filter(m => resting[m] > now)];
+  return [...all.filter(m => !aiTired(m, now)), ...all.filter(m => aiTired(m, now))];
 };
 // a voice note: Gemini writes down what it heard ("heard") and answers it in the same request
 const REPLY_SCHEMA_V = { type:'OBJECT', properties:Object.assign({ heard:{ type:'STRING' } }, REPLY_SCHEMA.properties), required:['heard', ...REPLY_SCHEMA.required] };
@@ -5300,7 +5323,7 @@ async function fetchSpeech(text) {
   await rankModels(key);
   const models = (modelCache && modelCache.tts) || []; if (!models.length) throw new AIError('notts');
   let lastErr = null;
-  const now = Date.now(), order = [...models.filter(m => !(resting[m] > now)), ...models.filter(m => resting[m] > now)];
+  const now = Date.now(), order = [...models.filter(m => !aiTired(m, now)), ...models.filter(m => aiTired(m, now))];
   for (const model of order) {
     const r = await gfetch(`${AI_BASE}/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key':key },
       body:JSON.stringify({ contents:[{ parts:[{ text }] }],
@@ -5592,8 +5615,8 @@ const lenaInner = (de, en, gn) => `<div class="de" data-en="${esc(en || '')}">${
     ${gn ? `<div class="trbox" hidden><div class="gr"><b>Grammatik:</b> ${esc(gn)}</div></div>` : ''}`;
 function lenaBubble(a) {
   if (C.vhs && !C.vhsPic && /\bBild\b/.test(a.reply_de || '')) { C.vhsPic = 1; const p = C.vhs.pic; setTimeout(() => addBubble('vsys', vhsPicHTML(p)), 40); }
-  const d = addBubble(C.write ? 'lena' : 'lena hid', lenaInner(a.reply_de, a.reply_en, a.grammar_note) + (C.write ? '' : '<div class="tools hidbar"><span class="hidtxt">🎧 Hör gut zu …<small class="en2">Listen first</small></span><button data-c="say">🔊 Nochmal</button><button data-c="reveal">👁 Text</button></div>'));
-  d.dataset.de = a.reply_de; C.speaking = C.write ? null : say(a.reply_de);
+  const d = addBubble(C.write ? 'lena' : 'lena hid', lenaInner(a.reply_de, a.reply_en, a.grammar_note) + (C.write ? '' : '<div class="tools hidbar"><span class="hidtxt">🎧 Hör gut zu …<small class="en2">Listen first</small></span><button data-c="say">🔊 Nochmal</button><button data-c="wie">🙋 Wie bitte?</button><button data-c="reveal" class="locked" disabled title="Erst antworten · answer first">🔒 Text nach Ihrer Antwort</button><span class="kw" hidden></span></div>'));
+  d.dataset.de = a.reply_de; d.dataset.kw = JSON.stringify((Array.isArray(a.reply_keywords) ? a.reply_keywords : []).filter(x => typeof x === 'string' && x.trim()).slice(0, 3)); C.speaking = C.write ? null : say(a.reply_de);
 }
 // café chats are saved to Past rounds (S.history) as soon as the learner has said something, and updated after every turn
 function cafeLog(mineText, a) {
@@ -5684,7 +5707,9 @@ async function cafeTurn(userText, mine, wav) {
     const a = await askLena(userText, wav);
     wait.remove();
     if (wav && mine) { const h = gS(a.heard) || '🎤'; mine.querySelector('.de').textContent = h; mine.dataset.de = h; }
-    if (mine) mine.insertAdjacentHTML('beforeend', feedbackHTML(a));
+    const asked = mine && !C.write ? [...$$('#cChat .b.lena')].filter(b => !b.classList.contains('typing')).pop() : null;
+    if (mine) mine.insertAdjacentHTML('beforeend', feedbackHTML(a) + (asked && asked.dataset.de ? `<div class="fbq">🎧 Lena hat gefragt: „${esc(asked.dataset.de)}“ <button class="linkbtn" data-c="sayq" data-q="${esc(asked.dataset.de)}">🔊</button>${a.feedback_understood === false ? `<div class="why">✗ ${esc(a.feedback_understood_note || 'Lena asked something else – listen again.')}</div>` : a.feedback_understood === true ? ' <b class="ok">✓ verstanden</b>' : ''}</div>` : ''));
+    if (asked) { const rv = asked.querySelector('[data-c="reveal"]'); if (rv) { rv.disabled = false; rv.classList.remove('locked'); rv.textContent = '👁 Text'; } }
     $$('#cChat .b.sys').forEach(b => b.remove());
     const prevL = [...C.msgs].reverse().find(x => x.r === 'l');
     lenaBubble(a); cafeLog(mine ? mine.dataset.de : null, a);
@@ -5711,8 +5736,15 @@ function cafeSend(text) {
   const mine = addBubble('me', `<div class="de">${esc(text)}</div>`); mine.dataset.de = text;
   cafeTurn(text, mine);
 }
+function aiUseHTML() {
+  const u = aiUse(), now = Date.now(), list = (modelCache && modelCache.list) || Object.keys(u.m);
+  if (!list.length) return '';
+  return '<b>Gemini heute · today</b> (Google day, resets at midnight US time):<br>' + list.map(m => { const n = u.m[m] || 0, lim = rpdOf(m), rest = resting[m] > now;
+    return `${esc(m)}: ${n}${lim ? ' / ' + lim : ''}${rest ? ` · ⏸ Pause bis ${new Date(resting[m]).toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' })}` : ''}`; }).join('<br>');
+}
 function showKeySetup(on) {
   $('#cSetup').style.display = on ? '' : 'none';
+  if (on && $('#cAiUse')) $('#cAiUse').innerHTML = aiUseHTML();
   $('#cKey').value = ''; $('#cKeyMsg').textContent = lsGet(AI_KEY) ? 'A key is saved on this device.' : '';
 }
 async function saveKey() {
@@ -11187,7 +11219,17 @@ function chatTools(e) {
   const b = e.target.closest('[data-c]'); if (!b) return; audioCtx();
   const bub = b.closest('.b');
   if (b.dataset.c === 'tr') { const box = bub.querySelector('.trbox'); box.hidden = !box.hidden; b.textContent = box.hidden ? '💡 Grammatik' : '💡 Ausblenden'; }
-  else if (b.dataset.c === 'say') say(bub.dataset.de);
+  else if (b.dataset.c === 'say') {
+    say(bub.dataset.de);
+    if (bub.classList.contains('hid')) {   // after 3 replays: only the key words, never the whole sentence
+      const n = (+bub.dataset.n || 0) + 1; bub.dataset.n = n; const kw = bub.querySelector('.kw');
+      if (n >= 3 && kw && kw.hidden) { let k = []; try { k = JSON.parse(bub.dataset.kw || '[]'); } catch (x) {}
+        if (!k.length) k = (bub.dataset.de || '').replace(/[?!.,„“"]/g, '').split(/\s+/).filter(w => w.length > 3).sort((x, y) => (/^[A-ZÄÖÜ]/.test(y) ? 1 : 0) - (/^[A-ZÄÖÜ]/.test(x) ? 1 : 0) || y.length - x.length).slice(0, 3);
+        if (k.length) { kw.innerHTML = '💡 Stichwörter: <b>' + k.map(esc).join(' · ') + '</b>'; kw.hidden = false; } }
+    }
+  }
+  else if (b.dataset.c === 'sayq') say(b.dataset.q);
+  else if (b.dataset.c === 'wie') { if (!C.busy) cafeTurn('[I did not understand your last question. Ask it again more slowly and in simpler words, still as ONE question. Do not judge this message: set feedback_ok to true and leave the other feedback fields empty.]', null); }
   else if (b.dataset.c === 'sayfix') say(bub.querySelector('.fix').textContent);
   else if (b.dataset.c === 'reveal') bub.classList.remove('hid');
 }
