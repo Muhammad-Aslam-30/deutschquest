@@ -154,7 +154,7 @@ html.dark .btn.green{background:#2F7A52}
 .vli{font-size:34px}.vlevel b{font-size:19px}
 .vweak{border:1px solid var(--line);border-left:5px solid #E24B4A;border-radius:0 14px 14px 0;padding:10px 12px;margin:10px 0;background:var(--white)}
 .vwh{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}.vwh b{font-size:17px}.vwh span{font-size:13px;color:var(--grey);font-weight:700}
-.vwr{margin:6px 0 2px;font-size:15px}.vwx{margin:2px 0 6px;font-size:16px}
+.vwr{margin:6px 0 2px;font-size:15px}.vwb{margin:0 0 6px;font-size:13.5px;font-weight:700;color:var(--grey)}.vwx{margin:2px 0 6px;font-size:16px}
 .vwe{font-size:15px;margin:6px 0;padding:6px 10px;background:rgba(47,54,64,.05);border-radius:10px}.vwe small{color:var(--grey);display:block}
 .vplan{padding-left:22px;line-height:1.5}.vplan li{margin:6px 0}.vplan small{display:block;color:var(--grey)}
 .vplan .linkbtn{font-weight:700;text-align:left}
@@ -3999,7 +3999,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.15-1';
+const APP_VERSION = 'v2026.10.15-2';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -8175,16 +8175,21 @@ const genBtn = (mod, label) => lsGet(AI_KEY) ? `<button class="btn center exgen"
    or as a full mock test. Writing and speaking are checked by Gemini; the form and the grammar check offline. */
 // the grammar topics up to A2.1: [name, short English rule, German example, runner topic for practice]
 const VHS_CATS = {
-  verb:['Verben & Satzbau', 'In a main clause the conjugated verb is always in position 2. Separable verbs send their prefix to the very end.', 'Am Montag <b>stehe</b> ich um 7 Uhr <b>auf</b>.', 'sb'],
-  modal:['Modalverben', 'The modal verb is in position 2 and the second verb goes to the end as an infinitive. ich and er/sie have no ending: ich kann, er muss.', 'Ich <b>muss</b> heute lange <b>arbeiten</b>.', 'mv'],
-  perfekt:['Perfekt', 'haben or sein + Partizip II at the end. Use sein for movement and change (gehen, fahren, kommen, aufstehen); verbs with be-, ver-, er- have no ge-.', 'Ich <b>bin</b> nach München <b>gefahren</b>. Ich <b>habe</b> das <b>verstanden</b>.', 'pf'],
-  praet:['war / hatte / konnte …', 'For sein, haben and the modal verbs Germans use the Präteritum, also when they speak: war, hatte, konnte, musste, wollte, durfte.', 'Gestern <b>war</b> ich krank und <b>musste</b> zu Hause bleiben.', 'pt'],
-  kasus:['Akkusativ & Dativ', 'Akkusativ = the direct object (den, einen). Dativ after mit, bei, von, zu, aus, nach, seit and with verbs like helfen, gefallen, gehören, danken.', 'Ich <b>helfe dem</b> Mann. Ich fahre <b>mit dem</b> Bus.', 'ar'],
-  wechsel:['Wechselpräpositionen', 'in, an, auf, unter, über, vor, hinter, neben, zwischen: Wo? → Dativ (liegen, stehen, hängen). Wohin? → Akkusativ (legen, stellen, gehen).', 'Das Buch liegt <b>auf dem</b> Tisch. Ich lege es <b>auf den</b> Tisch.', 'prep'],
-  neben:['weil / dass / wenn', 'After weil, dass and wenn the conjugated verb goes to the END of the clause. After denn, aber, und, oder the order stays normal.', 'Ich lerne Deutsch, <b>weil</b> ich in Deutschland <b>arbeite</b>.', 'wd'],
-  refl:['Reflexive Verben & Präpositionen', 'Reflexive verbs need mich, dich, sich, uns, euch. Many verbs have a fixed preposition: sich freuen auf, warten auf, sich interessieren für.', 'Ich <b>freue mich auf</b> das Wochenende.', 'rv'],
-  komp:['Komparativ & Superlativ', 'Comparing: -er + als (größer als); the same: so … wie; the most: am …sten. Irregular: gut – besser – am besten, gern – lieber – am liebsten.', 'Mein Bruder ist <b>älter als</b> ich.', 'ks'],
-  poss:['Possessivartikel', 'mein, dein, sein, ihr, unser, euer, Ihr take the endings of ein: meinen Bruder (Akk), meiner Mutter (Dat), mit meinen Kindern.', 'Ich besuche <b>meine</b> Eltern mit <b>meinem</b> Sohn.', 'ar']
+  verb:['Verben & Satzbau', 'In a main clause the conjugated verb is always in position 2. Separable verbs send their prefix to the very end. W-questions: W-word + verb.', 'Am Montag <b>stehe</b> ich um 7 Uhr <b>auf</b>. Wann <b>beginnt</b> der Kurs?', 'sb', 'Buch 1 · L1, L5'],
+  neg:['Artikel, kein & nicht', 'kein / keine / keinen negate a noun (ein → kein); nicht negates everything else. A „no“ question answered with yes = doch.', 'Ich habe <b>kein</b> Auto. Das ist <b>nicht</b> mein Buch. – Kommst du nicht? – <b>Doch</b>!', 'sb', 'Buch 1 · L3, L4, L6'],
+  kasus:['Akkusativ & Dativ', 'Akkusativ = the direct object (den, einen, keinen). Dativ after mit, bei, von, zu, aus, nach, seit and with helfen, gefallen, gehören, schmecken. Person (Dativ) before thing (Akkusativ) – but a pronoun thing goes first: es ihm.', 'Ich schenke <b>meinem Vater</b> ein Buch. Ich habe <b>es ihm</b> geschenkt.', 'ar', 'Buch 1 · L6 · Buch 2 · L8, L13 · Buch 3 · L7'],
+  poss:['Possessivartikel', 'mein, dein, sein, ihr, unser, euer, Ihr take the endings of ein: meinen Bruder (Akk), meiner Mutter (Dat), mit meinen Kindern.', 'Ich besuche <b>meine</b> Eltern mit <b>meinem</b> Sohn.', 'ar', 'Buch 1 · L2 · Buch 2 · L10 · Buch 3 · L7'],
+  modal:['Modalverben', 'The modal verb is in position 2 and the second verb goes to the end as an infinitive. ich and er/sie have no ending: ich kann, er muss.', 'Ich <b>muss</b> heute lange <b>arbeiten</b>. Hier <b>darf</b> man nicht <b>parken</b>.', 'mv', 'Buch 1 · L7 · Buch 2 · L9, L10 · Buch 3 · L4'],
+  perfekt:['Perfekt', 'haben or sein + Partizip II at the end. sein for movement and change (gehen, fahren, kommen, aufstehen); no ge- for be-, ver-, er- and -ieren verbs.', 'Ich <b>bin</b> nach München <b>gefahren</b>. Ich <b>habe</b> lange <b>telefoniert</b>.', 'pf', 'Buch 1 · L7 · Buch 3 · L1'],
+  praet:['war / hatte / konnte …', 'For sein, haben and the modal verbs Germans use the Präteritum, also when they speak: war, hatte, konnte, musste, wollte, durfte.', 'Gestern <b>war</b> ich krank und <b>musste</b> zu Hause bleiben.', 'pt', 'Buch 2 · L8 · Buch 3 · L1, L6'],
+  zeit:['Zeit & Datum', 'um + clock time, am + day / date, im + month / season. seit = since (still true), vor = ago. Dates: der dritte Oktober, am dritten Oktober.', 'Der Kurs beginnt <b>am</b> Montag <b>um</b> 9 Uhr. Ich wohne <b>seit</b> zwei Jahren hier.', 'zd', 'Buch 1 · L5 · Buch 2 · L8, L12, L14'],
+  imp:['Imperativ', 'du: verb stem without -st (Komm! Nimm! Hilf!), ihr: like the present (Kommt!), Sie: verb + Sie (Kommen Sie!). sein: Sei! Seid! Seien Sie!', '<b>Mach</b> bitte das Fenster zu! <b>Nehmen Sie</b> Platz! Kinder, <b>seid</b> leise!', 'ps', 'Buch 2 · L9 · Buch 3 · L5'],
+  wechsel:['Orte: Wechselpräpositionen', 'in, an, auf, unter, über, vor, hinter, neben, zwischen: Wo? → Dativ (liegen, stehen, sitzen, hängen). Wohin? → Akkusativ (legen, stellen, setzen, gehen).', 'Das Buch liegt <b>auf dem</b> Tisch. Ich lege es <b>auf den</b> Tisch.', 'prep', 'Buch 2 · L11 · Buch 3 · L2'],
+  neben:['weil, dass, wenn, denn', 'After weil, dass and wenn the conjugated verb goes to the END of the clause. After denn, aber, und, oder the order stays normal.', 'Ich lerne Deutsch, <b>weil</b> ich in Deutschland <b>arbeite</b>.', 'wd', 'Buch 2 · L14 · Buch 3 · L1, L4, L6'],
+  refl:['Reflexive Verben & Präpositionen', 'Reflexive verbs need mich, dich, sich, uns, euch. Many verbs have a fixed preposition (sich freuen auf, warten auf, sich interessieren für); ask with wo(r)+preposition, answer with da(r)+preposition.', '<b>Worauf</b> freust du dich? – Ich <b>freue mich auf</b> das Wochenende.', 'rv', 'Buch 3 · L5'],
+  pron:['Pronomen: einer, meins, jemand', 'Instead of repeating a noun: einen / eins / eine / welche (Hast du einen Stift? – Ja, ich habe einen.), meiner / meins / meine. Nobody / something: jemand, niemand, etwas, nichts.', 'Ist das dein Handy? – Ja, das ist <b>meins</b>. Ist hier <b>jemand</b>?', 'iq', 'Buch 3 · L3, L4'],
+  hoef:['Höflich bitten: könnten, würden', 'Polite requests and wishes: Könnten Sie …? Würden Sie …? Ich hätte gern … Ich möchte …', '<b>Könnten</b> Sie mir bitte helfen? Ich <b>hätte gern</b> einen Kaffee.', 'mv', 'Buch 2 · L12'],
+  komp:['gut – besser, gern – lieber', 'Book 2 only does the special forms: gut – besser – am besten, gern – lieber – am liebsten, viel – mehr – am meisten, with als for comparing. (More comparatives come in book 4.)', 'Ich trinke <b>lieber</b> Tee <b>als</b> Kaffee. <b>Am liebsten</b> esse ich Reis.', 'ks', 'Buch 2 · L13']
 };
 const VHS_CAT_EXTRA = { spelling:'Rechtschreibung', vocab:'Wortschatz', other:'Sonstiges' };
 const vhsCatName = c => (VHS_CATS[c] || [])[0] || VHS_CAT_EXTRA[c] || c;
@@ -8238,12 +8243,50 @@ const VHS_GQ = [
   ['refl', 'Ich warte ___ den Bus.', ['auf', 'für', 'an'], 'warten auf.'],
   ['refl', 'Er ärgert ___ über das Wetter.', ['sich', 'ihn', 'ihm'], 'er → sich.'],
   ['refl', 'Kannst du ___ bitte beeilen? Der Bus kommt gleich.', ['dich', 'dir', 'sich'], 'du → dich: sich beeilen = to hurry.'],
-  ['komp', 'Mein Bruder ist ___ als ich.', ['älter', 'alter', 'am ältesten'], 'alt → älter + als.'],
-  ['komp', 'Der Zug ist so schnell ___ das Auto.', ['wie', 'als', 'wann'], 'so … wie = the same.'],
   ['komp', 'Ich trinke ___ Tee als Kaffee.', ['lieber', 'gerner', 'mehr gern'], 'gern – lieber – am liebsten.'],
-  ['komp', 'Im Winter ist es ___ kältesten.', ['am', 'im', 'der'], 'Superlativ: am kältesten.'],
   ['komp', 'Das Essen hier ist ___ als in der Kantine.', ['besser', 'guter', 'gutter'], 'gut – besser – am besten.'],
-  ['komp', 'Berlin ist die ___ Stadt in Deutschland.', ['größte', 'größere', 'große'], 'Superlativ before a noun: die größte Stadt.'],
+  ['komp', 'Am ___ esse ich Pizza.', ['liebsten', 'gernsten', 'besten'], 'gern – lieber – am liebsten.'],
+  ['komp', 'Ich arbeite ___ als mein Bruder.', ['mehr', 'vieler', 'mehrer'], 'viel – mehr – am meisten.'],
+  ['komp', 'Wer spielt am ___ Fußball? – Tom!', ['besten', 'gutesten', 'bester'], 'gut – besser – am besten.'],
+  ['komp', 'Was machst du ___: Sport oder Musik?', ['lieber', 'gerner', 'besser'], 'gern → lieber (prefer).'],
+  ['neg', 'Ich habe ___ Auto.', ['kein', 'nicht', 'keine'], 'das Auto → kein Auto (kein negates a noun).'],
+  ['neg', 'Das ist ___ mein Buch.', ['nicht', 'kein', 'keine'], 'With mein, dein … use nicht.'],
+  ['neg', 'Wir haben heute ___ Zeit.', ['keine', 'nicht', 'kein'], 'die Zeit → keine Zeit.'],
+  ['neg', 'Kommst du nicht mit? – ___, ich komme gern mit!', ['Doch', 'Ja', 'Nein'], 'Yes to a negative question = doch.'],
+  ['neg', '___ Wohnung ist sehr schön. (the)', ['Die', 'Der', 'Das'], 'die Wohnung.'],
+  ['neg', 'Ich trinke ___ Kaffee mehr.', ['keinen', 'kein', 'nicht'], 'der Kaffee, Akkusativ → keinen.'],
+  ['zeit', 'Der Kurs beginnt ___ 9 Uhr.', ['um', 'am', 'im'], 'Clock time → um.'],
+  ['zeit', 'Ich habe ___ Montag frei.', ['am', 'um', 'im'], 'Days → am.'],
+  ['zeit', '___ Sommer fahren wir nach Italien.', ['Im', 'Am', 'Um'], 'Months and seasons → im.'],
+  ['zeit', 'Ich wohne ___ drei Jahren in Buchloe.', ['seit', 'vor', 'für'], 'seit = since; it is still true now.'],
+  ['zeit', 'Ich habe ___ zwei Wochen meinen Pass bekommen.', ['vor', 'seit', 'in'], 'vor = ago.'],
+  ['zeit', 'Heute ist ___ dritte Oktober.', ['der', 'am', 'im'], 'Heute ist der dritte Oktober · am dritten Oktober = on the 3rd.'],
+  ['imp', '___ bitte das Fenster zu! (du)', ['Mach', 'Machst', 'Machen'], 'du-Imperativ: no -st, no du.'],
+  ['imp', '___ Sie bitte Platz!', ['Nehmen', 'Nimm', 'Nehmt'], 'Sie-Imperativ: verb + Sie.'],
+  ['imp', 'Kinder, ___ bitte leise!', ['seid', 'sei', 'sind'], 'sein: Sei! (du) · Seid! (ihr) · Seien Sie!'],
+  ['imp', '___ mir bitte! (du, helfen)', ['Hilf', 'Helf', 'Hilfst'], 'helfen → du hilfst → Hilf!'],
+  ['imp', 'Ihr seid müde? Dann ___ doch eine Pause!', ['macht', 'macht ihr', 'machen'], 'ihr-Imperativ: like the present, without ihr.'],
+  ['imp', '___ Sie bitte langsam!', ['Sprechen', 'Sprich', 'Sprecht'], 'Sie-Imperativ: Sprechen Sie …!'],
+  ['pron', 'Hast du einen Kuli? – Ja, ich habe ___.', ['einen', 'eins', 'eine'], 'der Kuli → einen.'],
+  ['pron', 'Möchtest du ein Brötchen? – Nein danke, ich habe schon ___.', ['eins', 'einen', 'ein'], 'das Brötchen → eins.'],
+  ['pron', 'Ist das dein Handy? – Ja, das ist ___.', ['meins', 'mein', 'meiner'], 'das Handy → meins.'],
+  ['pron', 'Hallo? Ist hier ___? – Nein, hier ist niemand.', ['jemand', 'niemand', 'etwas'], 'jemand = somebody, niemand = nobody.'],
+  ['pron', 'Ich habe heute noch ___ gegessen. Ich habe Hunger!', ['nichts', 'niemand', 'etwas'], 'nichts = nothing.'],
+  ['pron', 'Brauchst du Tomaten? – Nein, ich habe noch ___.', ['welche', 'einen', 'eine'], 'Plural → welche.'],
+  ['hoef', '___ Sie mir bitte den Weg zum Bahnhof zeigen?', ['Könnten', 'Konnten', 'Kannst'], 'Polite request: Könnten Sie …?'],
+  ['hoef', 'Ich ___ gern einen Kaffee.', ['hätte', 'hatte', 'hätten'], 'Polite wish: ich hätte gern …'],
+  ['hoef', '___ du bitte das Fenster aufmachen?', ['Würdest', 'Wurdest', 'Würde'], 'du würdest … ?'],
+  ['hoef', 'Ich ___ gern mit Frau Huber sprechen.', ['möchte', 'möchten', 'mochte'], 'ich möchte = I would like.'],
+  ['hoef', 'Wir ___ gern bestellen.', ['würden', 'wurden', 'würde'], 'wir würden.'],
+  ['hoef', '___ ich bitte die Rechnung haben?', ['Könnte', 'Konnte', 'Könnten'], 'ich könnte.'],
+  ['kasus', 'Ich schenke ___ eine Uhr. (my father)', ['meinem Vater', 'meinen Vater', 'mein Vater'], 'The person who gets something → Dativ.'],
+  ['kasus', 'Welcher Satz ist richtig?', ['Ich habe es ihm geschenkt.', 'Ich habe ihm es geschenkt.', 'Ich habe es geschenkt ihm.'], 'Two pronouns: Akkusativ (es) before Dativ (ihm).'],
+  ['kasus', 'Die Blumen sind von ___ Freundin.', ['meiner', 'meine', 'meinen'], 'von + Dativ: die Freundin → meiner.'],
+  ['perfekt', 'Ich habe gestern lange ___. (telefonieren)', ['telefoniert', 'getelefoniert', 'telefonierte'], '-ieren verbs have no ge-.'],
+  ['wechsel', 'Ich ___ mich auf das Sofa.', ['setze', 'sitze', 'sitzt'], 'setzen = sit down (Wohin? + Akk); sitzen = be sitting.'],
+  ['wechsel', 'Das Glas ___ auf dem Tisch.', ['steht', 'stellt', 'legt'], 'Wo? → stehen (+ Dativ).'],
+  ['refl', '___ interessierst du dich? – Für Musik.', ['Wofür', 'Worauf', 'Woran'], 'sich interessieren für → Wofür?'],
+  ['refl', 'Freust du dich auf den Urlaub? – Ja, ich freue mich sehr ___.', ['darauf', 'dafür', 'daran'], 'sich freuen auf → darauf.'],
   ['poss', 'Das ist ___ Schwester. Sie heißt Anna. (my)', ['meine', 'mein', 'meinen'], 'die Schwester → meine.'],
   ['poss', 'Ich besuche am Sonntag ___ Eltern. (my)', ['meine', 'meinen', 'meiner'], 'Plural Akkusativ → meine.'],
   ['poss', 'Paul spielt mit ___ Sohn. (his)', ['seinem', 'seinen', 'sein'], 'mit + Dativ: der Sohn → seinem.'],
@@ -8290,7 +8333,7 @@ const VHS_PICS = [
   { em:['🎂', '🎈', '🎁', '🎶', '👫', '📸', '🥤'], desc:'a birthday party: a cake with candles, balloons, friends are singing, a man is giving a present, a woman is taking a photo, there is music and drinks' }
 ];
 const VHS_ROLE = 'Kursleiterin an der VHS Buchloe';
-const vhsTalkSituation = pic => `You are Frau Berger, a friendly German teacher at the Volkshochschule (VHS) Buchloe. This is the ORAL part of a placement interview (Einstufungsgespräch): you want to find out if the learner can join an A2.2 course (book Schritte plus Neu 4; they finished A2.1 with Schritte plus Neu 3). Speak slowly and clearly at A2 level and always use "Sie".
+const vhsTalkSituation = pic => `You are Frau Berger, a friendly German teacher at the Volkshochschule (VHS) Buchloe. This is the ORAL part of a placement interview (Einstufungsgespräch): you want to find out if the learner can join an A2.2 course (book Schritte plus Neu 4; they finished A2.1 with Schritte plus Neu 1–3). Speak slowly and clearly at A2 level and always use "Sie".
 Run the interview in this order, ONE question per turn, about 3 questions per part, and say when a new part starts:
 Teil 1 – Vorstellen: name, where they come from, where they live and since when, family, job or training, where and how long they have learned German and why.
 Teil 2 – Vergangenheit (Perfekt): the last weekend, the last holiday or how they came to Germany. Ask follow-ups (Mit wem? Wie war es?).
@@ -8319,7 +8362,7 @@ const VHS_TIPS = ['Antworten Sie in ganzen Sätzen, nicht nur mit einem Wort. ·
 /* ---- state: S.vhs = { form, msg, me, gram, speak: { t, score 0–100, … }, intro:{ t, text, res }, runs:[{ t, s:{ part:score } }] } ---- */
 const vS = () => (S.vhs = S.vhs || {});
 const VHS_PARTS = [['form', '📋', 'Formular', 'fill in a form', 10], ['msg', '✉️', 'Kurze Nachricht', '30–50 words', 15], ['me', '📝', 'Über mich', '60–80 words', 20],
-  ['gram', '🧩', 'Grammatik-Check', '25 questions', 20], ['speak', '🗣️', 'Gespräch', 'with the course teacher', 0]];
+  ['gram', '🧩', 'Grammatik-Check', '30 questions, books 1–3', 25], ['speak', '🗣️', 'Gespräch', 'with the course teacher', 0]];
 const VHS_CAT_IDS = Object.keys(VHS_CATS).concat(['spelling', 'vocab', 'other']);
 const vhsCls = s => s >= 75 ? 'g' : s >= 50 ? 'm' : 'b';
 let VH = { flow:null };
@@ -8350,7 +8393,7 @@ function vhsRender(view) {
 function vhsHomeHTML() {
   const v = vS(), done = VHS_PARTS.filter(p => v[p[0]]).length;
   return `<div class="vhshero"><div class="vhsh1">🎯 Einstufungstest A2</div>
-    <p>${bi('Ein Probetest für die Einstufung in einen A2.2-Kurs (nach Schritte plus Neu 3): Schreiben, Grammatik und ein Gespräch mit der Kursleiterin.', 'A mock placement test for an A2.2 course: writing, grammar and a conversation with the course teacher.')}</p>
+    <p>${bi('Ein Probetest für die Einstufung in einen A2.2-Kurs (nach Schritte plus Neu 1, 2 und 3): Schreiben, Grammatik und ein Gespräch mit der Kursleiterin.', 'A mock placement test for an A2.2 course: writing, grammar and a conversation with the course teacher.')}</p>
     <ul class="vhsexp"><li>✍️ <b>Schreiben</b> · Formular, kurze Nachricht, Text über Sie</li><li>🧩 <b>Grammatik</b> · manche VHS geben auch einen kurzen Test</li><li>🗣️ <b>Sprechen</b> · ein Gespräch, etwa 10 Minuten</li></ul>
     <button class="btn blue center" type="button" data-vgo="full">▶ Probetest komplett starten<small class="en2">The full mock test · about 75 minutes · relaxed timer</small></button></div>
     <h3 class="scath">Einzelne Teile<small class="en2">Practise one part at a time</small></h3>
@@ -8416,7 +8459,7 @@ const vhsCatRule = () => `cat = exactly one of: ${VHS_CAT_IDS.join(', ')} (${Obj
 const vhsFixCats = ms => (ms || []).map(m => Object.assign(m, { cat:VHS_CAT_IDS.includes(m.cat) ? m.cat : 'other' }));
 const vhsAvg = (sc, keys) => Math.round(10 * keys.reduce((s, k) => s + Math.max(0, Math.min(10, +((sc || {})[k] || {}).n || 0)), 0) / keys.length);
 function vhsWriteSystem(task, kind) {
-  return `You are an experienced, friendly German teacher at a Volkshochschule. A learner who finished A2.1 (Schritte plus Neu 3) writes the placement test for an A2.2 course.
+  return `You are an experienced, friendly German teacher at a Volkshochschule. A learner who finished A2.1 (Schritte plus Neu 1–3) writes the placement test for an A2.2 course.
 Task (${kind === 'msg' ? 'a short message, 30–50 words' : 'a text about themselves, 60–80 words'}${task.reg ? `, register: ${task.reg === 'formal' ? 'formal (Sie)' : 'informal (du)'}` : ''}): ${task.title}. ${task.situation} Points: ${task.points.join(' | ')}.
 Rules:
 - Check the grammar step by step before calling anything wrong. Be accurate and kind.
@@ -8477,11 +8520,12 @@ function vhsGram(cat) {
   const byC = c => shuffle(VHS_GQ.filter(q => q[0] === c));
   let list;
   if (cat) list = byC(cat).slice(0, 6);
-  else { list = Object.keys(VHS_CATS).flatMap(c => byC(c).slice(0, 2)); list = shuffle(list.concat(shuffle(VHS_GQ.filter(q => !list.includes(q))).slice(0, 25 - list.length))); }
+  else { list = Object.keys(VHS_CATS).flatMap(c => byC(c).slice(0, 1)); const a21 = ['perfekt', 'praet', 'wechsel', 'neben', 'refl', 'pron', 'kasus', 'modal', 'imp'];
+    list = shuffle(list.concat(shuffle(VHS_GQ.filter(q => !list.includes(q) && a21.includes(q[0]))).slice(0, 30 - list.length))); }
   VH.g = { list:list.map(q => ({ q, opts:shuffle(q[2].slice()), ans:null })), i:0, drill:!!cat, cat };
   if (cat) { VH.flow = null; VH.part = 'gram'; } VH.view = 'gram';
-  show('vhs'); $('#vhs').scrollTop = 0; $('#vhsSub').textContent = cat ? `Übung · ${vhsCatName(cat)}` : 'Grammatik-Check · 25 Fragen';
-  if (cat) vhsStopTimer(); else vhsTimer(20);
+  show('vhs'); $('#vhs').scrollTop = 0; $('#vhsSub').textContent = cat ? `Übung · ${vhsCatName(cat)}` : `Grammatik-Check · 30 Fragen aus Buch 1–3`;
+  if (cat) vhsStopTimer(); else vhsTimer(25);
   vhsGramRender();
 }
 function vhsGramRender() {
@@ -8525,7 +8569,7 @@ async function vhsSpeakEval() {
   if (C.vhsBusy) return; C.vhsBusy = true; cafeStatus('📊 Lena wertet das Gespräch aus …');
   const tr = C.msgs.map(m => (m.r === 'u' ? 'Learner: ' : 'Teacher: ') + m.de).join('\n');
   try {
-    const res = await geminiJSON({ system:`You are an experienced German teacher at a Volkshochschule. Assess the learner's speaking in this placement interview for an A2.2 course (they finished A2.1, Schritte plus Neu 3). Judge ONLY the learner's lines; they are transcripts of speech, so ignore punctuation and capital letters. Check the grammar step by step before calling anything wrong.
+    const res = await geminiJSON({ system:`You are an experienced German teacher at a Volkshochschule. Assess the learner's speaking in this placement interview for an A2.2 course (they finished A2.1 with Schritte plus Neu 1–3). Judge ONLY the learner's lines; they are transcripts of speech, so ignore punctuation and capital letters. Check the grammar step by step before calling anything wrong.
 - scores: n from 0 to 10 with a short English note each: aufgabe = answered the questions with details and kept the conversation going; wortschatz = enough fitting words for everyday topics; grammatik = correct A2 grammar (verb position, Perfekt, weil/dass, Dativ …); satzbau = full sentences, connectors (und, aber, weil, dann), longer answers. A solid A2 learner gets 6–8.
 - level: one of "A1", "A2.1", "A2.2", "B1".
 - strengths: 2–3 short English points. tips: 2–3 short, concrete English tips for the real interview tomorrow.
@@ -8580,7 +8624,7 @@ function vhsResultHTML() {
     <h3 class="scath">🔎 Ihre Schwachstellen<small class="en2">Weak spots: what to practise, with your own mistakes</small></h3>
     ${weak.length ? weak.slice(0, 5).map(({ c, w }) => { const [name, rule, ex, tp] = VHS_CATS[c];
       return `<div class="vweak"><div class="vwh"><b>${esc(name)}</b><span>${w.pct !== null ? `Test: ${w.pct} %` : ''}${w.n ? ` · ${w.n} Fehler beim Schreiben/Sprechen` : ''}</span></div>
-        <p class="vwr">${esc(rule)}</p><p class="vwx">✓ ${ex}</p>
+        <p class="vwr">${esc(rule)}</p><p class="vwx">✓ ${ex}</p><p class="vwb">📘 Schritte plus Neu ${esc(VHS_CATS[c][4] || '')}</p>
         ${w.ex.length ? `<div class="vwe"><small>Ihre Fehler · your mistakes:</small>${w.ex.slice(0, 3).map(([a, b]) => `<div><del>${esc(a)}</del> → <ins>${esc(b)}</ins></div>`).join('')}</div>` : ''}
         <div class="row2"><button class="btn blue center" type="button" data-vdrill="${c}">🎯 6 Übungsfragen<small class="en2">Practise this now</small></button><button class="btn center" type="button" data-vrun="${tp}">🏃 Im Spiel üben<small class="en2">More in the runner</small></button></div></div>`; }).join('')
       : `<div class="wres ok">✓ ${bi('Keine klaren Schwachstellen. Machen Sie noch den Grammatik-Check oder das Gespräch für ein genaueres Bild.', 'No clear weak spots yet. Do the grammar check or the interview for a fuller picture.')}</div>`}
