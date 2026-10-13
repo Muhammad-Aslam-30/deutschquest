@@ -3999,7 +3999,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.15-2';
+const APP_VERSION = 'v2026.10.15-3';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -8302,6 +8302,13 @@ const VHS_FORMS = [
     a:{ name:['García López', 'Garcia Lopez'], vorname:['Tomás', 'Tomas'], strasse:['Am Graben 3'], ort:['87600 Kaufbeuren'], geb:['17.11.1988', '17. November 1988'], land:['Spanien'], stand:'geschieden', kinder:['2', 'zwei'], beruf:['Koch'], sprache:['Spanisch'], kurs:'A2.1', zeit:'abends' } },
   { who:'Amina', text:'Hallo! Ich heiße Amina Yusuf. Ich komme aus Nigeria und lebe seit einem Jahr in Buchloe. Meine Adresse ist Lindenweg 7, 86807 Buchloe. Geboren bin ich am 30. Januar 2001. Ich bin ledig und habe keine Kinder. Ich bin Studentin, aber im Moment mache ich ein Praktikum in einem Hotel. Meine Muttersprache ist Englisch; ich spreche auch Yoruba. Ich habe den Kurs A2.1 bei der VHS gemacht und möchte jetzt A2.2 machen, am liebsten nachmittags.',
     a:{ name:['Yusuf'], vorname:['Amina'], strasse:['Lindenweg 7'], ort:['86807 Buchloe'], geb:['30.01.2001', '30.1.2001', '30. Januar 2001'], land:['Nigeria'], stand:'ledig', kinder:['0', 'keine', 'null'], beruf:['Studentin'], sprache:['Englisch'], kurs:'A2.2', zeit:'nachmittags' } }
+,
+  { who:'Mehmet', text:'Ich heiße Mehmet Yilmaz und komme aus der Türkei, aus Izmir. Ich bin am 12. August 1979 geboren. Ich wohne seit fünf Jahren in Mindelheim, in der Kirchstraße 21, 87719 Mindelheim. Ich bin verheiratet und habe drei Kinder. Ich arbeite als Busfahrer. Meine Muttersprache ist Türkisch. Vor zwei Jahren habe ich den Kurs A1.2 gemacht. Jetzt möchte ich den Kurs A2.1 besuchen. Ich habe nur nachmittags Zeit.',
+    a:{ name:['Yilmaz', 'Yılmaz'], vorname:['Mehmet'], strasse:['Kirchstraße 21', 'Kirchstr. 21', 'Kirchstrasse 21'], ort:['87719 Mindelheim'], geb:['12.08.1979', '12.8.1979', '12. August 1979'], land:['Türkei', 'die Türkei'], stand:'verheiratet', kinder:['3', 'drei'], beruf:['Busfahrer'], sprache:['Türkisch'], kurs:'A2.1', zeit:'nachmittags' } },
+  { who:'Olena', text:'Mein Name ist Olena Kovalenko. Ich komme aus der Ukraine und lebe seit 2022 in Buchloe. Meine Adresse ist Gartenweg 4, 86807 Buchloe. Mein Geburtstag ist der 21. März 1990. Ich bin verwitwet und habe einen Sohn. In der Ukraine war ich Lehrerin. Meine Muttersprache ist Ukrainisch, ich spreche auch Russisch. Ich habe die Kurse A1.1 und A1.2 gemacht. Jetzt möchte ich den Kurs A2.1 machen, am liebsten abends.',
+    a:{ name:['Kovalenko'], vorname:['Olena'], strasse:['Gartenweg 4'], ort:['86807 Buchloe'], geb:['21.03.1990', '21.3.1990', '21. März 1990'], land:['Ukraine', 'die Ukraine'], stand:'verwitwet', kinder:['1', 'eins', 'ein', 'einen'], beruf:['Lehrerin'], sprache:['Ukrainisch'], kurs:'A2.1', zeit:'abends' } },
+  { who:'Sanjay', text:'Hallo, ich bin Sanjay Perera aus Sri Lanka. Ich wohne seit drei Jahren in Landsberg am Lech, im Ahornweg 15, 86899 Landsberg am Lech. Ich bin am 9. Juni 1997 geboren. Ich bin ledig und habe keine Kinder. Ich arbeite als Lagerarbeiter in einer Firma. Meine Muttersprache ist Singhalesisch; ich spreche auch Englisch und ein bisschen Tamil. Den Kurs A2.1 habe ich schon gemacht, jetzt möchte ich A2.2 machen. Vormittags habe ich Zeit.',
+    a:{ name:['Perera'], vorname:['Sanjay'], strasse:['Ahornweg 15'], ort:['86899 Landsberg am Lech', '86899 Landsberg'], geb:['09.06.1997', '9.6.1997', '9. Juni 1997'], land:['Sri Lanka'], stand:'ledig', kinder:['0', 'keine', 'null'], beruf:['Lagerarbeiter'], sprache:['Singhalesisch'], kurs:'A2.2', zeit:'vormittags' } }
 ];
 const VHS_FIELDS = [['name', 'Familienname'], ['vorname', 'Vorname'], ['strasse', 'Straße, Hausnummer'], ['ort', 'PLZ, Wohnort'], ['geb', 'Geburtsdatum'], ['land', 'Herkunftsland'],
   ['stand', 'Familienstand', ['ledig', 'verheiratet', 'geschieden', 'verwitwet']], ['kinder', 'Anzahl der Kinder'], ['beruf', 'Beruf'], ['sprache', 'Muttersprache'],
@@ -8315,6 +8322,12 @@ const VHS_MSG = [
   { title:'Einladung zur Geburtstagsparty', reg:'informal', situation:'Sie haben am Freitag Geburtstag und machen eine kleine Party. Schreiben Sie Ihrem Freund Ben eine Nachricht.', points:['Laden Sie Ben ein.', 'Wann und wo ist die Party?', 'Was soll Ben mitbringen?'] },
   { title:'Frage an die VHS', reg:'formal', situation:'Sie möchten an der VHS einen Deutschkurs A2.2 machen. Schreiben Sie eine E-Mail an die VHS.', points:['Warum schreiben Sie?', 'Fragen Sie nach der Kurszeit und dem Preis.', 'Wann können Sie zum Einstufungstest kommen?'] },
   { title:'Hilfe beim Umzug', reg:'informal', situation:'Sie ziehen am Samstag in eine neue Wohnung um. Schreiben Sie Ihrer Freundin Sara eine Nachricht.', points:['Bitten Sie Sara um Hilfe.', 'Wann und wo treffen Sie sich?', 'Was gibt es danach (Essen, Getränke …)?'] },
+  { title:'Ein Paket für die Nachbarin', reg:'formal', situation:'Sie haben ein Paket für Ihre Nachbarin, Frau Kaya, angenommen. Schreiben Sie ihr eine Nachricht.', points:['Sagen Sie, dass Sie ein Paket für sie haben.', 'Wann sind Sie zu Hause?', 'Wann können Sie ihr das Paket bringen?'] },
+  { title:'Termin beim Kinderarzt', reg:'formal', situation:'Ihr Kind ist krank. Sie brauchen schnell einen Termin bei Kinderarzt Dr. Wolf. Schreiben Sie der Praxis eine E-Mail.', points:['Was hat Ihr Kind?', 'Wann können Sie kommen?', 'Bitten Sie um eine schnelle Antwort.'] },
+  { title:'Kaffee mit Mia verschieben', reg:'informal', situation:'Sie wollten am Mittwoch mit Ihrer Freundin Mia Kaffee trinken. Jetzt haben Sie keine Zeit. Schreiben Sie Mia eine Nachricht.', points:['Entschuldigen Sie sich.', 'Warum haben Sie keine Zeit?', 'Schlagen Sie einen anderen Tag vor.'] },
+  { title:'Die Heizung ist kaputt', reg:'formal', situation:'In Ihrer Wohnung ist die Heizung kaputt. Schreiben Sie Ihrem Vermieter, Herrn Maier, eine E-Mail.', points:['Was ist kaputt?', 'Seit wann ist das so?', 'Wann kann der Handwerker kommen?'] },
+  { title:'Danke für die Hilfe', reg:'informal', situation:'Ihr Freund Ali hat Ihnen beim Umzug geholfen. Schreiben Sie ihm eine Nachricht.', points:['Bedanken Sie sich.', 'Wie gefällt Ihnen die neue Wohnung?', 'Laden Sie Ali zum Essen ein.'] },
+  { title:'Elternabend: Sie können nicht', reg:'formal', situation:'Morgen ist Elternabend in der Schule Ihres Kindes, aber Sie können nicht kommen. Schreiben Sie der Lehrerin, Frau Schulz.', points:['Sagen Sie ab.', 'Nennen Sie den Grund.', 'Fragen Sie nach einem anderen Termin für ein Gespräch.'] },
   { title:'Krank: nicht zur Arbeit', reg:'formal', situation:'Sie sind krank und können heute nicht zur Arbeit kommen. Schreiben Sie Ihrer Chefin, Frau Lang, eine E-Mail.', points:['Was ist passiert?', 'Wie lange bleiben Sie zu Hause?', 'Wer kann heute Ihre Arbeit machen?'] }
 ];
 // 📝 a longer text about yourself (60–80 words)
@@ -8323,6 +8336,11 @@ const VHS_ME = [
   { title:'Mein letztes Wochenende', situation:'Schreiben Sie über Ihr letztes Wochenende. Benutzen Sie das Perfekt.', points:['Was haben Sie am Samstag gemacht?', 'Was haben Sie am Sonntag gemacht?', 'Mit wem waren Sie zusammen?', 'Wie war das Wochenende?'] },
   { title:'Mein Alltag', situation:'Beschreiben Sie einen normalen Tag in Ihrem Leben.', points:['Wann stehen Sie auf?', 'Was machen Sie am Vormittag und am Nachmittag?', 'Was machen Sie am Abend?', 'Was machen Sie am liebsten?'] },
   { title:'Ein Fest in meinem Heimatland', situation:'Schreiben Sie über ein Fest in Ihrem Heimatland.', points:['Welches Fest ist das, und wann ist es?', 'Was machen die Menschen?', 'Was isst man?', 'Was gefällt Ihnen an dem Fest?'] },
+  { title:'Meine Familie', situation:'Schreiben Sie über Ihre Familie. (Sie können auch erfundene Angaben benutzen.)', points:['Wer gehört zu Ihrer Familie?', 'Wo leben Ihre Verwandten?', 'Was machen sie (Arbeit, Schule …)?', 'Wie oft sehen oder sprechen Sie sie?'] },
+  { title:'Mein letzter Urlaub', situation:'Schreiben Sie über Ihren letzten Urlaub. Benutzen Sie das Perfekt.', points:['Wo waren Sie?', 'Mit wem waren Sie dort?', 'Was haben Sie gemacht?', 'Wie war das Wetter und das Essen?'] },
+  { title:'Meine Arbeit', situation:'Schreiben Sie über Ihre Arbeit oder über Ihren Traumberuf.', points:['Was sind Sie von Beruf (oder was möchten Sie werden)?', 'Wo arbeiten Sie?', 'Was machen Sie bei der Arbeit?', 'Was gefällt Ihnen, was nicht?'] },
+  { title:'Essen in meinem Heimatland', situation:'Schreiben Sie über das Essen in Ihrem Heimatland.', points:['Was isst man zum Frühstück, zu Mittag und am Abend?', 'Was ist Ihr Lieblingsessen?', 'Kochen Sie gern? Was?', 'Was essen Sie in Deutschland?'] },
+  { title:'Meine Freizeit', situation:'Schreiben Sie über Ihre Freizeit.', points:['Was machen Sie gern in Ihrer Freizeit?', 'Wann und mit wem?', 'Was haben Sie letztes Wochenende gemacht?', 'Was möchten Sie gern einmal machen?'] },
   { title:'Meine Wohnung', situation:'Schreiben Sie über Ihre Wohnung.', points:['Wo wohnen Sie?', 'Wie ist Ihre Wohnung (Zimmer, groß oder klein …)?', 'Was gefällt Ihnen, was nicht?', 'Was möchten Sie noch kaufen?'] }
 ];
 // 🗣 the picture for the interview (Teil 3): shown as emoji, described for Lena
@@ -8330,6 +8348,8 @@ const VHS_PICS = [
   { em:['🍳', '👩', '☕', '👨', '🍞', '👧', '🧃', '🕖'], desc:'breakfast in a family kitchen at 7 o’clock: a mother is frying eggs, a father is drinking coffee, a little girl is eating bread, there is orange juice on the table' },
   { em:['🌳', '⚽', '👦', '👧', '🧓', '📰', '🐕', '🧺', '☀️'], desc:'a park on a sunny Sunday: two children are playing football, an old man is reading a newspaper on a bench, a woman is walking her dog, a couple is having a picnic' },
   { em:['🛒', '🥛', '🍞', '🍎', '👨', '👩', '🧾', '🍫', '👶'], desc:'a supermarket: a man is pushing a shopping cart with milk, bread and apples, a woman is paying at the till, a small child wants chocolate' },
+  { em:['🚉', '🚆', '🧳', '👵', '👨‍👩‍👧', '🎫', '⏰', '☕'], desc:'a train station in the morning: a train is arriving, an old woman with a suitcase is waiting, a family is buying tickets at a machine, a clock shows 8:15, a man is drinking coffee' },
+  { em:['🏥', '🤧', '👩‍🍼', '👩‍⚕️', '📋', '🪑', '🤒', '📰'], desc:'a doctor’s waiting room: a man is sneezing, a mother is sitting with her baby, a nurse is holding a form, a boy with a fever is waiting, an old man is reading a magazine' },
   { em:['🎂', '🎈', '🎁', '🎶', '👫', '📸', '🥤'], desc:'a birthday party: a cake with candles, balloons, friends are singing, a man is giving a present, a woman is taking a photo, there is music and drinks' }
 ];
 const VHS_ROLE = 'Kursleiterin an der VHS Buchloe';
@@ -8396,7 +8416,7 @@ function vhsHomeHTML() {
     <p>${bi('Ein Probetest für die Einstufung in einen A2.2-Kurs (nach Schritte plus Neu 1, 2 und 3): Schreiben, Grammatik und ein Gespräch mit der Kursleiterin.', 'A mock placement test for an A2.2 course: writing, grammar and a conversation with the course teacher.')}</p>
     <ul class="vhsexp"><li>✍️ <b>Schreiben</b> · Formular, kurze Nachricht, Text über Sie</li><li>🧩 <b>Grammatik</b> · manche VHS geben auch einen kurzen Test</li><li>🗣️ <b>Sprechen</b> · ein Gespräch, etwa 10 Minuten</li></ul>
     <button class="btn blue center" type="button" data-vgo="full">▶ Probetest komplett starten<small class="en2">The full mock test · about 75 minutes · relaxed timer</small></button></div>
-    <h3 class="scath">Einzelne Teile<small class="en2">Practise one part at a time</small></h3>
+    <h3 class="scath">Einzelne Teile<small class="en2">Practise one part at a time · every test brings new tasks: ${VHS_FORMS.length} forms, ${VHS_MSG.length} messages, ${VHS_ME.length} topics, ${VHS_GQ.length} grammar questions, ${VHS_PICS.length} pictures</small></h3>
     <div class="vparts">${VHS_PARTS.map(([k, e, de, en, min]) => { const r = v[k];
       return `<button class="vpart" type="button" data-vgo="${k}"><span class="ve">${e}</span><b>${de}</b><small>${en}${min ? ` · ${min} Min.` : ''}</small>${r ? `<span class="vsc ${vhsCls(r.score)}">${r.score} %</span>` : '<span class="vsc none">neu</span>'}</button>`; }).join('')}</div>
     ${done ? `<button class="btn green center" type="button" data-vgo="result">📊 Ergebnis & Schwachstellen<small class="en2">Bar graphs, weak spots and your plan for today</small></button>` : ''}
@@ -8423,9 +8443,18 @@ const vhsNextBtn = () => VH.flow ? `<button class="btn blue center" type="button
 function vhsSave(part, rec) { vS()[part] = Object.assign({ t:Date.now() }, rec); const c = coinEarn(10); bumpStreak(); save(); keepStorage(); coinToast(c, 'write'); }
 const umlHTML = id => `<div class="uml" data-target="${id}">${'äöüßÄÖÜ'.split('').map(c => `<button type="button" data-ch="${c}">${c}</button>`).join('')}</div>`;
 
+/* ---- rotation: S.vhs.used[pool] = ids already given; the next task is always a new one until the pool is used up ---- */
+function vhsPick(pool, key, idOf) {
+  const v = vS(); v.used = v.used || {}; let u = v.used[key] || [];
+  let fresh = pool.filter(x => !u.includes(idOf(x)));
+  if (!fresh.length) { u = []; fresh = pool.slice(); }
+  const x = pick(fresh); v.used[key] = u.concat(idOf(x)); save(); return x;
+}
+const vqId = q => q[0] + '|' + q[1] + '|' + q[2][0];
+
 /* ---- 📋 the form ---- */
 function vhsForm() {
-  const f = pick(VHS_FORMS); VH.form = f; show('vhs'); $('#vhs').scrollTop = 0; $('#vhsSub').textContent = 'Schreiben 1 · Formular';
+  const f = vhsPick(VHS_FORMS, 'form', x => x.who); VH.form = f; show('vhs'); $('#vhs').scrollTop = 0; $('#vhsSub').textContent = 'Schreiben 1 · Formular';
   $('#vhsBody').innerHTML = `<div class="vtask"><b>📋 Formular</b><p>${bi(`Lesen Sie den Text. ${esc(f.who)} möchte einen Deutschkurs an der VHS machen. Füllen Sie das Anmeldeformular für ${esc(f.who)} aus.`, 'Read the text and fill in the registration form for this person.')}</p></div>
     <div class="vread">${esc(f.text)} <button class="linkbtn" type="button" data-say="${esc(f.text)}" aria-label="Anhören">🔊</button></div>
     <div class="vform"><div class="vfh">Volkshochschule Buchloe · Anmeldung Deutschkurs</div>
@@ -8472,7 +8501,7 @@ Rules:
 - summary: 2–3 short, encouraging English sentences: what was good, what to practise.`;
 }
 function vhsWrite(kind) {
-  const task = pick(kind === 'msg' ? VHS_MSG : VHS_ME), [lo, hi] = kind === 'msg' ? [30, 50] : [60, 80];
+  const task = vhsPick(kind === 'msg' ? VHS_MSG : VHS_ME, kind, x => x.title), [lo, hi] = kind === 'msg' ? [30, 50] : [60, 80];
   Object.assign(VH, { task, kind, words:[lo, hi] }); show('vhs'); $('#vhs').scrollTop = 0;
   $('#vhsSub').textContent = kind === 'msg' ? 'Schreiben 2 · Kurze Nachricht' : 'Schreiben 3 · Über mich';
   $('#vhsBody').innerHTML = `<div class="vtask"><b>${kind === 'msg' ? '✉️' : '📝'} ${esc(task.title)}</b>${task.reg ? ` <span class="vtag">${task.reg === 'formal' ? 'formell · Sie' : 'informell · du'}</span>` : ''}<p>${esc(task.situation)}</p>
@@ -8517,11 +8546,12 @@ function vhsWriteResHTML(res, text, score) {
 /* ---- 🧩 the grammar check (25 questions, no hints during the test) and short drills per topic (with feedback) ---- */
 const vqFill = (q, w) => q.includes('___') ? esc(q).replace('___', `<b>${esc(w)}</b>`) : `${esc(q)} → <b>${esc(w)}</b>`;
 function vhsGram(cat) {
-  const byC = c => shuffle(VHS_GQ.filter(q => q[0] === c));
+  const v = vS(); v.used = v.used || {}; const seen = new Set(v.used.gram || []);
+  const byC = c => { const all = shuffle(VHS_GQ.filter(q => q[0] === c)); return all.filter(q => !seen.has(vqId(q))).concat(all.filter(q => seen.has(vqId(q)))); };
   let list;
   if (cat) list = byC(cat).slice(0, 6);
   else { list = Object.keys(VHS_CATS).flatMap(c => byC(c).slice(0, 1)); const a21 = ['perfekt', 'praet', 'wechsel', 'neben', 'refl', 'pron', 'kasus', 'modal', 'imp'];
-    list = shuffle(list.concat(shuffle(VHS_GQ.filter(q => !list.includes(q) && a21.includes(q[0]))).slice(0, 30 - list.length))); }
+    const more = shuffle(VHS_GQ.filter(q => !list.includes(q) && a21.includes(q[0]))); list = shuffle(list.concat(more.filter(q => !seen.has(vqId(q))).concat(more.filter(q => seen.has(vqId(q)))).slice(0, 30 - list.length))); }
   VH.g = { list:list.map(q => ({ q, opts:shuffle(q[2].slice()), ans:null })), i:0, drill:!!cat, cat };
   if (cat) { VH.flow = null; VH.part = 'gram'; } VH.view = 'gram';
   show('vhs'); $('#vhs').scrollTop = 0; $('#vhsSub').textContent = cat ? `Übung · ${vhsCatName(cat)}` : `Grammatik-Check · 30 Fragen aus Buch 1–3`;
@@ -8542,6 +8572,7 @@ function vhsGramDone() {
   const G = VH.g, cat = {}; let ok = 0;
   G.list.forEach(x => { const c = x.q[0], good = x.ans === x.q[2][0]; cat[c] = cat[c] || [0, 0]; cat[c][1]++; if (good) { cat[c][0]++; ok++; } });
   const score = Math.round(100 * ok / G.list.length); vhsStopTimer();
+  if (!G.drill) { const v = vS(); v.used = v.used || {}; const ids = new Set((v.used.gram || []).concat(G.list.map(x => vqId(x.q)))); v.used.gram = ids.size >= VHS_GQ.length - 10 ? G.list.map(x => vqId(x.q)) : [...ids]; }
   if (!G.drill) vhsSave('gram', { score, ok, n:G.list.length, cat, wrong:G.list.filter(x => x.ans !== x.q[2][0]).map(x => [x.q[0], x.q[1], x.ans || '–', x.q[2][0], x.q[3]]) });
   $('#vhsBody').innerHTML = `<div class="vscore ${vhsCls(score)}">${ok} / ${G.list.length} richtig · ${score} %</div>
     ${G.drill ? '' : vhsBarsHTML(Object.keys(VHS_CATS).filter(c => cat[c]).map(c => [VHS_CATS[c][0], Math.round(100 * cat[c][0] / cat[c][1]), `${cat[c][0]}/${cat[c][1]}`]), '📊 Nach Thema · by topic')}
@@ -8554,7 +8585,7 @@ function vhsGramDone() {
 /* ---- 🗣 the interview: a Szenen chat with Lena as the VHS course teacher, then an assessment ---- */
 const vhsPicHTML = p => `<div class="vhspic"><div class="vpt">🖼️ Bild · Teil 3 <small>Was sehen Sie? Was machen die Leute?</small></div><div class="vpe">${p.em.map(e => `<span>${e}</span>`).join('')}</div></div>`;
 function vhsSpeak() {
-  const pic = pick(VHS_PICS); VHS_TALK[4] = vhsTalkSituation(pic);
+  const pic = vhsPick(VHS_PICS, 'pic', x => x.desc.slice(0, 30)); VHS_TALK[4] = vhsTalkSituation(pic);
   openCafe('vhs_einstufung', 'vhs', 'A2', false);
   C.vhs = { pic }; C.vhsPic = 0; $('#cVhsEnd').style.display = '';
   addBubble('vsys', bi('🎯 Das Einstufungsgespräch: 4 Teile (Vorstellen · Vergangenheit · Bild · Planen). Antworten Sie in ganzen Sätzen. Am Ende: „📊 Auswerten“.', 'The placement interview in 4 parts. Answer in full sentences; tap „Auswerten“ at the end.'));
