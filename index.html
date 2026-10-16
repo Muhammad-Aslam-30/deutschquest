@@ -818,8 +818,7 @@ html.dark .b.vsys{color:#2C2C2A}
 .vbox .vrow{margin:6px 0}.vbox select{font:inherit;font-size:15px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--white);color:var(--black);max-width:100%}
 .vbox label small{color:var(--grey)}
 .vtip{margin:6px 0;font-size:14.5px}.vtip summary{cursor:pointer;font-weight:700}.vtip ul{padding-left:20px;line-height:1.5;margin:6px 0}
-#cPiperBox [hidden],#cVoiceBox .btn[hidden]{display:none}
-.pbar{height:10px;border-radius:9px;background:rgba(47,54,64,.12);overflow:hidden;margin:8px 0}.pbar i{display:block;height:100%;background:var(--good);transition:width .3s}
+
 .keyrow{display:flex;gap:8px}
 .keyrow input{flex:1;min-width:0;border:calc(3px * var(--bwk)) solid var(--line);padding:10px;font:inherit}
 .keyrow .btn{width:auto}
@@ -1378,21 +1377,13 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
         <p class="note">Free keys: Google may use these chats to improve its services, so don't share private details with Lena. <button class="linkbtn" id="cKeyDel">Remove key from this device</button></p>
         <div class="vbox" id="cVoiceBox">
           <h3>🔊 Lenas Stimme <small>(Lena’s voice, this device only)</small></h3>
-          <div class="vrow"><label><input type="radio" name="lvoice" value="device"> Gerätestimme <small>(free, the voice installed on this device)</small></label></div>
+          <p class="note">Lena spricht mit einer Stimme Ihres Geräts. Wählen Sie die klarste. · Lena uses a voice installed on this device: choose the clearest one.</p>
           <div class="vrow"><select id="cDevVoice" aria-label="Gerätestimme wählen"></select></div>
           <div class="vrow">Tempo · speed: <select id="cDevSpeed"><option value="0.8">Langsam · slow</option><option value="0.9">Normal · a bit slower (default)</option><option value="1">Original</option></select></div>
           <details class="vtip"><summary>💡 Die klarste Gerätestimme finden · find the clearest device voice</summary><ul>
             <li><b>Laptop:</b> open the game in <b>Microsoft Edge</b> and choose a voice marked ⭐ (e.g. <i>Katja Online (Natural)</i>, <i>Seraphina</i>, <i>Amala</i>). These are among the clearest free German voices.</li>
             <li><b>Android tablet:</b> Settings → <i>Text-to-speech output</i> → <b>Google</b> speech engine → ⚙ → <i>Install voice data</i> → <b>Deutsch (Deutschland)</b>; choose the voice that sounds clearest. Then reopen the game and pick it here.</li>
             <li>Tap <b>▶ Probe hören</b> after each change.</li></ul></details>
-          <div class="vrow"><label><input type="radio" name="lvoice" value="piper"> Thorsten (Piper) <small>(free, open source, natural German; one download ~90 MB, then offline)</small></label></div>
-          <div id="cPiperBox">
-            <button class="btn blue center" id="cPiperGet" type="button" style="width:100%">⬇ Thorsten laden (~90 MB, einmalig)<small class="en2">Download once – best on Wi-Fi</small></button>
-            <div class="pbar" id="cPiperBar" hidden><i style="width:0"></i></div>
-            <div class="vrow">Tempo · speed: <select id="cPiperSpeed"><option value="1.7">Langsam · slow</option><option value="1.35">Normal · a bit slower (default)</option><option value="1">Original · as in the sample</option></select></div>
-            <p class="note" id="cPiperMsg"></p>
-            <button class="linkbtn" id="cPiperDel" type="button">Thorsten von diesem Gerät löschen (Speicher freigeben)</button>
-          </div>
           <button class="btn center" id="cVSample" type="button" style="width:100%;margin-top:8px">▶ Probe hören<small class="en2">Hear a sample sentence</small></button>
           <p class="note" id="cVMsg"></p>
         </div>
@@ -4030,7 +4021,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.16-5';
+const APP_VERSION = 'v2026.10.16-6';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -5360,7 +5351,7 @@ function voicePrune(db) {   // keep the newest VOICE_MAX pieces
     const all = [], st = db.transaction('v', 'readwrite').objectStore('v'), c = st.openCursor();
     c.onsuccess = () => {
       const cur = c.result;
-      if (cur) { const k = String(cur.key); if (!k.startsWith(VOICE_KEY) && !k.startsWith('PT|')) st.delete(cur.key); else all.push([cur.key, cur.value.t || 0]); cur.continue(); return; }
+      if (cur) { const k = String(cur.key); if (!k.startsWith(VOICE_KEY)) st.delete(cur.key); else all.push([cur.key, cur.value.t || 0]); cur.continue(); return; }
       if (all.length > VOICE_MAX) all.sort((a, b) => a[1] - b[1]).slice(0, all.length - VOICE_MAX).forEach(([k]) => st.delete(k));
     };
   } catch (e) {}
@@ -5443,7 +5434,8 @@ function loadVoice() {
   deVoice = (pickN && de.find(v => v.name === pickN)) || de.find(v => /natural|online/i.test(v.name)) || de.find(v => /google/i.test(v.name)) || de.find(v => /(katja|hedda|anna|marlene|vicki|petra|helena|female)/i.test(v.name)) || de[0] || null;
 }
 if (window.speechSynthesis) { loadVoice(); speechSynthesis.onvoiceschanged = loadVoice; }
-setTimeout(() => { if (lsGet('dq-piper-on') === '1') piperStart().catch(() => {}); }, 4000);
+// Thorsten (Piper) was tried and removed: free the ~90 MB on devices that downloaded him
+setTimeout(() => { try { if (window.caches) caches.delete('dq-piper-1'); ['dq-piper-on', 'dq-piper-speed'].forEach(k => localStorage.removeItem(k)); } catch (e) {} }, 3000);
 // returns when the sentence has been spoken (so nothing else talks over it). Android tablets drop an utterance that is
 // started right after cancel(), so after a cancel there is a short pause; if the voice never starts, the learner is told why.
 let devHint = false, devPlain = false, devLog = [];
@@ -5494,11 +5486,11 @@ function audioKeepAlive() {
   try { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 40; g.gain.value = 0.00001; o.connect(g); g.connect(ctx.destination); o.start(); keepAlive = o; } catch (e) {}
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden && keepAlive) { try { keepAlive.stop(); } catch (e) {} keepAlive = null; } });
-function playBuffer(buf, ownSpeed) {
+function playBuffer(buf) {
   audioKeepAlive();
   return new Promise(done => {
     const ctx = audioCtx(), src = ctx.createBufferSource();
-    src.buffer = buf; src.playbackRate.value = C.slow && !ownSpeed ? 0.85 : 1; src.connect(ctx.destination);
+    src.buffer = buf; src.playbackRate.value = C.slow ? 0.85 : 1; src.connect(ctx.destination);
     src.onended = () => { if (curSrc === src) curSrc = null; done(); };
     curSrc = src; talking(true); src.start();
   });
@@ -5507,114 +5499,8 @@ const withTimeout = p => Promise.race([p, sleep(VOICE_WAIT).then(() => null)]);
 // Lena speaks with the device voice only: Gemini's natural voice allows only a few requests a day on a free key and caused
 // silent or half-spoken replies on the tablet (user's choice, 2026-10-10). The code stays, switched off.
 const NATURAL_VOICE = false;
-/* ---- Piper (open source, MIT licence): the German voice "Thorsten" runs inside the browser, in a worker so the app never freezes.
-   One download (~90 MB: voice model, German pronunciation data, the engine), kept in the Cache Storage; after that it works offline.
-   The model is loaded once and stays in the worker. Replies are made sentence by sentence (the first plays while the next is made),
-   and every sentence is kept in the voice store, so a repeat is instant. Anything not ready or failing → the device voice. ---- */
-const PIPER_ON = 'dq-piper-on', PIPER_CACHE = 'dq-piper-1', PIPER_VOICE = 'thorsten-medium';
-const PIPER_FILES = {
-  model:'https://huggingface.co/diffusionstudio/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx',
-  config:'https://huggingface.co/diffusionstudio/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx.json',
-  ort:'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/esm/ort.min.js',
-  ortWasm:'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort-wasm-simd.wasm',
-  phon:'https://cdn.jsdelivr.net/npm/@diffusionstudio/vits-web@1.0.3/dist/piper-DeOu3H9E.js',
-  phonWasm:'https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm',
-  phonData:'https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data'
-};
-const piperWant = () => lsGet(PIPER_ON) === '1';
-const PIPER_SPEED = 'dq-piper-speed';
-const piperScale = slow => (+lsGet(PIPER_SPEED) || 1.35) * (slow ? 1.3 : 1);   // measured: ×1.35 ≈ 20 % slower, ×1.7 ≈ 45 % slower   // 🐢 slows down a little more on top
-let piperW = null, piperReady = null, piperSeq = 0, piperJobs = {}, piperState = '';
-async function piperHas() { try { const c = await caches.open(PIPER_CACHE); return (await Promise.all(Object.values(PIPER_FILES).map(u => c.match(u)))).every(Boolean); } catch (e) { return false; } }
-// download everything once (progress: 0–1); the voice model is the big part
-async function piperDownload(onProgress) {
-  const c = await caches.open(PIPER_CACHE), list = Object.values(PIPER_FILES), size = { model:63.2e6, phonData:18.1e6, ortWasm:10.6e6 };
-  const total = Object.keys(PIPER_FILES).reduce((t, k) => t + (size[k] || 0.7e6), 0); let done = 0;
-  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
-  for (const [k, u] of Object.entries(PIPER_FILES)) {
-    if (await c.match(u)) { done += size[k] || 0.7e6; onProgress(done / total); continue; }
-    let res = null; for (let k = 0; k < 2 && !(res && res.ok); k++) { try { res = await fetch(u); } catch (e) { if (k) throw e; await sleep(1500); } }
-    if (!res || !res.ok || !res.body) throw new Error('download ' + (res && res.status));
-    const rd = res.body.getReader(), parts = []; let got = 0;
-    for (;;) { const { done:end, value } = await rd.read(); if (end) break; parts.push(value); got += value.length; onProgress(Math.min(0.999, (done + got) / total)); }
-    await c.put(u, new Response(new Blob(parts), { headers:{ 'Content-Type':res.headers.get('Content-Type') || 'application/octet-stream' } }));
-    done += size[k] || got; onProgress(done / total);
-  }
-}
-// the worker gets every file as a blob: URL made from the cache, so it works offline
-const PIPER_WORKER = `
-let ort, phonCreate, sess, cfg, phon = null, out = null, urls;
-async function phonemes(text) {
-  const run = async m => new Promise((ok, bad) => { let got = false; out = ids => { got = true; ok(ids); };
-    try { m.callMain(['-l', cfg.espeak.voice, '--input', JSON.stringify([{ text }]), '--espeak_data', '/espeak-ng-data']); } catch (e) { if (!got) bad(e); return; }
-    setTimeout(() => { if (!got) bad(new Error('no phonemes')); }, 2000); });
-  const make = () => phonCreate({ print:l => { try { out && out(JSON.parse(l).phoneme_ids); } catch (e) {} }, printErr:() => {}, noInitialRun:true,
-    locateFile:f => f.endsWith('.wasm') ? urls.phonWasm : f.endsWith('.data') ? urls.phonData : f });
-  if (!phon) phon = await make();
-  try { return await run(phon); } catch (e) { phon = await make(); return run(phon); }   // a module that cannot run twice: a fresh one
-}
-onmessage = async e => {
-  const { id, type, text, slow } = e.data;
-  try {
-    if (type === 'init') {
-      urls = e.data.urls;
-      ort = await import(urls.ort); ort.env.wasm.numThreads = 1; ort.env.wasm.wasmPaths = { 'ort-wasm-simd.wasm':urls.ortWasm };
-      phonCreate = (await import(urls.phon)).createPiperPhonemize;
-      cfg = JSON.parse(await (await fetch(urls.config)).text());
-      sess = await ort.InferenceSession.create(await (await fetch(urls.model)).arrayBuffer());
-      postMessage({ id, ok:true, rate:cfg.audio.sample_rate }); return;
-    }
-    const ids = await phonemes(text);
-    const inf = cfg.inference, scale = +e.data.scale || 1, feeds = { input:new ort.Tensor('int64', BigInt64Array.from(ids.map(BigInt)), [1, ids.length]),
-      input_lengths:new ort.Tensor('int64', BigInt64Array.from([BigInt(ids.length)])), scales:new ort.Tensor('float32', Float32Array.from([inf.noise_scale, inf.length_scale * scale, inf.noise_w])) };
-    const res = await sess.run(feeds), audio = Float32Array.from(res.output.data);
-    postMessage({ id, audio, rate:cfg.audio.sample_rate }, [audio.buffer]);
-  } catch (err) { postMessage({ id, error:String(err && err.message || err) }); }
-};`;
-function piperCall(msg) { return new Promise((ok, bad) => { const id = ++piperSeq; piperJobs[id] = { ok, bad }; piperW.postMessage(Object.assign({ id }, msg)); }); }
-function piperStart() {
-  if (piperReady) return piperReady;
-  piperReady = (async () => {
-    if (!(await piperHas())) throw new Error('not downloaded');
-    const c = await caches.open(PIPER_CACHE), urls = {};
-    for (const [k, u] of Object.entries(PIPER_FILES)) { const blob = await (await c.match(u)).blob(); urls[k] = URL.createObjectURL(/\.m?js$/.test(u) ? new Blob([blob], { type:'text/javascript' }) : blob); }
-    piperW = new Worker(URL.createObjectURL(new Blob([PIPER_WORKER], { type:'text/javascript' })), { type:'module' });
-    piperW.onmessage = e => { const j = piperJobs[e.data.id]; if (!j) return; delete piperJobs[e.data.id]; e.data.error ? j.bad(new Error(e.data.error)) : j.ok(e.data); };
-    piperW.onerror = e => { Object.values(piperJobs).forEach(j => j.bad(new Error('worker'))); piperJobs = {}; };
-    await piperCall({ type:'init', urls }); piperState = 'ready';
-  })();
-  piperReady.catch(() => { piperReady = null; piperState = 'error'; if (piperW) { try { piperW.terminate(); } catch (e) {} piperW = null; } });
-  return piperReady;
-}
-async function piperBuffer(text, slow) {
-  const sc = piperScale(slow), pre = 'PT|' + PIPER_VOICE + '|' + sc.toFixed(2) + '|';
-  if (audioCache.has(pre + text)) return audioCache.get(pre + text);
-  const kept = await voiceGet(text, pre); if (kept) { audioCache.set(pre + text, kept); return kept; }
-  await piperStart();
-  const d = await piperCall({ type:'say', text, scale:sc }), ctx = audioCtx();
-  const buf = ctx.createBuffer(1, d.audio.length, d.rate); buf.copyToChannel(d.audio, 0);
-  audioCache.set(pre + text, buf); voicePut(text, buf, pre); return buf;
-}
-// sentences, short ones joined, so the first one is ready quickly
-const piperParts = text => { const p = (text.match(/[^.!?…]+[.!?…]+["“”»«]*|[^.!?…]+$/g) || [text]).map(x => x.trim()).filter(Boolean), out = [];
-  p.forEach(x => { if (out.length && out[out.length - 1].length < 20) out[out.length - 1] += ' ' + x; else out.push(x); }); return out; };
-async function sayPiper(text, my) {
-  try {
-    const slow = !!C.slow, parts = piperParts(text), jobs = parts.map(p => { const j = piperBuffer(p, slow); j.catch(() => {}); return j; });
-    const ctx = audioCtx(); if (ctx.state !== 'running') { try { await Promise.race([ctx.resume(), sleep(400)]); } catch (e) {} }
-    for (let i = 0; i < jobs.length; i++) {
-      const buf = await withTimeout(jobs[i]);
-      if (my !== speakSeq) return true;
-      if (!buf || ctx.state !== 'running') { if (i === 0) return false; talking(false); sayDevice(parts.slice(i).join(' ')); return true; }
-      await playBuffer(buf, true); if (my !== speakSeq) return true;
-      if (i < jobs.length - 1) { await sleep(350); if (my !== speakSeq) return true; }
-    }
-    talking(false); return true;
-  } catch (e) { return my !== speakSeq; }
-}
 async function say(text) {
   stopVoice(); const my = speakSeq;
-  if (piperWant() && text && text.trim() && audioCtx()) { if (await sayPiper(text.trim(), my)) return; if (my !== speakSeq) return; }
   if (ttsDown && Date.now() - ttsDownAt > 20 * 60000) ttsDown = false;   // try the natural voice again after a while
   if (NATURAL_VOICE && (S.cafeVoice || 'natural') === 'natural' && (lsGet(AI_KEY) || ttsDown) && audioCtx()) {
     const parts = speechChunks(text), jobs = parts.map(p => { const j = ttsDown ? ttsKept(p) : ttsBuffer(p); j.catch(() => {}); return j; });
@@ -11441,45 +11327,15 @@ $('#cSlow').addEventListener('click', () => { C.slow = !C.slow; $('#cSlow').setA
 $('#cKeyBtn').addEventListener('click', () => showKeySetup($('#cSetup').style.display === 'none'));
 // ---- ⚙ "Lenas Stimme" ----
 function vRender() {
-  const pip = piperWant();
-  $$('#cVoiceBox [name="lvoice"]').forEach(x => { x.checked = x.value === (pip ? 'piper' : 'device'); });
   const vs = ((window.speechSynthesis && speechSynthesis.getVoices()) || []).filter(v => /^de/i.test(v.lang));
   $('#cDevVoice').innerHTML = vs.length ? vs.map(v => `<option value="${esc(v.name)}"${deVoice && deVoice.name === v.name ? ' selected' : ''}>${esc(v.name)}${/natural|online/i.test(v.name) ? ' ⭐' : ''}</option>`).join('') : '<option>(no German voice installed)</option>';
   $('#cDevSpeed').value = ['0.8', '0.9', '1'].includes(lsGet(DEV_SPEED)) ? lsGet(DEV_SPEED) : '0.9';
-  $('#cPiperSpeed').value = ['1.7', '1.35', '1'].includes(lsGet(PIPER_SPEED)) ? lsGet(PIPER_SPEED) : '1.35';
-  piperHas().then(has => {
-    $('#cPiperGet').hidden = has; $('#cPiperDel').hidden = !has;
-    if (!$('#cPiperBar').hidden || /^✗/.test($('#cPiperMsg').textContent)) return;   // keep a download error visible
-    $('#cPiperMsg').textContent = has ? (piperState === 'ready' ? '✓ Thorsten ist bereit (offline). · Thorsten is ready.' : '✓ Thorsten ist auf diesem Gerät gespeichert. · Thorsten is saved on this device.') : 'Noch nicht geladen. · Not downloaded yet.';
-  });
 }
 const V_SAMPLE = 'Guten Tag! Ich bin Lena. Würden Sie mir bitte die Brötchen geben? Ich möchte heute Abend mit dem Zug nach München fahren.';
-$('#cVoiceBox').addEventListener('change', async e => {
-  if (e.target.name === 'lvoice') {
-    if (e.target.value === 'piper' && !(await piperHas())) { $('#cVMsg').textContent = 'Laden Sie Thorsten zuerst (⬇). · Download Thorsten first.'; vRender(); return; }
-    lsSet(PIPER_ON, e.target.value === 'piper' ? '1' : ''); if (e.target.value === 'piper') piperStart().catch(() => {});
-  }
-  if (e.target.id === 'cDevVoice') { lsSet(DEV_VOICE, e.target.value); loadVoice(); if (!piperWant()) { audioCtx(); say(V_SAMPLE); } }
-  if (e.target.id === 'cDevSpeed') { lsSet(DEV_SPEED, e.target.value); if (!piperWant()) { audioCtx(); say('So schnell spreche ich jetzt. Ist das gut für Sie?'); } }
-  if (e.target.id === 'cPiperSpeed') { lsSet(PIPER_SPEED, e.target.value); if (piperWant()) { audioCtx(); say('So schnell spreche ich jetzt. Ist das gut für Sie?'); } }
+$('#cVoiceBox').addEventListener('change', e => {
+  if (e.target.id === 'cDevVoice') { lsSet(DEV_VOICE, e.target.value); loadVoice(); audioCtx(); say(V_SAMPLE); }
+  if (e.target.id === 'cDevSpeed') { lsSet(DEV_SPEED, e.target.value); audioCtx(); say('So schnell spreche ich jetzt. Ist das gut für Sie?'); }
   vRender(); $('#cVMsg').textContent = '✓ gespeichert · saved';
-});
-$('#cPiperGet').addEventListener('click', async () => {
-  const bar = $('#cPiperBar'), b = $('#cPiperGet'); b.disabled = true; bar.hidden = false;
-  $('#cPiperMsg').textContent = '⬇ Thorsten wird geladen … Bitte die App offen lassen. · Downloading – keep the app open.';
-  try {
-    await piperDownload(p => { bar.querySelector('i').style.width = Math.round(p * 100) + '%'; $('#cPiperMsg').textContent = `⬇ ${Math.round(p * 100)} % · bitte die App offen lassen`; });
-    $('#cPiperMsg').textContent = '⏳ Thorsten wird gestartet … · starting …';
-    await piperStart(); lsSet(PIPER_ON, '1'); bar.hidden = true;
-    $('#cPiperMsg').textContent = '✓ Fertig! Thorsten spricht jetzt für Lena. · Done – Thorsten is Lena’s voice now.';
-    audioCtx(); say('Hallo! Ich bin Thorsten. Ab jetzt lese ich für Lena vor.');
-  } catch (err) { bar.hidden = true; $('#cPiperMsg').textContent = '✗ Das Laden hat nicht geklappt. Bitte mit WLAN noch einmal versuchen. · Download failed – try again on Wi-Fi.'; }
-  b.disabled = false; vRender();
-});
-$('#cPiperDel').addEventListener('click', async () => {
-  lsSet(PIPER_ON, ''); try { await caches.delete(PIPER_CACHE); } catch (e) {}
-  if (piperW) { try { piperW.terminate(); } catch (e) {} } piperW = null; piperReady = null; piperState = '';
-  vRender(); $('#cVMsg').textContent = 'Thorsten gelöscht – Lena nimmt die Gerätestimme. · Thorsten removed.';
 });
 $('#cVSample').addEventListener('click', () => { audioCtx(); say(V_SAMPLE); });
 $('#cKeySave').addEventListener('click', saveKey);
