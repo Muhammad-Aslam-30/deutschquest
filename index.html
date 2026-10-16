@@ -817,6 +817,7 @@ html.dark .b.vsys{color:#2C2C2A}
 .vbox h3{margin:0 0 6px;font-size:17px}.vbox h3 small{font-weight:500;color:var(--grey);font-size:12.5px}
 .vbox .vrow{margin:6px 0}.vbox select{font:inherit;font-size:15px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--white);color:var(--black);max-width:100%}
 .vbox label small{color:var(--grey)}
+.vtip{margin:6px 0;font-size:14.5px}.vtip summary{cursor:pointer;font-weight:700}.vtip ul{padding-left:20px;line-height:1.5;margin:6px 0}
 #cPiperBox [hidden],#cVoiceBox .btn[hidden]{display:none}
 .pbar{height:10px;border-radius:9px;background:rgba(47,54,64,.12);overflow:hidden;margin:8px 0}.pbar i{display:block;height:100%;background:var(--good);transition:width .3s}
 .keyrow{display:flex;gap:8px}
@@ -1379,10 +1380,16 @@ html.dark .g.gA{background:#1F3A2B} html.dark .g.gB{background:#33391F} html.dar
           <h3>🔊 Lenas Stimme <small>(Lena’s voice, this device only)</small></h3>
           <div class="vrow"><label><input type="radio" name="lvoice" value="device"> Gerätestimme <small>(free, the voice installed on this device)</small></label></div>
           <div class="vrow"><select id="cDevVoice" aria-label="Gerätestimme wählen"></select></div>
+          <div class="vrow">Tempo · speed: <select id="cDevSpeed"><option value="0.8">Langsam · slow</option><option value="0.9">Normal · a bit slower (default)</option><option value="1">Original</option></select></div>
+          <details class="vtip"><summary>💡 Die klarste Gerätestimme finden · find the clearest device voice</summary><ul>
+            <li><b>Laptop:</b> open the game in <b>Microsoft Edge</b> and choose a voice marked ⭐ (e.g. <i>Katja Online (Natural)</i>, <i>Seraphina</i>, <i>Amala</i>). These are among the clearest free German voices.</li>
+            <li><b>Android tablet:</b> Settings → <i>Text-to-speech output</i> → <b>Google</b> speech engine → ⚙ → <i>Install voice data</i> → <b>Deutsch (Deutschland)</b>; choose the voice that sounds clearest. Then reopen the game and pick it here.</li>
+            <li>Tap <b>▶ Probe hören</b> after each change.</li></ul></details>
           <div class="vrow"><label><input type="radio" name="lvoice" value="piper"> Thorsten (Piper) <small>(free, open source, natural German; one download ~90 MB, then offline)</small></label></div>
           <div id="cPiperBox">
             <button class="btn blue center" id="cPiperGet" type="button" style="width:100%">⬇ Thorsten laden (~90 MB, einmalig)<small class="en2">Download once – best on Wi-Fi</small></button>
             <div class="pbar" id="cPiperBar" hidden><i style="width:0"></i></div>
+            <div class="vrow">Tempo · speed: <select id="cPiperSpeed"><option value="1.7">Langsam · slow</option><option value="1.35">Normal · a bit slower (default)</option><option value="1">Original · as in the sample</option></select></div>
             <p class="note" id="cPiperMsg"></p>
             <button class="linkbtn" id="cPiperDel" type="button">Thorsten von diesem Gerät löschen (Speicher freigeben)</button>
           </div>
@@ -4023,7 +4030,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.16-2';
+const APP_VERSION = 'v2026.10.16-5';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -5429,7 +5436,7 @@ function speechEnd(x, rate) {
   let last = end; while (last > 0 && rms[last - 1] < LOUD * 0.5) last--;
   return Math.min(x.length, Math.min(end, last + 15) * W);
 }
-const DEV_VOICE = 'dq-dev-voice';
+const DEV_VOICE = 'dq-dev-voice', DEV_SPEED = 'dq-dev-speed';
 function loadVoice() {
   const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [], de = vs.filter(v => /^de/i.test(v.lang));
   const pickN = lsGet(DEV_VOICE);
@@ -5449,7 +5456,7 @@ function sayDevice(text) {
     const end = () => { if (finished) return; finished = true; talking(false); clearTimeout(guard); done(); };
     const speak = plain => {
       tries++;
-      const u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; if (deVoice && !plain) u.voice = deVoice; u.rate = C.slow ? 0.72 : 0.95; u.pitch = 1.1;
+      const u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; if (deVoice && !plain) u.voice = deVoice; const base = +lsGet(DEV_SPEED) || 0.9; u.rate = C.slow ? base * 0.78 : base; u.pitch = deVoice && /natural|online|neural/i.test(deVoice.name) ? 1 : 1.1;
       u.onstart = () => { started = true; talking(true); devLog.push('start' + (plain ? ' (plain)' : '')); };
       u.onend = () => { devLog.push('end'); end(); };
       u.onerror = e => { devLog.push('error: ' + (e && e.error)); if (!started && tries < 2) { setTimeout(() => speak(true), 300); return; } end(); };
@@ -5515,6 +5522,8 @@ const PIPER_FILES = {
   phonData:'https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data'
 };
 const piperWant = () => lsGet(PIPER_ON) === '1';
+const PIPER_SPEED = 'dq-piper-speed';
+const piperScale = slow => (+lsGet(PIPER_SPEED) || 1.35) * (slow ? 1.3 : 1);   // measured: ×1.35 ≈ 20 % slower, ×1.7 ≈ 45 % slower   // 🐢 slows down a little more on top
 let piperW = null, piperReady = null, piperSeq = 0, piperJobs = {}, piperState = '';
 async function piperHas() { try { const c = await caches.open(PIPER_CACHE); return (await Promise.all(Object.values(PIPER_FILES).map(u => c.match(u)))).every(Boolean); } catch (e) { return false; } }
 // download everything once (progress: 0–1); the voice model is the big part
@@ -5524,7 +5533,8 @@ async function piperDownload(onProgress) {
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
   for (const [k, u] of Object.entries(PIPER_FILES)) {
     if (await c.match(u)) { done += size[k] || 0.7e6; onProgress(done / total); continue; }
-    const res = await fetch(u); if (!res.ok || !res.body) throw new Error('download ' + res.status);
+    let res = null; for (let k = 0; k < 2 && !(res && res.ok); k++) { try { res = await fetch(u); } catch (e) { if (k) throw e; await sleep(1500); } }
+    if (!res || !res.ok || !res.body) throw new Error('download ' + (res && res.status));
     const rd = res.body.getReader(), parts = []; let got = 0;
     for (;;) { const { done:end, value } = await rd.read(); if (end) break; parts.push(value); got += value.length; onProgress(Math.min(0.999, (done + got) / total)); }
     await c.put(u, new Response(new Blob(parts), { headers:{ 'Content-Type':res.headers.get('Content-Type') || 'application/octet-stream' } }));
@@ -5555,8 +5565,8 @@ onmessage = async e => {
       postMessage({ id, ok:true, rate:cfg.audio.sample_rate }); return;
     }
     const ids = await phonemes(text);
-    const inf = cfg.inference, feeds = { input:new ort.Tensor('int64', BigInt64Array.from(ids.map(BigInt)), [1, ids.length]),
-      input_lengths:new ort.Tensor('int64', BigInt64Array.from([BigInt(ids.length)])), scales:new ort.Tensor('float32', Float32Array.from([inf.noise_scale, inf.length_scale * (slow ? 1.25 : 1), inf.noise_w])) };
+    const inf = cfg.inference, scale = +e.data.scale || 1, feeds = { input:new ort.Tensor('int64', BigInt64Array.from(ids.map(BigInt)), [1, ids.length]),
+      input_lengths:new ort.Tensor('int64', BigInt64Array.from([BigInt(ids.length)])), scales:new ort.Tensor('float32', Float32Array.from([inf.noise_scale, inf.length_scale * scale, inf.noise_w])) };
     const res = await sess.run(feeds), audio = Float32Array.from(res.output.data);
     postMessage({ id, audio, rate:cfg.audio.sample_rate }, [audio.buffer]);
   } catch (err) { postMessage({ id, error:String(err && err.message || err) }); }
@@ -5577,11 +5587,11 @@ function piperStart() {
   return piperReady;
 }
 async function piperBuffer(text, slow) {
-  const pre = 'PT|' + PIPER_VOICE + (slow ? '|s|' : '|');
+  const sc = piperScale(slow), pre = 'PT|' + PIPER_VOICE + '|' + sc.toFixed(2) + '|';
   if (audioCache.has(pre + text)) return audioCache.get(pre + text);
   const kept = await voiceGet(text, pre); if (kept) { audioCache.set(pre + text, kept); return kept; }
   await piperStart();
-  const d = await piperCall({ type:'say', text, slow:!!slow }), ctx = audioCtx();
+  const d = await piperCall({ type:'say', text, scale:sc }), ctx = audioCtx();
   const buf = ctx.createBuffer(1, d.audio.length, d.rate); buf.copyToChannel(d.audio, 0);
   audioCache.set(pre + text, buf); voicePut(text, buf, pre); return buf;
 }
@@ -5597,6 +5607,7 @@ async function sayPiper(text, my) {
       if (my !== speakSeq) return true;
       if (!buf || ctx.state !== 'running') { if (i === 0) return false; talking(false); sayDevice(parts.slice(i).join(' ')); return true; }
       await playBuffer(buf, true); if (my !== speakSeq) return true;
+      if (i < jobs.length - 1) { await sleep(350); if (my !== speakSeq) return true; }
     }
     talking(false); return true;
   } catch (e) { return my !== speakSeq; }
@@ -11434,6 +11445,8 @@ function vRender() {
   $$('#cVoiceBox [name="lvoice"]').forEach(x => { x.checked = x.value === (pip ? 'piper' : 'device'); });
   const vs = ((window.speechSynthesis && speechSynthesis.getVoices()) || []).filter(v => /^de/i.test(v.lang));
   $('#cDevVoice').innerHTML = vs.length ? vs.map(v => `<option value="${esc(v.name)}"${deVoice && deVoice.name === v.name ? ' selected' : ''}>${esc(v.name)}${/natural|online/i.test(v.name) ? ' ⭐' : ''}</option>`).join('') : '<option>(no German voice installed)</option>';
+  $('#cDevSpeed').value = ['0.8', '0.9', '1'].includes(lsGet(DEV_SPEED)) ? lsGet(DEV_SPEED) : '0.9';
+  $('#cPiperSpeed').value = ['1.7', '1.35', '1'].includes(lsGet(PIPER_SPEED)) ? lsGet(PIPER_SPEED) : '1.35';
   piperHas().then(has => {
     $('#cPiperGet').hidden = has; $('#cPiperDel').hidden = !has;
     if (!$('#cPiperBar').hidden || /^✗/.test($('#cPiperMsg').textContent)) return;   // keep a download error visible
@@ -11446,7 +11459,9 @@ $('#cVoiceBox').addEventListener('change', async e => {
     if (e.target.value === 'piper' && !(await piperHas())) { $('#cVMsg').textContent = 'Laden Sie Thorsten zuerst (⬇). · Download Thorsten first.'; vRender(); return; }
     lsSet(PIPER_ON, e.target.value === 'piper' ? '1' : ''); if (e.target.value === 'piper') piperStart().catch(() => {});
   }
-  if (e.target.id === 'cDevVoice') { lsSet(DEV_VOICE, e.target.value); loadVoice(); }
+  if (e.target.id === 'cDevVoice') { lsSet(DEV_VOICE, e.target.value); loadVoice(); if (!piperWant()) { audioCtx(); say(V_SAMPLE); } }
+  if (e.target.id === 'cDevSpeed') { lsSet(DEV_SPEED, e.target.value); if (!piperWant()) { audioCtx(); say('So schnell spreche ich jetzt. Ist das gut für Sie?'); } }
+  if (e.target.id === 'cPiperSpeed') { lsSet(PIPER_SPEED, e.target.value); if (piperWant()) { audioCtx(); say('So schnell spreche ich jetzt. Ist das gut für Sie?'); } }
   vRender(); $('#cVMsg').textContent = '✓ gespeichert · saved';
 });
 $('#cPiperGet').addEventListener('click', async () => {
