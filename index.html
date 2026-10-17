@@ -8,6 +8,7 @@ try { localStorage.removeItem('dq-design'); } catch (e) {}
 try { var t = localStorage.getItem('dq-theme'); if (t === 'dark' || (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark'); } catch (e) {}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Deutsch Quest – a 3D German grammar runner</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E6ECEB'/%3E%3Ccircle cx='20' cy='20' r='12' fill='%23EDC765'/%3E%3Crect x='34' y='8' width='22' height='22' rx='3' fill='%235B636B'/%3E%3Crect x='8' y='34' width='22' height='22' rx='3' fill='%234F7CAC'/%3E%3Cpath d='M45 34L57 56H33Z' fill='%23D9675B'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600;800&display=swap" rel="stylesheet">
@@ -128,7 +129,7 @@ html.dark .vsc.g{color:#C0DD97}html.dark .vsc.m{color:#FAC775}html.dark .vsc.b{c
 html.dark .btn.green{background:#2F7A52}
 #vhs .row2{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
 #vhs .row2 .btn{min-width:0}
-@media (max-width:440px){#cefrTabs{flex-wrap:wrap}#cefrTabs button{flex:1 1 auto;padding:8px 7px}#menu .row2{grid-template-columns:1fr}}
+@media (max-width:440px){#cefrTabs{flex-wrap:wrap}#cefrTabs button{flex:1 1 auto;padding:8px 7px}#menu .row2{grid-template-columns:1fr}#menu .row2 .btn,#bHist{flex-direction:column;gap:2px}}
 .vread .linkbtn{color:#185FA5}
 .vtag{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:rgba(47,54,64,.08);color:var(--black);vertical-align:middle}
 .vread{background:#FAF3E3;color:#2C2C2A;border-radius:12px;padding:12px;line-height:1.6;margin:0 0 10px;font-size:16px}
@@ -4025,7 +4026,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.17-2';
+const APP_VERSION = 'v2026.10.17-3';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -8278,7 +8279,7 @@ function renderTopicNav() {
   $('#topicCards').style.display = tab === 'EX' || tab === 'TR' || tab === 'WG' ? 'none' : '';
   if (tab !== 'EX' && tab !== 'TR' && tab !== 'WG') $('#topicCards').innerHTML = TOPICS.filter(t => t[1] === tab).map(([k]) => {
     const t = topicInfo(k), st = topicStars(k), pc = topicLearned(k);
-    return `<button class="tcard${k === S.topic ? ' on' : ''}" data-topic="${k}" aria-expanded="${k === S.topic}">${k === next ? '<span class="nexttag">NEXT</span>' : ''}<span class="te">${t.icon}</span><b>${esc(t.name)}</b><small>${t.cefr}</small>`
+    return `<button class="tcard${k === S.topic ? ' on' : ''}" data-topic="${k}" aria-expanded="${k === S.topic}">${k === next ? '<span class="nexttag">NEXT</span>' : ''}<span class="te">${t.icon}</span><b>${esc(t.name).replace(/Plusquamperfekt/g, 'Plusquam&shy;perfekt')}</b><small>${t.cefr}</small>`
       + `<span class="stars" aria-label="${st} of 3 levels passed">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span><span class="tbar" title="${pc}% learned"><i style="width:${pc}%"></i></span></button>`;
   }).join('');
   placeTopicPanel();
