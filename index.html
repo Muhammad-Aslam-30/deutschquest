@@ -128,6 +128,7 @@ html.dark .vsc.g{color:#C0DD97}html.dark .vsc.m{color:#FAC775}html.dark .vsc.b{c
 html.dark .btn.green{background:#2F7A52}
 #vhs .row2{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
 #vhs .row2 .btn{min-width:0}
+@media (max-width:440px){#cefrTabs{flex-wrap:wrap}#cefrTabs button{flex:1 1 auto;padding:8px 7px}#menu .row2{grid-template-columns:1fr}}
 .vread .linkbtn{color:#185FA5}
 .vtag{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:rgba(47,54,64,.08);color:var(--black);vertical-align:middle}
 .vread{background:#FAF3E3;color:#2C2C2A;border-radius:12px;padding:12px;line-height:1.6;margin:0 0 10px;font-size:16px}
@@ -484,6 +485,8 @@ html.dark .gwword b{filter:brightness(1.35)}
 .cj.wenn{color:var(--good)} .cj.obwohl,.cj.ob{color:#A07A12} .cj.aber,.cj.deshalb{color:var(--black);text-decoration:underline}
 #cefrTabs{margin:14px 0 10px}
 #cefrTabs button{font-size:17px;font-weight:700}
+.tpanel.inrow{min-width:0;max-width:100%;grid-column:1 / -1;border:calc(2px * var(--bwk)) solid var(--line);border-radius:18px;padding:4px 12px 12px;background:var(--white);margin:2px 0 6px}
+.tpanel.inrow>.guide:first-child{margin-top:8px}
 .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:10px;margin-bottom:6px}
 .tcard{position:relative;border:calc(2px * var(--bwk)) solid var(--line);background:var(--white);color:var(--black);box-shadow:calc(3px * var(--shk)) calc(3px * var(--shk)) calc(3px * var(--shb)) var(--shadow);padding:10px 10px 12px;text-align:left;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:2px}
 .tcard .te{font-size:26px;line-height:1.15;padding-right:46px}
@@ -4021,7 +4024,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.16-6';
+const APP_VERSION = 'v2026.10.17-1';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -8266,6 +8269,7 @@ function topicLearned(k) {
   return Math.round(100 * pool.reduce((s, x) => s + Math.min(5, (S.srs[x.id] || {}).box || 0), 0) / (5 * pool.length));
 }
 function renderTopicNav() {
+  const tp0 = $('#topicPanel'); if (tp0 && tp0.parentNode === $('#topicCards')) $('#topicCards').after(tp0);   // out of the grid before the tiles are redrawn
   const tab = S.cefr || topicTab(S.topic);
   $$('#cefrTabs button').forEach(b => b.classList.toggle('on', b.dataset.cefr === tab));
   const wg = $('#cefrTabs [data-cefr="WG"]'); if (wg) { const due = gardenDue(); wg.classList.toggle('glow', !!due); wg.title = due ? 'Zeit für einen neuen Baum! · Time for a new tree' : ''; }
@@ -8273,9 +8277,10 @@ function renderTopicNav() {
   $('#topicCards').style.display = tab === 'EX' || tab === 'TR' || tab === 'WG' ? 'none' : '';
   if (tab !== 'EX' && tab !== 'TR' && tab !== 'WG') $('#topicCards').innerHTML = TOPICS.filter(t => t[1] === tab).map(([k]) => {
     const t = topicInfo(k), st = topicStars(k), pc = topicLearned(k);
-    return `<button class="tcard${k === S.topic ? ' on' : ''}" data-topic="${k}">${k === next ? '<span class="nexttag">NEXT</span>' : ''}<span class="te">${t.icon}</span><b>${esc(t.name)}</b><small>${t.cefr}</small>`
+    return `<button class="tcard${k === S.topic ? ' on' : ''}" data-topic="${k}" aria-expanded="${k === S.topic}">${k === next ? '<span class="nexttag">NEXT</span>' : ''}<span class="te">${t.icon}</span><b>${esc(t.name)}</b><small>${t.cefr}</small>`
       + `<span class="stars" aria-label="${st} of 3 levels passed">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</span><span class="tbar" title="${pc}% learned"><i style="width:${pc}%"></i></span></button>`;
   }).join('');
+  placeTopicPanel();
   return tab;
 }
 function renderXLevels(tp) {
@@ -9019,7 +9024,21 @@ async function genExam(mod) {
 
 /* ---- events ---- */
 $('#cefrTabs').addEventListener('click', e => { const b = e.target.closest('[data-cefr]'); if (!b) return; S.cefr = b.dataset.cefr; save(); $('#menuMsg').textContent = ''; renderMenu(); });
-$('#topicCards').addEventListener('click', e => { const b = e.target.closest('[data-topic]'); if (b) setTopic(b.dataset.topic); });
+// one panel holds the chosen topic's content; it sits in the tile grid right after the row of the chosen tile
+const topicPanel = document.createElement('div'); topicPanel.id = 'topicPanel'; topicPanel.className = 'tpanel';
+$('#topicCards').after(topicPanel);
+['#guide', '#modeQ', '#modeRow', '#runBox', '#cafeBox', '#writeBox'].forEach(q => topicPanel.appendChild($(q)));
+function placeTopicPanel(scroll) {
+  const grid = $('#topicCards'), tp = $('#topicPanel'); if (!grid || !tp) return;
+  const tiles = [...grid.querySelectorAll(':scope > .tcard')], i = tiles.findIndex(b => b.dataset.topic === S.topic);
+  if (grid.style.display === 'none' || i < 0) { if (tp.previousElementSibling !== grid) grid.after(tp); tp.classList.remove('inrow'); return; }
+  const cols = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length), last = Math.min(tiles.length - 1, Math.floor(i / cols) * cols + cols - 1);
+  if (tiles[last].nextElementSibling !== tp) tiles[last].after(tp);
+  tp.classList.add('inrow');
+  if (scroll) setTimeout(() => tiles[i].scrollIntoView({ block:'start', behavior:'smooth' }), 30);
+}
+window.addEventListener('resize', () => placeTopicPanel());
+$('#topicCards').addEventListener('click', e => { const b = e.target.closest('[data-topic]'); if (b && !b.closest('#topicPanel')) { setTopic(b.dataset.topic); placeTopicPanel(true); } });
 $('#lvX').addEventListener('click', e => { const b = e.target.closest('[data-xlevel]'); if (b) startLevel(+b.dataset.xlevel); });
 $('#examBox').addEventListener('click', async e => {
   const t = e.target.closest('[data-extab]'); if (t) { S.exTab = t.dataset.extab; save(); renderExamBox(); return; }
