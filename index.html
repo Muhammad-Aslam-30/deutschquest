@@ -485,6 +485,7 @@ html.dark .gwword b{filter:brightness(1.35)}
 .cj.wenn{color:var(--good)} .cj.obwohl,.cj.ob{color:#A07A12} .cj.aber,.cj.deshalb{color:var(--black);text-decoration:underline}
 #cefrTabs{margin:14px 0 10px}
 #cefrTabs button{font-size:17px;font-weight:700}
+.tpanel[hidden]{display:none}
 .tpanel.inrow{min-width:0;max-width:100%;grid-column:1 / -1;border:calc(2px * var(--bwk)) solid var(--line);border-radius:18px;padding:4px 12px 12px;background:var(--white);margin:2px 0 6px}
 .tpanel.inrow>.guide:first-child{margin-top:8px}
 .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:10px;margin-bottom:6px}
@@ -4024,7 +4025,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.17-1';
+const APP_VERSION = 'v2026.10.17-2';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
@@ -4952,7 +4953,7 @@ function renderMenu() {
   $('#genRow').style.display = lsGet(AI_KEY) ? '' : 'none'; $('#genNew').checked = !!S.genNew;
 }
 const topicKey = () => (OLD_T[S.topic] || XBY[S.topic]) ? S.topic : 'wd';
-function setTopic(t) { S.topic = t; S.cefr = topicTab(t); cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
+function setTopic(t) { topicShut = false; S.topic = t; S.cefr = topicTab(t); cafeMode = null; save(); $('#menuMsg').textContent = ''; renderMenu(); }
 
 function renderGap() {
   $$('.gapv').forEach(b => { b.textContent = `${S.gap} s`; });
@@ -9028,17 +9029,20 @@ $('#cefrTabs').addEventListener('click', e => { const b = e.target.closest('[dat
 const topicPanel = document.createElement('div'); topicPanel.id = 'topicPanel'; topicPanel.className = 'tpanel';
 $('#topicCards').after(topicPanel);
 ['#guide', '#modeQ', '#modeRow', '#runBox', '#cafeBox', '#writeBox'].forEach(q => topicPanel.appendChild($(q)));
+var topicShut = false;
 function placeTopicPanel(scroll) {
   const grid = $('#topicCards'), tp = $('#topicPanel'); if (!grid || !tp) return;
   const tiles = [...grid.querySelectorAll(':scope > .tcard')], i = tiles.findIndex(b => b.dataset.topic === S.topic);
-  if (grid.style.display === 'none' || i < 0) { if (tp.previousElementSibling !== grid) grid.after(tp); tp.classList.remove('inrow'); return; }
+  if (grid.style.display === 'none' || i < 0) { if (tp.previousElementSibling !== grid) grid.after(tp); tp.classList.remove('inrow'); tp.hidden = false; return; }
+  tp.hidden = topicShut;
+  tiles.forEach(b => { const open = b === tiles[i] && !topicShut; b.classList.toggle('on', open); b.setAttribute('aria-expanded', open); });
   const cols = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length), last = Math.min(tiles.length - 1, Math.floor(i / cols) * cols + cols - 1);
   if (tiles[last].nextElementSibling !== tp) tiles[last].after(tp);
   tp.classList.add('inrow');
   if (scroll) setTimeout(() => tiles[i].scrollIntoView({ block:'start', behavior:'smooth' }), 30);
 }
 window.addEventListener('resize', () => placeTopicPanel());
-$('#topicCards').addEventListener('click', e => { const b = e.target.closest('[data-topic]'); if (b && !b.closest('#topicPanel')) { setTopic(b.dataset.topic); placeTopicPanel(true); } });
+$('#topicCards').addEventListener('click', e => { const b = e.target.closest('[data-topic]'); if (b && !b.closest('#topicPanel')) { if (b.dataset.topic === S.topic && !topicShut) { topicShut = true; placeTopicPanel(); return; } setTopic(b.dataset.topic); placeTopicPanel(true); } });
 $('#lvX').addEventListener('click', e => { const b = e.target.closest('[data-xlevel]'); if (b) startLevel(+b.dataset.xlevel); });
 $('#examBox').addEventListener('click', async e => {
   const t = e.target.closest('[data-extab]'); if (t) { S.exTab = t.dataset.extab; save(); renderExamBox(); return; }
