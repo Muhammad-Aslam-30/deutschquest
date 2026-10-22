@@ -1782,6 +1782,7 @@ html.dark #twName{background:#1E252C;color:#E3E8EC;border-color:rgba(255,255,255
 .twstats .en2{font-size:12px}
 #townBox .twgo{width:100%;margin:6px 0 12px;flex-direction:column;font-size:19px}
 #cefrTabs [data-cefr="MO"] span{white-space:nowrap}
+#cefrTabs{flex-wrap:wrap}#cefrTabs button{flex:1 1 auto;min-width:0}
 body:has(#town.show) #askFab{display:none!important}
 /*@@GAME_CSS@@*/
 </style>
@@ -4728,7 +4729,7 @@ W.filter(w => w.c !== 'weil' && w.c !== 'dass').forEach(w => ORDER.push(w));   /
    Uses Claude's artifact storage when available, otherwise the browser's localStorage
    (when you host the file yourself), otherwise memory only. */
 // shown small on the menu: tells which version the device is running (raise it with every upload)
-const APP_VERSION = 'v2026.10.23-2';
+const APP_VERSION = 'v2026.10.23-3';
 const KEY = 'weil-dass-runner-v1';
 // signed in with Google: every account has its own copy on this device (KEY:<account id>); signed out = the guest copy (KEY)
 const PROFILE = (() => { try { const p = JSON.parse(window.localStorage.getItem('dq-profile') || 'null'); return p && p.sub ? p : null; } catch (e) { return null; } })();
